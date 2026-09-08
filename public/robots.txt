@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /login
+Disallow: /studio
+Disallow: /studio/
+
+Sitemap: https://www.gypsyjazzhub.com/sitemap.xml

@@ -1,0 +1,16 @@
+---
+description: Gypsy Jazz Hub conventions for Cursor
+alwaysApply: true
+---
+
+Gypsy jazz community hub. TanStack Start + React 19 + Vite + Tailwind 4.
+
+Keep the wood look, globe, and nav. Do not redesign unless asked.
+
+Facts only: real names, dates, venues, URLs. No invented jams, concerts, or luthiers.
+
+Living players route to `/musicians/<slug>`. Django is `/django`, Grappelli is `/grappelli`.
+
+Catalog data is TypeScript in `src/lib/` (artists, jams, concerts, festivals, venues, news). Schema is `migrations/`. Local DB is PGLite until `DATABASE_URL` is set.
+
+Read `AGENTS.project.md` and `README.md` before large edits.

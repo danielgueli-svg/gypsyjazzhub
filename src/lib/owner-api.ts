@@ -1,0 +1,528 @@
+import { createServerFn } from "@tanstack/react-start";
+import { authMiddleware } from "@/lib/auth/middleware";
+import { getSql } from "@/lib/db";
+import { toIso } from "@/lib/utils";
+import {
+  getDigestSettings,
+  listDigestLog,
+  runDigest,
+  saveDigestSettings,
+  type DigestSettings,
+} from "@/lib/digest";
+import {
+  ensureSubscriptionTables,
+  type SubscriptionKind,
+} from "@/lib/subscriptions";
+import {
+  INSTRUMENT_OPTIONS,
+  PROFILE_TYPES,
+  isMusician,
+  parseInstrumentIds,
+  parseProfileTypes,
+  typesFromMemberKind,
+  type InstrumentId,
+  type ProfileTypeId,
+} from "@/lib/profile-types";
+
+const OWNER_PHRASE = "ile-du-berceau";
+
+export type HubMember = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
+
+export type HubActivity = {
+  kind: string;
+  id: string;
+  title: string;
+  who: string;
+  when: string;
+};
+
+async function ensureOwnerTable() {
+  const sql = await getSql();
+  await sql.query(`
+    create table if not exists hub_owners (
+      user_id text primary key,
+      claimed_at timestamptz not null default now()
+    )
+  `);
+}
+
+async function ownerIds() {
+  await ensureOwnerTable();
+  const sql = await getSql();
+  const rows = await sql<{ user_id: string }>`select user_id from hub_owners`;
+  return rows.map((row) => row.user_id);
+}
+
+async function requireOwner(userId: string) {
+  const ids = await ownerIds();
+  if (!ids.includes(userId)) throw new Error("Owner desk is only for the hub owner.");
+}
+
+export const amIOwner = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const ids = await ownerIds();
+    return { owner: ids.includes(context.userId), claimed: ids.length > 0 };
+  });
+
+export const claimOwner = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((phrase: string) => phrase.trim().toLowerCase())
+  .handler(async ({ context, data: phrase }) => {
+    if (phrase !== OWNER_PHRASE) throw new Error("That phrase is not right.");
+    const sql = await getSql();
+    await ensureOwnerTable();
+    await sql`insert into hub_owners (user_id) values (${context.userId}) on conflict do nothing`;
+    return { ok: true };
+  });
+
+export const listHubMembers = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const sql = await getSql();
+    const rows = await sql<{
+      id: string;
+      name: string;
+      email: string;
+      createdAt: unknown;
+    }>`
+      select id, name, email, "createdAt" from "user" order by "createdAt" desc
+    `;
+    return rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      createdAt: toIso(row.createdAt),
+    })) satisfies HubMember[];
+  });
+
+export type HubUserRow = {
+  id: string;
+  name: string;
+  email: string;
+  country: string;
+  city: string;
+  profileTypes: ProfileTypeId[];
+  musician: boolean;
+  instruments: string;
+  instrumentIds: InstrumentId[];
+  subscriptions: { kind: SubscriptionKind; targetId: string; targetName: string }[];
+  createdAt: string;
+  banned: boolean;
+  verified: boolean;
+};
+
+export type HubUserStats = {
+  totalUsers: number;
+  musicians: number;
+  nonMusicians: number;
+  byCountry: { country: string; count: number }[];
+  byType: { type: ProfileTypeId; count: number }[];
+  bySubscription: { kind: SubscriptionKind; count: number }[];
+  byInstrument: { id: InstrumentId; count: number }[];
+};
+
+export type HubUserFilter = {
+  country?: string;
+  subscriptionKind?: SubscriptionKind | "";
+  profileType?: ProfileTypeId | "";
+  musician?: "all" | "musician" | "non";
+  instrument?: InstrumentId | "";
+  q?: string;
+};
+
+function mapUserRow(row: {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: unknown;
+  country: string | null;
+  city: string | null;
+  member_kind: string | null;
+  profile_types: string | null;
+  instruments: string | null;
+  subs: string | null;
+}): HubUserRow {
+  const types = typesFromMemberKind(parseProfileTypes(row.profile_types), row.member_kind);
+  const instruments = row.instruments ?? "";
+  const subscriptions = (row.subs ?? "")
+    .split("||")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const [kind, targetId, targetName] = part.split("\t");
+      if (!kind || !targetId) return null;
+      return {
+        kind: kind as SubscriptionKind,
+        targetId,
+        targetName: targetName || targetId,
+      };
+    })
+    .filter((item): item is HubUserRow["subscriptions"][number] => Boolean(item));
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    country: row.country ?? "",
+    city: row.city ?? "",
+    profileTypes: types,
+    musician: isMusician(types),
+    instruments,
+    instrumentIds: parseInstrumentIds(instruments),
+    subscriptions,
+    createdAt: toIso(row.createdAt),
+    banned: false,
+    verified: true,
+  };
+}
+
+async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> {
+  await ensureSubscriptionTables();
+  const sql = await getSql();
+  const rows = await sql<{
+    id: string;
+    name: string;
+    email: string;
+    createdAt: unknown;
+    country: string | null;
+    city: string | null;
+    member_kind: string | null;
+    profile_types: string | null;
+    instruments: string | null;
+    subs: string | null;
+  }>`
+    select
+      u.id,
+      u.name,
+      u.email,
+      u."createdAt",
+      p.country,
+      p.city,
+      p.member_kind,
+      p.profile_types,
+      p.instruments,
+      (
+        select string_agg(s.kind || chr(9) || s.target_id || chr(9) || s.target_name, '||')
+        from hub_subscriptions s
+        where s.user_id = u.id
+      ) as subs
+    from "user" u
+    left join profiles p on p.user_id = u.id
+    order by u."createdAt" desc
+  `;
+  let users = rows.map(mapUserRow);
+  const q = filter.q?.trim().toLowerCase() ?? "";
+  if (q) {
+    users = users.filter((row) =>
+      `${row.name} ${row.email} ${row.country} ${row.city}`.toLowerCase().includes(q),
+    );
+  }
+  if (filter.country) {
+    const country = filter.country.toLowerCase();
+    users = users.filter((row) => row.country.toLowerCase() === country);
+  }
+  if (filter.subscriptionKind) {
+    users = users.filter((row) => row.subscriptions.some((sub) => sub.kind === filter.subscriptionKind));
+  }
+  if (filter.profileType) {
+    users = users.filter((row) => row.profileTypes.includes(filter.profileType as ProfileTypeId));
+  }
+  if (filter.musician === "musician") users = users.filter((row) => row.musician);
+  if (filter.musician === "non") users = users.filter((row) => !row.musician);
+  if (filter.instrument) {
+    users = users.filter((row) => row.instrumentIds.includes(filter.instrument as InstrumentId));
+  }
+  try {
+    const { ensureGuard } = await import("@/lib/hub-guard");
+    await ensureGuard();
+    const flags = await sql<{ user_id: string; banned: number; verified: number }>`
+      select user_id, banned, verified from hub_members
+    `;
+    const map = new Map(flags.map((row) => [row.user_id, row]));
+    users = users.map((user) => {
+      const row = map.get(user.id);
+      return {
+        ...user,
+        banned: Boolean(row?.banned),
+        verified: row ? Boolean(row.verified) : true,
+      };
+    });
+  } catch {
+    /* flags optional */
+  }
+  return users;
+}
+
+export const listHubUserDirectory = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: HubUserFilter = {}) => input)
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    return loadDirectory(data);
+  });
+
+export const listHubUserStats = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const users = await loadDirectory();
+    const byCountryMap = new Map<string, number>();
+    const byTypeMap = new Map<ProfileTypeId, number>();
+    const bySubMap = new Map<SubscriptionKind, number>();
+    const byInstMap = new Map<InstrumentId, number>();
+    for (const user of users) {
+      if (user.country) byCountryMap.set(user.country, (byCountryMap.get(user.country) ?? 0) + 1);
+      for (const type of user.profileTypes) byTypeMap.set(type, (byTypeMap.get(type) ?? 0) + 1);
+      for (const sub of user.subscriptions) bySubMap.set(sub.kind, (bySubMap.get(sub.kind) ?? 0) + 1);
+      for (const inst of user.instrumentIds) byInstMap.set(inst, (byInstMap.get(inst) ?? 0) + 1);
+    }
+    return {
+      totalUsers: users.length,
+      musicians: users.filter((row) => row.musician).length,
+      nonMusicians: users.filter((row) => !row.musician).length,
+      byCountry: [...byCountryMap.entries()]
+        .map(([country, count]) => ({ country, count }))
+        .sort((a, b) => b.count - a.count || a.country.localeCompare(b.country)),
+      byType: PROFILE_TYPES.map((row) => ({ type: row.id, count: byTypeMap.get(row.id) ?? 0 })).filter(
+        (row) => row.count,
+      ),
+      bySubscription: [...bySubMap.entries()]
+        .map(([kind, count]) => ({ kind, count }))
+        .sort((a, b) => b.count - a.count),
+      byInstrument: INSTRUMENT_OPTIONS.map((row) => ({
+        id: row.id,
+        count: byInstMap.get(row.id) ?? 0,
+      })).filter((row) => row.count),
+    } satisfies HubUserStats;
+  });
+
+export const listHubActivity = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const sql = await getSql();
+    const activity: HubActivity[] = [];
+
+    const concerts = await sql<{
+      id: number;
+      title: string;
+      artist_name: string;
+      submitted_name: string;
+      created_at: unknown;
+    }>`
+      select id, title, artist_name, submitted_name, created_at
+      from hub_concerts order by created_at desc limit 40
+    `;
+    for (const row of concerts) {
+      activity.push({
+        kind: "concert",
+        id: String(row.id),
+        title: `${row.artist_name} — ${row.title}`,
+        who: row.submitted_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    const clips = await sql<{
+      id: number;
+      title: string;
+      artist_slug: string;
+      submitted_name: string;
+      created_at: unknown;
+    }>`
+      select id, title, artist_slug, submitted_name, created_at
+      from hub_clips order by created_at desc limit 20
+    `;
+    for (const row of clips) {
+      activity.push({
+        kind: "clip",
+        id: String(row.id),
+        title: row.title || row.artist_slug,
+        who: row.submitted_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    const notes = await sql<{
+      id: number;
+      body: string;
+      artist_slug: string;
+      submitted_name: string;
+      created_at: unknown;
+    }>`
+      select id, body, artist_slug, submitted_name, created_at
+      from hub_notes order by created_at desc limit 20
+    `;
+    for (const row of notes) {
+      activity.push({
+        kind: "note",
+        id: String(row.id),
+        title: row.body.slice(0, 80),
+        who: row.submitted_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    const festivals = await sql<{
+      slug: string;
+      name: string;
+      submitted_name: string;
+      created_at: unknown;
+    }>`
+      select slug, name, submitted_name, created_at
+      from hub_festivals order by created_at desc limit 20
+    `;
+    for (const row of festivals) {
+      activity.push({
+        kind: "festival",
+        id: row.slug,
+        title: row.name,
+        who: row.submitted_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    const jams = await sql<{
+      slug: string;
+      name: string;
+      submitted_name: string;
+      created_at: unknown;
+    }>`
+      select slug, name, submitted_name, created_at
+      from hub_jams order by created_at desc limit 20
+    `;
+    for (const row of jams) {
+      activity.push({
+        kind: "jam",
+        id: row.slug,
+        title: row.name,
+        who: row.submitted_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    const chat = await sql<{
+      id: number;
+      body: string;
+      chat_name: string;
+      target_kind: string;
+      target_slug: string;
+      created_at: unknown;
+    }>`
+      select id, body, chat_name, target_kind, target_slug, created_at
+      from hub_chat order by created_at desc limit 30
+    `;
+    for (const row of chat) {
+      activity.push({
+        kind: "chat",
+        id: String(row.id),
+        title: `${row.target_kind}/${row.target_slug}: ${row.body.slice(0, 60)}`,
+        who: row.chat_name,
+        when: toIso(row.created_at),
+      });
+    }
+
+    activity.sort((a, b) => (a.when < b.when ? 1 : -1));
+    return activity.slice(0, 80);
+  });
+
+export const removeHubItem = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { kind: string; id: string }) => input)
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    const sql = await getSql();
+    const id = data.id;
+    if (data.kind === "concert") {
+      await sql`delete from hub_concerts where id = ${Number(id)}`;
+    } else if (data.kind === "clip") {
+      await sql`delete from hub_clips where id = ${Number(id)}`;
+    } else if (data.kind === "note" || data.kind === "history" || data.kind === "archive") {
+      await sql`delete from hub_notes where id = ${Number(id)}`;
+    } else if (data.kind === "festival") {
+      await sql`delete from hub_festivals where slug = ${id}`;
+    } else if (data.kind === "jam") {
+      await sql`delete from hub_jams where slug = ${id}`;
+    } else if (data.kind === "venue") {
+      await sql`delete from hub_venues where slug = ${id}`;
+    } else if (data.kind === "luthier") {
+      await sql`delete from hub_luthiers where slug = ${id}`;
+    } else if (data.kind === "teacher") {
+      await sql`delete from hub_teachers where id = ${Number(id)}`;
+    } else if (data.kind === "artist") {
+      await sql`delete from hub_notes where id = ${Number(id)}`;
+    } else if (data.kind === "chat") {
+      await sql`delete from hub_chat where id = ${Number(id)}`;
+    } else {
+      throw new Error("Unknown item.");
+    }
+    return { ok: true };
+  });
+
+export const getOwnerDigest = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const [settings, log] = await Promise.all([getDigestSettings(), listDigestLog()]);
+    return { settings, log };
+  });
+
+export const saveOwnerDigest = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: DigestSettings) => ({
+    email: input.email.trim().toLowerCase(),
+    enabled: Boolean(input.enabled),
+  }))
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    if (data.email && !data.email.includes("@")) {
+      throw new Error("That does not look like an email.");
+    }
+    return saveDigestSettings(data);
+  });
+
+export const sendOwnerDigest = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    return runDigest("test");
+  });
+
+export const banHubMember = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { userId: string; banned: boolean }) => input)
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    const { setMemberBanned } = await import("@/lib/hub-guard");
+    await setMemberBanned(data.userId, data.banned);
+    return { ok: true as const };
+  });
+
+export const verifyHubMember = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((userId: string) => userId)
+  .handler(async ({ context, data: userId }) => {
+    await requireOwner(context.userId);
+    const { markMemberVerified } = await import("@/lib/hub-guard");
+    await markMemberVerified(userId);
+    return { ok: true as const };
+  });
+
+export const banHubIp = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((ip: string) => ip.trim())
+  .handler(async ({ context, data: ip }) => {
+    await requireOwner(context.userId);
+    if (!ip) throw new Error("Need an IP.");
+    const { ensureGuard } = await import("@/lib/hub-guard");
+    await ensureGuard();
+    const sql = await getSql();
+    await sql`insert into hub_bans (user_id, ip, reason) values (${""}, ${ip}, ${"desk"})`;
+    return { ok: true as const };
+  });
