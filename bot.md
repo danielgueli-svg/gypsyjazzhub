@@ -17,13 +17,17 @@ TanStack Start, React 19, Tailwind 4, PGLite or Postgres. Routes in `src/routes`
 
 ## Local
 
+```bash
 nvm use
 npm install
 cp .env.example .env
 npm run dev:local
+```
 
 Open http://localhost:3000
 
 ## Facts
 
 Seed files are the source of truth (`src/lib/jams.ts`, concerts, musicians, history). Empty lists stay honest.
+
+Grok Build can push here when you ask.
