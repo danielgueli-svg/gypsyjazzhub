@@ -35,6 +35,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    font-size: 110%;
   }
 
   body {
@@ -151,7 +152,7 @@
 
 @media (max-width: 640px) {
   html {
-    font-size: 17px;
+    font-size: 18.7px;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
@@ -160,9 +161,9 @@
     line-height: 1.6;
   }
 
-  .text-\[10px\],
-  .text-\[11px\],
-  .text-\[13px\] {
+  .text-\\[10px\\],
+  .text-\\[11px\\],
+  .text-\\[13px\\] {
     font-size: 0.78rem;
     letter-spacing: 0.08em;
   }
