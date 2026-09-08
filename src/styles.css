@@ -161,9 +161,9 @@
     line-height: 1.6;
   }
 
-  .text-\\[10px\\],
-  .text-\\[11px\\],
-  .text-\\[13px\\] {
+  .text-\[10px\],
+  .text-\[11px\],
+  .text-\[13px\] {
     font-size: 0.78rem;
     letter-spacing: 0.08em;
   }
