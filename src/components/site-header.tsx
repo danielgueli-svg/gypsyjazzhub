@@ -153,7 +153,6 @@ export function SiteHeader() {
           </span>
         </Link>
         <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-          <LanguageSwitch compact prominent />
           <Link
             to="/search"
             className="hidden size-11 items-center justify-center rounded-md text-inherit hover:bg-black/10 md:inline-flex"
@@ -162,12 +161,6 @@ export function SiteHeader() {
             <Search className="size-5" />
           </Link>
           <AuthSlot />
-          <Link
-            to="/history"
-            className="inline-flex h-9 items-center rounded-md bg-[#d9a24e] px-2.5 text-xs font-semibold text-[#2a1c10] hover:bg-[#e4b05a] md:hidden"
-          >
-            {t("nav.history")}
-          </Link>
           <button
             type="button"
             className="inline-flex h-9 items-center gap-1 rounded-md bg-[#d9a24e] px-2.5 text-xs font-semibold text-[#2a1c10] hover:bg-[#e4b05a] md:hidden"
@@ -181,6 +174,7 @@ export function SiteHeader() {
             {sheetOpen ? <X className="size-4" /> : <Menu className="size-4" />}
             {t("nav.menu")}
           </button>
+          <LanguageSwitch compact prominent />
         </div>
       </div>
 
@@ -415,7 +409,7 @@ function AuthSlot({
   if (isPending) return <div className={cn("h-11 w-24 animate-pulse rounded-md bg-black/10", className)} />;
   if (!user) {
     return (
-      <Button asChild className={cn("h-11", sheet && "w-full justify-center", className)}>
+      <Button asChild className={cn("h-9 px-2.5 text-xs sm:h-11 sm:px-4 sm:text-sm", sheet && "w-full justify-center", className)}>
         <Link to="/login" onClick={onPick}>
           {t("nav.login")}
         </Link>
