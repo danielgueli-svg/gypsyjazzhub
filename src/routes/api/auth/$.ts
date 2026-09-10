@@ -5,7 +5,7 @@ import { withAbsoluteRequest } from "@/lib/runtime-env";
 async function handleAuth(request: Request) {
   try {
     const res = await auth.handler(withAbsoluteRequest(request));
-    if (res.status >= 500) {
+    if (res.status >= 400) {
       const clone = res.clone();
       const body = await clone.text();
       if (!body.trim()) {
@@ -14,10 +14,12 @@ async function handleAuth(request: Request) {
             message:
               "Could not join. Email sign-in failed on this host — try Google, or try again in a minute.",
             code: "AUTH_EMPTY",
+            status: res.status,
           },
-          { status: 500 },
+          { status: res.status >= 500 ? 500 : res.status },
         );
       }
+      return res;
     }
     return res;
   } catch (err) {

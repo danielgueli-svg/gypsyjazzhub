@@ -12,6 +12,8 @@
  */
 const FALLBACK = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gypsy Jazz Hub</title><style>html,body{margin:0;min-height:100%;background:#100c0a;color:#faf6ef;font-family:Georgia,serif}body{display:grid;place-items:center;gap:1rem;padding:2rem;text-align:center}a{color:#e8c9a0}</style></head><body><p>Gypsy Jazz Hub</p><p><a href="/">Home</a></p><script>(function(){try{var k="gjh-retry:"+location.pathname;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");location.reload();}}catch(e){}})();</script></body></html>`;
 const PUBLIC_ORIGIN = "https://www.gypsyjazzhub.com";
+const APEX_HOST = "gypsyjazzhub.com";
+const WWW_ORIGIN = "https://www.gypsyjazzhub.com";
 
 function isPageGet(method: string, path: string) {
   const m = method.toUpperCase();
@@ -65,6 +67,36 @@ interface NavEvent {
   req: { method: string; headers: Headers; url?: string };
 }
 
+function requestHost(event: NavEvent): string {
+  const raw =
+    event.req.headers.get("x-forwarded-host") ||
+    event.req.headers.get("host") ||
+    "";
+  return raw.split(",")[0]!.trim().toLowerCase().split(":")[0]!;
+}
+
+function apexToWww(event: NavEvent): Response | null {
+  if (requestHost(event) !== APEX_HOST) return null;
+  let path = "/";
+  let search = "";
+  const raw = event.req.url || event.url?.href || "";
+  try {
+    const parsed = new URL(raw, WWW_ORIGIN);
+    path = parsed.pathname || "/";
+    search = parsed.search || "";
+  } catch {
+    path = event.url?.pathname || "/";
+    search = event.url?.search || "";
+  }
+  return new Response(null, {
+    status: 301,
+    headers: {
+      location: `${WWW_ORIGIN}${path}${search}`,
+      "cache-control": "public, max-age=3600",
+    },
+  });
+}
+
 function requestHref(event: NavEvent): string {
   const raw = event.req.url || event.url?.href || "";
   try {
@@ -112,6 +144,9 @@ export default async function htmlNavMiddleware(
   event: NavEvent,
   next: () => unknown | Promise<unknown>,
 ): Promise<unknown> {
+  const bounced = apexToWww(event);
+  if (bounced) return bounced;
+
   const method = event.req.method ?? "GET";
   const path = event.url?.pathname || "/";
   const page = isPageGet(method, path);

@@ -34,6 +34,7 @@ import { getCookie } from "@tanstack/react-start/server";
 import { Pool as PgPool } from "pg";
 import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
 import { ensureDbReady, getPglite, readDatabaseUrl } from "../db";
+import { doSqliteDialect, hubDbNamespace } from "../do-sql";
 import { isCloudflareWorker, PUBLIC_SITE_ORIGIN, readEnv } from "../runtime-env";
 import { emailAndPasswordEnabled, hashPassword, verifyPassword } from "./email-password";
 import { GROK_PROVIDERS } from "./providers";
@@ -163,8 +164,11 @@ function authDatabase() {
       : new PgPool({ connectionString: databaseUrl });
   }
   if (isCloudflareWorker()) {
+    if (hubDbNamespace()) {
+      return { dialect: doSqliteDialect(), type: "sqlite" as const };
+    }
     throw new Error(
-      "DATABASE_URL is required on Cloudflare Workers — refusing PGLite (Invalid URL string).",
+      "HUB_DB Durable Object is required on Cloudflare Workers when DATABASE_URL is unset.",
     );
   }
   if (typeof window === "undefined") void ensureDbReady();

@@ -1,7 +1,8 @@
 import { isCloudflareWorker, readEnv } from "@/lib/runtime-env";
+import { createDoSql, hubDbNamespace } from "@/lib/do-sql";
 
 /** Which database backend is active. */
-export type DbSource = "neon" | "pglite" | "none";
+export type DbSource = "neon" | "pglite" | "do" | "none";
 
 export class DbUnavailableError extends Error {
   constructor(
@@ -39,7 +40,7 @@ export function readDatabaseUrl(): string | undefined {
  */
 export function getDbSource(): DbSource {
   if (readDatabaseUrl()) return "neon";
-  if (isCloudflareWorker()) return "none";
+  if (isCloudflareWorker()) return hubDbNamespace() ? "do" : "none";
   return "pglite";
 }
 
@@ -216,7 +217,10 @@ async function createSql(): Promise<Sql> {
     );
   }
   if (readDatabaseUrl()) return createNeonSql();
-  if (isCloudflareWorker()) return Promise.resolve(emptySql());
+  if (isCloudflareWorker()) {
+    if (hubDbNamespace()) return createDoSql();
+    return Promise.resolve(emptySql());
+  }
   return createPgliteSql();
 }
 
@@ -261,8 +265,10 @@ export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite
  * module kick it off immediately (see bottom of file).
  */
 export function ensureDbReady(): Promise<void> {
-  // Workers: never touch PGLite (WASM URL). Neon is opened lazily on first query.
-  if (isCloudflareWorker() || readDatabaseUrl()) return Promise.resolve();
+  if (readDatabaseUrl()) return Promise.resolve();
+  if (isCloudflareWorker()) {
+    return hubDbNamespace() ? getSql().then(() => undefined) : Promise.resolve();
+  }
   if (getDbSource() !== "pglite") return Promise.resolve();
   return getSql().then(() => undefined);
 }
