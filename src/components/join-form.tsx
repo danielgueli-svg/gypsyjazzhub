@@ -71,7 +71,12 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         keepToken(created);
         if (created.error) {
           const message = created.error.message ?? "";
-          if (!alreadyMember(message)) throw new Error(message || "Could not join.");
+          if (!alreadyMember(message)) {
+            throw new Error(
+              message.trim() ||
+                "Could not join. Try Google, or a Gmail address — some mail hosts bounce the confirm step.",
+            );
+          }
           firstTime = false;
           const existing = await authClient.signIn.email({
             email,

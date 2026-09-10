@@ -32,9 +32,10 @@ import { betterAuth } from "better-auth";
 import { bearer, genericOAuth } from "better-auth/plugins";
 import { getCookie } from "@tanstack/react-start/server";
 import { randomBytes } from "node:crypto";
-import { Pool } from "pg";
+import { Pool as PgPool } from "pg";
+import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
 import { ensureDbReady, getPglite } from "../db";
-import { emailAndPasswordEnabled } from "./email-password";
+import { emailAndPasswordEnabled, hashPassword, verifyPassword } from "./email-password";
 import { GROK_PROVIDERS } from "./providers";
 import { pgliteDialect } from "./pglite-dialect";
 import { safeTanstackCookies } from "./tanstack-cookies";
@@ -100,11 +101,24 @@ const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:8080",
   "http://127.0.0.1:8080",
   "http://[::1]:8080",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+];
+const PUBLIC_ORIGINS: string[] = [
+  "https://www.gypsyjazzhub.com",
+  "https://gypsyjazzhub.com",
 ];
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
   // (not only the preview wildcard).
-  allowedHosts: [...previewAllowedHosts, "localhost", "127.0.0.1", "[::1]"],
+  allowedHosts: [
+    ...previewAllowedHosts,
+    "localhost",
+    "127.0.0.1",
+    "[::1]",
+    "www.gypsyjazzhub.com",
+    "gypsyjazzhub.com",
+  ],
   // `auto` → trust both http:// and https:// expansions of allowedHosts
   // (preview is https; local dev is http).
   protocol: "auto" as const,
@@ -113,15 +127,15 @@ const baseURL = explicitBaseURL ?? {
 
 // Origins Better Auth accepts on credentialed POSTs (sign-up/sign-in, etc.).
 // Missing entries here surface as FORBIDDEN "Invalid origin".
-const trustedOrigins: string[] = explicitBaseURL
-  ? [explicitBaseURL, ...LOCAL_DEV_ORIGINS]
-  : [
-      // Host wildcards (matched against Origin's host)
-      ...previewAllowedHosts,
-      // Full-origin wildcards (matched against Origin)
-      ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
-      ...LOCAL_DEV_ORIGINS,
-    ];
+const trustedOrigins: string[] = [
+  ...new Set([
+    ...(explicitBaseURL ? [explicitBaseURL] : []),
+    ...PUBLIC_ORIGINS,
+    ...previewAllowedHosts,
+    ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
+    ...LOCAL_DEV_ORIGINS,
+  ]),
+];
 
 const databaseUrl = env("DATABASE_URL");
 
@@ -134,12 +148,18 @@ const grokAuthorizationUrl = `${issuerBase}/api/auth/oauth2/authorize`;
 const grokTokenUrl = `${issuerBase}/api/auth/oauth2/token`;
 const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 
+neonConfig.poolQueryViaFetch = true;
+
 // Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
 // embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
 // SAME DB as app data, including email/password users. Both use the Better Auth
 // schema from `migrations/0001_auth.sql`.
+// Neon HTTP pool on Cloudflare / Neon hosts — node-postgres TCP does not run
+// on Workers and was returning empty 500s on gypsyjazzhub.com sign-up.
 const database = databaseUrl
-  ? new Pool({ connectionString: databaseUrl })
+  ? /neon\.tech/i.test(databaseUrl)
+    ? new NeonPool({ connectionString: databaseUrl })
+    : new PgPool({ connectionString: databaseUrl })
   : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
 
 /** Session token cookie name — also read by the live-preview popup completion page. */
@@ -205,7 +225,15 @@ export const auth = betterAuth({
   session: { cookieCache: { enabled: true, maxAge: 300 } },
 
   // Local email/password — toggled only via `./email-password` (not a plugin).
-  ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+  ...(emailAndPasswordEnabled
+    ? {
+        emailAndPassword: {
+          enabled: true,
+          minPasswordLength: 8,
+          password: { hash: hashPassword, verify: verifyPassword },
+        },
+      }
+    : {}),
 
   // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
   // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a
