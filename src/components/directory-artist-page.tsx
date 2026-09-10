@@ -166,7 +166,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             alt={legend.name}
             credit={photo.credit}
             creditHref={photo.href}
-            className="aspect-[4/5] w-28 shrink-0 rounded-2xl shadow-border sm:w-40 lg:w-64"
+            className="h-auto w-28 max-h-80 shrink-0 rounded-2xl object-contain object-top shadow-border sm:w-40 sm:max-h-[22rem] lg:w-64"
           />
         ) : (
           <div

@@ -1045,13 +1045,14 @@ export function teacherMatchesInstrument(instruments: string, note: string, inst
   return inst.teacherNeedles.some((needle) => hay.includes(needle));
 }
 
-export function topicsForInstrument<T extends { title: string; body: string }>(
+export function topicsForInstrument<T extends { title: string; body: string; replies?: number }>(
   topics: T[],
   inst: Instrument,
   copy: InstrumentCopy,
 ) {
   const needles = [...inst.teacherNeedles, copy.name.toLowerCase(), copy.role.toLowerCase(), inst.slug.replace(/-/g, " ")];
   const hit = topics.filter((topic) => {
+    if ((topic.replies ?? 0) <= 0) return false;
     const hay = `${topic.title} ${topic.body}`.toLowerCase();
     return needles.some((needle) => needle.length > 2 && hay.includes(needle));
   });

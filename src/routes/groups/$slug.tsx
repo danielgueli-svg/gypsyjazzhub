@@ -95,7 +95,7 @@ function GroupPage() {
           alt={band.name}
           credit={photo.credit}
           creditHref={photo.href}
-          className="mt-8 aspect-[16/9] w-full rounded-2xl shadow-border"
+          className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover shadow-border"
         />
       ) : null}
 

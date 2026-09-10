@@ -7,6 +7,7 @@ export type ArtistPhoto = {
   src: string;
   credit: string;
   href?: string;
+  license?: string;
 };
 
 const LOCAL: Record<string, ArtistPhoto> = {
@@ -44,6 +45,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Sinti Music",
     href: "https://www.sintimusic.nl/en/artists/paulus-schafer/",
   },
+  "popy-basily": {
+    src: "/artists/popy-basily.jpg",
+    credit: "Kees De Hond / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Popy_basily-1448261511.png",
+    license: "CC BY-SA 4.0",
+  },
   "tim-kliphuis": {
     src: "/artists/tim-kliphuis.jpg",
     credit: "Tim Kliphuis",
@@ -53,6 +60,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     src: "/artists/christiaan-van-hemert.jpg",
     credit: "Christiaan van Hemert",
     href: "https://christiaanvanhemert.com/",
+  },
+  "costel-nitescu": {
+    src: "/artists/costel-nitescu.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Costel_Ni%C8%9Bescu_Djangofestivalen_2025_(205324).jpg",
+    license: "CC BY-SA 4.0",
   },
   "olli-soikkeli": {
     src: "/artists/olli-soikkeli.jpg",
@@ -64,6 +77,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Upstairs Jazz",
     href: "https://www.upstairsjazz.com/events/denis-chang-gypsy-quartet/",
   },
+  "erno-kallai-kiss": {
+    src: "/artists/erno-kallai-kiss.jpg",
+    credit: "Fifike1978 / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:K%C3%A1llai_Kiss_Erno_Kossuth_dijas_Klarin%C3%A9tm%C3%BCv%C3%A9sz.jpg",
+    license: "CC BY-SA 4.0",
+  },
   "bireli-lagrene": {
     src: "/artists/bireli-lagrene.jpg",
     credit: "Biréli Lagrène",
@@ -74,10 +93,29 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Wikimedia Commons",
     href: "https://commons.wikimedia.org/wiki/File:Angelo_Debarre_Cosmopolite_(221433).jpg",
   },
+  "antoine-boyer": {
+    src: "/artists/antoine-boyer.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Antoine_Boyer_Cosmopolite_Djangofestivalen_(224439).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "attila-sidoo": {
+    src: "/artists/attila-sidoo.jpg",
+    credit: "Grandpierre Atilla / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:V%C3%A1gt%C3%A1z%C3%B3_Halottk%C3%A9mek_(1995).jpg",
+    license: "CC BY-SA 3.0",
+  },
+  "aurore-voilque": {
+    src: "/artists/aurore-voilque.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Aurore_Voilqu%C3%A9_Djangofestivalen_2023_(225637).jpg",
+    license: "CC BY-SA 4.0",
+  },
   "tchavolo-schmitt": {
     src: "/artists/tchavolo-schmitt.jpg",
-    credit: "Wikimedia Commons",
-    href: "https://commons.wikimedia.org/wiki/File:Tchavolo_Schmitt_brighter.jpg",
+    credit: "Jeronimo Vicente Cunha / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Tchavolo_Schmitt_2026_%C3%A0_Binic.jpg",
+    license: "CC BY 4.0",
   },
   "fapy-lafertin": {
     src: "/artists/fapy-lafertin.jpg",
@@ -89,6 +127,24 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Wikimedia Commons",
     href: "https://commons.wikimedia.org/wiki/File:Jimmy_Rosenberg_Djangofestivalen_2024_(232226).jpg",
   },
+  "joseph-reinhardt": {
+    src: "/artists/joseph-reinhardt.jpg",
+    credit: "Polmeccartni / Gipsy Jazz Enciclopedia / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Joseph_reinhardt.jpg",
+    license: "GFDL",
+  },
+  "koen-de-cauter": {
+    src: "/artists/koen-de-cauter.jpg",
+    credit: "Tony 1212 (Tony Rees) / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Waso-83-3.jpg",
+    license: "CC BY 4.0",
+  },
+  "lulo-reinhardt": {
+    src: "/artists/lulo-reinhardt.jpg",
+    credit: "Elke Klefisch, Norbert Schikowski / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Lulo_Reinhardt.jpg",
+    license: "CC BY-SA 4.0",
+  },
   "andreas-oberg": {
     src: "/artists/andreas-oberg.jpg",
     credit: "Wikimedia Commons",
@@ -99,15 +155,39 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Dario Napoli",
     href: "https://darionapoli.com/bio/",
   },
+  "georges-boulanger": {
+    src: "/artists/georges-boulanger.jpg",
+    credit: "Abraham Pisarek / Deutsche Fotothek / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Fotothek_df_pk_0000196_002_Portr%C3%A4t,_Dirigent_Boulanger.jpg",
+    license: "CC BY-SA 3.0 DE",
+  },
   "gismo-graf": {
     src: "/artists/gismo-graf.jpg",
     credit: "Gismo Graf Trio",
     href: "https://gismograf.de/",
   },
+  "hansche-weiss": {
+    src: "/artists/hansche-weiss.jpg",
+    credit: "Godwin T. Petermann / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:H%C3%A4ns%27che_Weiss_im_Schnuckenack-reinhardt-quintett_1972a.jpg",
+    license: "CC BY-SA 3.0",
+  },
   "robin-nolan": {
     src: "/artists/robin-nolan.jpg",
     credit: "Robin Nolan / Jonathan Herman",
     href: "https://robinnolan.com/about/",
+  },
+  "nonnie-rosenberg": {
+    src: "/artists/nonnie-rosenberg.jpg",
+    credit: "Otourly / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Nonnie_Rosenberg1.JPG",
+    license: "CC BY-SA 3.0",
+  },
+  "nousche-rosenberg": {
+    src: "/artists/nousche-rosenberg.jpg",
+    credit: "Irene Ypenburg / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Nousche_Rosenberg.jpg",
+    license: "CC BY-SA 4.0",
   },
   "nuno-marinho": {
     src: "/artists/nuno-marinho.jpg",
@@ -144,6 +224,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Christine Tassan",
     href: "https://christinetassan.com/bio/",
   },
+  "manitas-de-plata": {
+    src: "/artists/manitas-de-plata.jpg",
+    credit: "Jack de Nijs / Anefo / Nationaal Archief / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Grand_Gala_du_Disque_in_de_RAI._Gitarist_Manitas_de_Platas_uit_Spanje,_Bestanddeelnr_921-1450.jpg",
+    license: "CC0 1.0",
+  },
   "marcia-bamberg": {
     src: "/artists/marcia-bamberg.jpg",
     credit: "Marcia Bamberg",
@@ -153,6 +239,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     src: "/artists/marion-lenfant-preus.jpg",
     credit: "Marion & Sobo Band",
     href: "https://marionandsobo.com/about/",
+  },
+  "martin-limberger": {
+    src: "/artists/martin-limberger.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Martin_Limberger_Cosmopolite_2018_(230259).jpg",
+    license: "CC BY-SA 4.0",
   },
   "alexander-sobocinski": {
     src: "/artists/alexander-sobocinski.jpg",

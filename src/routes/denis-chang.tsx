@@ -106,7 +106,7 @@ function DenisChangPage() {
             alt="Denis Chang"
             credit={photo.credit}
             creditHref={photo.href}
-            className="aspect-[4/5] w-full rounded-2xl shadow-border"
+            className="h-auto w-full max-h-[28rem] rounded-2xl object-contain object-top shadow-border"
           />
         ) : null}
       </div>

@@ -78,7 +78,7 @@ function GrappelliPage() {
           alt="Stéphane Grappelli"
           credit={artistPhoto("stephane-grappelli")?.credit}
           creditHref={artistPhoto("stephane-grappelli")?.href}
-          className="aspect-[4/5] w-full rounded-2xl shadow-border"
+          className="h-auto w-full max-h-[28rem] rounded-2xl object-contain object-top shadow-border"
         />
       </div>
 

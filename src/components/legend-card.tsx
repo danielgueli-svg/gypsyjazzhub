@@ -40,7 +40,7 @@ function CardBody({ legend, role }: { legend: Legend; role?: string }) {
   return (
     <>
       {photo ? (
-        <Portrait src={photo} alt={legend.name} className="aspect-[16/10] w-full" />
+        <Portrait src={photo} alt={legend.name} className="aspect-[16/10] w-full object-cover" />
       ) : null}
       <div className="p-5">
         <p className="text-[11px] tracking-[0.18em] text-faint uppercase">

@@ -18,7 +18,7 @@ export function Portrait({
       <img
         src={src}
         alt={alt}
-        className={cn("bg-raised object-cover", className)}
+        className={cn("bg-raised object-contain", className)}
       />
       {credit ? (
         <figcaption className="mt-2 text-[11px] leading-snug text-faint">

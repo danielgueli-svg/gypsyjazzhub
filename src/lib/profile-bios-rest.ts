@@ -8,6 +8,8 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
     "John Etheridge is a British guitarist who came to Django’s language after Soft Machine. Sweet Chorus — Dave Kelbie on rhythm, Christian Garrick on violin — has carried Grappelli’s book on the UK circuit for two decades.",
   "al-di-meola":
     "Al Di Meola is the American fusion guitar of Return to Forever and Elegant Gypsy. On this hub he appears as an occasional collaborator: acoustic nylon and electric fire sharing a bill with Sinti swing — a guest the circuit still prints, not a manouche specialist first.",
+  "alon-sagi":
+    "Alon Sagi plays guitar in Swing de Gitanes, with Yaakov Hoter and Oren Sagi. Rhythm under the lead in that band. Dates and clips live on his hub page.",
   "jan-akkerman":
     "Jan Akkerman is the Dutch guitar of Focus. An occasional guest on the gypsy jazz side of the Dutch circuit — lute, electric and acoustic next to Sinti guitar, not a Hot Club specialist.",
   "roby-lakatos":
@@ -87,7 +89,7 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
   "julia-philippens":
     "Julia Philippens is a Dutch violinist of the living circuit. She has sat with the Dutch manouche rooms beside the Rosenberg and Schäfer worlds.",
   "frans-van-geest":
-    "Frans van Geest is Dutch double bass — a first-call low end of the Dutch jazz and gypsy jazz rooms.",
+    "Frans van Geest plays Dutch jazz double bass. He is a long-time chair behind Rosenberg guitar and on the Dutch festival nights. Swing first, then the room. Bass under the pompe so the guitars can leave the ground.",
   "walter-clerici":
     "Walter Clerici is a guitarist on the Danish–Dutch circuit. Nights with Paulus Schäfer and Henrik Mathiassen — Sinti Music bills, Café Bartof, Copenhagen.",
   "henrik-mathiassen":
@@ -138,8 +140,12 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
     "Daniel Rosenberg is Dutch Sinti rhythm guitar of the Rosenberg family. He is the pompe chair of the Mozes Rosenberg Trio with Matheus Nicolaiewsky on bass — the floor under Mozes’s lead.",
   "matheus-nicolaiewsky":
     "Matheus Nicolaiewsky is Brazilian double bass of the Mozes Rosenberg Trio, with Daniel Rosenberg on rhythm. He is also the bass on the Chaplin Project with Stochelo and Mozes.",
+  "marius-preda":
+    "Marius Preda plays Romanian cimbalom. The archive bills Marius Preda and Giani Lincan at Poestarika, The Hague, 2000. Cimbalom on that bill. Dates and clips live on his hub page.",
   "noekie-basily":
     "Noekie Basily is Dutch Sinti guitar of the Basily family. He plays in the Django Rosenberg Trio with Daniel Gueli on bass, and in The Basily Boys — the next generation of the Basily Gipsy Band.",
+  "gino-basily":
+    "Gino Basily plays rhythm guitar in the Basily Gipsy Band. Dutch Sinti pompe in the family group around Popy Basily. The pompe chair in that band. Dates and clips live on his hub page.",
   "sendelo-schafer":
     "Sendelo Schäfer is Dutch Sinti rhythm guitar of the Schäfer circle. He is the pompe beside Feigeli Prisor — Gerwen, Café Wilhelmina, the family jams with Paulus’s cousins.",
   "noah-schafer":
@@ -179,7 +185,7 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
   "arnoud-van-den-berg":
     "Arnoud van den Berg is Dutch double bass of the gypsy jazz rooms — a regular associate of the Dutch Sinti guitar chairs. The low end when the family bands need a sure floor.",
   "simon-read":
-    "Simon Read is a British musician of the living circuit, heard on UK Hot Club and festival bills.",
+    "Simon Read plays London jazz double bass. He held the bass for Stochelo Rosenberg and Paulus Schäfer at LSO St Luke’s, and for Latchepen with Dave Kelbie. A first-call UK chair when the Dutch core lands.",
   "volker-kamp":
     "Volker Kamp is a German musician of the living circuit, heard on the German gypsy jazz and festival bills.",
   "marian-yanchyk":
