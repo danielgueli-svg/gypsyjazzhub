@@ -388,6 +388,17 @@ export const ALBUMS: Album[] = [
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "angelo-debarre-ulule",
+    date: "2026-09-10",
+    title: "Crowdfund for Angelo Debarre",
+    body: "Denis Chang passed on a message from Angelo Debarre: he is having health difficulties and is in need of help. A crowdfunding page is open on Ulule — Soutien au guitariste Angelo Debarre. The link is on this page.",
+    kind: "scene",
+    artistSlugs: ["angelo-debarre", "denis-chang"],
+    href: "https://fr.ulule.com/soutien-au-guitariste-angelo-debarre/",
+    hrefLabel: "Ulule",
+    image: "/artists/angelo-debarre.jpg",
+  },
+  {
     slug: "la-pompe-live-app",
     date: "2026-09-10",
     title: "Christiaan van Hemert released La Pompe",
@@ -655,6 +666,7 @@ export function latestAlbums(limit = 8) {
 }
 
 const PINNED_NEWS = [
+  "angelo-debarre-ulule",
   "la-pompe-live-app",
   "moignard-miroirs-sunset",
   "midwest-django-fest-2026",

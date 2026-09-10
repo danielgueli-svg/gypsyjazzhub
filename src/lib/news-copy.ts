@@ -13,6 +13,10 @@ function pack(
 }
 
 export const NEWS_EN = pack({
+  "angelo-debarre-ulule": {
+    title: "Crowdfund for Angelo Debarre",
+    body: "Denis Chang passed on a message from Angelo Debarre: he is having health difficulties and is in need of help. A crowdfunding page is open on Ulule — Soutien au guitariste Angelo Debarre. The link is on this page.",
+  },
   "pgc-steven-reinhardt": {
     title: "Paris Guitar Connection sits with Steven Reinhardt",
     body: "The Paris podcast — six guitarists, two sofas — put Saint-Ouen’s Steven Reinhardt on the couch. Gypsy Jazz with a Gypsy: family time, the pompe, Swing Lâg shop guitars, then Blues en mineur and What Is This Thing Called Love. PGC is not a weekly jam. The public jam is still La Chope des Puces, weekends on rue des Rosiers. The hosts are Aurélien Robert, Guillaume Muschalle, François Thouvenot, Ghali Hadefi, Nicolas Lestoquoy and Yoann Kempst. Ghali’s pompe shorts are the ones players send each other. Watch the episode on the channel.",
@@ -112,6 +116,10 @@ export const NEWS_EN = pack({
 });
 
 export const NEWS_NL = pack({
+  "angelo-debarre-ulule": {
+    title: "Crowdfunding voor Angelo Debarre",
+    body: "Denis Chang gaf een bericht van Angelo Debarre door: hij heeft gezondheidsproblemen en heeft hulp nodig. Op Ulule staat een collecte — Soutien au guitariste Angelo Debarre. De link staat op deze pagina.",
+  },
   "pgc-steven-reinhardt": {
     title: "Paris Guitar Connection met Steven Reinhardt",
     body: "De Parijse podcast — zes gitaristen, twee banken — zette Steven Reinhardt uit Saint-Ouen op de sofa. Gypsy Jazz with a Gypsy: familietijd, de pompe, Swing Lâg-gitaren, daarna Blues en mineur en What Is This Thing Called Love. PGC is geen wekelijkse jam. De openbare jam blijft La Chope des Puces, in het weekend op de rue des Rosiers. De hosts: Aurélien Robert, Guillaume Muschalle, François Thouvenot, Ghali Hadefi, Nicolas Lestoquoy en Yoann Kempst. De pompe-shorts van Ghali sturen spelers elkaar door. Aflevering op het kanaal.",
@@ -203,6 +211,10 @@ export const NEWS_NL = pack({
 });
 
 export const NEWS_DE = pack({
+  "angelo-debarre-ulule": {
+    title: "Crowdfunding für Angelo Debarre",
+    body: "Denis Chang gab eine Nachricht von Angelo Debarre weiter: er hat gesundheitliche Schwierigkeiten und braucht Hilfe. Auf Ulule läuft eine Sammlung — Soutien au guitariste Angelo Debarre. Der Link steht auf dieser Seite.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Diese Woche auf dem Globus — Barcelona, London, Madison, Langley",
     body: "Neue wöchentliche Jam in Barcelona: Martes Manouche, jeden Dienstag im Soda Acústic, Gràcia. Heute in Chicago die La-Tosca-Jam bei Cara Cara. Die nächsten Wochen: Midwest Django Fest (11.–12. Sep, Madison), DjangoFest Northwest (15.–20. Sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17.–19. Sep, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel in Chicago, Rochester und Asheville, Dario Napoli auf der US-Tour, und die Rosenberg-Brüder in Viljandi, Estland, 9. Oktober.",
@@ -266,6 +278,10 @@ export const NEWS_DE = pack({
 });
 
 export const NEWS_FR = pack({
+  "angelo-debarre-ulule": {
+    title: "Soutien au guitariste Angelo Debarre",
+    body: "Denis Chang relaie un message d’Angelo Debarre : il traverse des difficultés de santé et a besoin d’aide. Une collecte est ouverte sur Ulule. Le lien est sur cette page.",
+  },
   "pgc-steven-reinhardt": {
     title: "Paris Guitar Connection reçoit Steven Reinhardt",
     body: "Le podcast parisien — six guitaristes, deux canapés — a assis Steven Reinhardt, de Saint-Ouen, sur le sofa. Gypsy Jazz with a Gypsy : le temps de la famille, la pompe, les guitares Swing Lâg, puis Blues en mineur et What Is This Thing Called Love. PGC n’est pas un jam hebdomadaire. Le jam public reste La Chope des Puces, le week-end, rue des Rosiers. Les hôtes : Aurélien Robert, Guillaume Muschalle, François Thouvenot, Ghali Hadefi, Nicolas Lestoquoy et Yoann Kempst. Les shorts pompe de Ghali circulent entre les joueurs. L’épisode est sur la chaîne.",
@@ -467,6 +483,10 @@ export const NEWS_ES = pack({
 });
 
 export const NEWS_JA = pack({
+  "angelo-debarre-ulule": {
+    title: "アンジェロ・デバール支援のクラウドファンディング",
+    body: "Denis ChangがAngelo Debarreからのメッセージを伝えた。体調が優れず支援が必要だという。Ululeでクラウドファンディングが行われている。リンクはこのページに。",
+  },
   "la-pompe-live-app": {
     title: "クリスティアーン・ファン・ヘーメルトが La Pompe Live を公開",
     body: "オランダのバイオリニスト兼講師が La Pompe Live を 2026年8月に発売。コード譜、セットリスト、ポンプをポケットに。iPhone と Android。YouTube の初心者ガイドは 8月10日。",
