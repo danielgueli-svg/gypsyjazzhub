@@ -47,7 +47,7 @@ export const NEWS_EN = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert released La Pompe",
-    body: "The Dutch violinist and teacher released La Pompe Live on 10 August 2026 — charts, setlists and the pompe in your pocket. iPhone and Android. Same day: his beginner guide on YouTube.",
+    body: "The Dutch violinist and teacher released La Pompe Live in August 2026 — charts, setlists and the pompe in your pocket. iPhone and Android. Beginner guide on YouTube from 10 August.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — first Saturday in Utrecht",
@@ -138,7 +138,7 @@ export const NEWS_NL = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert brengt La Pompe uit",
-    body: "De Nederlandse violist en leraar bracht La Pompe Live uit op 10 augustus 2026 — akkoordenschema’s, setlists en de pompe in je zak. iPhone en Android. Dezelfde dag: de beginnerstutorial op YouTube.",
+    body: "De Nederlandse violist en leraar bracht La Pompe Live in augustus 2026 uit — akkoordenschema’s, setlists en de pompe in je zak. iPhone en Android. Beginnerstutorial op YouTube sinds 10 augustus.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — eerste zaterdag in Utrecht",
@@ -213,7 +213,7 @@ export const NEWS_DE = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert veröffentlicht La Pompe Live",
-    body: "Der niederländische Geiger und Lehrer hat La Pompe Live am 10. August 2026 herausgebracht — Charts, Setlists und die Pompe in der Tasche. iPhone und Android. Am selben Tag: das Einsteiger-Tutorial auf YouTube.",
+    body: "Der niederländische Geiger und Lehrer hat La Pompe Live im August 2026 herausgebracht — Charts, Setlists und die Pompe in der Tasche. iPhone und Android. Einsteiger-Tutorial auf YouTube seit dem 10. August.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — erster Samstag in Utrecht",
@@ -288,7 +288,7 @@ export const NEWS_FR = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert sort La Pompe Live",
-    body: "Le violoniste et prof néerlandais a publié La Pompe Live le 10 août 2026 — grilles, setlists et la pompe dans la poche. iPhone et Android. Le même jour : le tuto débutant sur YouTube.",
+    body: "Le violoniste et prof néerlandais a publié La Pompe Live en août 2026 — grilles, setlists et la pompe dans la poche. iPhone et Android. Tuto débutant sur YouTube depuis le 10 août.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — premier samedi à Utrecht",
@@ -351,7 +351,7 @@ export const NEWS_IT = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert pubblica La Pompe Live",
-    body: "Il violinista e insegnante olandese ha pubblicato La Pompe Live il 10 agosto 2026 — griglie, setlist e la pompe in tasca. iPhone e Android. Lo stesso giorno: il tutorial per principianti su YouTube.",
+    body: "Il violinista e insegnante olandese ha pubblicato La Pompe Live in agosto 2026 — griglie, setlist e la pompe in tasca. iPhone e Android. Tutorial per principianti su YouTube dal 10 agosto.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — primo sabato a Utrecht",
@@ -414,7 +414,7 @@ export const NEWS_ES = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert publica La Pompe Live",
-    body: "El violinista y profesor neerlandés publicó La Pompe Live el 10 de agosto de 2026 — cifrados, setlists y la pompe en el bolsillo. iPhone y Android. El mismo día: el tutorial de principiantes en YouTube.",
+    body: "El violinista y profesor neerlandés publicó La Pompe Live en agosto de 2026 — cifrados, setlists y la pompe en el bolsillo. iPhone y Android. Tutorial de principiantes en YouTube desde el 10 de agosto.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — primer sábado en Utrecht",
@@ -469,7 +469,7 @@ export const NEWS_ES = pack({
 export const NEWS_JA = pack({
   "la-pompe-live-app": {
     title: "クリスティアーン・ファン・ヘーメルトが La Pompe Live を公開",
-    body: "オランダのバイオリニスト兼講師が La Pompe Live を 2026年8月10日に発売。コード譜、セットリスト、ポンプをポケットに。iPhone と Android。同日、初心者向けガイドが YouTube に。",
+    body: "オランダのバイオリニスト兼講師が La Pompe Live を 2026年8月に発売。コード譜、セットリスト、ポンプをポケットに。iPhone と Android。YouTube の初心者ガイドは 8月10日。",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — ユトレヒト、毎月第一土曜",
@@ -524,7 +524,7 @@ export const NEWS_JA = pack({
 export const NEWS_KO = pack({
   "la-pompe-live-app": {
     title: "크리스티안 반 헤메르트, La Pompe Live 출시",
-    body: "네덜란드 바이올리니스트이자 선생님이 La Pompe Live를 2026년 8월 10일에 냈습니다. 코드차트, 셋리스트, 라 폼프를 주머니에. iPhone과 Android. 같은 날 YouTube 초보 가이드.",
+    body: "네덜란드 바이올리니스트이자 선생님이 La Pompe Live를 2026년 8월에 냈습니다. 코드차트, 셋리스트, 라 폼프를 주머니에. iPhone과 Android. YouTube 초보 가이드는 8월 10일.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — 위트레흐트 매월 첫째 토요일",
@@ -579,7 +579,7 @@ export const NEWS_KO = pack({
 export const NEWS_ZH = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert 发布 La Pompe Live",
-    body: "荷兰小提琴家兼老师于 2026年8月10日推出 La Pompe Live：谱、歌单和 pompe 装进口袋。iPhone 与 Android。同日 YouTube 入门教程。",
+    body: "荷兰小提琴家兼老师于 2026年8月推出 La Pompe Live：谱、歌单和 pompe 装进口袋。iPhone 与 Android。YouTube 入门教程为 8月10日。",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — 乌得勒支每月第一个周六",
@@ -634,7 +634,7 @@ export const NEWS_ZH = pack({
 export const NEWS_ZH_TW = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert 發布 La Pompe Live",
-    body: "荷蘭小提琴家兼老師於 2026年8月10日推出 La Pompe Live：譜、歌單和 pompe 裝進口袋。iPhone 與 Android。同日 YouTube 入門教學。",
+    body: "荷蘭小提琴家兼老師於 2026年8月推出 La Pompe Live：譜、歌單和 pompe 裝進口袋。iPhone 與 Android。YouTube 入門教學為 8月10日。",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — 烏得勒支每月第一個週六",
@@ -689,7 +689,7 @@ export const NEWS_ZH_TW = pack({
 export const NEWS_ID = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert merilis La Pompe Live",
-    body: "Pemain biola dan guru Belanda merilis La Pompe Live pada 10 Agustus 2026 — chord, setlist, dan la pompe di saku. iPhone dan Android. Hari yang sama: tutorial pemula di YouTube.",
+    body: "Pemain biola dan guru Belanda merilis La Pompe Live pada Agustus 2026 — chord, setlist, dan la pompe di saku. iPhone dan Android. Tutorial pemula di YouTube sejak 10 Agustus.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — Sabtu pertama di Utrecht",
@@ -744,7 +744,7 @@ export const NEWS_ID = pack({
 export const NEWS_TH = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert เปิดตัว La Pompe Live",
-    body: "นักไวโอลินและครูชาวดัตช์ออก La Pompe Live เมื่อ 10 สิงหาคม 2026 — คอร์ด เซ็ตลิสต์ และลาปอมป์ในกระเป๋า iPhone และ Android วันเดียวกันมีบทสอนมือใหม่บน YouTube",
+    body: "นักไวโอลินและครูชาวดัตช์ออก La Pompe Live ในเดือนสิงหาคม 2026 — คอร์ด เซ็ตลิสต์ และลาปอมป์ในกระเป๋า iPhone และ Android บทสอนมือใหม่บน YouTube ตั้งแต่วันที่ 10 สิงหาคม",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — เสาร์แรกที่ยูเทรคท์",
@@ -803,7 +803,7 @@ export const NEWS_HU = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert kiadta a La Pompe Live-ot",
-    body: "A holland hegedűs és tanár 2026. augusztus 10-én megjelentette a La Pompe Live-ot — akkordok, setlist és a pompe a zsebedben. iPhone és Android. Ugyanaznap: a kezdő tutorial YouTube-on.",
+    body: "A holland hegedűs és tanár 2026 augusztusában megjelentette a La Pompe Live-ot — akkordok, setlist és a pompe a zsebedben. iPhone és Android. A YouTube-kezdőtutorial augusztus 10-től.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — első szombat Utrechtben",
@@ -862,7 +862,7 @@ export const NEWS_PL = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert wydał La Pompe Live",
-    body: "Holenderski skrzypek i nauczyciel wypuścił La Pompe Live 10 sierpnia 2026 — siatki, setlisty i pompe w kieszeni. iPhone i Android. Tego samego dnia: tutorial na YouTube.",
+    body: "Holenderski skrzypek i nauczyciel wypuścił La Pompe Live w sierpniu 2026 — siatki, setlisty i pompe w kieszeni. iPhone i Android. Tutorial na YouTube od 10 sierpnia.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — pierwsza sobota w Utrechcie",
@@ -921,7 +921,7 @@ export const NEWS_SR = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert objavio La Pompe Live",
-    body: "Holandski violinista i učitelj objavio je La Pompe Live 10. avgusta 2026 — šeme, setliste i pompa u džepu. iPhone i Android. Istog dana: tutorial na YouTube-u.",
+    body: "Holandski violinista i učitelj objavio je La Pompe Live u avgustu 2026 — šeme, setliste i pompa u džepu. iPhone i Android. Tutorial na YouTube-u od 10. avgusta.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — prva subota u Utrechtu",
@@ -976,7 +976,7 @@ export const NEWS_SR = pack({
 export const NEWS_HR = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert objavio La Pompe Live",
-    body: "Nizozemski violinist i učitelj objavio je La Pompe Live 10. kolovoza 2026 — sheme, setliste i pompa u džepu. iPhone i Android. Istog dana: tutorial na YouTubeu.",
+    body: "Nizozemski violinist i učitelj objavio je La Pompe Live u kolovozu 2026 — sheme, setliste i pompa u džepu. iPhone i Android. Tutorial na YouTubeu od 10. kolovoza.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — prva subota u Utrechtu",
@@ -1039,7 +1039,7 @@ export const NEWS_PT = pack({
   },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert lançou o La Pompe Live",
-    body: "O violinista e professor neerlandês publicou o La Pompe Live a 10 de agosto de 2026 — grelhas, setlists e a pompe no bolso. iPhone e Android. No mesmo dia: o tutorial no YouTube.",
+    body: "O violinista e professor neerlandês publicou o La Pompe Live em agosto de 2026 — grelhas, setlists e a pompe no bolso. iPhone e Android. Tutorial no YouTube desde 10 de agosto.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — primeiro sábado em Utrecht",
@@ -1094,7 +1094,7 @@ export const NEWS_PT = pack({
 export const NEWS_RU = pack({
   "la-pompe-live-app": {
     title: "Christiaan van Hemert выпустил La Pompe Live",
-    body: "Голландский скрипач и педагог выпустил La Pompe Live 10 августа 2026 — сетки, сет-листы и помпа в кармане. iPhone и Android. В тот же день: урок для начинающих на YouTube.",
+    body: "Голландский скрипач и педагог выпустил La Pompe Live в августе 2026 — сетки, сет-листы и помпа в кармане. iPhone и Android. Урок на YouTube с 10 августа.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — первая суббота в Утрехте",

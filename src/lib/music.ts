@@ -389,9 +389,9 @@ export const ALBUMS: Album[] = [
 export const NEWS: NewsItem[] = [
   {
     slug: "la-pompe-live-app",
-    date: "2026-08-10",
+    date: "2026-09-10",
     title: "Christiaan van Hemert released La Pompe",
-    body: "The Dutch violinist and teacher released La Pompe Live on 10 August 2026 — charts, setlists and the pompe in your pocket. iPhone and Android. Same day: his beginner guide on YouTube.",
+    body: "The Dutch violinist and teacher released La Pompe Live in August 2026 — charts, setlists and the pompe in your pocket. iPhone and Android. Beginner guide on YouTube from 10 August.",
     kind: "scene",
     artistSlugs: ["christiaan-van-hemert"],
     href: "https://lapompelive.com/",
