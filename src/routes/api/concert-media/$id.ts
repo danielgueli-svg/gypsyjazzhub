@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { readConcertMedia } from "@/lib/concert-reviews";
+import { requestUrl } from "@/lib/runtime-env";
 
 function mediaId(request: Request, params: { id?: string } | undefined) {
   const fromParams = Number(params?.id);
   if (Number.isFinite(fromParams) && fromParams > 0) return fromParams;
-  const last = new URL(request.url).pathname.split("/").filter(Boolean).pop() ?? "";
+  const last = requestUrl(request).pathname.split("/").filter(Boolean).pop() ?? "";
   const fromPath = Number(last);
   return Number.isFinite(fromPath) ? fromPath : 0;
 }

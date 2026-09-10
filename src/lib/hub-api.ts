@@ -494,58 +494,68 @@ export const listHubNotes = createServerFn({ method: "GET" })
   });
 
 export const listHubFestivals = createServerFn({ method: "GET" }).handler(async () => {
-  await ensureHub();
   try {
-    await syncDiscoveries();
-  } catch {
-    /* scan import should not hide festivals */
-  }
-  const sql = await getSql();
-  const rows = await sql<{
-    slug: string;
-    name: string;
-    city: string;
-    country: string;
-    when_text: string;
-    next_starts_at: unknown;
-    bio: string;
-    site: string;
-  }>`
+    await ensureHub();
+    try {
+      await syncDiscoveries();
+    } catch {
+      /* scan import should not hide festivals */
+    }
+    const sql = await getSql();
+    const rows = await sql<{
+      slug: string;
+      name: string;
+      city: string;
+      country: string;
+      when_text: string;
+      next_starts_at: unknown;
+      bio: string;
+      site: string;
+    }>`
     select slug, name, city, country, when_text, next_starts_at, bio, site
     from hub_festivals
     where coalesce(status, 'published') = 'published'
     order by next_starts_at asc
   `;
-  return rows.map(mapFestival);
+    return rows.map(mapFestival);
+  } catch (err) {
+    console.error("list hub festivals failed", err);
+    return [];
+  }
 });
 
 export const listHubJams = createServerFn({ method: "GET" }).handler(async () => {
-  await ensureHub();
   try {
-    await syncDiscoveries();
-  } catch {
-    /* scan import should not hide jams */
-  }
-  const sql = await getSql();
-  const rows = await sql<{
-    slug: string;
-    name: string;
-    city: string;
-    country: string;
-    venue: string;
-    when_text: string;
-    next_starts_at: unknown;
-    bio: string;
-    kind: string;
-    address: string;
-    hours: string;
-  }>`
+    await ensureHub();
+    try {
+      await syncDiscoveries();
+    } catch {
+      /* scan import should not hide jams */
+    }
+    const sql = await getSql();
+    const rows = await sql<{
+      slug: string;
+      name: string;
+      city: string;
+      country: string;
+      venue: string;
+      when_text: string;
+      next_starts_at: unknown;
+      bio: string;
+      kind: string;
+      address: string;
+      hours: string;
+    }>`
     select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours
     from hub_jams
     where coalesce(status, 'published') = 'published'
     order by next_starts_at asc
   `;
-  return rows.map(mapJam);
+    return rows.map(mapJam);
+  } catch (err) {
+    console.error("list hub jams failed", err);
+    return [];
+  }
 });
 
 export const getHubFestival = createServerFn({ method: "GET" })
@@ -1298,18 +1308,23 @@ export type JoinedArtist = {
 };
 
 export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async () => {
-  await ensureHub();
-  const sql = await getSql();
-  const fromPages = await sql<{ slug: string; user_id: string }>`
+  try {
+    await ensureHub();
+    const sql = await getSql();
+    const fromPages = await sql<{ slug: string; user_id: string }>`
     select slug, user_id from profiles
   `;
-  const fromClaims = await sql<{ artist_slug: string; user_id: string }>`
+    const fromClaims = await sql<{ artist_slug: string; user_id: string }>`
     select artist_slug, user_id from hub_profiles where artist_slug <> ''
   `;
-  const map = new Map<string, string>();
-  for (const row of fromPages) map.set(row.slug, row.user_id);
-  for (const row of fromClaims) map.set(row.artist_slug, row.user_id);
-  return [...map.entries()].map(([slug, userId]) => ({ slug, userId })) satisfies JoinedArtist[];
+    const map = new Map<string, string>();
+    for (const row of fromPages) map.set(row.slug, row.user_id);
+    for (const row of fromClaims) map.set(row.artist_slug, row.user_id);
+    return [...map.entries()].map(([slug, userId]) => ({ slug, userId })) satisfies JoinedArtist[];
+  } catch (err) {
+    console.error("list joined artists failed", err);
+    return [];
+  }
 });
 
 export const claimArtist = createServerFn({ method: "POST" })

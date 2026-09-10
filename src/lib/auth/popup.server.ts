@@ -17,6 +17,7 @@
  * `client.ts` (`signIn` → `openSignInPopup`).
  */
 import { auth, SESSION_TOKEN_COOKIE } from "./server";
+import { requestUrl } from "../runtime-env";
 
 /** Message shape the popup posts to the opener (must match `client.ts`). */
 type PopupMessage = {
@@ -30,7 +31,7 @@ type PopupMessage = {
  * preview). Do not re-export this from a React route file.
  */
 export async function handleAuthPopupRequest(request: Request): Promise<Response> {
-  const url = new URL(request.url);
+  const url = requestUrl(request);
   const done = url.searchParams.get("done") === "1";
 
   if (done) {

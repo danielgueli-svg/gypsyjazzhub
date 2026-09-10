@@ -523,13 +523,14 @@ export const listCollaborators = createServerFn({ method: "GET" })
 export const listMusicians = createServerFn({ method: "GET" })
   .validator((input: { q?: string } = {}) => input)
   .handler(async ({ data }) => {
-    await ensureSeed();
-    await ensureFanTables();
-    const sql = await getSql();
-    const q = data.q?.trim() ?? "";
-    const like = `%${q}%`;
-    const rows = q
-      ? await sql<ProfileRow>`
+    try {
+      await ensureSeed();
+      await ensureFanTables();
+      const sql = await getSql();
+      const q = data.q?.trim() ?? "";
+      const like = `%${q}%`;
+      const rows = q
+        ? await sql<ProfileRow>`
           select p.*, (
             select count(*)::int from follows f where f.musician_user_id = p.user_id
           ) as follower_count
@@ -543,7 +544,7 @@ export const listMusicians = createServerFn({ method: "GET" })
             )
           order by p.created_at desc
         `
-      : await sql<ProfileRow>`
+        : await sql<ProfileRow>`
           select p.*, (
             select count(*)::int from follows f where f.musician_user_id = p.user_id
           ) as follower_count
@@ -551,7 +552,11 @@ export const listMusicians = createServerFn({ method: "GET" })
           where coalesce(p.member_kind, 'musician') <> 'fan'
           order by p.created_at desc
         `;
-    return rows.map(mapProfile);
+      return rows.map(mapProfile);
+    } catch (err) {
+      console.error("list musicians failed", err);
+      return [];
+    }
   });
 
 export const getMusician = createServerFn({ method: "GET" })

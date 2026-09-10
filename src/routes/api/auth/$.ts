@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { auth } from "@/lib/auth/server";
+import { withAbsoluteRequest } from "@/lib/runtime-env";
 
 async function handleAuth(request: Request) {
   try {
-    const res = await auth.handler(request);
+    const res = await auth.handler(withAbsoluteRequest(request));
     if (res.status >= 500) {
       const clone = res.clone();
       const body = await clone.text();

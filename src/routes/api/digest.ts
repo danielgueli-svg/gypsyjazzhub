@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { runDigest } from "@/lib/digest";
+import { requestUrl } from "@/lib/runtime-env";
 
 export const Route = createFileRoute("/api/digest")({
   server: {
@@ -7,7 +8,7 @@ export const Route = createFileRoute("/api/digest")({
       GET: async ({ request }) => {
         const secret = process.env.CRON_SECRET || process.env.DIGEST_SECRET;
         const header = request.headers.get("authorization") ?? "";
-        const query = new URL(request.url).searchParams.get("secret");
+        const query = requestUrl(request).searchParams.get("secret");
         const allowed =
           Boolean(secret) &&
           (header === `Bearer ${secret}` || (query !== null && query === secret));

@@ -60,12 +60,17 @@ async function submitterName(userId: string) {
 }
 
 export const listHubCountries = createServerFn({ method: "GET" }).handler(async () => {
-  await ensureCountryTables();
-  const sql = await getSql();
-  const rows = await sql<{ slug: string; name: string }>`
-    select slug, name from hub_countries order by name
-  `;
-  return rows.map((row) => ({ slug: row.slug, name: row.name })) satisfies HubCountry[];
+  try {
+    await ensureCountryTables();
+    const sql = await getSql();
+    const rows = await sql<{ slug: string; name: string }>`
+      select slug, name from hub_countries order by name
+    `;
+    return rows.map((row) => ({ slug: row.slug, name: row.name })) satisfies HubCountry[];
+  } catch (err) {
+    console.error("list hub countries failed", err);
+    return [];
+  }
 });
 
 export const requestCountry = createServerFn({ method: "POST" })
