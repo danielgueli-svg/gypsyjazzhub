@@ -59,7 +59,15 @@ const globalAuthRef = globalThis as typeof globalThis & {
   __grokAuthPreviewSecret__?: string;
 };
 function previewAuthSecret(): string {
-  globalAuthRef.__grokAuthPreviewSecret__ ??= randomBytes(32).toString("hex");
+  if (!globalAuthRef.__grokAuthPreviewSecret__) {
+    try {
+      globalAuthRef.__grokAuthPreviewSecret__ = randomBytes(32).toString("hex");
+    } catch {
+      // Cloudflare Workers forbid crypto at module load (global scope).
+      globalAuthRef.__grokAuthPreviewSecret__ =
+        "cf-worker-dev-secret-set-BETTER_AUTH_SECRET";
+    }
+  }
   return globalAuthRef.__grokAuthPreviewSecret__;
 }
 
