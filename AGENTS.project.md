@@ -1,10 +1,47 @@
-# Gypsy Jazz Hub — project rules (Cursor)
+# Gypsy Jazz Hub — project rules
 
 Gypsy jazz community site: jams, concerts, musicians, groups, instruments, Learn, History, News, globe.
 
+## Production (public + Google)
+
+- Live URL: https://www.gypsyjazzhub.com/
+- Repo: `danielgueli-svg/gypsyjazzhub` · branch `main`
+- Host: Cloudflare Workers. DNS stays on Cloudflare. Registrar is GoDaddy — do not buy GoDaddy hosting.
+- Canonical host is **www**. Apex `gypsyjazzhub.com` must 301 to `https://www.gypsyjazzhub.com/`. HTTP must 301 to HTTPS.
+- Sitemap: https://www.gypsyjazzhub.com/sitemap.xml
+- robots: Allow Google on `/`. Disallow only `/api/`, `/login`, `/studio`. Meta robots: `index, follow`. Canonical always `https://www.gypsyjazzhub.com/...`
+
+## Not production
+
+- `glow-shale-falcon-daisy.grok.me` is a draft sandbox. It is noindex.
+- Private repo `danielgueli-svg/glow-shale-falcon-daisy` is the Grok export copy. Draft only.
+- Never attach `gypsyjazzhub.com` DNS back to grok.me / Vercel as the public host.
+
+## Deploy command
+
+When asked to **deploy [change]**:
+
+1. Edit `danielgueli-svg/gypsyjazzhub` on `main`.
+2. Push `main` (and wrangler-publish if GitHub auto-deploy is not wired).
+3. Reply with the commit URL and that **https://www.gypsyjazzhub.com** is the live URL.
+4. If also exported to `glow-shale-falcon-daisy`, say so — that copy is draft only.
+
+## Cloudflare rules
+
+- Workers cannot boot PGLite/Postgres. Do not add `DATABASE_URL` / PGLite startup that crashes SSR.
+- Public pages must keep rendering from catalog/seed/live rows if the DB extras fail.
+- Login persistence is HubDb SQLite on a Cloudflare Durable Object, not Neon.
+- Do not hang `/jams` with a bad `NITRO_PRESET`.
+
+## Known bugs (fix when touching that area)
+
+- `/musicians` must not show 0 musicians. Restore the directory without breaking Workers.
+- `/favicon.ico` is 404. Add a favicon.
+- Artist/concert links must not 404 or serve a refresh stub.
+
 ## Stack
 
-TanStack Start (file routes in `src/routes`) · React 19 · Vite · Tailwind 4 · Better Auth · Kysely/SQL · PGLite locally, Neon when `DATABASE_URL` is set.
+TanStack Start (file routes in `src/routes`) · React 19 · Vite · Tailwind 4 · Better Auth · Kysely/SQL. PGLite locally only. Production does **not** use PGLite or Neon.
 
 ## Do
 
@@ -18,14 +55,14 @@ TanStack Start (file routes in `src/routes`) · React 19 · Vite · Tailwind 4 �
 
 - Don’t add fake RSVPs, fake board notes, or copy biographies from other sites.
 - Don’t commit `.env`, `node_modules`, `screenshots/`, or `artifacts/`.
-- Don’t bind production to PGLite. Set `DATABASE_URL` on deploy.
+- Don’t suggest GoDaddy hosting, keeping production only on grok.me, or indexing the grok.me URL.
 
 ## Run
 
 ```bash
 npm install
 cp .env.example .env
-npm run dev          # 0.0.0.0:8080 (Grok preview)
+npm run dev          # 0.0.0.0:8080 (Grok preview, draft)
 npm run dev:local    # 127.0.0.1:3000 (Cursor)
 npm run typecheck
 ```
