@@ -1,0 +1,53 @@
+name: Site check
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  preview:
+    name: Local catalog (PGLite)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start preview
+        run: |
+          npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/dev.log 2>&1 &
+          echo $! > /tmp/dev.pid
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8080/ >/dev/null; then exit 0; fi
+            sleep 3
+          done
+          echo "dev server did not start"
+          cat /tmp/dev.log
+          exit 1
+      - name: Check pages + globe
+        run: node scripts/site-check.mjs --base http://127.0.0.1:8080 --globe
+      - name: Stop preview
+        if: always()
+        run: kill $(cat /tmp/dev.pid) 2>/dev/null || true
+
+  live:
+    name: Live gypsyjazzhub.com
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check live (retries for deploy lag)
+        env:
+          SITE_CHECK_RETRIES: "8"
+          SITE_CHECK_RETRY_MS: "20000"
+        run: node scripts/site-check.mjs --base https://www.gypsyjazzhub.com
