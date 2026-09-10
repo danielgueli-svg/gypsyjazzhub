@@ -631,6 +631,37 @@ export function preferCountryNames(names: string[], preferred?: string) {
   return [...hit, ...rest];
 }
 
+/** Round-robin by country so a short homepage list is worldwide, not one scene. */
+export function mixByCountry<T>(rows: T[], countryOf: (row: T) => string): T[] {
+  const buckets = new Map<string, T[]>();
+  const order: string[] = [];
+  for (const row of rows) {
+    const key = countryOf(row).trim() || "Other";
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = [];
+      buckets.set(key, bucket);
+      order.push(key);
+    }
+    bucket.push(row);
+  }
+  const out: T[] = [];
+  let i = 0;
+  let more = true;
+  while (more) {
+    more = false;
+    for (const key of order) {
+      const row = buckets.get(key)?.[i];
+      if (row) {
+        out.push(row);
+        more = true;
+      }
+    }
+    i += 1;
+  }
+  return out;
+}
+
 export function findCountry(
   index: Record<string, GlobeCountry>,
   slug: string,

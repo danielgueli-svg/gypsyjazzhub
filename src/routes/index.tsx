@@ -11,8 +11,8 @@ import { listConcerts, listLegends, listMusicians } from "@/lib/api";
 import { upcomingCamps } from "@/lib/camps";
 import { CountryClicker } from "@/components/country-clicker";
 import { CountryLabel } from "@/components/country-label";
-import { buildGlobeIndex, countrySlug, displayCountry, globeButtonNames, preferCountryNames, sameCountry } from "@/lib/geo";
-import { localeHomeCountry, useI18n } from "@/lib/i18n";
+import { buildGlobeIndex, countrySlug, displayCountry, globeButtonNames, mixByCountry } from "@/lib/geo";
+import { useI18n } from "@/lib/i18n";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
@@ -64,7 +64,6 @@ function Home() {
   const { camps, jams, news, globeConcerts, globeCountries, activeNames } =
     Route.useLoaderData();
   const { t, locale } = useI18n();
-  const home = localeHomeCountry(locale);
   const navigate = useNavigate();
   const [country, setCountry] = useState<string | null>(null);
   const [jamCountry, setJamCountry] = useState<string | null>(null);
@@ -75,19 +74,12 @@ function Home() {
       if (!name) continue;
       counts.set(name, (counts.get(name) ?? 0) + 1);
     }
-    return preferCountryNames(
-      [...counts.keys()].sort((a, b) => displayCountry(a).localeCompare(displayCountry(b))),
-      home,
-    );
-  }, [jams, home]);
+    return [...counts.keys()].sort((a, b) => displayCountry(a).localeCompare(displayCountry(b)));
+  }, [jams]);
   const countryJams = useMemo(() => {
-    if (!jamCountry) {
-      return [...jams].sort(
-        (a, b) => Number(sameCountry(b.country, home)) - Number(sameCountry(a.country, home)),
-      );
-    }
+    if (!jamCountry) return mixByCountry(jams, (jam) => jam.country);
     return jams.filter((jam) => countrySlug(jam.country) === jamCountry);
-  }, [jamCountry, jams, home]);
+  }, [jamCountry, jams]);
   const shownJams = countryJams;
   const concertCountries = useMemo(() => {
     const counts = new Map<string, number>();
@@ -96,19 +88,12 @@ function Home() {
       if (!name) continue;
       counts.set(name, (counts.get(name) ?? 0) + 1);
     }
-    return preferCountryNames(
-      [...counts.keys()].sort((a, b) => displayCountry(a).localeCompare(displayCountry(b))),
-      home,
-    );
-  }, [globeConcerts, home]);
+    return [...counts.keys()].sort((a, b) => displayCountry(a).localeCompare(displayCountry(b)));
+  }, [globeConcerts]);
   const countryConcerts = useMemo(() => {
-    if (!country) {
-      return [...globeConcerts].sort(
-        (a, b) => Number(sameCountry(b.country, home)) - Number(sameCountry(a.country, home)),
-      );
-    }
+    if (!country) return mixByCountry(globeConcerts, (concert) => concert.country);
     return globeConcerts.filter((concert) => countrySlug(concert.country) === country);
-  }, [country, globeConcerts, home]);
+  }, [country, globeConcerts]);
   const shownConcerts = country ? countryConcerts : countryConcerts.slice(0, 5);
   const alphaCountries = useMemo(
     () =>
