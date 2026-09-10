@@ -81,6 +81,13 @@ async function checkOnce() {
   }
   ok("home 200 + globe markup");
 
+  const favicon = await fetch(`${BASE}/favicon.ico`, {
+    redirect: "follow",
+    headers: { "user-agent": "gypsyjazzhub-site-check/1" },
+  });
+  if (favicon.status !== 200) fail(`favicon.ico ${favicon.status}`);
+  else ok("favicon.ico 200");
+
   const musicians = await fetchText("/musicians");
   if (musicians.status !== 200) fail(`musicians ${musicians.status}`);
   if (/No musicians match those filters/.test(musicians.text)) {

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AddRouteImport } from './routes/add'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as BoardRouteImport } from './routes/board'
+import { Route as CampsRouteImport } from './routes/camps'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
 import { Route as DjangoRouteImport } from './routes/django'
 import { Route as GrappelliRouteImport } from './routes/grappelli'
@@ -107,6 +108,11 @@ const AgendaRoute = AgendaRouteImport.update({
 const BoardRoute = BoardRouteImport.update({
   id: '/board',
   path: '/board',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampsRoute = CampsRouteImport.update({
+  id: '/camps',
+  path: '/camps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DenisChangRoute = DenisChangRouteImport.update({
@@ -492,6 +498,7 @@ export interface FileRoutesByFullPath {
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
   '/board': typeof BoardRoute
+  '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/grappelli': typeof GrappelliRoute
@@ -573,6 +580,7 @@ export interface FileRoutesByTo {
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
   '/board': typeof BoardRoute
+  '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/grappelli': typeof GrappelliRoute
@@ -655,6 +663,7 @@ export interface FileRoutesById {
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
   '/board': typeof BoardRoute
+  '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/grappelli': typeof GrappelliRoute
@@ -738,6 +747,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/agenda'
     | '/board'
+    | '/camps'
     | '/denis-chang'
     | '/django'
     | '/grappelli'
@@ -819,6 +829,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/agenda'
     | '/board'
+    | '/camps'
     | '/denis-chang'
     | '/django'
     | '/grappelli'
@@ -900,6 +911,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/agenda'
     | '/board'
+    | '/camps'
     | '/denis-chang'
     | '/django'
     | '/grappelli'
@@ -982,6 +994,7 @@ export interface RootRouteChildren {
   AddRoute: typeof AddRoute
   AgendaRoute: typeof AgendaRoute
   BoardRoute: typeof BoardRoute
+  CampsRoute: typeof CampsRoute
   DenisChangRoute: typeof DenisChangRoute
   DjangoRoute: typeof DjangoRoute
   GrappelliRoute: typeof GrappelliRoute
@@ -1087,6 +1100,13 @@ declare module '@tanstack/react-router' {
       path: '/board'
       fullPath: '/board'
       preLoaderRoute: typeof BoardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/camps': {
+      id: '/camps'
+      path: '/camps'
+      fullPath: '/camps'
+      preLoaderRoute: typeof CampsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/denis-chang': {
@@ -1622,6 +1642,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddRoute: AddRoute,
   AgendaRoute: AgendaRoute,
   BoardRoute: BoardRoute,
+  CampsRoute: CampsRoute,
   DenisChangRoute: DenisChangRoute,
   DjangoRoute: DjangoRoute,
   GrappelliRoute: GrappelliRoute,
