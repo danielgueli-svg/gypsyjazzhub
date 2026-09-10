@@ -69,7 +69,11 @@ export default async function htmlNavMiddleware(
   const page = isPageGet(method, path);
 
   if (page) {
-    event.req.headers.set("accept", "text/html,application/xhtml+xml,*/*;q=0.8");
+    try {
+      event.req.headers.set("accept", "text/html,application/xhtml+xml,*/*;q=0.8");
+    } catch {
+      // Cloudflare Workers: request headers are immutable.
+    }
   }
 
   try {
