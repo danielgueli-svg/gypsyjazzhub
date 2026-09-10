@@ -140,6 +140,38 @@ function Home() {
         </div>
       </section>
 
+      <section className="mt-8">
+        <div className="relative z-0 overflow-visible rounded-2xl bg-[#071018] p-3 ring-1 ring-white/15 sm:p-4">
+          <WorldGlobe
+            countries={globeCountries}
+            selected={null}
+            onSelect={(name) => {
+              void navigate({
+                to: "/world/$slug",
+                params: { slug: countrySlug(name) },
+              });
+            }}
+          />
+          <div className="flex justify-center">
+            <CountryClicker
+              countries={alphaCountries}
+              value={null}
+              allowClear={false}
+              layout="list"
+              onDark
+              className="mt-3 mb-0"
+              onChange={(slug) => {
+                if (!slug) return;
+                void navigate({
+                  to: "/world/$slug",
+                  params: { slug },
+                });
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="mt-14 sm:mt-16">
         <SectionHeading
           kicker={t("nav.jams")}
@@ -199,38 +231,6 @@ function Home() {
               <ConcertRow key={concert.id} concert={concert} compact />
             ))
           )}
-        </div>
-      </section>
-
-      <section className="mt-14 sm:mt-16">
-        <div className="relative z-0 overflow-visible rounded-2xl bg-[#071018] p-3 ring-1 ring-white/15 sm:p-4">
-          <WorldGlobe
-            countries={globeCountries}
-            selected={null}
-            onSelect={(name) => {
-              void navigate({
-                to: "/world/$slug",
-                params: { slug: countrySlug(name) },
-              });
-            }}
-          />
-          <div className="flex justify-center">
-            <CountryClicker
-              countries={alphaCountries}
-              value={null}
-              allowClear={false}
-              layout="list"
-              onDark
-              className="mt-3 mb-0"
-              onChange={(slug) => {
-                if (!slug) return;
-                void navigate({
-                  to: "/world/$slug",
-                  params: { slug },
-                });
-              }}
-            />
-          </div>
         </div>
       </section>
 
