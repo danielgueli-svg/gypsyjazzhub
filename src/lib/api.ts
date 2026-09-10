@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
-import { LEGEND_CONCERTS, LEGENDS } from "@/lib/seed-data";
+import { LEGEND_CONCERTS, LEGENDS, type LegendSeed } from "@/lib/seed-data";
 import { listHubConcerts } from "@/lib/hub-api";
 import { SAMOIS_SLUGS } from "@/lib/samois-artists";
 import { BANDS, bandForBill, collaboratorSlugs } from "@/lib/scene";
@@ -183,10 +183,63 @@ async function ensureSeed() {
     })
     .catch((err) => {
       seedPromise = null;
-      throw err;
+      console.error("legend seed failed", err);
     });
   await seedPromise;
-  await refreshConcerts();
+  await refreshConcerts().catch((err) => {
+    console.error("concert seed failed", err);
+  });
+}
+
+function mapSeedLegend(legend: LegendSeed): Legend {
+  return {
+    slug: legend.slug,
+    name: legend.name,
+    years: legend.years,
+    origin: legend.origin,
+    instruments: legend.instruments,
+    era: legend.era,
+    bio: legend.bio,
+    notable: legend.notable,
+    youtubeUrl: legend.youtube_url,
+    sortOrder: legend.sort_order,
+    samois: SAMOIS_SLUGS.has(legend.slug),
+    photoUrl: legend.photo_url ?? "",
+    photoCredit: legend.photo_credit ?? "",
+    websiteUrl: legend.website_url ?? "",
+    instagramUrl: legend.instagram_url ?? "",
+    spotifyUrl: "",
+    catalogSource: "seed",
+    bioStatus: "ok",
+  };
+}
+
+function mergeLegends(rows: Legend[]): Legend[] {
+  const bySlug = new Map<string, Legend>();
+  for (const legend of LEGENDS) bySlug.set(legend.slug, mapSeedLegend(legend));
+  for (const row of rows) {
+    const seed = bySlug.get(row.slug);
+    bySlug.set(row.slug, seed ? { ...seed, ...row, bio: row.bio || seed.bio } : row);
+  }
+  return [...bySlug.values()].sort(
+    (a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name),
+  );
+}
+
+async function loadLegendsFromDb(): Promise<Legend[]> {
+  try {
+    const sql = await getSql();
+    const rows = await sql<LegendRow>`
+      select slug, name, years, origin, instruments, era, bio, notable, youtube_url, sort_order, samois,
+             photo_url, photo_credit, website_url, instagram_url, spotify_url, catalog_source, bio_status
+      from legends
+      order by sort_order asc
+    `;
+    return rows.map(mapLegend);
+  } catch (err) {
+    console.error("list legends failed", err);
+    return [];
+  }
 }
 
 async function seedCatalog() {
@@ -201,7 +254,10 @@ async function seedCatalog() {
   await sql.query(
     "alter table profiles add column if not exists spotify_url text not null default ''",
   );
-  for (const legend of LEGENDS) {
+  const haveRows = await sql<{ slug: string }>`select slug from legends`;
+  const have = new Set(haveRows.map((row) => row.slug));
+  const missing = LEGENDS.filter((legend) => !have.has(legend.slug));
+  for (const legend of missing) {
     const samois = SAMOIS_SLUGS.has(legend.slug);
     const photoUrl = legend.photo_url ?? "";
     const photoCredit = legend.photo_credit ?? "";
@@ -391,46 +447,46 @@ async function uniqueSlug(base: string, userId: string) {
   }
 }
 
+async function legendsCatalog() {
+  void ensureSeed();
+  return mergeLegends(await loadLegendsFromDb());
+}
+
 export const listLegends = createServerFn({ method: "GET" }).handler(async () => {
-  await ensureSeed();
-  const sql = await getSql();
-  const rows = await sql<LegendRow>`
-    select slug, name, years, origin, instruments, era, bio, notable, youtube_url, sort_order, samois,
-           photo_url, photo_credit, website_url, instagram_url, spotify_url, catalog_source, bio_status
-    from legends
-    order by sort_order asc
-  `;
-  return rows.map(mapLegend);
+  return legendsCatalog();
 });
 
 export const getLegend = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    await ensureSeed();
-    const sql = await getSql();
-    const rows = await sql<LegendRow>`
-      select slug, name, years, origin, instruments, era, bio, notable, youtube_url, sort_order, samois,
-             photo_url, photo_credit, website_url, instagram_url, spotify_url, catalog_source, bio_status
-      from legends where slug = ${slug} limit 1
-    `;
-    return rows[0] ? mapLegend(rows[0]) : null;
+    void ensureSeed();
+    try {
+      const sql = await getSql();
+      const rows = await sql<LegendRow>`
+        select slug, name, years, origin, instruments, era, bio, notable, youtube_url, sort_order, samois,
+               photo_url, photo_credit, website_url, instagram_url, spotify_url, catalog_source, bio_status
+        from legends where slug = ${slug} limit 1
+      `;
+      if (rows[0]) {
+        const seed = LEGENDS.find((row) => row.slug === slug);
+        const mapped = mapLegend(rows[0]);
+        return seed ? { ...mapSeedLegend(seed), ...mapped, bio: mapped.bio || seed.bio } : mapped;
+      }
+    } catch (err) {
+      console.error("get legend failed", err);
+    }
+    const seed = LEGENDS.find((row) => row.slug === slug);
+    return seed ? mapSeedLegend(seed) : null;
   });
 
 export const listCollaborators = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    await ensureSeed();
     const wanted = collaboratorSlugs(slug);
     if (wanted.length === 0) return [];
-    const sql = await getSql();
-    const rows = await sql<LegendRow>`
-      select slug, name, years, origin, instruments, era, bio, notable, youtube_url, sort_order, samois,
-             photo_url, photo_credit, website_url, instagram_url, spotify_url, catalog_source, bio_status
-      from legends
-      order by name asc
-    `;
     const allow = new Set(wanted);
-    return rows.map(mapLegend).filter((legend) => allow.has(legend.slug));
+    const legends = await legendsCatalog();
+    return legends.filter((legend) => allow.has(legend.slug));
   });
 
 export const listMusicians = createServerFn({ method: "GET" })
