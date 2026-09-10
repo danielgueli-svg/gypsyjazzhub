@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { loadConcert, type Concert } from "@/lib/api";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { toIso } from "@/lib/utils";
 
 export type NightMedia = {
@@ -64,7 +64,18 @@ function mediaUrl(id: number) {
   return `/api/concert-media/${id}`;
 }
 
+let reviewsReady: Promise<void> | null = null;
+
 async function ensureReviews() {
+  if (getDbSource() === "none") return;
+  reviewsReady ??= runEnsureReviews().catch((err) => {
+    reviewsReady = null;
+    throw err;
+  });
+  await reviewsReady;
+}
+
+async function runEnsureReviews() {
   const sql = await getSql();
   await sql.query(`
     create table if not exists concert_reviews (
@@ -190,6 +201,7 @@ export function concertHasStarted(concert: Concert, now = Date.now()) {
 export const listArtistReviews = createServerFn({ method: "GET" })
   .validator((slug: string) => slug.trim())
   .handler(async ({ data: slug }) => {
+    try {
     await ensureReviews();
     if (!slug) return [] as NightReview[];
     const sql = await getSql();
@@ -208,6 +220,10 @@ export const listArtistReviews = createServerFn({ method: "GET" })
       order by created_at desc
     `;
     return attachMedia(rows.map(mapReview));
+    } catch (err) {
+      console.error("listArtistReviews failed", err);
+      return [] as NightReview[];
+    }
   });
 
 export const listConcertReviews = createServerFn({ method: "GET" })

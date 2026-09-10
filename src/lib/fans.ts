@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
 import { formatConcertWhen, slugify, toIso } from "@/lib/utils";
 import { parseProfileTypes, serializeTypes, typesFromMemberKind } from "@/lib/profile-types";
@@ -75,6 +75,7 @@ const SEED_FANS: Array<{
 let fanReady: Promise<void> | null = null;
 
 export async function ensureFanTables() {
+  if (getDbSource() === "none") return;
   fanReady ??= (async () => {
     const sql = await getSql();
     await sql.query(`alter table profiles add column if not exists member_kind text not null default 'musician'`);

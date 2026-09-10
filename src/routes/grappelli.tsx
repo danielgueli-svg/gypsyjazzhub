@@ -9,11 +9,8 @@ import { Contribute } from "@/components/contribute";
 import { FestivalLinks } from "@/components/festival-links";
 import { Guestbook } from "@/components/guestbook";
 import { HubExtras } from "@/components/hub-extras";
-import { listCollaborators, listLegendConcerts } from "@/lib/api";
+import { loadArtistExtras } from "@/lib/directory-artist";
 import { festivalsForArtist } from "@/lib/festivals";
-import { listHubClips, listHubNotes } from "@/lib/hub-api";
-import { listGuestbook } from "@/lib/guestbook";
-import { listArtistReviews } from "@/lib/concert-reviews";
 import { artistPhoto } from "@/lib/photos";
 import { bandsFor } from "@/lib/scene";
 import { pageHead } from "@/lib/seo";
@@ -26,21 +23,14 @@ export const Route = createFileRoute("/grappelli")({
         "Stéphane Grappelli, violin of the Quintette du Hot Club de France. Bio, recordings and the living gypsy jazz violin line.",
     }),
   loader: async () => {
-    const [concerts, collaborators, clips, notes, shoutouts, reports] = await Promise.all([
-      listLegendConcerts({ data: "stephane-grappelli" }),
-      listCollaborators({ data: "stephane-grappelli" }),
-      listHubClips({ data: "stephane-grappelli" }),
-      listHubNotes({ data: "stephane-grappelli" }),
-      listGuestbook({ data: "stephane-grappelli" }),
-      listArtistReviews({ data: "stephane-grappelli" }),
-    ]);
+    const extras = await loadArtistExtras("stephane-grappelli");
     return {
-      concerts,
-      collaborators,
-      clips,
-      notes,
-      shoutouts,
-      reports,
+      concerts: extras.concerts,
+      collaborators: extras.collaborators,
+      clips: extras.clips,
+      notes: extras.notes,
+      shoutouts: extras.shoutouts,
+      reports: extras.reports,
       bands: bandsFor("stephane-grappelli"),
       festivals: festivalsForArtist("stephane-grappelli", true),
     };

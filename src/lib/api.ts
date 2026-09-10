@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { LEGEND_CONCERTS, LEGENDS, type ConcertSeed, type LegendSeed } from "@/lib/seed-data";
 import { listHubConcerts } from "@/lib/hub-api";
 import { liveConcertsSeed, resolveArtistSlug } from "@/lib/live-concerts";
@@ -176,6 +176,7 @@ let concertRefresh: Promise<void> | null = null;
 let legendSig = "";
 
 async function ensureSeed() {
+  if (getDbSource() === "none") return;
   const sig = LEGENDS.map((legend) => `${legend.slug}|${legend.bio}|${legend.notable}`).join(";");
   if (sig !== legendSig) seedPromise = null;
   seedPromise ??= seedCatalog()
@@ -213,6 +214,26 @@ function mapSeedLegend(legend: LegendSeed): Legend {
     catalogSource: "seed",
     bioStatus: "ok",
   };
+}
+
+export function catalogLegend(slug: string): Legend | null {
+  const seed = LEGENDS.find((row) => row.slug === slug);
+  return seed ? mapSeedLegend(seed) : null;
+}
+
+export function catalogCollaborators(slug: string): Legend[] {
+  const wanted = new Set(collaboratorSlugs(slug));
+  if (wanted.size === 0) return [];
+  return LEGENDS.filter((legend) => wanted.has(legend.slug)).map(mapSeedLegend);
+}
+
+export function catalogConcertsFor(slug: string): Concert[] {
+  const name = LEGENDS.find((row) => row.slug === slug)?.name ?? slug;
+  const seeded = LEGEND_CONCERTS.filter((concert) => concert.legend_slug === slug).map((concert) =>
+    mapSeedConcert(concert, name),
+  );
+  const live = liveConcertsSeed().filter((concert) => concert.artistSlug === slug);
+  return mergeConcertLists([seeded, live]);
 }
 
 function mergeLegends(rows: Legend[]): Legend[] {
@@ -513,11 +534,16 @@ export const getLegend = createServerFn({ method: "GET" })
 export const listCollaborators = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    const wanted = collaboratorSlugs(slug);
-    if (wanted.length === 0) return [];
-    const allow = new Set(wanted);
-    const legends = await legendsCatalog();
-    return legends.filter((legend) => allow.has(legend.slug));
+    try {
+      const wanted = collaboratorSlugs(slug);
+      if (wanted.length === 0) return [];
+      const allow = new Set(wanted);
+      const legends = await legendsCatalog();
+      return legends.filter((legend) => allow.has(legend.slug));
+    } catch (err) {
+      console.error("listCollaborators failed", err);
+      return catalogCollaborators(slug);
+    }
   });
 
 export const listMusicians = createServerFn({ method: "GET" })
@@ -782,6 +808,7 @@ export const listConcerts = createServerFn({ method: "POST" })
 export const listLegendConcerts = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     void ensureSeed();
     const name = LEGENDS.find((row) => row.slug === slug)?.name ?? slug;
     const seeded = LEGEND_CONCERTS.filter((concert) => concert.legend_slug === slug).map((concert) =>
@@ -834,6 +861,10 @@ export const listLegendConcerts = createServerFn({ method: "GET" })
     }
     const live = liveConcertsSeed().filter((concert) => concert.artistSlug === slug);
     return mergeConcertLists([seeded, fromDb, hub, live]);
+    } catch (err) {
+      console.error("listLegendConcerts failed", err);
+      return catalogConcertsFor(slug);
+    }
   });
 
 export async function loadConcert(id: string): Promise<Concert | null> {

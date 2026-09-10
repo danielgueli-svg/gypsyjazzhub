@@ -35,6 +35,7 @@ import { listArtistReviews } from "@/lib/concert-reviews";
 import { contactHref, concertShareLine, formatInstrumentList } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/musicians/$slug")({
   beforeLoad: ({ params }) => {
@@ -46,18 +47,18 @@ export const Route = createFileRoute("/musicians/$slug")({
   loader: async ({ params }) => {
     const directory = await loadDirectoryArtist(params.slug);
     if (directory) return { kind: "directory" as const, directory };
-    const musician = await getMusician({ data: params.slug });
+    const musician = await settle("musician", null, () => getMusician({ data: params.slug }));
     if (!musician) throw notFound();
     if (musician.memberKind === "fan") {
       throw redirect({ to: "/fans/$slug", params: { slug: musician.slug } });
     }
     const [concerts, clips, notes, shoutouts, extraJams, reports] = await Promise.all([
-      listMusicianConcerts({ data: musician.userId }),
-      listHubClips({ data: musician.slug }),
-      listHubNotes({ data: musician.slug }),
-      listGuestbook({ data: musician.slug }),
-      listHubJams(),
-      listArtistReviews({ data: musician.slug }),
+      settle("member-concerts", [] as Concert[], () => listMusicianConcerts({ data: musician.userId })),
+      settle("member-clips", [], () => listHubClips({ data: musician.slug })),
+      settle("member-notes", [], () => listHubNotes({ data: musician.slug })),
+      settle("member-guestbook", [], () => listGuestbook({ data: musician.slug })),
+      settle("member-jams", [], () => listHubJams()),
+      settle("member-reviews", [], () => listArtistReviews({ data: musician.slug })),
     ]);
     const city = musician.city.trim().toLowerCase();
     const nearbyJams = city

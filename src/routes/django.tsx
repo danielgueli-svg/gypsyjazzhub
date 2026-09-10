@@ -9,11 +9,8 @@ import { Contribute } from "@/components/contribute";
 import { FestivalLinks } from "@/components/festival-links";
 import { Guestbook } from "@/components/guestbook";
 import { HubExtras } from "@/components/hub-extras";
-import { listCollaborators, listLegendConcerts } from "@/lib/api";
+import { loadArtistExtras } from "@/lib/directory-artist";
 import { festivalsForArtist } from "@/lib/festivals";
-import { listHubClips, listHubNotes } from "@/lib/hub-api";
-import { listGuestbook } from "@/lib/guestbook";
-import { listArtistReviews } from "@/lib/concert-reviews";
 import { artistPhoto } from "@/lib/photos";
 import { bandsFor } from "@/lib/scene";
 import { pageHead } from "@/lib/seo";
@@ -26,21 +23,14 @@ export const Route = createFileRoute("/django")({
         "Django Reinhardt invented gypsy jazz. Bio, recordings, lineage and dates for the guitarist of the Quintette du Hot Club de France.",
     }),
   loader: async () => {
-    const [concerts, collaborators, clips, notes, shoutouts, reports] = await Promise.all([
-      listLegendConcerts({ data: "django-reinhardt" }),
-      listCollaborators({ data: "django-reinhardt" }),
-      listHubClips({ data: "django-reinhardt" }),
-      listHubNotes({ data: "django-reinhardt" }),
-      listGuestbook({ data: "django-reinhardt" }),
-      listArtistReviews({ data: "django-reinhardt" }),
-    ]);
+    const extras = await loadArtistExtras("django-reinhardt");
     return {
-      concerts,
-      collaborators,
-      clips,
-      notes,
-      shoutouts,
-      reports,
+      concerts: extras.concerts,
+      collaborators: extras.collaborators,
+      clips: extras.clips,
+      notes: extras.notes,
+      shoutouts: extras.shoutouts,
+      reports: extras.reports,
       bands: bandsFor("django-reinhardt"),
       festivals: festivalsForArtist("django-reinhardt", true),
     };

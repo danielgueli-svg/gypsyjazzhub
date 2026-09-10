@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { slugify, youtubeVideoId } from "@/lib/utils";
 
 export type CatalogArtist = {
@@ -14,6 +14,7 @@ const STUB_BIO =
   "On the gypsy jazz circuit. This page opened from a date, jam or clip on the hub — a short bio will follow when we have a sourced line.";
 
 export async function ensureCatalogColumns() {
+  if (getDbSource() === "none") return;
   const sql = await getSql();
   await sql.query(`alter table legends add column if not exists photo_url text not null default ''`);
   await sql.query(`alter table legends add column if not exists photo_credit text not null default ''`);

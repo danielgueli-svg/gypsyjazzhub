@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { toIso } from "@/lib/utils";
 
 export type GuestbookEntry = {
@@ -60,31 +60,40 @@ const SEED: { slug: string; name: string; body: string; at: string }[] = [
   },
 ];
 
+let guestbookReady: Promise<void> | null = null;
+
 async function ensureGuestbook() {
-  const sql = await getSql();
-  await sql.query(`
-    create table if not exists artist_guestbook (
-      id serial primary key,
-      artist_slug text not null,
-      body text not null,
-      user_id text not null,
-      author_name text not null,
-      created_at timestamptz not null default now()
-    )
-  `);
-  await sql.query(
-    `create index if not exists artist_guestbook_slug_idx on artist_guestbook (artist_slug, created_at desc)`,
-  );
-  const existing = await sql<{ n: number }>`
-    select count(*)::int as n from artist_guestbook
-  `;
-  if ((existing[0]?.n ?? 0) > 0) return;
-  for (const row of SEED) {
-    await sql`
-      insert into artist_guestbook (artist_slug, body, user_id, author_name, created_at)
-      values (${row.slug}, ${row.body}, ${"guestbook-seed"}, ${row.name}, ${row.at})
+  if (getDbSource() === "none") return;
+  guestbookReady ??= (async () => {
+    const sql = await getSql();
+    await sql.query(`
+      create table if not exists artist_guestbook (
+        id serial primary key,
+        artist_slug text not null,
+        body text not null,
+        user_id text not null,
+        author_name text not null,
+        created_at timestamptz not null default now()
+      )
+    `);
+    await sql.query(
+      `create index if not exists artist_guestbook_slug_idx on artist_guestbook (artist_slug, created_at desc)`,
+    );
+    const existing = await sql<{ n: number }>`
+      select count(*)::int as n from artist_guestbook
     `;
-  }
+    if ((existing[0]?.n ?? 0) > 0) return;
+    for (const row of SEED) {
+      await sql`
+        insert into artist_guestbook (artist_slug, body, user_id, author_name, created_at)
+        values (${row.slug}, ${row.body}, ${"guestbook-seed"}, ${row.name}, ${row.at})
+      `;
+    }
+  })().catch((err) => {
+    guestbookReady = null;
+    throw err;
+  });
+  await guestbookReady;
 }
 
 async function authorName(userId: string) {
@@ -119,25 +128,44 @@ function mapEntry(row: {
   };
 }
 
+export function seedGuestbook(slug: string): GuestbookEntry[] {
+  return SEED.filter((row) => row.slug === slug).map((row, index) =>
+    mapEntry({
+      id: -(index + 1),
+      artist_slug: row.slug,
+      body: row.body,
+      author_name: row.name,
+      user_id: "guestbook-seed",
+      created_at: row.at,
+    }),
+  );
+}
+
 export const listGuestbook = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
-    await ensureGuestbook();
-    const sql = await getSql();
-    const rows = await sql<{
-      id: number;
-      artist_slug: string;
-      body: string;
-      author_name: string;
-      user_id: string;
-      created_at: unknown;
-    }>`
-      select id, artist_slug, body, author_name, user_id, created_at
-      from artist_guestbook
-      where artist_slug = ${slug}
-      order by created_at desc
-    `;
-    return rows.map(mapEntry);
+    try {
+      await ensureGuestbook();
+      const sql = await getSql();
+      const rows = await sql<{
+        id: number;
+        artist_slug: string;
+        body: string;
+        author_name: string;
+        user_id: string;
+        created_at: unknown;
+      }>`
+        select id, artist_slug, body, author_name, user_id, created_at
+        from artist_guestbook
+        where artist_slug = ${slug}
+        order by created_at desc
+      `;
+      const mapped = rows.map(mapEntry);
+      return mapped.length ? mapped : seedGuestbook(slug);
+    } catch (err) {
+      console.error("listGuestbook failed", err);
+      return seedGuestbook(slug);
+    }
   });
 
 export const addGuestbook = createServerFn({ method: "POST" })

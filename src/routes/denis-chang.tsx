@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
 import { ConcertList } from "@/components/concert-row";
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/denis-chang")({
     }),
   loader: async () => {
     const directory = await loadDirectoryArtist("denis-chang");
-    if (!directory) throw new Error("Denis Chang is missing from the hub.");
+    if (!directory) throw notFound();
     return directory;
   },
   component: DenisChangPage,

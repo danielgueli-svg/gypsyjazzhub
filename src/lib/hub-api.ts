@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { syncDiscoveries } from "@/lib/discovery-api";
 import type { Concert } from "@/lib/api";
 import type { Festival } from "@/lib/festivals";
@@ -37,7 +37,18 @@ export type HubNote = {
   createdAt: string;
 };
 
+let hubReady: Promise<void> | null = null;
+
 async function ensureHub() {
+  if (getDbSource() === "none") return;
+  hubReady ??= runEnsureHub().catch((err) => {
+    hubReady = null;
+    throw err;
+  });
+  await hubReady;
+}
+
+async function runEnsureHub() {
   const sql = await getSql();
   await sql.query(`
     create table if not exists hub_concerts (
@@ -447,6 +458,7 @@ export const listHubConcerts = createServerFn({ method: "GET" })
 export const listHubClips = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     await ensureHub();
     const sql = await getSql();
     const rows = await sql<{
@@ -470,11 +482,16 @@ export const listHubClips = createServerFn({ method: "GET" })
       submittedName: row.submitted_name,
       createdAt: toIso(row.created_at),
     })) satisfies HubClip[];
+    } catch (err) {
+      console.error("listHubClips db failed", err);
+      return [];
+    }
   });
 
 export const listHubNotes = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     await ensureHub();
     const sql = await getSql();
     const rows = await sql<{
@@ -496,6 +513,10 @@ export const listHubNotes = createServerFn({ method: "GET" })
       submittedName: row.submitted_name,
       createdAt: toIso(row.created_at),
     })) satisfies HubNote[];
+    } catch (err) {
+      console.error("listHubNotes db failed", err);
+      return [];
+    }
   });
 
 export const listHubFestivals = createServerFn({ method: "GET" }).handler(async () => {
