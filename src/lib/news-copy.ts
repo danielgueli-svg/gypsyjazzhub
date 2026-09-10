@@ -54,8 +54,8 @@ export const NEWS_EN = pack({
     body: "Jazz Manouche at The Music Space XL, Australiëlaan 24. First Saturday of the month, 19:00–23:00. First night 5 September 2026: Chris’ Collective opens. WhatsApp community on the jam page.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — first Wednesday in Amsterdam",
-    body: "Acoustic gypsy jazz jam at Café Insulinde, Sumatrastraat 24 (Insulindeweg). First Wednesday of the month from 19:00. Open to all. Next: 2 September 2026.",
+    title: "Hot Club Insulinde — second Wednesday in Amsterdam",
+    body: "Acoustic gypsy jazz jam at Café Insulinde, Sumatrastraat 24 (Insulindeweg). Second Wednesday of the month from 19:00. Open to all. Next: 14 October 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 April–2 May 2027",
@@ -145,8 +145,8 @@ export const NEWS_NL = pack({
     body: "Jazz Manouche bij The Music Space XL, Australiëlaan 24. Elke eerste zaterdag van de maand, 19:00–23:00. Eerste avond 5 september 2026: Chris’ Collective opent. WhatsApp-groep op de jam-pagina.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — eerste woensdag in Amsterdam",
-    body: "Akoestische gypsy-jazzjam in Café Insulinde, Sumatrastraat 24 (Insulindeweg). Elke eerste woensdag van de maand vanaf 19:00. Iedereen welkom. Volgende: 2 september 2026.",
+    title: "Hot Club Insulinde — tweede woensdag in Amsterdam",
+    body: "Akoestische gypsy-jazzjam in Café Insulinde, Sumatrastraat 24 (Insulindeweg). Elke tweede woensdag van de maand vanaf 19:00. Iedereen welkom. Volgende: 14 oktober 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 april–2 mei 2027",
@@ -220,8 +220,8 @@ export const NEWS_DE = pack({
     body: "Jazz Manouche im The Music Space XL, Australiëlaan 24. Jeder erste Samstag im Monat, 19:00–23:00. Erste Nacht 5. September 2026: Chris’ Collective eröffnet.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — erster Mittwoch in Amsterdam",
-    body: "Akustische Gypsy-Jazz-Jam im Café Insulinde, Sumatrastraat 24. Jeder erste Mittwoch ab 19:00. Offen für alle. Nächster Termin: 2. September 2026.",
+    title: "Hot Club Insulinde — zweiter Mittwoch in Amsterdam",
+    body: "Akustische Gypsy-Jazz-Jam im Café Insulinde, Sumatrastraat 24. Jeder zweite Mittwoch ab 19:00. Offen für alle. Nächster Termin: 14. Oktober 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28. April–2. Mai 2027",
@@ -295,8 +295,8 @@ export const NEWS_FR = pack({
     body: "Jazz manouche au The Music Space XL, Australiëlaan 24. Premier samedi du mois, 19h–23h. Première soirée le 5 septembre 2026 : Chris’ Collective ouvre.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — premier mercredi à Amsterdam",
-    body: "Jam acoustique au Café Insulinde, Sumatrastraat 24. Premier mercredi du mois dès 19h. Ouvert à tous. Prochaine : 2 septembre 2026.",
+    title: "Hot Club Insulinde — deuxième mercredi à Amsterdam",
+    body: "Jam acoustique au Café Insulinde, Sumatrastraat 24. Deuxième mercredi du mois dès 19h. Ouvert à tous. Prochaine : 14 octobre 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 avril–2 mai 2027",
@@ -358,8 +358,8 @@ export const NEWS_IT = pack({
     body: "Jazz manouche al The Music Space XL, Australiëlaan 24. Primo sabato del mese, 19:00–23:00. Prima serata 5 settembre 2026: apre Chris’ Collective.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — primo mercoledì ad Amsterdam",
-    body: "Jam acustica al Café Insulinde, Sumatrastraat 24. Primo mercoledì del mese dalle 19:00. Aperta a tutti. Prossima: 2 settembre 2026.",
+    title: "Hot Club Insulinde — secondo mercoledì ad Amsterdam",
+    body: "Jam acustica al Café Insulinde, Sumatrastraat 24. Secondo mercoledì del mese dalle 19:00. Aperta a tutti. Prossima: 14 ottobre 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 aprile–2 maggio 2027",
@@ -421,8 +421,8 @@ export const NEWS_ES = pack({
     body: "Jazz manouche en The Music Space XL, Australiëlaan 24. Primer sábado del mes, 19:00–23:00. Primera noche 5 de septiembre de 2026: abre Chris’ Collective.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — primer miércoles en Ámsterdam",
-    body: "Jam acústica en Café Insulinde, Sumatrastraat 24. Primer miércoles del mes desde las 19:00. Abierta a todos. Siguiente: 2 de septiembre de 2026.",
+    title: "Hot Club Insulinde — segundo miércoles en Ámsterdam",
+    body: "Jam acústica en Café Insulinde, Sumatrastraat 24. Segundo miércoles del mes desde las 19:00. Abierta a todos. Siguiente: 14 de octubre de 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 de abril–2 de mayo de 2027",
@@ -476,8 +476,8 @@ export const NEWS_JA = pack({
     body: "The Music Space XL（Australiëlaan 24）でジャズ・マヌーシュ。毎月第一土曜 19:00–23:00。初回は 2026年9月5日、Chris’ Collective がオープニング。",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — アムステルダム、毎月第一水曜",
-    body: "Café Insulinde（Sumatrastraat 24）のアコースティック・ジャム。毎月第一水曜 19:00 から。誰でも参加可。次回は 2026年9月2日。",
+    title: "Hot Club Insulinde — アムステルダム、毎月第二水曜",
+    body: "Café Insulinde（Sumatrastraat 24）のアコースティック・ジャム。毎月第二水曜 19:00 から。誰でも参加可。次回は 2026年10月14日。",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — ヴィラ・ヴィソサ、2027年4月28日–5月2日",
@@ -531,8 +531,8 @@ export const NEWS_KO = pack({
     body: "The Music Space XL, Australiëlaan 24. 매월 첫째 토요일 19:00–23:00. 첫 밤 2026년 9월 5일, Chris’ Collective 오프닝.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — 암스테르담 매월 첫째 수요일",
-    body: "Café Insulinde, Sumatrastraat 24. 매월 첫째 수요일 19:00부터. 누구나. 다음: 2026년 9월 2일.",
+    title: "Hot Club Insulinde — 암스테르담 매월 둘째 수요일",
+    body: "Café Insulinde, Sumatrastraat 24. 매월 둘째 수요일 19:00부터. 누구나. 다음: 2026년 10월 14일.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — 빌라 비소사, 2027년 4월 28일–5월 2일",
@@ -586,8 +586,8 @@ export const NEWS_ZH = pack({
     body: "The Music Space XL，Australiëlaan 24。每月第一个周六 19:00–23:00。首场 2026年9月5日，Chris’ Collective 开场。",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — 阿姆斯特丹每月第一个周三",
-    body: "Café Insulinde，Sumatrastraat 24。每月第一个周三 19:00 起。欢迎所有人。下一场：2026年9月2日。",
+    title: "Hot Club Insulinde — 阿姆斯特丹每月第二个周三",
+    body: "Café Insulinde，Sumatrastraat 24。每月第二个周三 19:00 起。欢迎所有人。下一场：2026年10月14日。",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — 维拉维索萨，2027年4月28日–5月2日",
@@ -641,8 +641,8 @@ export const NEWS_ZH_TW = pack({
     body: "The Music Space XL，Australiëlaan 24。每月第一個週六 19:00–23:00。首場 2026年9月5日，Chris’ Collective 開場。",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — 阿姆斯特丹每月第一個週三",
-    body: "Café Insulinde，Sumatrastraat 24。每月第一個週三 19:00 起。歡迎所有人。下一場：2026年9月2日。",
+    title: "Hot Club Insulinde — 阿姆斯特丹每月第二個週三",
+    body: "Café Insulinde，Sumatrastraat 24。每月第二個週三 19:00 起。歡迎所有人。下一場：2026年10月14日。",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — 維拉維索薩，2027年4月28日–5月2日",
@@ -696,8 +696,8 @@ export const NEWS_ID = pack({
     body: "Jazz manouche di The Music Space XL, Australiëlaan 24. Sabtu pertama setiap bulan, 19:00–23:00. Malam pertama 5 September 2026: Chris’ Collective membuka.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — Rabu pertama di Amsterdam",
-    body: "Jam akustik di Café Insulinde, Sumatrastraat 24. Rabu pertama setiap bulan dari 19:00. Terbuka untuk semua. Berikutnya: 2 September 2026.",
+    title: "Hot Club Insulinde — Rabu kedua di Amsterdam",
+    body: "Jam akustik di Café Insulinde, Sumatrastraat 24. Rabu kedua setiap bulan dari 19:00. Terbuka untuk semua. Berikutnya: 14 Oktober 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 April–2 Mei 2027",
@@ -751,8 +751,8 @@ export const NEWS_TH = pack({
     body: "แจ๊ส มานูช ที่ The Music Space XL ถนน Australiëlaan 24 เสาร์แรกของเดือน 19:00–23:00 คืนแรก 5 กันยายน 2026 Chris’ Collective เปิด",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — พุธแรกที่อัมสเตอร์ดัม",
-    body: "แจมกีตาร์ที่ Café Insulinde Sumatrastraat 24 พุธแรกของเดือนตั้งแต่ 19:00 เปิดสำหรับทุกคน ครั้งหน้า: 2 กันยายน 2026",
+    title: "Hot Club Insulinde — พุธที่สองที่อัมสเตอร์ดัม",
+    body: "แจมกีตาร์ที่ Café Insulinde Sumatrastraat 24 พุธที่สองของเดือนตั้งแต่ 19:00 เปิดสำหรับทุกคน ครั้งหน้า: 14 ตุลาคม 2026",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa 28 เม.ย.–2 พ.ค. 2027",
@@ -810,8 +810,8 @@ export const NEWS_HU = pack({
     body: "Jazz Manouche a The Music Space XL-ben, Australiëlaan 24. A hónap első szombatja, 19:00–23:00. Első este 2026. szeptember 5.: a Chris’ Collective nyit. WhatsApp a jam oldalon.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — első szerda Amszterdamban",
-    body: "Akusztikus gypsy jazz jam a Café Insulindében, Sumatrastraat 24. A hónap első szerdája 19:00-tól. Mindenki jöhet. Következő: 2026. szeptember 2.",
+    title: "Hot Club Insulinde — második szerda Amszterdamban",
+    body: "Akusztikus gypsy jazz jam a Café Insulindében, Sumatrastraat 24. A hónap második szerdája 19:00-tól. Mindenki jöhet. Következő: 2026. október 14.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 2027. április 28.–május 2.",
@@ -869,8 +869,8 @@ export const NEWS_PL = pack({
     body: "Jazz Manouche w The Music Space XL, Australiëlaan 24. Pierwsza sobota miesiąca, 19:00–23:00. Pierwszy wieczór 5 września 2026: otwiera Chris’ Collective. WhatsApp na stronie jamu.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — pierwsza środa w Amsterdamie",
-    body: "Akustyczny jam gypsy jazz w Café Insulinde, Sumatrastraat 24. Pierwsza środa miesiąca od 19:00. Dla wszystkich. Następny: 2 września 2026.",
+    title: "Hot Club Insulinde — druga środa w Amsterdamie",
+    body: "Akustyczny jam gypsy jazz w Café Insulinde, Sumatrastraat 24. Druga środa miesiąca od 19:00. Dla wszystkich. Następny: 14 października 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 kwietnia–2 maja 2027",
@@ -928,8 +928,8 @@ export const NEWS_SR = pack({
     body: "Jazz Manouche u The Music Space XL, Australiëlaan 24. Prva subota u mesecu, 19:00–23:00. Prva noć 5. septembar 2026: otvara Chris’ Collective. WhatsApp na stranici jama.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — prva sreda u Amsterdamu",
-    body: "Akustični gypsy jazz jam u Café Insulinde, Sumatrastraat 24. Prva sreda u mesecu od 19:00. Svi su dobrodošli. Sledeći: 2. septembar 2026.",
+    title: "Hot Club Insulinde — druga sreda u Amsterdamu",
+    body: "Akustični gypsy jazz jam u Café Insulinde, Sumatrastraat 24. Druga sreda u mesecu od 19:00. Svi su dobrodošli. Sledeći: 14. oktobar 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28. april–2. maj 2027",
@@ -983,8 +983,8 @@ export const NEWS_HR = pack({
     body: "Jazz Manouche u The Music Space XL, Australiëlaan 24. Prva subota u mjesecu, 19:00–23:00. Prva noć 5. rujna 2026.: otvara Chris’ Collective. WhatsApp na stranici jama.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — prva srijeda u Amsterdamu",
-    body: "Akustični gypsy jazz jam u Café Insulinde, Sumatrastraat 24. Prva srijeda u mjesecu od 19:00. Svi su dobrodošli. Sljedeći: 2. rujna 2026.",
+    title: "Hot Club Insulinde — druga srijeda u Amsterdamu",
+    body: "Akustični gypsy jazz jam u Café Insulinde, Sumatrastraat 24. Druga srijeda u mjesecu od 19:00. Svi su dobrodošli. Sljedeći: 14. listopada 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28. travnja–2. svibnja 2027.",
@@ -1046,8 +1046,8 @@ export const NEWS_PT = pack({
     body: "Jazz Manouche no The Music Space XL, Australiëlaan 24. Primeiro sábado do mês, 19:00–23:00. Primeira noite 5 de setembro de 2026: Chris’ Collective abre. WhatsApp na página do jam.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — primeira quarta-feira em Amesterdão",
-    body: "Jam acústico de gypsy jazz no Café Insulinde, Sumatrastraat 24. Primeira quarta-feira do mês a partir das 19:00. Aberto a todos. Próximo: 2 de setembro de 2026.",
+    title: "Hot Club Insulinde — segunda quarta-feira em Amesterdão",
+    body: "Jam acústico de gypsy jazz no Café Insulinde, Sumatrastraat 24. Segunda quarta-feira do mês a partir das 19:00. Aberto a todos. Próximo: 14 de outubro de 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 de abril–2 de maio de 2027",
@@ -1101,8 +1101,8 @@ export const NEWS_RU = pack({
     body: "Jazz Manouche в The Music Space XL, Australiëlaan 24. Первая суббота месяца, 19:00–23:00. Первая ночь 5 сентября 2026: открывает Chris’ Collective. WhatsApp на странице джема.",
   },
   "hot-club-insulinde": {
-    title: "Hot Club Insulinde — первая среда в Амстердаме",
-    body: "Акустический gypsy jazz джем в Café Insulinde, Sumatrastraat 24. Первая среда месяца с 19:00. Для всех. Следующий: 2 сентября 2026.",
+    title: "Hot Club Insulinde — вторая среда в Амстердаме",
+    body: "Акустический gypsy jazz джем в Café Insulinde, Sumatrastraat 24. Вторая среда месяца с 19:00. Для всех. Следующий: 14 октября 2026.",
   },
   "django-portugal-camp-2027": {
     title: "Django Portugal Camp — Vila Viçosa, 28 апреля–2 мая 2027",

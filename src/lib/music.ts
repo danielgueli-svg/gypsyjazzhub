@@ -537,9 +537,9 @@ export const NEWS: NewsItem[] = [
   },
   {
     slug: "hot-club-insulinde",
-    date: "2026-09-02",
-    title: "Hot Club Insulinde — first Wednesday in Amsterdam",
-    body: "Acoustic gypsy jazz jam at Café Insulinde, Sumatrastraat 24 (Insulindeweg). First Wednesday of the month from 19:00. Open to all. Next: 2 September 2026.",
+    date: "2026-09-10",
+    title: "Hot Club Insulinde — second Wednesday in Amsterdam",
+    body: "Acoustic gypsy jazz jam at Café Insulinde, Sumatrastraat 24 (Insulindeweg). Second Wednesday of the month from 19:00. Open to all. Next: 14 October 2026.",
     kind: "scene",
     artistSlugs: [],
     image: "/guitar-wood.jpg",

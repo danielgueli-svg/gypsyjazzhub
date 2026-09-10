@@ -74,7 +74,7 @@ export const VENUES: Venue[] = [
     kind: "Café",
     site: "https://www.instagram.com/hotclubinsulinde/",
     contact: "",
-    bio: "Sumatrastraat 24, Amsterdam (Insulindeweg, Indische Buurt). Home of Hot Club Insulinde — acoustic gypsy jazz jam, first Wednesday of the month from 19:00. Open to all. Cash drinks.",
+    bio: "Sumatrastraat 24, Amsterdam (Insulindeweg, Indische Buurt). Home of Hot Club Insulinde — acoustic gypsy jazz jam, second Wednesday of the month from 19:00. Open to all. Cash drinks.",
     scene: "gypsy",
   },
   {
