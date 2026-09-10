@@ -1,14 +1,32 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { ArtistNameLink } from "@/components/artist-name-link";
+import { ConcertList } from "@/components/concert-row";
+import { Nightbook } from "@/components/i-was-there";
 import { FestivalLinks } from "@/components/festival-links";
 import { LegendCard } from "@/components/legend-card";
 import { Portrait } from "@/components/portrait";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { Badge } from "@/components/ui/badge";
-import { listLegends, type Legend } from "@/lib/api";
+import { listLegendConcerts, listLegends, type Concert, type Legend } from "@/lib/api";
+import { listReviewsForConcerts } from "@/lib/concert-reviews";
 import { festivalsForArtist } from "@/lib/festivals";
 import { groupPhoto } from "@/lib/photos";
 import { getBand } from "@/lib/scene";
+import { useI18n } from "@/lib/i18n";
+
+function uniqueConcerts(rows: Concert[]): Concert[] {
+  const seen = new Set<string>();
+  const out: Concert[] = [];
+  for (const concert of rows) {
+    const key = `${concert.title}|${concert.startsAt}|${concert.city}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(concert);
+  }
+  return out.sort(
+    (a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime(),
+  );
+}
 
 export const Route = createFileRoute("/groups/$slug")({
   beforeLoad: ({ params }) => {
@@ -19,7 +37,10 @@ export const Route = createFileRoute("/groups/$slug")({
   loader: async ({ params }) => {
     const band = getBand(params.slug);
     if (!band) throw notFound();
-    const legends = await listLegends();
+    const [legends, nested] = await Promise.all([
+      listLegends(),
+      Promise.all(band.members.map((slug) => listLegendConcerts({ data: slug }))),
+    ]);
     const bySlug = new Map(legends.map((legend) => [legend.slug, legend]));
     const members = band.members
       .map((slug) => bySlug.get(slug))
@@ -28,13 +49,22 @@ export const Route = createFileRoute("/groups/$slug")({
     const festivals = lead
       ? festivalsForArtist(lead.slug, lead.samois)
       : [];
-    return { band, members, lead, festivals };
+    const concerts = uniqueConcerts(nested.flat()).filter((concert) => {
+      const hay = `${concert.title} ${concert.description}`.toLowerCase();
+      return hay.includes(band.name.toLowerCase());
+    });
+    const reports = await listReviewsForConcerts({ data: concerts.map((row) => row.id) });
+    return { band, members, lead, concerts, festivals, reports };
   },
   component: GroupPage,
 });
 
 function GroupPage() {
-  const { band, members, lead, festivals } = Route.useLoaderData();
+  const { band, members, lead, concerts, festivals, reports } = Route.useLoaderData();
+  const { t } = useI18n();
+  const upcoming = concerts.filter(
+    (concert) => !concert.isHistoric && new Date(concert.startsAt).getTime() >= Date.now(),
+  );
   const photo = groupPhoto(band.slug, band.members);
 
   return (
@@ -88,6 +118,12 @@ function GroupPage() {
 
       <FestivalLinks festivals={festivals} />
 
+      <ConcertList
+        title={t("home.upcoming")}
+        concerts={upcoming}
+        empty={t("home.noConcerts")}
+      />
+
       {band.clips && band.clips.length > 0 ? (
         <section className="mt-12">
           <h2 className="font-display text-3xl font-semibold">Watch</h2>
@@ -103,6 +139,8 @@ function GroupPage() {
           </div>
         </section>
       ) : null}
+
+      <Nightbook artistName={band.name} concerts={concerts} initialReviews={reports} />
 
       <p className="mt-12 text-sm text-muted">
         <Link to="/groups" className="text-fg hover:underline">

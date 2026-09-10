@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Nightbook } from "@/components/i-was-there";
 import { ArtistMusic } from "@/components/artist-music";
 import { LineageLinks } from "@/components/lineage-links";
 import { PlaysWith } from "@/components/plays-with";
@@ -48,7 +49,7 @@ export const Route = createFileRoute("/grappelli")({
 });
 
 function GrappelliPage() {
-  const { collaborators, bands, festivals, clips, notes, shoutouts } = Route.useLoaderData();
+  const { concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports } = Route.useLoaderData();
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
@@ -166,6 +167,8 @@ function GrappelliPage() {
           ))}
         </ul>
       </section>
+
+      <Nightbook artistName="Stéphane Grappelli" concerts={concerts} initialReviews={reports} />
 
       <Guestbook slug="stephane-grappelli" name="Stéphane Grappelli" initial={shoutouts} />
 

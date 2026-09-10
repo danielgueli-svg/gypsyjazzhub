@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
+import { ConcertList } from "@/components/concert-row";
 import { Contribute } from "@/components/contribute";
 import { FestivalLinks } from "@/components/festival-links";
 import { FollowArtist } from "@/components/follow-artist";
 import { Guestbook } from "@/components/guestbook";
 import { HubExtras } from "@/components/hub-extras";
+import { Nightbook } from "@/components/i-was-there";
 import { LearnLinks } from "@/components/learn-links";
 import { PlaysWith } from "@/components/plays-with";
 import { Portrait } from "@/components/portrait";
@@ -188,6 +190,14 @@ function DenisChangPage() {
 
       <ArtistMusic slug="denis-chang" name="Denis Chang" />
 
+      <ConcertList
+        className="mt-10"
+        title="Upcoming"
+        concerts={upcoming}
+        empty="No dates posted yet."
+        compact
+      />
+
       <div className="mt-10 max-w-2xl">
         <ShareBox
           url="/denis-chang"
@@ -213,6 +223,7 @@ function DenisChangPage() {
       <ArtistClips slug="denis-chang" />
       <PlaysWith artists={collaborators} bands={bands} />
       <FestivalLinks festivals={festivals} />
+      <Nightbook artistName="Denis Chang" concerts={concerts} initialReviews={reports} />
       <Guestbook slug="denis-chang" name="Denis Chang" initial={shoutouts} />
       <HubExtras clips={clips} notes={notes} />
       <Contribute presetSlug="denis-chang" presetName="Denis Chang" heading="Add to Denis Chang" />

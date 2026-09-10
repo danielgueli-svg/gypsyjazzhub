@@ -2,6 +2,8 @@ import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-route
 import { useState } from "react";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
+import { ConcertList } from "@/components/concert-row";
+import { Nightbook } from "@/components/i-was-there";
 import { Contribute } from "@/components/contribute";
 import { DirectoryArtistPage } from "@/components/directory-artist-page";
 import { FollowArtist } from "@/components/follow-artist";
@@ -103,7 +105,7 @@ function MemberMusicianPage({
     reports: Awaited<ReturnType<typeof listArtistReviews>>;
   };
 }) {
-  const { musician, concerts, clips, notes, shoutouts, nearbyJams } = data;
+  const { musician, concerts, clips, notes, shoutouts, nearbyJams, reports } = data;
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
   const [note, setNote] = useState("");
@@ -214,6 +216,12 @@ function MemberMusicianPage({
 
       <ArtistMusic slug={musician.slug} name={musician.displayName} />
 
+      <ConcertList
+        title={t("home.upcoming")}
+        concerts={upcoming}
+        empty={t("home.noConcerts")}
+      />
+
       <div className="mt-10 max-w-2xl">
         <ShareBox
           url={`/musicians/${musician.slug}`}
@@ -248,6 +256,8 @@ function MemberMusicianPage({
       ) : null}
 
       <ArtistClips slug={musician.slug} />
+
+      <Nightbook artistName={musician.displayName} concerts={concerts} initialReviews={reports} />
 
       <Guestbook slug={musician.slug} name={musician.displayName} initial={shoutouts} />
 

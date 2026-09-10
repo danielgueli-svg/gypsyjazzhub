@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
 import { BookerLinks } from "@/components/booker-links";
+import { ConcertList } from "@/components/concert-row";
+import { Nightbook } from "@/components/i-was-there";
 import { Contribute } from "@/components/contribute";
 import { FollowArtist } from "@/components/follow-artist";
 import { FestivalLinks } from "@/components/festival-links";
@@ -54,7 +56,7 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
-  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, camps, schools, member } =
+  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports, camps, schools, member } =
     data;
   const { t } = useI18n();
   const { user } = useCurrentUserState();
@@ -184,6 +186,14 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
 
       <ArtistMusic slug={legend.slug} name={legend.name} />
 
+      <ConcertList
+        className="mt-10"
+        title={t("home.upcoming")}
+        concerts={upcoming}
+        empty={t("home.noConcerts")}
+        compact
+      />
+
       <div className="mt-10 max-w-2xl">
         <ShareBox
           url={`/musicians/${legend.slug}`}
@@ -218,6 +228,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
 
       <FestivalLinks festivals={festivals} />
 
+      <Nightbook artistName={legend.name} concerts={concerts} initialReviews={reports} />
       <Guestbook slug={legend.slug} name={legend.name} initial={shoutouts} />
       <HubExtras clips={clips} notes={notes} />
 

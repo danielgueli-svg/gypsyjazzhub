@@ -841,8 +841,24 @@ export async function loadConcert(id: string): Promise<Concert | null> {
   if (!raw) return null;
   const seeded = liveConcertsSeed();
   const seedHit = seeded.find((row) => row.id === raw) ?? null;
+  if (seedHit) return seedHit;
+
+  if (raw.startsWith("s-")) {
+    for (const concert of LEGEND_CONCERTS) {
+      const name =
+        LEGENDS.find((legend) => legend.slug === concert.legend_slug)?.name ?? concert.legend_slug;
+      const mapped = mapSeedConcert(concert, name);
+      if (mapped.id === raw) return mapped;
+    }
+    const byStamp = seeded.find((row) => {
+      const seedId = `s-${row.artistSlug}-${row.startsAt}`;
+      return seedId === raw || raw.endsWith(row.startsAt);
+    });
+    if (byStamp) return byStamp;
+  }
+
   const match = /^(l|c|h)-(\d+)$/.exec(raw);
-  if (!match) return seedHit;
+  if (!match) return null;
 
   try {
     await ensureSeed();
