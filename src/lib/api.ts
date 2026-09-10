@@ -562,6 +562,7 @@ export const listMusicians = createServerFn({ method: "GET" })
 export const getMusician = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     await ensureFanTables();
     const sql = await getSql();
     const rows = await sql<ProfileRow>`
@@ -573,6 +574,10 @@ export const getMusician = createServerFn({ method: "GET" })
       limit 1
     `;
     return rows[0] ? mapProfile(rows[0]) : null;
+    } catch (err) {
+      console.error("getMusician db failed", err);
+      return null;
+    }
   });
 
 export const getMyProfile = createServerFn({ method: "GET" })

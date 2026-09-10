@@ -416,6 +416,7 @@ export const listArtistOptions = createServerFn({ method: "GET" }).handler(async
 export const listHubConcerts = createServerFn({ method: "GET" })
   .validator((slug?: string) => slug ?? "")
   .handler(async ({ data: slug }) => {
+    try {
     await ensureHub();
     try {
       await syncDiscoveries();
@@ -437,6 +438,10 @@ export const listHubConcerts = createServerFn({ method: "GET" })
           order by starts_at asc
         `;
     return rows.map(mapHubConcert);
+    } catch (err) {
+      console.error("listHubConcerts db failed", err);
+      return [];
+    }
   });
 
 export const listHubClips = createServerFn({ method: "GET" })
@@ -582,6 +587,7 @@ export const getHubFestival = createServerFn({ method: "GET" })
 export const getHubJam = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     await ensureHub();
     const sql = await getSql();
     const rows = await sql<{
@@ -601,6 +607,10 @@ export const getHubJam = createServerFn({ method: "GET" })
       from hub_jams where slug = ${slug} limit 1
     `;
     return rows[0] ? mapJam(rows[0]) : null;
+    } catch (err) {
+      console.error("getHubJam db failed", err);
+      return null;
+    }
   });
 
 export const addHubConcert = createServerFn({ method: "POST" })
@@ -781,6 +791,7 @@ function parseHistoryNote(
 }
 
 export const listHistoryCircleNotes = createServerFn({ method: "GET" }).handler(async () => {
+  try {
   await ensureHub();
   const sql = await getSql();
   const rows = await sql<{
@@ -805,6 +816,10 @@ export const listHistoryCircleNotes = createServerFn({ method: "GET" }).handler(
       ...parsed,
     } satisfies HistoryCircleNote;
   });
+  } catch (err) {
+    console.error("listHistoryCircleNotes db failed", err);
+    return [] as HistoryCircleNote[];
+  }
 });
 
 export const addHistoryCircleNote = createServerFn({ method: "POST" })
@@ -946,6 +961,7 @@ export const addHubJam = createServerFn({ method: "POST" })
   });
 
 export const listHubVenues = createServerFn({ method: "GET" }).handler(async () => {
+  try {
   await ensureHub();
   try {
     await syncDiscoveries();
@@ -984,6 +1000,10 @@ export const listHubVenues = createServerFn({ method: "GET" }).handler(async () 
         booker: row.booker ?? "",
       }) satisfies Venue,
   );
+  } catch (err) {
+    console.error("listHubVenues db failed", err);
+    return [] as Venue[];
+  }
 });
 
 export const getHubVenue = createServerFn({ method: "GET" })
@@ -1248,6 +1268,7 @@ export type HubChatMessage = {
 export const listHubChat = createServerFn({ method: "GET" })
   .validator((input: { kind: ChatKind; slug: string }) => input)
   .handler(async ({ data }) => {
+    try {
     await ensureHub();
     const sql = await getSql();
     const rows = await sql<{
@@ -1267,6 +1288,10 @@ export const listHubChat = createServerFn({ method: "GET" })
       chatName: row.chat_name,
       createdAt: toIso(row.created_at),
     })) satisfies HubChatMessage[];
+    } catch (err) {
+      console.error("listHubChat db failed", err);
+      return [] as HubChatMessage[];
+    }
   });
 
 export const getMyChatName = createServerFn({ method: "GET" })
@@ -1441,6 +1466,7 @@ export const listAllHubTeachers = createServerFn({ method: "GET" }).handler(asyn
     where coalesce(status, 'published') = 'published'
     order by country_slug, name
   `;
+  if (rows.length === 0) return catalogTeachers();
   return rows.map((row) => ({
     id: row.id,
     countrySlug: row.country_slug,

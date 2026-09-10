@@ -113,6 +113,11 @@ function toSql(run: Run): Sql {
   return sql;
 }
 
+/** Cloudflare without Postgres: reads return []. Writes are no-ops. Pages use seed data. */
+function emptySql(): Sql {
+  return toSql(async () => []);
+}
+
 function createNeonSql(): Promise<Sql> {
   globalRef.__pgSqlPromise__ ??= (async () => {
     // Neon HTTP pool (Cloudflare-safe). node-postgres TCP does not run on Workers.
@@ -211,7 +216,7 @@ async function createSql(): Promise<Sql> {
     );
   }
   if (readDatabaseUrl()) return createNeonSql();
-  if (isCloudflareWorker()) throw new DbUnavailableError();
+  if (isCloudflareWorker()) return Promise.resolve(emptySql());
   return createPgliteSql();
 }
 

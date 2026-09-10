@@ -316,12 +316,9 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            // Keep Vercel. Do not honor NITRO_PRESET here: Cloudflare's build
-            // env has set `cloudflare_module`, which hung `/jams` + `/concerts`
-            // and still 500'd `/` with TanStack's dehydrated Invalid URL.
-            // CF Workers deploys should use the Cloudflare Vite plugin against
-            // this same config (as the stable 5079457 worker did).
-            preset: "vercel",
+            // Default Vercel for Grok preview builds. Set GROK_CF_WORKER=1 to
+            // emit a Cloudflare Worker for gypsyjazzhub.com.
+            preset: process.env.GROK_CF_WORKER === "1" ? "cloudflare_module" : "vercel",
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.
