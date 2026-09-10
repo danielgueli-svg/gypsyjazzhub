@@ -51,6 +51,34 @@ export function isLocaleId(raw: unknown): raw is LocaleId {
   return typeof raw === "string" && LOCALES.some((item) => item.id === raw);
 }
 
+/** Country to put first on jams / concerts for this language. */
+export function localeHomeCountry(locale: LocaleId): string {
+  const map: Record<LocaleId, string> = {
+    en: "United States of America",
+    es: "Spain",
+    pt: "Portugal",
+    fr: "France",
+    de: "Germany",
+    nl: "Netherlands",
+    it: "Italy",
+    hu: "Hungary",
+    ro: "Romania",
+    sr: "Serbia",
+    cs: "Czechia",
+    pl: "Poland",
+    hr: "Croatia",
+    ru: "Russia",
+    ja: "Japan",
+    ko: "South Korea",
+    zh: "China",
+    "zh-tw": "Taiwan",
+    id: "Indonesia",
+    th: "Thailand",
+    he: "Israel",
+  };
+  return map[locale];
+}
+
 type Dict = Record<string, string>;
 
 const en: Dict = {
@@ -4284,15 +4312,17 @@ export function LocaleProvider({
   children: ReactNode;
   initial?: LocaleId;
 }) {
-  const [locale, setLocaleState] = useState<LocaleId>(isLocaleId(initial) ? initial : "en");
+  const [locale, setLocaleState] = useState<LocaleId>(() =>
+    typeof window === "undefined"
+      ? isLocaleId(initial)
+        ? initial
+        : "en"
+      : readStored(),
+  );
 
   useEffect(() => {
-    const stored = readStored();
-    if (stored !== locale) setLocaleState(stored);
-    persistLocale(stored);
-    // First paint is English unless a saved choice exists.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    persistLocale(locale);
+  }, [locale]);
 
   useEffect(() => {
     document.documentElement.lang = locale;

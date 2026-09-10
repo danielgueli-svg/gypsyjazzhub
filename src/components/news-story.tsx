@@ -16,13 +16,8 @@ export function NewsBanner({ item }: { item: NewsItem }) {
   const title = t(`news.item.${item.slug}.title`);
   const body = t(`news.item.${item.slug}.body`);
   const cover = newsThumb(item);
-
-  return (
-    <Link
-      to="/news/$slug"
-      params={{ slug: item.slug }}
-      className="flex items-center gap-3 py-2 hover:underline"
-    >
+  const inner = (
+    <>
       {cover ? (
         <img
           src={cover}
@@ -48,6 +43,19 @@ export function NewsBanner({ item }: { item: NewsItem }) {
         <h3 className="font-display text-base font-semibold leading-tight">{title}</h3>
         <p className="mt-0.5 truncate text-xs text-muted">{newsExcerpt(body)}</p>
       </div>
+    </>
+  );
+  const className = "flex items-center gap-3 py-2 hover:underline";
+  if (item.href?.startsWith("/")) {
+    return (
+      <Link to={item.href as "/learn/apps"} className={className}>
+        {inner}
+      </Link>
+    );
+  }
+  return (
+    <Link to="/news/$slug" params={{ slug: item.slug }} className={className}>
+      {inner}
     </Link>
   );
 }

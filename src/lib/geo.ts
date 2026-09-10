@@ -621,6 +621,16 @@ export function sameCountry(value: string, atlasName: string) {
   return key === atlasName || countrySlug(key) === countrySlug(atlasName);
 }
 
+export function preferCountryNames(names: string[], preferred?: string) {
+  if (!preferred) return names;
+  const hit: string[] = [];
+  const rest: string[] = [];
+  for (const name of names) {
+    (sameCountry(name, preferred) ? hit : rest).push(name);
+  }
+  return [...hit, ...rest];
+}
+
 export function findCountry(
   index: Record<string, GlobeCountry>,
   slug: string,

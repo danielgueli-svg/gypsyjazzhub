@@ -5,9 +5,9 @@ import { JamLine } from "@/components/jam-line";
 import { ListFold } from "@/components/list-fold";
 import { Button } from "@/components/ui/button";
 import { CountryLabel } from "@/components/country-label";
-import { countrySlug } from "@/lib/geo";
+import { countrySlug, preferCountryNames, sameCountry } from "@/lib/geo";
 import { listHubJams } from "@/lib/hub-api";
-import { useI18n } from "@/lib/i18n";
+import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { jamsByCountry, type Jam } from "@/lib/jams";
 import { filterAgenda, jamToAgenda, uniqueCities, uniqueCountries } from "@/lib/agenda";
 import { pageHead, SEO } from "@/lib/seo";
@@ -30,11 +30,15 @@ export const Route = createFileRoute("/jams/")({
 function JamsPage() {
   const { extra, filter } = Route.useLoaderData();
   const groups = jamsByCountry(extra);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
+  const home = localeHomeCountry(locale);
+  const ordered = [...groups].sort(
+    (a, b) => Number(sameCountry(b.country, home)) - Number(sameCountry(a.country, home)),
+  );
   const allJams = groups.flatMap((g) => g.jams);
   const cities = uniqueCities(allJams);
-  const countries = uniqueCountries(allJams);
+  const countries = preferCountryNames(uniqueCountries(allJams), home);
 
   function allowed(jam: Jam) {
     const item = jamToAgenda(jam);
@@ -90,7 +94,7 @@ function JamsPage() {
       />
 
       <div className="mt-10 space-y-8">
-        {groups.map((group) => {
+        {ordered.map((group) => {
           const jams = group.jams.filter(allowed);
           if (!jams.length) return null;
           return (

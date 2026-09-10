@@ -3,12 +3,12 @@ import { Contribute } from "@/components/contribute";
 import { Button } from "@/components/ui/button";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
 import { CountryLabel } from "@/components/country-label";
-import { displayCountry } from "@/lib/geo";
+import { displayCountry, preferCountryNames } from "@/lib/geo";
 import { listHubFestivals } from "@/lib/hub-api";
 import { formatConcertWhen } from "@/lib/utils";
 import { format } from "date-fns";
 import { pageHead, SEO } from "@/lib/seo";
-import { useI18n } from "@/lib/i18n";
+import { localeHomeCountry, useI18n } from "@/lib/i18n";
 
 function nextShort(festival: { when: string; nextStartsAt: string; tba?: boolean }) {
   if (festival.tba) return festival.when;
@@ -38,6 +38,7 @@ export const Route = createFileRoute("/festivals/")({
 function FestivalsPage() {
   const { extra } = Route.useLoaderData();
   const { t, locale } = useI18n();
+  const home = localeHomeCountry(locale);
   const all = [...FESTIVALS, ...extra];
   const featured = all.find((festival) => festival.slug === FEATURED_SLUG) ?? all[0];
   const rest = all.filter((festival) => festival.slug !== featured.slug);
@@ -47,9 +48,12 @@ function FestivalsPage() {
       (a, b) => new Date(a.nextStartsAt).getTime() - new Date(b.nextStartsAt).getTime(),
     )
     .slice(0, 5);
-  const countries = [
-    ...new Set(rest.map((festival) => festival.country)),
-  ].sort((a, b) => displayCountry(a, locale).localeCompare(displayCountry(b, locale), locale, { sensitivity: "base" }));
+  const countries = preferCountryNames(
+    [
+      ...new Set(rest.map((festival) => festival.country)),
+    ].sort((a, b) => displayCountry(a, locale).localeCompare(displayCountry(b, locale), locale, { sensitivity: "base" })),
+    home,
+  );
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">

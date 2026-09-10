@@ -1305,13 +1305,10 @@ export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
   const counts: Record<string, number> = {};
   for (const jam of all) counts[jam.country] = (counts[jam.country] ?? 0) + 1;
   const present = [...new Set(all.map((jam) => jam.country))];
-  const lead = ["Netherlands", "Germany", "France", "Belgium"].filter((name) =>
-    present.includes(name),
+  const ordered = present.sort(
+    (a, b) => (counts[b] ?? 0) - (counts[a] ?? 0) || a.localeCompare(b),
   );
-  const rest = present
-    .filter((name) => !lead.includes(name))
-    .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0) || a.localeCompare(b));
-  return [...lead, ...rest].map((country) => ({
+  return ordered.map((country) => ({
     country,
     jams: all
       .filter((jam) => jam.country === country)

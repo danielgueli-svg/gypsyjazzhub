@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { NewsStory } from "@/components/news-story";
 import { getNews } from "@/lib/music";
 import { useI18n } from "@/lib/i18n";
@@ -8,6 +8,9 @@ export const Route = createFileRoute("/news/$slug")({
   loader: ({ params }) => {
     const item = getNews(params.slug);
     if (!item) throw notFound();
+    if (item.href?.startsWith("/")) {
+      throw redirect({ href: item.href });
+    }
     return { item };
   },
   head: ({ loaderData }) => {

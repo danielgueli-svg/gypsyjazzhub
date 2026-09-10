@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CountryLabel } from "@/components/country-label";
 import { listConcerts } from "@/lib/api";
-import { countrySlug, displayCountry } from "@/lib/geo";
+import { countrySlug, displayCountry, preferCountryNames, sameCountry } from "@/lib/geo";
 import { monthKey, monthOptions, uniqueCities, weekdayName } from "@/lib/agenda";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { jamsByCountry, type Jam } from "@/lib/jams";
-import { useI18n } from "@/lib/i18n";
+import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { pageHead, SEO } from "@/lib/seo";
 import { cn, concertAgendaText, formatConcertDay, formatConcertYear } from "@/lib/utils";
 
@@ -189,7 +189,17 @@ function ConcertsPage() {
   const search = Route.useSearch();
   const router = useRouter();
   const [value, setValue] = useState(search.q ?? "");
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const home = localeHomeCountry(locale);
+  const countryOptions = preferCountryNames(countries, home);
+  const listed = search.country
+    ? nights
+    : [...nights].sort((a, b) => {
+        const aHit = sameCountry(a.country, home) ? 0 : 1;
+        const bHit = sameCountry(b.country, home) ? 0 : 1;
+        if (aHit !== bHit) return aHit - bHit;
+        return a.startsAt.localeCompare(b.startsAt);
+      });
 
   function go(next: {
     q?: string | null;
@@ -262,7 +272,7 @@ function ConcertsPage() {
       </form>
 
       <EventFilters
-        countries={countries}
+        countries={countryOptions}
         cities={cities}
         country={search.country}
         city={search.city}
@@ -285,7 +295,7 @@ function ConcertsPage() {
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-faint">
-          {nights.length} {t("concerts.nights")}
+          {listed.length} {t("concerts.nights")}
         </p>
         <Button asChild variant="outline" size="sm">
           <Link to="/add" search={{ kind: "concert" }}>
@@ -294,14 +304,14 @@ function ConcertsPage() {
         </Button>
       </div>
 
-      {nights.length > 0 ? (
+      {listed.length > 0 ? (
         <div className="mt-6 max-w-2xl">
           <ShareBox
             url="/concerts"
             title={t("share.dates")}
             lead={t("share.datesLead")}
             text={concertAgendaText(
-              nights.map((night) => ({
+              listed.map((night) => ({
                 title: night.title,
                 artistName: night.title,
                 venue: night.venue,
@@ -315,11 +325,11 @@ function ConcertsPage() {
         </div>
       ) : null}
 
-      {nights.length === 0 ? (
+      {listed.length === 0 ? (
         <p className="mt-10 text-sm text-muted">{t("concerts.empty")}</p>
       ) : (
         <div className="mt-5 space-y-3">
-          {nights.map((night) =>
+          {listed.map((night) =>
             night.kind === "concert" && night.concert ? (
               <ConcertRow key={night.id} concert={night.concert} />
             ) : (
