@@ -102,7 +102,7 @@ function LanguageMenu({
   }, [open]);
 
   return (
-    <div ref={root} className="relative">
+    <div ref={root} className="site-lang relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -138,7 +138,7 @@ function LanguageMenu({
       {open ? (
         <div
           className={cn(
-            "absolute z-[120] w-56 rounded-xl bg-surface p-2 shadow-border",
+            "site-lang-menu absolute z-[120] w-56 rounded-xl bg-surface p-2 shadow-border",
             onDark ? "bottom-full left-0 mb-2" : "right-0 top-full mt-2",
           )}
         >

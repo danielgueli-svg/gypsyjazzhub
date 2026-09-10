@@ -124,6 +124,28 @@
     color: #2a1c10;
   }
 
+  /* Language flag: always the rightmost control in the header. */
+  header.spruce-bar .header-row {
+    display: flex;
+    align-items: center;
+  }
+  header.spruce-bar .header-tools {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  header.spruce-bar .site-lang {
+    order: 99;
+    margin-left: 0.15rem;
+    margin-right: 0;
+    flex-shrink: 0;
+  }
+  header.spruce-bar .site-lang-menu {
+    left: auto;
+    right: 0;
+  }
+
   .spruce-flat {
     background-color: #c39452;
     color: #2a1c10;

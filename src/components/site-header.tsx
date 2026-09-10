@@ -145,14 +145,14 @@ export function SiteHeader() {
 
   return (
     <header ref={root} className="spruce-bar sticky top-0 z-50 border-b border-black/15">
-      <div className="relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1.5 px-2 sm:h-20 sm:gap-3 sm:px-6">
+      <div className="header-row relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1.5 px-2 sm:h-20 sm:gap-3 sm:px-6">
         <Link to="/" aria-label="Gypsy Jazz Hub" className="flex min-w-0 shrink items-center gap-1.5 text-inherit sm:gap-3">
           <BrandMark className="h-10 w-auto shrink-0 sm:h-14" />
           <span className="hidden min-w-0 font-display text-lg font-semibold leading-tight tracking-tight sm:inline sm:text-3xl">
             Gypsy Jazz Hub
           </span>
         </Link>
-        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="header-tools ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <Link
             to="/search"
             className="hidden size-11 items-center justify-center rounded-md text-inherit hover:bg-black/10 md:inline-flex"
