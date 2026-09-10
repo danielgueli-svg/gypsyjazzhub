@@ -213,6 +213,7 @@ export const listArtistReviews = createServerFn({ method: "GET" })
 export const listConcertReviews = createServerFn({ method: "GET" })
   .validator((concertId: string) => concertId.trim())
   .handler(async ({ data: concertId }) => {
+    try {
     await ensureReviews();
     if (!concertId) return [] as NightReview[];
     const sql = await getSql();
@@ -231,6 +232,10 @@ export const listConcertReviews = createServerFn({ method: "GET" })
       order by created_at desc
     `;
     return attachMedia(rows.map(mapReview));
+    } catch (err) {
+      console.error("listConcertReviews db failed", err);
+      return [] as NightReview[];
+    }
   });
 
 export const listReviewsForConcerts = createServerFn({ method: "GET" })

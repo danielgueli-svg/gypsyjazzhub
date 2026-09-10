@@ -1,7 +1,16 @@
 import { isCloudflareWorker, readEnv } from "@/lib/runtime-env";
 
 /** Which database backend is active. */
-export type DbSource = "neon" | "pglite";
+export type DbSource = "neon" | "pglite" | "none";
+
+export class DbUnavailableError extends Error {
+  constructor(
+    message = "DATABASE_URL is required on Cloudflare Workers. PGLite WASM cannot boot there (Invalid URL string from an empty import.meta.url).",
+  ) {
+    super(message);
+    this.name = "DbUnavailableError";
+  }
+}
 
 /**
  * Live `DATABASE_URL` (not a module-load snapshot). Cloudflare Workers often
@@ -26,10 +35,11 @@ export function readDatabaseUrl(): string | undefined {
  * included. Swap in Neon later by just setting `DATABASE_URL`; no code changes.
  *
  * Never PGLite on Cloudflare Workers (WASM `import.meta.url` is empty there).
+ * Without DATABASE_URL those hosts stay on a read-only catalog seed.
  */
 export function getDbSource(): DbSource {
   if (readDatabaseUrl()) return "neon";
-  if (isCloudflareWorker()) return "neon";
+  if (isCloudflareWorker()) return "none";
   return "pglite";
 }
 
@@ -113,9 +123,7 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_INTERVAL, identity);
     const connectionString = readDatabaseUrl();
     if (!connectionString) {
-      throw new Error(
-        "DATABASE_URL is required on this host (PGLite cannot run on Cloudflare Workers).",
-      );
+      throw new DbUnavailableError();
     }
     const pool = new Pool({ connectionString });
     return toSql(async <T>(text: string, params: unknown[]) => {
@@ -203,12 +211,7 @@ async function createSql(): Promise<Sql> {
     );
   }
   if (readDatabaseUrl()) return createNeonSql();
-  if (isCloudflareWorker()) {
-    throw new Error(
-      "DATABASE_URL is required on Cloudflare Workers. PGLite WASM cannot boot there " +
-        "(Invalid URL string from an empty import.meta.url).",
-    );
-  }
+  if (isCloudflareWorker()) throw new DbUnavailableError();
   return createPgliteSql();
 }
 
@@ -260,9 +263,8 @@ export function ensureDbReady(): Promise<void> {
 }
 
 // Server-only eager start: kick PGLite bootstrap as soon as this module loads in
-// Node. Client bundles never hit this path (`getSql` throws in the browser).
-// Cloudflare Workers must not run this — `import.meta.url` is empty and PGLite
-// throws `Invalid URL string.` at isolate boot / first SSR.
+// Node. Cloudflare Workers must not run this — `import.meta.url` is empty and
+// PGLite throws `Invalid URL string.` at isolate boot / first SSR.
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };

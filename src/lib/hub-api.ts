@@ -1065,6 +1065,7 @@ export const addHubVenue = createServerFn({ method: "POST" })
   });
 
 export const listHubLuthiers = createServerFn({ method: "GET" }).handler(async () => {
+  try {
   await ensureHub();
   const sql = await getSql();
   const rows = await sql<{
@@ -1100,6 +1101,10 @@ export const listHubLuthiers = createServerFn({ method: "GET" }).handler(async (
         note: row.note ?? "",
       }) satisfies Luthier,
   );
+  } catch (err) {
+    console.error("listHubLuthiers db failed", err);
+    return [] as Luthier[];
+  }
 });
 
 export const getHubLuthier = createServerFn({ method: "GET" })
@@ -1356,9 +1361,28 @@ export type HubTeacher = {
   artistSlug: string;
 };
 
+function catalogTeachers(countrySlug?: string): HubTeacher[] {
+  const rows = CATALOG_TEACHERS.filter(
+    (row) => !countrySlug || row.countrySlug === countrySlug,
+  );
+  return rows.map((teacher, index) => ({
+    id: index + 1,
+    countrySlug: teacher.countrySlug,
+    name: teacher.name,
+    instruments: teacher.instruments,
+    contact: teacher.contact,
+    note: teacher.note,
+    region: teacher.region,
+    city: teacher.city,
+    userId: "",
+    artistSlug: teacher.artistSlug,
+  }));
+}
+
 export const listHubTeachers = createServerFn({ method: "GET" })
   .validator((countrySlug: string) => countrySlug)
   .handler(async ({ data: countrySlug }) => {
+    try {
     await ensureHub();
     const sql = await getSql();
     const rows = await sql<{
@@ -1390,9 +1414,14 @@ export const listHubTeachers = createServerFn({ method: "GET" })
       userId: row.user_id,
       artistSlug: row.artist_slug ?? "",
     })) satisfies HubTeacher[];
+    } catch (err) {
+      console.error("listHubTeachers db failed", err);
+      return catalogTeachers(countrySlug);
+    }
   });
 
 export const listAllHubTeachers = createServerFn({ method: "GET" }).handler(async () => {
+  try {
   await ensureHub();
   const sql = await getSql();
   const rows = await sql<{
@@ -1424,6 +1453,10 @@ export const listAllHubTeachers = createServerFn({ method: "GET" }).handler(asyn
     userId: row.user_id,
     artistSlug: row.artist_slug ?? "",
   })) satisfies HubTeacher[];
+  } catch (err) {
+    console.error("listAllHubTeachers db failed", err);
+    return catalogTeachers();
+  }
 });
 
 export const addHubTeacher = createServerFn({ method: "POST" })

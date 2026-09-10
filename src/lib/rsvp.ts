@@ -48,6 +48,7 @@ export const listRsvps = createServerFn({ method: "GET" })
     const kind = parseKind(data.kind);
     const targetId = data.targetId.trim();
     if (!kind || !targetId) return [] as RsvpPerson[];
+    try {
     await ensureRsvps();
     const sql = await getSql();
     const rows = await sql<{ user_id: string; display_name: string }>`
@@ -60,6 +61,10 @@ export const listRsvps = createServerFn({ method: "GET" })
       userId: row.user_id,
       name: row.display_name.trim() || "Hub member",
     })) satisfies RsvpPerson[];
+    } catch (err) {
+      console.error("listRsvps db failed", err);
+      return [] as RsvpPerson[];
+    }
   });
 
 export const toggleRsvp = createServerFn({ method: "POST" })

@@ -237,6 +237,7 @@ async function authorName(userId: string) {
 }
 
 export const listForumTopics = createServerFn({ method: "GET" }).handler(async () => {
+  try {
   await ensureForum();
   const sql = await getSql();
   const rows = await sql<{
@@ -262,11 +263,16 @@ export const listForumTopics = createServerFn({ method: "GET" }).handler(async (
     createdAt: toIso(row.created_at),
     replies: Number(row.replies),
   })) satisfies ForumTopic[];
+  } catch (err) {
+    console.error("listForumTopics db failed", err);
+    return [] as ForumTopic[];
+  }
 });
 
 export const getForumTopic = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
+    try {
     await ensureForum();
     const sql = await getSql();
     const topics = await sql<{
@@ -305,6 +311,10 @@ export const getForumTopic = createServerFn({ method: "GET" })
         createdAt: toIso(row.created_at),
       })) satisfies ForumPost[],
     };
+    } catch (err) {
+      console.error("getForumTopic db failed", err);
+      return null;
+    }
   });
 
 export const addForumTopic = createServerFn({ method: "POST" })

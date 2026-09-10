@@ -832,25 +832,30 @@ export const listLegendConcerts = createServerFn({ method: "GET" })
   });
 
 export async function loadConcert(id: string): Promise<Concert | null> {
-  const raw = id.trim();
+  const raw = decodeURIComponent(id.trim());
+  if (!raw) return null;
+  const seeded = liveConcertsSeed();
+  const seedHit = seeded.find((row) => row.id === raw) ?? null;
   const match = /^(l|c|h)-(\d+)$/.exec(raw);
-  if (!match) return null;
-  await ensureSeed();
-  const sql = await getSql();
-  const num = Number(match[2]);
-  if (match[1] === "l") {
-    const rows = await sql<{
-      id: number;
-      title: string;
-      venue: string;
-      city: string;
-      country: string;
-      starts_at: unknown;
-      note: string;
-      is_historic: boolean;
-      name: string;
-      slug: string;
-    }>`
+  if (!match) return seedHit;
+
+  try {
+    await ensureSeed();
+    const sql = await getSql();
+    const num = Number(match[2]);
+    if (match[1] === "l") {
+      const rows = await sql<{
+        id: number;
+        title: string;
+        venue: string;
+        city: string;
+        country: string;
+        starts_at: unknown;
+        note: string;
+        is_historic: boolean;
+        name: string;
+        slug: string;
+      }>`
       select lc.id, lc.title, lc.venue, lc.city, lc.country, lc.starts_at, lc.note, lc.is_historic,
              l.name, l.slug
       from legend_concerts lc
@@ -858,36 +863,36 @@ export async function loadConcert(id: string): Promise<Concert | null> {
       where lc.id = ${num}
       limit 1
     `;
-    const row = rows[0];
-    if (!row) return null;
-    return {
-      id: `l-${row.id}`,
-      kind: "legend",
-      title: row.title,
-      venue: row.venue,
-      city: row.city,
-      country: row.country,
-      startsAt: toIso(row.starts_at),
-      description: row.note,
-      ticketUrl: urlFromText(row.note),
-      isHistoric: Boolean(row.is_historic),
-      artistName: row.name,
-      artistSlug: row.slug,
-    };
-  }
-  if (match[1] === "c") {
-    const rows = await sql<{
-      id: number;
-      title: string;
-      venue: string;
-      city: string;
-      country: string;
-      starts_at: unknown;
-      description: string;
-      ticket_url: string;
-      display_name: string;
-      slug: string;
-    }>`
+      const row = rows[0];
+      if (!row) return seedHit;
+      return {
+        id: `l-${row.id}`,
+        kind: "legend",
+        title: row.title,
+        venue: row.venue,
+        city: row.city,
+        country: row.country,
+        startsAt: toIso(row.starts_at),
+        description: row.note,
+        ticketUrl: urlFromText(row.note),
+        isHistoric: Boolean(row.is_historic),
+        artistName: row.name,
+        artistSlug: row.slug,
+      };
+    }
+    if (match[1] === "c") {
+      const rows = await sql<{
+        id: number;
+        title: string;
+        venue: string;
+        city: string;
+        country: string;
+        starts_at: unknown;
+        description: string;
+        ticket_url: string;
+        display_name: string;
+        slug: string;
+      }>`
       select c.id, c.title, c.venue, c.city, c.country, c.starts_at, c.description, c.ticket_url,
              p.display_name, p.slug
       from concerts c
@@ -895,25 +900,29 @@ export async function loadConcert(id: string): Promise<Concert | null> {
       where c.id = ${num}
       limit 1
     `;
-    const row = rows[0];
-    if (!row) return null;
-    return {
-      id: `c-${row.id}`,
-      kind: "community",
-      title: row.title,
-      venue: row.venue,
-      city: row.city,
-      country: row.country,
-      startsAt: toIso(row.starts_at),
-      description: row.description,
-      ticketUrl: row.ticket_url,
-      isHistoric: false,
-      artistName: row.display_name,
-      artistSlug: row.slug,
-    };
+      const row = rows[0];
+      if (!row) return seedHit;
+      return {
+        id: `c-${row.id}`,
+        kind: "community",
+        title: row.title,
+        venue: row.venue,
+        city: row.city,
+        country: row.country,
+        startsAt: toIso(row.starts_at),
+        description: row.description,
+        ticketUrl: row.ticket_url,
+        isHistoric: false,
+        artistName: row.display_name,
+        artistSlug: row.slug,
+      };
+    }
+    const hub = await listHubConcerts({ data: "" });
+    return hub.find((row) => row.id === raw) ?? seedHit;
+  } catch (err) {
+    console.error("loadConcert db failed", err);
+    return seedHit;
   }
-  const hub = await listHubConcerts({ data: "" });
-  return hub.find((row) => row.id === raw) ?? null;
 }
 
 export const getConcert = createServerFn({ method: "GET" })
