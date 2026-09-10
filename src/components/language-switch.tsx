@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Flag } from "@/components/flag";
 import { LOCALES, useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,6 @@ export function LanguageSwitch({
   prominent?: boolean;
 }) {
   const { locale, setLocale, t } = useI18n();
-  const current = LOCALES.find((item) => item.id === locale) ?? LOCALES[0];
 
   if (size === "hero") {
     return (
@@ -39,9 +39,7 @@ export function LanguageSwitch({
                   : "text-fg hover:bg-raised",
               )}
             >
-              <span className="text-[1.2rem] leading-none" aria-hidden>
-                {item.flag}
-              </span>
+              <Flag iso={item.iso} className="h-4 w-6" />
             </button>
           ))}
         </div>
@@ -74,9 +72,7 @@ export function LanguageSwitch({
               : "text-muted hover:bg-raised hover:text-fg",
           )}
         >
-          <span className="text-base leading-none" aria-hidden>
-            {item.flag}
-          </span>
+          <Flag iso={item.iso} />
           <span>{item.native}</span>
         </button>
       ))}
@@ -116,18 +112,21 @@ function LanguageMenu({
         className={cn(
           "inline-flex items-center justify-center rounded-md",
           prominent
-            ? "h-9 gap-0.5 px-1 text-inherit hover:bg-black/10 sm:h-14 sm:gap-1.5 sm:px-2.5"
+            ? "h-9 gap-1 px-1.5 text-inherit hover:bg-black/10 sm:h-14 sm:gap-1.5 sm:px-2.5"
             : onDark
               ? "size-10 gap-2 px-2 text-white hover:bg-white/10 sm:h-12 sm:w-auto sm:px-3"
               : "size-12 gap-2 px-2 text-inherit hover:bg-black/10 sm:h-12 sm:w-auto sm:px-3",
         )}
       >
-        <span
-          className={cn("leading-none", prominent ? "text-[1.35rem] sm:text-[2.35rem]" : "text-2xl sm:text-xl")}
-          aria-hidden
-        >
-          {current.flag}
-        </span>
+        <Flag
+          iso={current.iso}
+          eager
+          className={
+            prominent
+              ? "h-5 w-7 rounded-sm sm:h-8 sm:w-11"
+              : "h-5 w-7 sm:h-6 sm:w-8"
+          }
+        />
         <ChevronDown
           className={cn(
             prominent ? "size-3.5 opacity-80 sm:size-6" : "hidden size-4 sm:block",
@@ -163,9 +162,7 @@ function LanguageMenu({
                     : "text-fg hover:bg-raised",
                 )}
               >
-                <span className={cn("leading-none", prominent ? "text-2xl" : "text-lg")} aria-hidden>
-                  {item.flag}
-                </span>
+                <Flag iso={item.iso} className="h-4 w-6" />
                 <span>{item.native}</span>
               </button>
             ))}
@@ -175,4 +172,3 @@ function LanguageMenu({
     </div>
   );
 }
-
