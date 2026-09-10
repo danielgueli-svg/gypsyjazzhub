@@ -23,6 +23,7 @@ import {
   type InstrumentId,
   type ProfileTypeId,
 } from "@/lib/profile-types";
+import { visitStats, type VisitDay } from "@/lib/visits";
 
 const OWNER_PHRASE = "ile-du-berceau";
 
@@ -101,6 +102,15 @@ export const listHubMembers = createServerFn({ method: "GET" })
       createdAt: toIso(row.createdAt),
     })) satisfies HubMember[];
   });
+
+export const getVisitStats = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    return visitStats();
+  });
+
+export type { VisitDay };
 
 export type HubUserRow = {
   id: string;

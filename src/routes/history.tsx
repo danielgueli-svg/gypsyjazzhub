@@ -1201,7 +1201,7 @@ function HistoryPage() {
         </p>
         <p className="mt-4">
           <a href={ROMANI_MUSIC_SITE} className="text-sm font-medium text-accent hover:underline">
-            Romani Music → romanimusic.com
+            Romani Music → www.romanimusic.com
           </a>
         </p>
       </div>
@@ -1209,7 +1209,7 @@ function HistoryPage() {
       <p className="mt-10 max-w-2xl text-base leading-relaxed text-muted">
         Want more history? Go to{" "}
         <a href={ROMANI_MUSIC_SITE} className="text-fg hover:underline" rel="noreferrer">
-          romanimusic.com
+          www.romanimusic.com
         </a>
         .
       </p>

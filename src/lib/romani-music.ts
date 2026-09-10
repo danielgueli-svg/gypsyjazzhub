@@ -8,7 +8,7 @@ import {
 import { archiveVideosForCountry } from "@/lib/archive-videos";
 import { familiesForCountry } from "@/lib/families";
 
-export const ROMANI_MUSIC_SITE = "https://romanimusic.com";
+export const ROMANI_MUSIC_SITE = "https://www.romanimusic.com";
 
 export function romaniMusicCountryUrl(slug: string) {
   return `${ROMANI_MUSIC_SITE}/${slug}`;

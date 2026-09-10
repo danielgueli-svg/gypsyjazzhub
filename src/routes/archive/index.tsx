@@ -60,7 +60,7 @@ function ArchiveIndexPage() {
           {t("archive.backHistory")}
         </Link>
         {" · "}
-        <a href="https://romanimusic.com" className="text-muted hover:text-fg">
+        <a href="https://www.romanimusic.com" className="text-muted hover:text-fg">
           {t("nav.romaniMusic")}
         </a>
       </p>

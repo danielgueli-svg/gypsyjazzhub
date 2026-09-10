@@ -21,13 +21,21 @@ export const NEWS_EN = pack({
     title: "Shrewsbury Django Fest 2026 line-up is up",
     body: "23–25 October in Shrewsbury. Friday: John Wheatcroft Trio featuring Olivia Frances Brown, then the Mozes Rosenberg Trio with Christiaan van Hemert. Saturday: Marion & Sobo Band, then Paulus Schäfer and Olli Soikkeli. Sunday: the Gypsy Jazz Retreat concert, Marion & Sobo again, and the all-star jam. Free daytime DJams Saturday and Sunday at Glou Glou, The Bull Inn and The Nags Head. Tickets from shrewsburydjangofest.co.uk.",
   },
+  "midwest-django-fest-2026": {
+    title: "Midwest Django Fest — Madison this weekend",
+    body: "11–12 September at William G. Lunney Lake Farm County Park, Madison. Gonzalo Bergara Trio, Dario Napoli Trio, Alfonso Ponticelli, Hot Club of Baltimore, Harmonious Wail. Campfire djam both nights. Schedule: midwestdjangofestival.com.",
+  },
+  "djangofest-northwest-2026": {
+    title: "DjangoFest Northwest — Gismo Graf, Pearl Django, Bergara",
+    body: "26th year at WICA, Langley, 15–20 September 2026. Six days: 3 Parts Bourbon, Pearl Django, Eric Vanderbilt-Mathews, John Jorgenson Trio, Gonzalo Bergara Quintet, Gismo Graf Quintet, then the Nick Lehr Memorial djam. Free second-stage sets. BroadwayWorld posted the bill 3 September.",
+  },
   "moignard-miroirs-sunset": {
     title: "Adrien Moignard Quartet + guests — Miroirs at Sunset, 11 September",
     body: "Friday 11 September 2026, 20:30, Sunset in Paris, for the album Miroirs (Label Ouest). Adrien Moignard Quartet + guests — Benji Winterstein and Julien Cattiaux on rhythm, Fabricio Nicolas-Garcia on bass. Tickets from Sunset-Sunside.",
   },
   "weekly-scan-2026-08-23": {
-    title: "This week on the globe — Barcelona, London, Madison, Langley",
-    body: "A new weekly jam in Barcelona: Martes Manouche every Tuesday at Soda Acústic, Gràcia. Chicago’s La Tosca jam is today at Cara Cara. Coming weeks: Midwest Django Fest (11–12 Sep, Madison), DjangoFest Northwest (15–20 Sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 Sep, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel in Chicago then Rochester then Asheville, Dario Napoli on the US run, and the Rosenberg brothers in Viljandi, Estonia, 9 October.",
+    title: "This week on the globe — Paris, Madison, Chicago, Langley",
+    body: "Tonight and Friday: Olli Soikkeli with the Finnish Air Force Big Band (Kuopio, Tampere). Friday in Paris: Adrien Moignard’s Miroirs at Sunset. Weekend: Midwest Django Fest in Madison (Bergara, Napoli, Ponticelli). Next week: DjangoFest Northwest (15–20 Sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Pearl Django), Chicago Gypsy Jazz Fest from 15 Sep (SPACE, Green Mill), Django In London 17–19 Sep. Rosenberg brothers in Viljandi, 9 October.",
   },
   "latin-america-manouche-2026": {
     title: "South & Central America — jams and festivals on the globe",
@@ -38,8 +46,8 @@ export const NEWS_EN = pack({
     body: "Dedicated Gypsy Jazz open jams are essentially nonexistent across Africa. The style stays niche and European. South Africa has the only standing scene: Hot Club d’Afrique in Johannesburg (all-acoustic, founded 2008), Hot Club of Cape Town, Tarabu in the Winelands, and Manouche in Cape Town — performance groups for venues, festivals and hire, not open jams. Morocco has seen occasional Django homage concerts (Royal Symphony Orchestra Jazz Band, Casablanca and Rabat, 2024). Egypt, Senegal, Nigeria, Kenya, Ghana and Ethiopia have no posted Manouche jam. General jazz jams in Cape Town, Johannesburg, Cairo and Dakar are not Hot Club nights.",
   },
   "la-pompe-live-app": {
-    title: "Christiaan van Hemert released La Pompe Live",
-    body: "The Dutch violinist and teacher just put out his backing-track app — charts, setlists and the pompe in your pocket. iPhone and Android. His beginner tutorial is on our apps page.",
+    title: "Christiaan van Hemert released La Pompe",
+    body: "The Dutch violinist and teacher released La Pompe Live today — charts, setlists and the pompe in your pocket. iPhone and Android. His beginner tutorial is on our apps page.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — first Saturday in Utrecht",
@@ -112,17 +120,25 @@ export const NEWS_NL = pack({
     title: "Shrewsbury Django Fest 2026 — het programma is er",
     body: "23–25 oktober in Shrewsbury. Vrijdag: John Wheatcroft Trio met Olivia Frances Brown, daarna het Mozes Rosenberg Trio met Christiaan van Hemert. Zaterdag: Marion & Sobo Band, daarna Paulus Schäfer en Olli Soikkeli. Zondag: het Gypsy Jazz Retreat-concert, opnieuw Marion & Sobo, en de all-star jam. Overdag vrije DJams op zaterdag en zondag bij Glou Glou, The Bull Inn en The Nags Head. Kaarten: shrewsburydjangofest.co.uk.",
   },
+  "midwest-django-fest-2026": {
+    title: "Midwest Django Fest — dit weekend in Madison",
+    body: "11–12 september op William G. Lunney Lake Farm County Park, Madison. Gonzalo Bergara Trio, Dario Napoli Trio, Alfonso Ponticelli, Hot Club of Baltimore, Harmonious Wail. Kampvuur-djam beide avonden. Programma: midwestdjangofestival.com.",
+  },
+  "djangofest-northwest-2026": {
+    title: "DjangoFest Northwest — Gismo Graf, Pearl Django, Bergara",
+    body: "26e jaar in WICA, Langley, 15–20 september 2026. Zes dagen: 3 Parts Bourbon, Pearl Django, Eric Vanderbilt-Mathews, John Jorgenson Trio, Gonzalo Bergara Quintet, Gismo Graf Quintet, daarna de Nick Lehr Memorial-djam. Gratis second-stage sets. BroadwayWorld zette de bill op 3 september.",
+  },
   "weekly-scan-2026-08-23": {
-    title: "Deze week op de globe — Barcelona, Londen, Madison, Langley",
-    body: "Nieuwe wekelijkse jam in Barcelona: Martes Manouche, elke dinsdag in Soda Acústic, Gràcia. Vandaag in Chicago de La Tosca-jam bij Cara Cara. Komende weken: Midwest Django Fest (11–12 sep, Madison), DjangoFest Northwest (15–20 sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 sep, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel in Chicago, Rochester en Asheville, Dario Napoli op de Amerikaanse ronde, en de gebroeders Rosenberg in Viljandi, Estland, 9 oktober.",
+    title: "Deze week op de globe — Parijs, Madison, Chicago, Langley",
+    body: "Vanavond en vrijdag: Olli Soikkeli met de Finnish Air Force Big Band (Kuopio, Tampere). Vrijdag in Parijs: Adrien Moignard’s Miroirs in Sunset. Weekend: Midwest Django Fest in Madison (Bergara, Napoli, Ponticelli). Volgende week: DjangoFest Northwest (15–20 sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Pearl Django), Chicago Gypsy Jazz Fest vanaf 15 sep (SPACE, Green Mill), Django In London 17–19 sep. Gebroeders Rosenberg in Viljandi, 9 oktober.",
   },
   "latin-america-manouche-2026": {
     title: "Zuid- en Midden-Amerika — jams en festivals op de globe",
     body: "Buenos Aires: de maandelijkse jam van Swing Medical in Bar de Fondo (Julián Álvarez 1200). Festival Django Argentina elke mei. Curitiba: Festival Manouche, 20–25 oktober 2026. Gypsy Jazz Club Brasília, Piracicaba, Hot Club Medellín, Hot Club de San Miguel, Festival Django CL in Santiago. Uruguay: geen vaste jam bekend.",
   },
   "la-pompe-live-app": {
-    title: "Christiaan van Hemert brengt La Pompe Live uit",
-    body: "De Nederlandse violist en leraar heeft zijn backingtrack-app uitgebracht — akkoordenschema’s, setlists en de pompe in je zak. iPhone en Android. Zijn beginnerstutorial staat op onze apps-pagina.",
+    title: "Christiaan van Hemert brengt La Pompe uit",
+    body: "De Nederlandse violist en leraar bracht vandaag La Pompe Live uit — akkoordenschema’s, setlists en de pompe in je zak. iPhone en Android. Zijn beginnerstutorial staat op onze apps-pagina.",
   },
   "hot-club-de-tms": {
     title: "Hot Club de TMS — eerste zaterdag in Utrecht",

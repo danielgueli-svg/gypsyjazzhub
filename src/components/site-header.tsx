@@ -67,7 +67,7 @@ const TOP: TopItem[] = [
       { to: "/history", key: "nav.history", hint: "nav.hint.history" },
       {
         to: "/romani-music",
-        href: "https://romanimusic.com",
+        href: "https://www.romanimusic.com",
         key: "nav.archiveRomani",
         hint: "nav.hint.archiveRomani",
       },

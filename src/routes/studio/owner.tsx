@@ -13,6 +13,7 @@ import {
   amIOwner,
   claimOwner,
   getOwnerDigest,
+  getVisitStats,
   listHubActivity,
   listHubMembers,
   removeHubItem,
@@ -20,6 +21,7 @@ import {
   sendOwnerDigest,
   type HubActivity,
   type HubMember,
+  type VisitDay,
 } from "@/lib/owner-api";
 import {
   listDiscoveries,
@@ -68,16 +70,18 @@ function OwnerPage() {
   >([]);
   const [digestNote, setDigestNote] = useState<string | null>(null);
   const [digestBusy, setDigestBusy] = useState(false);
+  const [visits, setVisits] = useState<{ today: VisitDay; days: VisitDay[] } | null>(null);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
-    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic] = await Promise.all([
+    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits] = await Promise.all([
       listHubMembers(),
       listHubActivity(),
       listDiscoveries(),
       getOwnerDigest(),
       listPendingHub(),
       listPublicActivity(),
+      getVisitStats().catch(() => null),
     ]);
     setMembers(nextMembers);
     setActivity(nextActivity);
@@ -87,6 +91,7 @@ function OwnerPage() {
     setDigestLog(nextDigest.log);
     setPending(nextPending);
     setPublicActivity(nextPublic);
+    setVisits(nextVisits);
   }
 
   useEffect(() => {
@@ -219,6 +224,42 @@ function OwnerPage() {
         </form>
       ) : (
         <>
+          <section className="mt-10">
+            <h2 className="font-display text-3xl font-semibold">Visitors</h2>
+            <p className="mt-2 text-sm text-muted">
+              Unique people per Amsterdam day. Hits are page opens from those people.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Today</p>
+                <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
+                  {visits?.today.visitors ?? 0}
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  unique visitor{(visits?.today.visitors ?? 0) === 1 ? "" : "s"} · {visits?.today.hits ?? 0} hit
+                  {(visits?.today.hits ?? 0) === 1 ? "" : "s"}
+                </p>
+              </div>
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Last 14 days</p>
+                <ul className="mt-3 space-y-1.5 text-sm">
+                  {(visits?.days ?? []).length === 0 ? (
+                    <li className="text-faint">No visits counted yet.</li>
+                  ) : (
+                    visits!.days.map((row) => (
+                      <li key={row.day} className="flex justify-between gap-3">
+                        <span>{row.day}</span>
+                        <span className="tabular-nums text-muted">
+                          {row.visitors} · {row.hits} hits
+                        </span>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+            </div>
+          </section>
+
           <section className="mt-10">
             <h2 className="font-display text-3xl font-semibold">Last 24 hours</h2>
             <p className="mt-2 text-sm text-muted">

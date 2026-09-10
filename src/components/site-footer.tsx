@@ -31,7 +31,7 @@ const LEARN = [
 
 const MORE = [
   { to: "/history", key: "nav.history" },
-  { to: "/romani-music", key: "nav.archiveRomani", href: "https://romanimusic.com" },
+  { to: "/romani-music", key: "nav.archiveRomani", href: "https://www.romanimusic.com" },
   { to: "/news", key: "nav.news" },
   { to: "/world", key: "nav.globe" },
   { to: "/join", key: "nav.join" },

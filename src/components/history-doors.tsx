@@ -21,7 +21,7 @@ const DOORS = [
     to: null,
     href: ROMANI_MUSIC_SITE,
     label: "Romani Music",
-    hint: "Opens romanimusic.com — families, orchestras, past chairs.",
+    hint: "Opens www.romanimusic.com — families, orchestras, past chairs.",
     gold: true,
   },
 ];
@@ -47,7 +47,7 @@ export function HistoryDoors() {
                   door.gold ? "opacity-80" : "text-faint",
                 )}
               >
-                Opens romanimusic.com
+                Opens www.romanimusic.com
               </p>
             ) : null}
           </>
