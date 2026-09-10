@@ -316,7 +316,12 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === "build" || isPreview
       ? [
           nitro({
-            preset: process.env.NITRO_PRESET || "vercel",
+            // Keep Vercel. Do not honor NITRO_PRESET here: Cloudflare's build
+            // env has set `cloudflare_module`, which hung `/jams` + `/concerts`
+            // and still 500'd `/` with TanStack's dehydrated Invalid URL.
+            // CF Workers deploys should use the Cloudflare Vite plugin against
+            // this same config (as the stable 5079457 worker did).
+            preset: "vercel",
             // Auto-registers server/middleware/* (the PWA install page +
             // manifest + head-tag middleware). Nitro v3 defaults serverDir to
             // false, so removing this silently unwires /?install=1 on deploys.

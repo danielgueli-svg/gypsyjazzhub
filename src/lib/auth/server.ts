@@ -31,10 +31,10 @@
 import { betterAuth } from "better-auth";
 import { bearer, genericOAuth } from "better-auth/plugins";
 import { getCookie } from "@tanstack/react-start/server";
-import { randomBytes } from "node:crypto";
 import { Pool as PgPool } from "pg";
 import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
-import { ensureDbReady, getPglite } from "../db";
+import { ensureDbReady, getPglite, readDatabaseUrl } from "../db";
+import { isCloudflareWorker, PUBLIC_SITE_ORIGIN, readEnv } from "../runtime-env";
 import { emailAndPasswordEnabled, hashPassword, verifyPassword } from "./email-password";
 import { GROK_PROVIDERS } from "./providers";
 import { pgliteDialect } from "./pglite-dialect";
@@ -46,36 +46,42 @@ import {
   PREVIEW_CLIENT_SECRET,
 } from "./preview";
 
-// Kick (and share) PGLite bootstrap as soon as the auth server module loads.
-void ensureDbReady();
-
 /**
  * Preview secret must outlive module reloads: PGLite (and its session rows) is
  * stored on `globalThis`, so an HMR re-eval of this file must NOT mint a new
  * signing secret or every existing session becomes invalid mid-dev. Process
  * restart clears both the secret and PGLite together.
+ *
+ * Never call `node:crypto.randomBytes` at module load — Cloudflare Workers
+ * forbid crypto in global scope and that crash was masking the real SSR
+ * `Invalid URL string.` from PGLite.
  */
 const globalAuthRef = globalThis as typeof globalThis & {
   __grokAuthPreviewSecret__?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  __gypsyJazzAuth__?: any;
 };
 function previewAuthSecret(): string {
-  if (!globalAuthRef.__grokAuthPreviewSecret__) {
-    try {
-      globalAuthRef.__grokAuthPreviewSecret__ = randomBytes(32).toString("hex");
-    } catch {
-      // Cloudflare Workers forbid crypto at module load (global scope).
-      globalAuthRef.__grokAuthPreviewSecret__ =
-        "cf-worker-dev-secret-set-BETTER_AUTH_SECRET";
-    }
+  if (globalAuthRef.__grokAuthPreviewSecret__) {
+    return globalAuthRef.__grokAuthPreviewSecret__;
+  }
+  // Web Crypto is legal inside a Worker request; node:crypto.randomBytes is not
+  // legal at isolate global scope.
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    globalAuthRef.__grokAuthPreviewSecret__ = [...bytes]
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  } else {
+    globalAuthRef.__grokAuthPreviewSecret__ =
+      "cf-worker-dev-secret-set-BETTER_AUTH_SECRET";
   }
   return globalAuthRef.__grokAuthPreviewSecret__;
 }
 
 /** Read an env var, treating empty/whitespace as unset. */
-const env = (key: string): string | undefined => {
-  const value = process.env[key]?.trim();
-  return value ? value : undefined;
-};
+const env = (key: string): string | undefined => readEnv(key);
 
 // Explicit off-switch. The deployer sets `VITE_AUTH_ENABLED=true` when it
 // provisions auth; set it to "false" to force auth off everywhere (dev user).
@@ -113,10 +119,10 @@ const LOCAL_DEV_ORIGINS: string[] = [
   "http://127.0.0.1:3000",
 ];
 const PUBLIC_ORIGINS: string[] = [
-  "https://www.gypsyjazzhub.com",
+  PUBLIC_SITE_ORIGIN,
   "https://gypsyjazzhub.com",
 ];
-const baseURL = explicitBaseURL ?? {
+const baseURLConfig = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
   // (not only the preview wildcard).
   allowedHosts: [
@@ -130,7 +136,9 @@ const baseURL = explicitBaseURL ?? {
   // `auto` → trust both http:// and https:// expansions of allowedHosts
   // (preview is https; local dev is http).
   protocol: "auto" as const,
-  fallback: "http://localhost:8080",
+  // Workers SSR may have no Host / a relative request.url; never let Better Auth
+  // call `new URL("")`. Production fallback is the public site, not localhost.
+  fallback: isCloudflareWorker() ? PUBLIC_SITE_ORIGIN : "http://localhost:8080",
 };
 
 // Origins Better Auth accepts on credentialed POSTs (sign-up/sign-in, etc.).
@@ -145,7 +153,23 @@ const trustedOrigins: string[] = [
   ]),
 ];
 
-const databaseUrl = env("DATABASE_URL");
+neonConfig.poolQueryViaFetch = true;
+
+function authDatabase() {
+  const databaseUrl = readDatabaseUrl();
+  if (databaseUrl) {
+    return /neon\.tech/i.test(databaseUrl)
+      ? new NeonPool({ connectionString: databaseUrl })
+      : new PgPool({ connectionString: databaseUrl });
+  }
+  if (isCloudflareWorker()) {
+    throw new Error(
+      "DATABASE_URL is required on Cloudflare Workers — refusing PGLite (Invalid URL string).",
+    );
+  }
+  if (typeof window === "undefined") void ensureDbReady();
+  return { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
+}
 
 // Static broker OAuth endpoints (skip OIDC discovery on every sign-in / callback).
 // Discovery would cost an extra network hop to the broker before the popup can
@@ -155,20 +179,6 @@ const issuerBase = grokIssuer.replace(/\/+$/, "");
 const grokAuthorizationUrl = `${issuerBase}/api/auth/oauth2/authorize`;
 const grokTokenUrl = `${issuerBase}/api/auth/oauth2/token`;
 const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
-
-neonConfig.poolQueryViaFetch = true;
-
-// Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
-// embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
-// SAME DB as app data, including email/password users. Both use the Better Auth
-// schema from `migrations/0001_auth.sql`.
-// Neon HTTP pool on Cloudflare / Neon hosts — node-postgres TCP does not run
-// on Workers and was returning empty 500s on gypsyjazzhub.com sign-up.
-const database = databaseUrl
-  ? /neon\.tech/i.test(databaseUrl)
-    ? new NeonPool({ connectionString: databaseUrl })
-    : new PgPool({ connectionString: databaseUrl })
-  : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
 
 /** Session token cookie name — also read by the live-preview popup completion page. */
 export const SESSION_TOKEN_COOKIE = "__Host-grok-auth.session_token";
@@ -197,12 +207,14 @@ const grokOAuthPlugin = authConfigured
     })
   : null;
 
-export const auth = betterAuth({
-  baseURL,
+function createAuthInstance() {
+  return betterAuth({
+  baseURL: baseURLConfig,
   // Deployed apps inject BETTER_AUTH_SECRET. Preview: process-stable secret on
   // globalThis so HMR doesn't invalidate PGLite-backed sessions (see above).
+  // Constructed lazily on first request so Workers crypto stays in request scope.
   secret: env("BETTER_AUTH_SECRET") ?? previewAuthSecret(),
-  database,
+  database: authDatabase(),
 
   // CSRF / origin check for credentialed auth POSTs (email sign-up/sign-in, …).
   // See `trustedOrigins` construction above — must cover live preview hosts AND
@@ -279,6 +291,25 @@ export const auth = betterAuth({
     // `tanstackStartCookies()` crashes this Start version (setCookie undefined).
     safeTanstackCookies(),
   ],
+});
+}
+
+function getAuth() {
+  globalAuthRef.__gypsyJazzAuth__ ??= createAuthInstance();
+  return globalAuthRef.__gypsyJazzAuth__;
+}
+
+/**
+ * Lazy Better Auth instance. Cloudflare populates `DATABASE_URL` / secrets
+ * during a request, not always at module evaluation — constructing this at
+ * import time selected PGLite and threw `Invalid URL string.` on SSR.
+ */
+export const auth = new Proxy({} as ReturnType<typeof createAuthInstance>, {
+  get(_target, prop, receiver) {
+    const instance = getAuth();
+    const value = Reflect.get(instance, prop, receiver);
+    return typeof value === "function" ? value.bind(instance) : value;
+  },
 });
 
 export function readSessionToken(): string | null {

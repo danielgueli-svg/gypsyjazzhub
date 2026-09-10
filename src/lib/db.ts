@@ -1,20 +1,40 @@
+import { isCloudflareWorker, readEnv } from "@/lib/runtime-env";
+
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite";
 
-// An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
-// "unset" — otherwise production would silently run on the PGLite fallback.
-const rawDatabaseUrl =
-  typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
-const databaseUrl =
-  rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
+/**
+ * Live `DATABASE_URL` (not a module-load snapshot). Cloudflare Workers often
+ * populate `process.env` only when handling a request; reading it at import
+ * time made production fall through to PGLite, whose WASM loader then threw
+ * workerd's `Invalid URL string.` during SSR.
+ */
+export function readDatabaseUrl(): string | undefined {
+  const raw = readEnv("DATABASE_URL");
+  if (!raw) return undefined;
+  // Neon / Hyperdrive / local Postgres. A dashboard paste without a scheme
+  // becomes `new URL(connectionString)` → `Invalid URL string.` on workerd.
+  if (/^(postgres(ql)?|https?):\/\//i.test(raw)) return raw;
+  console.error("[db] DATABASE_URL is not a postgres/http URL — ignoring");
+  return undefined;
+}
 
 /**
  * Active backend: real **Neon** when `DATABASE_URL` is set (deployed / configured
  * sandbox), otherwise a local embedded **PGLite** (Postgres compiled to WASM) so
  * the app has a working database even with nothing configured — the live preview
  * included. Swap in Neon later by just setting `DATABASE_URL`; no code changes.
+ *
+ * Never PGLite on Cloudflare Workers (WASM `import.meta.url` is empty there).
  */
-export const dbSource: DbSource = databaseUrl ? "neon" : "pglite";
+export function getDbSource(): DbSource {
+  if (readDatabaseUrl()) return "neon";
+  if (isCloudflareWorker()) return "neon";
+  return "pglite";
+}
+
+/** Live backend. Prefer `getDbSource()` — this is a convenience snapshot. */
+export const dbSource: DbSource = getDbSource();
 
 /**
  * Minimal shared SQL surface, satisfied by both Neon and PGLite. Both the
@@ -91,7 +111,13 @@ function createNeonSql(): Promise<Sql> {
     types.setTypeParser(OID_INT8, Number);
     types.setTypeParser(OID_DATE, identity);
     types.setTypeParser(OID_INTERVAL, identity);
-    const pool = new Pool({ connectionString: databaseUrl });
+    const connectionString = readDatabaseUrl();
+    if (!connectionString) {
+      throw new Error(
+        "DATABASE_URL is required on this host (PGLite cannot run on Cloudflare Workers).",
+      );
+    }
+    const pool = new Pool({ connectionString });
     return toSql(async <T>(text: string, params: unknown[]) => {
       const res = await pool.query(text, params);
       return res.rows as T[];
@@ -176,7 +202,14 @@ async function createSql(): Promise<Sql> {
         "or a server route loader, never from client code.",
     );
   }
-  return dbSource === "neon" ? createNeonSql() : createPgliteSql();
+  if (readDatabaseUrl()) return createNeonSql();
+  if (isCloudflareWorker()) {
+    throw new Error(
+      "DATABASE_URL is required on Cloudflare Workers. PGLite WASM cannot boot there " +
+        "(Invalid URL string from an empty import.meta.url).",
+    );
+  }
+  return createPgliteSql();
 }
 
 /**
@@ -200,7 +233,7 @@ export function getSql(): Promise<Sql> {
  * Kysely dialect). Throws when `DATABASE_URL` is set (that path uses Neon).
  */
 export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite> {
-  if (dbSource !== "pglite") {
+  if (getDbSource() !== "pglite") {
     throw new Error("getPglite() is only available on the PGLite fallback (no DATABASE_URL)");
   }
   await getSql();
@@ -220,16 +253,20 @@ export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite
  * module kick it off immediately (see bottom of file).
  */
 export function ensureDbReady(): Promise<void> {
-  if (dbSource !== "pglite") return Promise.resolve();
+  // Workers: never touch PGLite (WASM URL). Neon is opened lazily on first query.
+  if (isCloudflareWorker() || readDatabaseUrl()) return Promise.resolve();
+  if (getDbSource() !== "pglite") return Promise.resolve();
   return getSql().then(() => undefined);
 }
 
 // Server-only eager start: kick PGLite bootstrap as soon as this module loads in
 // Node. Client bundles never hit this path (`getSql` throws in the browser).
+// Cloudflare Workers must not run this — `import.meta.url` is empty and PGLite
+// throws `Invalid URL string.` at isolate boot / first SSR.
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };
-if (typeof window === "undefined" && dbSource === "pglite") {
+if (typeof window === "undefined" && !isCloudflareWorker() && !readDatabaseUrl()) {
   globalBoot.__pgBootstrapPromise__ ??= ensureDbReady().catch((err) => {
     globalBoot.__pgBootstrapPromise__ = undefined;
     console.error("[db] PGLite bootstrap failed:", err);
