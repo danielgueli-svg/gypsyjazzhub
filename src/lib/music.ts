@@ -396,7 +396,7 @@ export const NEWS: NewsItem[] = [
     artistSlugs: ["angelo-debarre", "denis-chang"],
     href: "https://fr.ulule.com/soutien-au-guitariste-angelo-debarre/",
     hrefLabel: "Ulule",
-    image: "/artists/angelo-debarre.jpg",
+    image: "/news/angelo-debarre-ulule.jpg",
   },
   {
     slug: "la-pompe-live-app",
