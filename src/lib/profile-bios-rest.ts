@@ -264,6 +264,30 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
     "Nick Wilkinson is Halifax rhythm guitar of Gypsophilia. The pompe of the Canadian East Coast Hot Club, under Ross Burns and Alec Frith.",
   "adam-fine":
     "Adam Fine is Halifax double bass of Gypsophilia. The low end of Nova Scotia’s gypsy jazz band — East Coast Hot Club nights.",
+  "aner-albuquerque":
+    "Aner Albuquerque (ענר אלבוקרק) plays gypsy jazz from Israel. On 12 Aug 2026 he sat the Ala Rampa gypsy-swing table in Tel Aviv with Yaakov Hoter and Nissim Zaga.",
+  "balogh-janos":
+    "Balogh János is a Hungarian primás violinist. The International Archive bills Balogh János és zenekara — his own orchestra, with him as leader on violin.",
+  "gagyi-oszkar":
+    "Gagyi Oszkár is a Hungarian primás violinist. The International Archive bills Gagyi Oszkár és zenekara — his orchestra, with him as leader on violin.",
+  "johan-tobias-bergstrom":
+    "Johan Tobias Bergstrøm plays Norwegian guitar. On 29 August 2026 he was in trio with Sol Grimshaw at Djangofest, Vespa and Humla, Oslo.",
+  "lala-weiss":
+    "Lala Weiss is a Dutch Sinti singer. The archive bills Oedoer Drom met Lala Weiss — vocal with that group.",
+  "mezei-jozsef":
+    "Mezei József “Gogo” is a Hungarian primás violinist. The archive bills Mezei József Gogo at Duna Corso, 1995.",
+  "morice-basily":
+    "Morice Basily plays Dutch Sinti guitar in The Basily Boys — the younger generation of the Basily family.",
+  "pablo-reyes":
+    "Paul “Pablo” Reyes plays guitar and sings. Son of José Reyes; an early Los Reyes / Gipsy Kings chair from Arles.",
+  "puka-karoly":
+    "Puka Károly is a Hungarian violinist. The archive bills Frido Diepeveen and Puka Károly on a Duna television show.",
+  "santa-ferenc":
+    "Sánta Ferenc is a Hungarian primás violinist. The International Archive bills Sánta Ferenc és zenekara.",
+  "spatso-weis-mirando":
+    "Spatso Weis Mirando plays Dutch Sinti violin in the Mirando family. The International Archive names him beside Romano Weis Mirando Sr.",
+  "varga-jeno":
+    "Varga Jenő is a Hungarian primás violinist. The International Archive bills Varga Jenő és zenekara.",
 };
 
 export const REST_GROUP_BIOS: Record<string, string> = {
