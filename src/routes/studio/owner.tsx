@@ -82,12 +82,15 @@ function OwnerPage() {
   async function load(isOwner: boolean) {
     if (!isOwner) return;
     const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits] = await Promise.all([
-      listHubMembers(),
-      listHubActivity(),
-      listDiscoveries(),
-      getOwnerDigest(),
-      listPendingHub(),
-      listPublicActivity(),
+      listHubMembers().catch(() => []),
+      listHubActivity().catch(() => []),
+      listDiscoveries().catch(() => []),
+      getOwnerDigest().catch(() => ({
+        settings: { email: "", enabled: true },
+        log: [] as typeof digestLog,
+      })),
+      listPendingHub().catch(() => []),
+      listPublicActivity().catch(() => []),
       getVisitStats().catch(() => null),
     ]);
     setMembers(nextMembers);
@@ -116,7 +119,10 @@ function OwnerPage() {
   if (isPending || (user && !ready)) {
     return (
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-16">
-        <div className="h-10 w-48 animate-pulse rounded-md bg-raised" />
+        <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Owner</p>
+        <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Owner desk</h1>
+        <p className="mt-3 text-sm text-muted">Opening the desk…</p>
+        <div className="mt-6 h-10 w-48 animate-pulse rounded-md bg-raised" />
       </main>
     );
   }
@@ -250,11 +256,11 @@ function OwnerPage() {
               <div className="rounded-2xl bg-surface p-5 shadow-border">
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Today</p>
                 <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
-                  {visits?.today.visitors ?? 0}
+                  {visits?.today?.visitors ?? 0}
                 </p>
                 <p className="mt-1 text-sm text-muted">
-                  unique visitor{(visits?.today.visitors ?? 0) === 1 ? "" : "s"} · {visits?.today.hits ?? 0} hit
-                  {(visits?.today.hits ?? 0) === 1 ? "" : "s"}
+                  unique visitor{(visits?.today?.visitors ?? 0) === 1 ? "" : "s"} · {visits?.today?.hits ?? 0} hit
+                  {(visits?.today?.hits ?? 0) === 1 ? "" : "s"}
                 </p>
               </div>
               <div className="rounded-2xl bg-surface p-5 shadow-border">

@@ -87,14 +87,19 @@ export const listHubMembers = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await requireOwner(context.userId);
     const sql = await getSql();
-    const rows = await sql<{
-      id: string;
-      name: string;
-      email: string;
-      createdAt: unknown;
-    }>`
-      select id, name, email, "createdAt" from "user" order by "createdAt" desc
-    `.catch(() => []);
+    let rows: { id: string; name: string; email: string; createdAt: unknown }[] = [];
+    try {
+      rows = await sql<{
+        id: string;
+        name: string;
+        email: string;
+        createdAt: unknown;
+      }>`
+        select id, name, email, "createdAt" from "user" order by "createdAt" desc
+      `;
+    } catch {
+      rows = [];
+    }
     const members: HubMember[] = rows.map((row) => ({
       id: row.id,
       name: row.name,
@@ -302,14 +307,24 @@ async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> 
   }
   const sql = await getSql();
   const rows = await loadUsersRaw();
-  const subRows = await sql<{
+  let subRows: {
     user_id: string;
     kind: string;
     target_id: string;
     target_name: string;
-  }>`
-    select user_id, kind, target_id, target_name from hub_subscriptions
-  `.catch(() => []);
+  }[] = [];
+  try {
+    subRows = await sql<{
+      user_id: string;
+      kind: string;
+      target_id: string;
+      target_name: string;
+    }>`
+      select user_id, kind, target_id, target_name from hub_subscriptions
+    `;
+  } catch {
+    subRows = [];
+  }
   const byUser = new Map<string, string[]>();
   for (const row of subRows) {
     const line = `${row.kind}\t${row.target_id}\t${row.target_name ?? ""}`;
