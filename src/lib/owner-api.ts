@@ -25,9 +25,10 @@ import {
 } from "@/lib/profile-types";
 import { visitStats, type VisitDay, type VisitPlace } from "@/lib/visits";
 import { isReservedTestEmail } from "@/lib/auth/email-password";
+import { HUB_OWNER_EMAIL } from "@/lib/hub-owner";
 
 const OWNER_PHRASE = "ile-du-berceau";
-const OWNER_KEEP_EMAIL = "danielgueli@mac.com";
+const OWNER_KEEP_EMAIL = HUB_OWNER_EMAIL;
 const FOUNDING_KEEP_EMAILS = new Set([
   OWNER_KEEP_EMAIL,
   "mbamberg@kpnplanet.nl",

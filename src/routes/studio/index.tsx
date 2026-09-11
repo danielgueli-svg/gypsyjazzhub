@@ -48,6 +48,7 @@ import {
 import { listMySubscriptions, subscriptionLabel, type Subscription } from "@/lib/subscriptions";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { isHubOwnerEmail } from "@/lib/hub-owner";
 import { useI18n } from "@/lib/i18n";
 import { listArtistOptions, type ArtistOption } from "@/lib/hub-api";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
@@ -108,11 +109,13 @@ function StudioPage() {
         invitations so jam hosts can alert you. Add a concert, a YouTube clip,
         a bio note, a festival or a jam.
       </p>
-      <p className="mt-3 text-sm">
-        <Link to="/studio/owner" className="text-muted hover:text-fg">
-          Owner desk
-        </Link>
-      </p>
+      {isHubOwnerEmail(user.primaryEmail) ? (
+        <p className="mt-3 text-sm">
+          <Link to="/studio/owner" className="text-muted hover:text-fg">
+            Owner desk
+          </Link>
+        </p>
+      ) : null}
       <DeskIdentity profile={profile} onProfile={setProfile} />
       <div className="mt-8 flex flex-wrap gap-2">
         {(

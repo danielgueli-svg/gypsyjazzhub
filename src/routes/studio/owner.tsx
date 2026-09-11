@@ -9,6 +9,7 @@ import { listPublicActivity, type ActivityItem } from "@/lib/activity";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/i18n";
+import { isHubOwnerEmail } from "@/lib/hub-owner";
 import {
   amIOwner,
   claimOwner,
@@ -107,6 +108,10 @@ function OwnerPage() {
 
   useEffect(() => {
     if (isPending || !user) return;
+    if (!isHubOwnerEmail(user.primaryEmail)) {
+      setReady(true);
+      return;
+    }
     void amIOwner()
       .then(async (res) => {
         setOwner(res.owner);
@@ -131,6 +136,21 @@ function OwnerPage() {
     );
   }
   if (!user) return <RedirectToSignIn to="/join" />;
+  if (!isHubOwnerEmail(user.primaryEmail)) {
+    return (
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-16">
+        <h1 className="font-display text-4xl font-semibold">Owner desk</h1>
+        <p className="mt-3 max-w-md text-sm text-muted">
+          This page is only for the hub owner.
+        </p>
+        <p className="mt-6 text-sm">
+          <Link to="/studio" className="text-muted hover:text-fg">
+            Back to Hub Profile
+          </Link>
+        </p>
+      </main>
+    );
+  }
 
   async function onClaim(event: FormEvent) {
     event.preventDefault();

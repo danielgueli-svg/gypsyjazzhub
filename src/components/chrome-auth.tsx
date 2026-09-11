@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/i18n";
+import { isHubOwnerEmail } from "@/lib/hub-owner";
 import { cn } from "@/lib/utils";
 
 type MenuPos = { top: number; left: number; bottom: number; up: boolean; maxHeight: number; width: number };
@@ -123,16 +124,18 @@ export function ChromeAuth({
       >
         {t("nav.hubProfile")}
       </Link>
-      <Link
-        to="/studio/owner"
-        onClick={() => {
-          setOpen(false);
-          onPick?.();
-        }}
-        className="flex h-12 items-center rounded-lg px-3 text-base text-fg hover:bg-raised"
-      >
-        Owner desk
-      </Link>
+      {isHubOwnerEmail(user.primaryEmail) ? (
+        <Link
+          to="/studio/owner"
+          onClick={() => {
+            setOpen(false);
+            onPick?.();
+          }}
+          className="flex h-12 items-center rounded-lg px-3 text-base text-fg hover:bg-raised"
+        >
+          Owner desk
+        </Link>
+      ) : null}
       <Link
         to="/studio"
         search={{ tab: "alerts" }}
