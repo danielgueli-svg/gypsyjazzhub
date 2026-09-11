@@ -532,6 +532,9 @@ function ProfileForm({
         <Button type="submit" disabled={busy}>
           {busy ? "Saving…" : "Save page"}
         </Button>
+        <p className="text-sm text-muted">
+          After you save, this information appears on the website.
+        </p>
         {profile ? (
           <Link
             to={isMusician(profileTypes) ? "/musicians/$slug" : "/fans/$slug"}
