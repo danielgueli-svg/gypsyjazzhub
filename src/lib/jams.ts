@@ -23,6 +23,14 @@ export function isStandingGypsyJam(jam: Jam) {
   return (jam.scene ?? "gypsy") === "gypsy";
 }
 
+/** Homepage: real rooms only. Keep thin-scene notes off the front. */
+export function isFrontJam(jam: Jam) {
+  if ((jam.scene ?? "gypsy") !== "gypsy") return false;
+  if (/no regular|no standing/i.test(jam.when)) return false;
+  if (/no standing|occasional Django/i.test(jam.name)) return false;
+  return true;
+}
+
 /** No posted Hot Club jam, but rooms exist to write to. */
 export function isThinGypsyScene(jams: Jam[], venueCount: number) {
   return !jams.some(isStandingGypsyJam) && venueCount > 0;

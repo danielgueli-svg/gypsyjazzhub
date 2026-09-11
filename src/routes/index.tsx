@@ -16,7 +16,7 @@ import { useI18n } from "@/lib/i18n";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
-import { upcomingJams } from "@/lib/jams";
+import { catalogJams, isFrontJam, type Jam } from "@/lib/jams";
 import { pageHead, SEO } from "@/lib/seo";
 import { settle } from "@/lib/settle";
 
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
     return {
       concerts: upcoming.slice(0, 5),
       camps: upcomingCamps().slice(0, 5),
-      jams: upcomingJams(),
+      jams: catalogJams().filter(isFrontJam),
       news: latestNews(20)
         .filter((item) => item.kind !== "album")
         .slice(0, 5),
@@ -78,9 +78,23 @@ function Home() {
     return [...counts.keys()].sort((a, b) => displayCountry(a).localeCompare(displayCountry(b)));
   }, [jams]);
   const countryJams = useMemo(() => {
-    if (!jamCountry) return mixByCountry(jams, (jam) => jam.country);
-    return jams.filter((jam) => countrySlug(jam.country) === jamCountry);
-  }, [jamCountry, jams]);
+    if (jamCountry) {
+      return jams.filter((jam) => countrySlug(jam.country) === jamCountry);
+    }
+    const mixed = mixByCountry(jams, (jam) => jam.country);
+    const seen = new Set<string>();
+    const one: Jam[] = [];
+    for (const jam of mixed) {
+      if (seen.has(jam.country)) continue;
+      seen.add(jam.country);
+      one.push(jam);
+    }
+    return one.sort((a, b) =>
+      displayCountry(a.country, locale).localeCompare(displayCountry(b.country, locale), locale, {
+        sensitivity: "base",
+      }),
+    );
+  }, [jamCountry, jams, locale]);
   const shownJams = countryJams;
   const concertCountries = useMemo(() => {
     const counts = new Map<string, number>();
@@ -190,9 +204,9 @@ function Home() {
         {shownJams.length === 0 ? (
           <p className="mt-4 text-sm text-muted">{t("home.noJams")}</p>
         ) : (
-          <ListFold items={shownJams} limit={10}>
+          <ListFold items={shownJams} limit={jamCountry ? 8 : shownJams.length || 24}>
             {(rows) => (
-              <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-5">
+              <ul className="mt-4">
                 {rows.map((jam) => (
                   <JamLine key={jam.slug} jam={jam} />
                 ))}
