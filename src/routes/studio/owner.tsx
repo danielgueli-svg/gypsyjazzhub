@@ -70,7 +70,11 @@ function OwnerPage() {
   >([]);
   const [digestNote, setDigestNote] = useState<string | null>(null);
   const [digestBusy, setDigestBusy] = useState(false);
-  const [visits, setVisits] = useState<{ today: VisitDay; days: VisitDay[] } | null>(null);
+  const [visits, setVisits] = useState<{
+    today: VisitDay;
+    days: VisitDay[];
+    total?: { visitors: number; hits: number };
+  } | null>(null);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
@@ -225,11 +229,21 @@ function OwnerPage() {
       ) : (
         <>
           <section className="mt-10">
-            <h2 className="font-display text-3xl font-semibold">Visitors</h2>
+            <h2 className="font-display text-3xl font-semibold">Visits</h2>
             <p className="mt-2 text-sm text-muted">
-              Unique people per Amsterdam day. Hits are page opens from those people.
+              Every public page open. Unique people use one browser. Amsterdam day.
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl bg-surface p-5 shadow-border sm:col-span-1">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Site visits</p>
+                <p className="mt-2 font-display text-5xl font-semibold tabular-nums">
+                  {visits?.total?.hits ?? 0}
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  all time · {visits?.total?.visitors ?? 0} unique visitor
+                  {(visits?.total?.visitors ?? 0) === 1 ? "" : "s"}
+                </p>
+              </div>
               <div className="rounded-2xl bg-surface p-5 shadow-border">
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Today</p>
                 <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
