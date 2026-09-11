@@ -234,8 +234,8 @@ async function ensurePrefsRow(userId: string) {
 
 export async function storeAlertPrefs(userId: string, input: Omit<AlertPrefs, "lastSentAt">) {
   await ensureAlertTables();
-  const countries = parseCountries(input.countries.join(","));
-  const kinds = parseKinds(input.kinds.join(","));
+  const countries = parseCountries((input.countries ?? []).join(","));
+  const kinds = parseKinds((input.kinds ?? []).join(","));
   const frequency = parseFrequency(input.frequency);
   const sql = await getSql();
   await sql`

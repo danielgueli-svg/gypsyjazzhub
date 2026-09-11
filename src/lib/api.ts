@@ -552,8 +552,7 @@ export const listCollaborators = createServerFn({ method: "GET" })
 export const listMusicians = createServerFn({ method: "GET" })
   .validator((input: { q?: string } = {}) => input)
   .handler(async ({ data }) => {
-    return settle("musicians", [] as Profile[], async () => {
-      try {
+    try {
         await ensureFanTables();
         const sql = await getSql();
         const q = data.q?.trim() ?? "";
@@ -586,20 +585,16 @@ export const listMusicians = createServerFn({ method: "GET" })
       } catch (err) {
         console.error("list musicians failed", err);
         try {
-          await ensureFanTables();
           const sql = await getSql();
-          const rows = await sql<ProfileRow>`
-            select * from profiles
-            where coalesce(member_kind, 'musician') <> 'fan'
-            order by created_at desc
-          `;
-          return rows.map(mapProfile);
+          const rows = await sql<ProfileRow>`select * from profiles`;
+          return rows
+            .filter((row) => String(row.member_kind ?? "musician") !== "fan")
+            .map(mapProfile);
         } catch (err2) {
           console.error("list musicians fallback failed", err2);
-          return [];
+          return [] as Profile[];
         }
       }
-    });
   });
 
 export const getMusician = createServerFn({ method: "GET" })
