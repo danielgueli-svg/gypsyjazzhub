@@ -110,10 +110,13 @@ function OwnerPage() {
       .then(async (res) => {
         setOwner(res.owner);
         setClaimed(res.claimed);
+        setReady(true);
         await load(res.owner);
       })
-      .catch(() => setError("Could not open the owner desk."))
-      .finally(() => setReady(true));
+      .catch(() => {
+        setError("Could not open the owner desk.");
+        setReady(true);
+      });
   }, [isPending, user]);
 
   if (isPending || (user && !ready)) {

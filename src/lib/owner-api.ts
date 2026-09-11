@@ -63,54 +63,30 @@ function isTestAccount(email: string, name = "", id = "") {
 
 async function purgeTestAccounts() {
   const sql = await getSql();
-  let rows: { id: string; name: string; email: string }[] = [];
   try {
-    rows = await sql<{ id: string; name: string; email: string }>`
-      select id, name, email from "user"
-    `;
+    await sql.query(`
+      delete from "session" where "userId" in (
+        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+      )
+    `);
+    await sql.query(`
+      delete from account where "userId" in (
+        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+      )
+    `);
+    await sql.query(`
+      delete from hub_subscriptions where user_id in (
+        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+      )
+    `);
+    await sql.query(`
+      delete from hub_members where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+    `);
+    await sql.query(`
+      delete from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+    `);
   } catch {
-    return;
-  }
-  const ids = new Set<string>();
-  for (const row of rows) {
-    if (isTestAccount(row.email, row.name, row.id)) ids.add(row.id);
-  }
-  try {
-    const extra = await sql<{ user_id: string; email: string }>`
-      select user_id, email from hub_members
-    `;
-    for (const row of extra) {
-      if (isTestAccount(row.email, "", row.user_id)) ids.add(row.user_id);
-    }
-  } catch {
-    /* optional */
-  }
-  for (const id of ids) {
-    try {
-      await sql`delete from "session" where "userId" = ${id}`;
-    } catch {
-      /* */
-    }
-    try {
-      await sql`delete from account where "userId" = ${id}`;
-    } catch {
-      /* */
-    }
-    try {
-      await sql`delete from hub_subscriptions where user_id = ${id}`;
-    } catch {
-      /* */
-    }
-    try {
-      await sql`delete from hub_members where user_id = ${id}`;
-    } catch {
-      /* */
-    }
-    try {
-      await sql`delete from "user" where id = ${id}`;
-    } catch {
-      /* */
-    }
+    /* best-effort */
   }
 }
 
@@ -147,6 +123,13 @@ async function ownerIds() {
 }
 
 async function requireOwner(userId: string) {
+  const sql = await getSql();
+  try {
+    const me = await sql<{ email: string }>`select email from "user" where id = ${userId} limit 1`;
+    if ((me[0]?.email ?? "").toLowerCase() === OWNER_KEEP_EMAIL) return;
+  } catch {
+    /* fall through to hub_owners */
+  }
   const ids = await ownerIds();
   if (!ids.includes(userId)) throw new Error("Owner desk is only for the hub owner.");
 }
@@ -154,8 +137,25 @@ async function requireOwner(userId: string) {
 export const amIOwner = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
-    const ids = await ownerIds();
-    return { owner: ids.includes(context.userId), claimed: ids.length > 0 };
+    try {
+      const sql = await getSql();
+      const me = await sql<{ email: string }>`
+        select email from "user" where id = ${context.userId} limit 1
+      `;
+      if ((me[0]?.email ?? "").toLowerCase() === OWNER_KEEP_EMAIL) {
+        await ensureOwnerTable();
+        await sql`insert into hub_owners (user_id) values (${context.userId}) on conflict do nothing`;
+        return { owner: true, claimed: true };
+      }
+    } catch {
+      /* use hub_owners */
+    }
+    try {
+      const ids = await ownerIds();
+      return { owner: ids.includes(context.userId), claimed: ids.length > 0 };
+    } catch {
+      return { owner: false, claimed: false };
+    }
   });
 
 export const claimOwner = createServerFn({ method: "POST" })
@@ -173,7 +173,6 @@ export const listHubMembers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     await requireOwner(context.userId);
-    await purgeTestAccounts();
     const sql = await getSql();
     let rows: { id: string; name: string; email: string; createdAt: unknown }[] = [];
     try {
@@ -211,7 +210,13 @@ export const listHubMembers = createServerFn({ method: "GET" })
     } catch {
       /* hub_members optional */
     }
-    return members.filter((row) => !isTestAccount(row.email, row.name, row.id));
+    const real = members.filter((row) => !isTestAccount(row.email, row.name, row.id));
+    try {
+      await purgeTestAccounts();
+    } catch {
+      /* hide first, delete when we can */
+    }
+    return real;
   });
 
 export const getVisitStats = createServerFn({ method: "GET" })
@@ -392,11 +397,6 @@ async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> 
     await ensureSubscriptionTables();
   } catch {
     /* subscriptions table is optional */
-  }
-  try {
-    await purgeTestAccounts();
-  } catch {
-    /* keep listing even if purge fails */
   }
   const sql = await getSql();
   const rows = await loadUsersRaw();
