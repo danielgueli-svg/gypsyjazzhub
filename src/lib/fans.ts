@@ -74,10 +74,62 @@ const SEED_FANS: Array<{
 
 let fanReady: Promise<void> | null = null;
 
+export async function ensureProfileColumns() {
+  const sql = await getSql();
+  await sql.query(`
+    create table if not exists profiles (
+      user_id text primary key,
+      slug text not null unique,
+      display_name text not null,
+      city text not null default '',
+      country text not null default '',
+      instruments text not null default '',
+      bio text not null default '',
+      website_url text not null default '',
+      youtube_url text not null default '',
+      instagram_url text not null default '',
+      contact_url text not null default '',
+      spotify_url text not null default '',
+      looking_for_gigs integer not null default 0,
+      available_to_jam integer not null default 0,
+      member_kind text not null default 'musician',
+      profile_types text not null default '',
+      open_for_invites integer not null default 0,
+      created_at text not null default (datetime('now')),
+      updated_at text not null default (datetime('now'))
+    )
+  `);
+  await sql.query(`
+    create table if not exists follows (
+      follower_id text not null,
+      musician_user_id text not null,
+      created_at text not null default (datetime('now')),
+      primary key (follower_id, musician_user_id)
+    )
+  `);
+  for (const col of [
+    "contact_url text not null default ''",
+    "spotify_url text not null default ''",
+    "member_kind text not null default 'musician'",
+    "profile_types text not null default ''",
+    "open_for_invites integer not null default 0",
+    "looking_for_gigs integer not null default 0",
+    "available_to_jam integer not null default 0",
+  ]) {
+    try {
+      await sql.query(`alter table profiles add column ${col}`);
+    } catch {
+      /* column already there */
+    }
+  }
+}
+
 export async function ensureFanTables() {
-  if (getDbSource() === "none" || getDbSource() === "do") return;
+  if (getDbSource() === "none") return;
   fanReady ??= (async () => {
     const sql = await getSql();
+    await ensureProfileColumns();
+    if (getDbSource() === "do") return;
     await sql.query(`alter table profiles add column if not exists member_kind text not null default 'musician'`);
     await sql.query(`alter table profiles add column if not exists open_for_invites boolean not null default false`);
     await sql.query(`alter table profiles add column if not exists profile_types text not null default ''`);

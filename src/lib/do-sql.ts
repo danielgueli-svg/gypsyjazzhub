@@ -42,7 +42,15 @@ export function pgToSqlite(sql: string): string {
     .replace(/\bnow\(\)/gi, "datetime('now')")
     .replace(/\btrue\b/gi, "1")
     .replace(/\bfalse\b/gi, "0")
-    .replace(/add column if not exists/gi, "add column");
+    .replace(/add column if not exists/gi, "add column")
+    .replace(/::\w+/g, "")
+    .replace(/\bilike\b/gi, "like");
+}
+
+function sqliteParam(value: unknown) {
+  if (typeof value === "boolean") return value ? 1 : 0;
+  if (value instanceof Date) return value.toISOString();
+  return value;
 }
 
 function sqlStatements(sql: string): string[] {
@@ -62,11 +70,11 @@ function sqlStatements(sql: string): string[] {
 }
 
 function placeholders(text: string, params: unknown[]): { sql: string; params: unknown[] } {
-  if (!/\$\d+/.test(text)) return { sql: pgToSqlite(text), params };
+  if (!/\$\d+/.test(text)) return { sql: pgToSqlite(text), params: params.map(sqliteParam) };
   const used = [...text.matchAll(/\$(\d+)/g)].map((m) => Number(m[1]));
   return {
     sql: pgToSqlite(text).replace(/\$(\d+)/g, "?"),
-    params: used.map((n) => params[n - 1]),
+    params: used.map((n) => sqliteParam(params[n - 1])),
   };
 }
 

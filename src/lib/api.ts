@@ -653,14 +653,17 @@ export const saveMyProfile = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const displayName = data.displayName.trim();
     if (!displayName) throw new Error("Give your page a name.");
-    await ensureFanTables();
-    const sql = await getSql();
-    const slug = await uniqueSlug(displayName, context.userId);
-    const types = typesFromMemberKind(data.profileTypes ?? [], data.memberKind);
-    const memberKind = isMusician(types) ? "musician" : "fan";
-    const openForInvites = Boolean(data.openForInvites);
-    const profileTypes = serializeTypes(types);
-    await sql`
+    try {
+      await ensureFanTables();
+      const sql = await getSql();
+      const slug = await uniqueSlug(displayName, context.userId);
+      const types = typesFromMemberKind(data.profileTypes ?? [], data.memberKind);
+      const memberKind = isMusician(types) ? "musician" : "fan";
+      const openForInvites = data.openForInvites ? 1 : 0;
+      const lookingForGigs = data.lookingForGigs ? 1 : 0;
+      const availableToJam = data.availableToJam ? 1 : 0;
+      const profileTypes = serializeTypes(types);
+      await sql`
       insert into profiles (
         user_id, slug, display_name, city, country, instruments, bio,
         website_url, youtube_url, instagram_url, spotify_url, contact_url, looking_for_gigs, available_to_jam,
@@ -669,7 +672,7 @@ export const saveMyProfile = createServerFn({ method: "POST" })
         ${context.userId}, ${slug}, ${displayName}, ${data.city.trim()},
         ${data.country.trim()}, ${data.instruments.trim()}, ${data.bio.trim()},
         ${data.websiteUrl.trim()}, ${data.youtubeUrl.trim()}, ${data.instagramUrl.trim()},
-        ${(data.spotifyUrl ?? "").trim()}, ${data.contactUrl.trim()}, ${data.lookingForGigs}, ${data.availableToJam},
+        ${(data.spotifyUrl ?? "").trim()}, ${data.contactUrl.trim()}, ${lookingForGigs}, ${availableToJam},
         ${memberKind}, ${profileTypes}, ${openForInvites}, now()
       )
       on conflict (user_id) do update set
@@ -691,13 +694,26 @@ export const saveMyProfile = createServerFn({ method: "POST" })
         open_for_invites = excluded.open_for_invites,
         updated_at = now()
     `;
-    const rows = await sql<ProfileRow>`
+      let rows: ProfileRow[] = [];
+      try {
+        rows = await sql<ProfileRow>`
       select p.*, (
-        select count(*)::int from follows f where f.musician_user_id = p.user_id
+        select count(*) from follows f where f.musician_user_id = p.user_id
       ) as follower_count
       from profiles p where p.user_id = ${context.userId} limit 1
     `;
-    return mapProfile(rows[0]!);
+      } catch {
+        rows = await sql<ProfileRow>`
+          select p.* from profiles p where p.user_id = ${context.userId} limit 1
+        `;
+      }
+      if (!rows[0]) throw new Error("Could not save your page.");
+      return mapProfile(rows[0]);
+    } catch (err) {
+      if (err instanceof Error && err.message === "Give your page a name.") throw err;
+      console.error("saveMyProfile failed", err);
+      throw new Error("Could not save your page. Try again in a moment.");
+    }
   });
 
 export const listConcerts = createServerFn({ method: "POST" })
