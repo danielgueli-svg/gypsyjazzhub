@@ -131,7 +131,7 @@ export const FESTIVALS: Festival[] = [
     when: "September",
     founded: "2000",
     site: "https://www.djangofest.com/",
-    bio: "Founded in 2000 to bring gypsy jazz to the Pacific Northwest. DjangoFest NW is concerts, workshops and late jams on Whidbey Island — a West Coast counterpart to Django in June. 15–20 September 2026 at Whidbey Island Center for the Arts, Langley: Gismo Graf (headliner), Gonzalo Bergara, Tim Kliphuis, John Jorgenson, Pearl Django, Jimmy Grant with Sam Farthing and Simon Planting, plus the island chairs.",
+    bio: "Founded in 2000 to bring gypsy jazz to the Pacific Northwest. DjangoFest NW is concerts, workshops and late jams on Whidbey Island — a West Coast counterpart to Django in June. 15–20 September 2026 at Whidbey Island Center for the Arts, Langley: 15 Sep 3 Parts Bourbon and Café Impromptu; 17 Sep Eric Vanderbilt-Mathews All-Stars and Leah and I; 18 Sep John Jorgenson Trio (matinee) and Gonzalo Bergara Quintet (evening); 19 Sep Pino Noir and Grappelli’s Django (matinee) and Gismo Graf Quintet (evening); 20 Sep Stella Heath and the Nick Lehr Memorial Djam. Free second stage: Ranger and the Re-Arrangers, Lone Fir Hot Club.",
     nextStartsAt: "2026-09-16T02:00:00.000Z",
     relatedSlugs: [
       "gismo-graf",
@@ -688,7 +688,7 @@ export const FESTIVALS: Festival[] = [
     when: "24–27 September 2026",
     founded: "2020s",
     site: "https://www.throckmortontheatre.org/djangofest-mill-valley",
-    bio: "West Coast Django week at 142 Throckmorton Theatre. Gonzalo Bergara Quintet Thursday 24 Sep 20:00; Gismo Graf Quintet with Tim Kliphuis Saturday 26 Sep 20:00. Workshops in the same house. throckmortontheatre.org.",
+    bio: "West Coast Django week at 142 Throckmorton Theatre. Official 2026 nights: Thursday 24 Sep 20:00 Gonzalo Bergara Quintet feat. Leah Zeger and Rob Hardt; Friday 25 Sep 20:00 Sam Farthing All Stars feat. Stella Heath; Saturday 26 Sep 20:00 Gismo Graf Quintet with Tim Kliphuis; Sunday 27 Sep Grappelli’s Django. Workshops in the same house. throckmortontheatre.org.",
     nextStartsAt: "2026-09-25T03:00:00.000Z",
     relatedSlugs: ["gonzalo-bergara", "gismo-graf", "tim-kliphuis", "jimmy-grant", "sam-farthing"],
   },
