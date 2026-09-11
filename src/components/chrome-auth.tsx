@@ -89,6 +89,16 @@ export function ChromeAuth({
         {t("nav.hubProfile")}
       </Link>
       <Link
+        to="/studio/owner"
+        onClick={() => {
+          setOpen(false);
+          onPick?.();
+        }}
+        className="flex h-12 items-center rounded-lg px-3 text-base text-fg hover:bg-raised"
+      >
+        Owner desk
+      </Link>
+      <Link
         to="/studio"
         search={{ tab: "alerts" }}
         onClick={() => {
