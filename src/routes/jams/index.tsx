@@ -11,6 +11,7 @@ import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { jamsByCountry, type Jam } from "@/lib/jams";
 import { filterAgenda, jamToAgenda, uniqueCities, uniqueCountries } from "@/lib/agenda";
 import { pageHead, SEO } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 type Search = { country?: string; city?: string; weekday?: string; type?: string };
 
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/jams/")({
     type: typeof search.type === "string" ? search.type : undefined,
   }),
   loaderDeps: ({ search }) => search,
-  loader: async ({ deps }) => ({ extra: await listHubJams(), filter: deps }),
+  loader: async ({ deps }) => ({ extra: await settle("hub-jams", [], () => listHubJams()), filter: deps }),
   component: JamsPage,
 });
 

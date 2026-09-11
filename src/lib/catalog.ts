@@ -14,7 +14,7 @@ const STUB_BIO =
   "On the gypsy jazz circuit. This page opened from a date, jam or clip on the hub — a short bio will follow when we have a sourced line.";
 
 export async function ensureCatalogColumns() {
-  if (getDbSource() === "none") return;
+  if (getDbSource() === "none" || getDbSource() === "do") return;
   const sql = await getSql();
   await sql.query(`alter table legends add column if not exists photo_url text not null default ''`);
   await sql.query(`alter table legends add column if not exists photo_credit text not null default ''`);

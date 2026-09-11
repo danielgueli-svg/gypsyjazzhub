@@ -75,7 +75,7 @@ const SEED_FANS: Array<{
 let fanReady: Promise<void> | null = null;
 
 export async function ensureFanTables() {
-  if (getDbSource() === "none") return;
+  if (getDbSource() === "none" || getDbSource() === "do") return;
   fanReady ??= (async () => {
     const sql = await getSql();
     await sql.query(`alter table profiles add column if not exists member_kind text not null default 'musician'`);

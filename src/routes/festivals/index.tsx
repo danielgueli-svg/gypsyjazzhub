@@ -9,6 +9,7 @@ import { formatConcertWhen } from "@/lib/utils";
 import { format } from "date-fns";
 import { pageHead, SEO } from "@/lib/seo";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
+import { settle } from "@/lib/settle";
 
 function nextShort(festival: { when: string; nextStartsAt: string; tba?: boolean }) {
   if (festival.tba) return festival.when;
@@ -28,7 +29,7 @@ const FEATURED_SLUG = "festival-django-reinhardt";
 export const Route = createFileRoute("/festivals/")({
   head: () => pageHead(SEO.festivals),
   loader: async () => {
-    const extra = await listHubFestivals();
+    const extra = await settle("hub-festivals", [], () => listHubFestivals());
     const known = new Set(FESTIVALS.map((festival) => festival.slug));
     return { extra: extra.filter((festival) => !known.has(festival.slug)) };
   },

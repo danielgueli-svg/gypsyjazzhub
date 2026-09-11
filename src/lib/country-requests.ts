@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { countrySlug } from "@/lib/geo";
 import { toIso } from "@/lib/utils";
 
@@ -23,6 +23,7 @@ export type HubCountry = {
 };
 
 async function ensureCountryTables() {
+  if (getDbSource() === "do") return;
   const sql = await getSql();
   await sql.query(`
     create table if not exists hub_country_requests (

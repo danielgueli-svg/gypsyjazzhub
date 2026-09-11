@@ -1,7 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql, getDbSource } from "@/lib/db";
-import { syncDiscoveries } from "@/lib/discovery-api";
 import type { Concert } from "@/lib/api";
 import type { Festival } from "@/lib/festivals";
 import type { Jam } from "@/lib/jams";
@@ -40,7 +39,7 @@ export type HubNote = {
 let hubReady: Promise<void> | null = null;
 
 async function ensureHub() {
-  if (getDbSource() === "none") return;
+  if (getDbSource() === "none" || getDbSource() === "do") return;
   hubReady ??= runEnsureHub().catch((err) => {
     hubReady = null;
     throw err;
@@ -429,11 +428,6 @@ export const listHubConcerts = createServerFn({ method: "GET" })
   .handler(async ({ data: slug }) => {
     try {
     await ensureHub();
-    try {
-      await syncDiscoveries();
-    } catch {
-      /* scan import should not hide the calendar */
-    }
     const sql = await getSql();
     const rows = slug
       ? await sql<Parameters<typeof mapHubConcert>[0]>`
@@ -522,11 +516,6 @@ export const listHubNotes = createServerFn({ method: "GET" })
 export const listHubFestivals = createServerFn({ method: "GET" }).handler(async () => {
   try {
     await ensureHub();
-    try {
-      await syncDiscoveries();
-    } catch {
-      /* scan import should not hide festivals */
-    }
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -553,11 +542,6 @@ export const listHubFestivals = createServerFn({ method: "GET" }).handler(async 
 export const listHubJams = createServerFn({ method: "GET" }).handler(async () => {
   try {
     await ensureHub();
-    try {
-      await syncDiscoveries();
-    } catch {
-      /* scan import should not hide jams */
-    }
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -984,11 +968,6 @@ export const addHubJam = createServerFn({ method: "POST" })
 export const listHubVenues = createServerFn({ method: "GET" }).handler(async () => {
   try {
   await ensureHub();
-  try {
-    await syncDiscoveries();
-  } catch {
-    /* scan import should not hide venues */
-  }
   const sql = await getSql();
   const rows = await sql<{
     slug: string;
@@ -1425,6 +1404,16 @@ function catalogTeachers(countrySlug?: string): HubTeacher[] {
   }));
 }
 
+function mergeHubTeachers(fromDb: HubTeacher[], countrySlug?: string): HubTeacher[] {
+  const catalog = catalogTeachers(countrySlug);
+  if (fromDb.length === 0) return catalog;
+  const keys = new Set(fromDb.map((row) => `${row.countrySlug}|${row.name.toLowerCase()}`));
+  return [
+    ...catalog.filter((row) => !keys.has(`${row.countrySlug}|${row.name.toLowerCase()}`)),
+    ...fromDb,
+  ];
+}
+
 export const listHubTeachers = createServerFn({ method: "GET" })
   .validator((countrySlug: string) => countrySlug)
   .handler(async ({ data: countrySlug }) => {
@@ -1448,18 +1437,21 @@ export const listHubTeachers = createServerFn({ method: "GET" })
       where country_slug = ${countrySlug} and coalesce(status, 'published') = 'published'
       order by created_at desc
     `;
-    return rows.map((row) => ({
-      id: row.id,
-      countrySlug: row.country_slug,
-      name: row.name,
-      instruments: row.instruments,
-      contact: row.contact,
-      note: row.note,
-      region: row.region ?? "",
-      city: row.city ?? "",
-      userId: row.user_id,
-      artistSlug: row.artist_slug ?? "",
-    })) satisfies HubTeacher[];
+    return mergeHubTeachers(
+      rows.map((row) => ({
+        id: row.id,
+        countrySlug: row.country_slug,
+        name: row.name,
+        instruments: row.instruments,
+        contact: row.contact,
+        note: row.note,
+        region: row.region ?? "",
+        city: row.city ?? "",
+        userId: row.user_id,
+        artistSlug: row.artist_slug ?? "",
+      })),
+      countrySlug,
+    );
     } catch (err) {
       console.error("listHubTeachers db failed", err);
       return catalogTeachers(countrySlug);
@@ -1487,19 +1479,20 @@ export const listAllHubTeachers = createServerFn({ method: "GET" }).handler(asyn
     where coalesce(status, 'published') = 'published'
     order by country_slug, name
   `;
-  if (rows.length === 0) return catalogTeachers();
-  return rows.map((row) => ({
-    id: row.id,
-    countrySlug: row.country_slug,
-    name: row.name,
-    instruments: row.instruments,
-    contact: row.contact,
-    note: row.note,
-    region: row.region ?? "",
-    city: row.city ?? "",
-    userId: row.user_id,
-    artistSlug: row.artist_slug ?? "",
-  })) satisfies HubTeacher[];
+  return mergeHubTeachers(
+    rows.map((row) => ({
+      id: row.id,
+      countrySlug: row.country_slug,
+      name: row.name,
+      instruments: row.instruments,
+      contact: row.contact,
+      note: row.note,
+      region: row.region ?? "",
+      city: row.city ?? "",
+      userId: row.user_id,
+      artistSlug: row.artist_slug ?? "",
+    })),
+  );
   } catch (err) {
     console.error("listAllHubTeachers db failed", err);
     return catalogTeachers();

@@ -544,7 +544,20 @@ async function publishFestivalRow(row: DbRow, force: boolean) {
   return publishListing(row, "hub_festivals", force);
 }
 
+let syncOnce: Promise<void> | null = null;
+
 export async function syncDiscoveries(extra: ScanFind[] = []) {
+  if (extra.length === 0) {
+    syncOnce ??= runSyncDiscoveries([]).catch((err) => {
+      syncOnce = null;
+      throw err;
+    });
+    return syncOnce;
+  }
+  return runSyncDiscoveries(extra);
+}
+
+async function runSyncDiscoveries(extra: ScanFind[]) {
   await ensureDiscoveries();
   const sql = await getSql();
   const queued = [...SCAN_QUEUE, ...FACEBOOK_QUEUE, ...DJANGOBOOKS_QUEUE];

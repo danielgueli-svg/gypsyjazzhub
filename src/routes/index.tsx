@@ -18,6 +18,7 @@ import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
 import { upcomingJams } from "@/lib/jams";
 import { pageHead, SEO } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/")({
   head: () => pageHead(SEO.home),
@@ -26,9 +27,9 @@ export const Route = createFileRoute("/")({
       listConcerts({ data: { filter: "upcoming" } }),
       listLegends(),
       listMusicians({ data: {} }),
-      listHubFestivals(),
-      listHubJams(),
-      listHubCountries(),
+      settle("hub-festivals", [], () => listHubFestivals()),
+      settle("hub-jams", [], () => listHubJams()),
+      settle("hub-countries", [], () => listHubCountries()),
     ]);
     const upcoming = concerts.filter(
       (c) => !c.isHistoric && new Date(c.startsAt).getTime() >= Date.now(),

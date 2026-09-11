@@ -14,13 +14,20 @@ import { pageHead, SEO } from "@/lib/seo";
 import { InstrumentPicker } from "@/components/instrument-cards";
 import { LearnJump } from "@/components/learn-jump";
 import { ListFold } from "@/components/list-fold";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/learn/")({
   head: () => pageHead(SEO.learn),
-  loader: async () => ({
-    teachers: await listAllHubTeachers(),
-    topics: (await listForumTopics()).filter((topic) => topic.replies > 0).slice(0, 6),
-  }),
+  loader: async () => {
+    const [teachers, topics] = await Promise.all([
+      settle("teachers", [], () => listAllHubTeachers()),
+      settle("forum", [], () => listForumTopics()),
+    ]);
+    return {
+      teachers,
+      topics: topics.filter((topic) => topic.replies > 0).slice(0, 6),
+    };
+  },
   component: LearnPage,
 });
 

@@ -19,6 +19,7 @@ import { CountryLabel } from "@/components/country-label";
 import { listJoinedArtists } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
 import { pageHead, SEO } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 const PAGE_SIZE = 10;
 
@@ -50,7 +51,7 @@ export const Route = createFileRoute("/musicians/")({
     const [musicians, legends, joined] = await Promise.all([
       listMusicians({ data: { q: deps.q } }),
       listLegends(),
-      listJoinedArtists(),
+      settle("joined", [], () => listJoinedArtists()),
     ]);
     const filtered = filterMusicians(legends, deps);
     const filtering = Boolean(

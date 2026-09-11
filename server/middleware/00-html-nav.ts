@@ -14,6 +14,8 @@ const FALLBACK = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><me
 const PUBLIC_ORIGIN = "https://www.gypsyjazzhub.com";
 const APEX_HOST = "gypsyjazzhub.com";
 const WWW_ORIGIN = "https://www.gypsyjazzhub.com";
+const PRIVATE_PAGE = /^\/(login|studio|join|welcome|verify-email|add|board|agenda)(\/|$)/;
+const HTML_CACHE_CONTROL = "public, s-maxage=120, stale-while-revalidate=600";
 
 function isPageGet(method: string, path: string) {
   const m = method.toUpperCase();
@@ -115,6 +117,56 @@ function requestHref(event: NavEvent): string {
   }
 }
 
+function cachesDefault(): Cache | null {
+  try {
+    const store = (globalThis as { caches?: { default?: Cache } }).caches?.default;
+    return store ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function cacheableHtml(method: string, path: string) {
+  return method.toUpperCase() === "GET" && isPageGet(method, path) && !PRIVATE_PAGE.test(path);
+}
+
+async function lookupHtml(href: string, method: string, path: string): Promise<Response | null> {
+  if (!cacheableHtml(method, path)) return null;
+  const cache = cachesDefault();
+  if (!cache) return null;
+  try {
+    return (await cache.match(new Request(href, { method: "GET" }))) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function rememberHtml(
+  href: string,
+  method: string,
+  path: string,
+  result: Response,
+): Promise<Response> {
+  if (!cacheableHtml(method, path) || result.status !== 200) return result;
+  if (result.headers.get("set-cookie")) return result;
+  const ct = String(result.headers.get("content-type") ?? "");
+  if (!ct.includes("text/html")) return result;
+
+  const headers = new Headers(result.headers);
+  headers.set("cache-control", HTML_CACHE_CONTROL);
+  const body = await result.arrayBuffer();
+  const out = new Response(body, { status: 200, headers });
+  const cache = cachesDefault();
+  if (cache) {
+    try {
+      await cache.put(new Request(href, { method: "GET" }), out.clone());
+    } catch {
+      /* Cache API is optional — headers still help the browser. */
+    }
+  }
+  return out;
+}
+
 function withHtmlAccept(event: NavEvent) {
   const href = requestHref(event);
   if (event.url) {
@@ -153,12 +205,18 @@ export default async function htmlNavMiddleware(
 
   if (page) withHtmlAccept(event);
 
+  const href = requestHref(event);
+  const cached = await lookupHtml(href, method, path);
+  if (cached) return cached;
+
   try {
     const result = await next();
     if (!page || !(result instanceof Response)) return result;
 
     const ct = String(result.headers.get("content-type") ?? "");
-    if (result.status < 400 && !ct.includes("json")) return result;
+    if (result.status < 400 && !ct.includes("json")) {
+      return rememberHtml(href, method, path, result);
+    }
 
     let text = "";
     try {

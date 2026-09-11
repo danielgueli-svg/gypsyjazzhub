@@ -15,6 +15,7 @@ import { jamsByCountry, type Jam } from "@/lib/jams";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { pageHead, SEO } from "@/lib/seo";
 import { cn, concertAgendaText, formatConcertDay, formatConcertYear } from "@/lib/utils";
+import { settle } from "@/lib/settle";
 
 type Filter = "upcoming" | "historic" | "all";
 type EventKind = "concert" | "festival" | "jam";
@@ -72,13 +73,24 @@ export const Route = createFileRoute("/concerts/")({
   }),
   loader: async ({ deps }) => {
     const kind = deps.type;
-    const [timed, catalog, extraFestivals, extraJams] = await Promise.all([
-      listConcerts({ data: { q: deps.q, filter: deps.filter } }),
+    const [catalog, extraFestivals, extraJams] = await Promise.all([
       listConcerts({ data: { filter: "all" } }),
-      listHubFestivals(),
-      listHubJams(),
+      settle("hub-festivals", [], () => listHubFestivals()),
+      settle("hub-jams", [], () => listHubJams()),
     ]);
     const now = Date.now();
+    const q = deps.q?.trim().toLowerCase() ?? "";
+    const timed = catalog.filter((concert) => {
+      const t = new Date(concert.startsAt).getTime();
+      if (deps.filter === "upcoming") {
+        if (concert.isHistoric || t < now) return false;
+      } else if (deps.filter === "historic") {
+        if (!(concert.isHistoric || t < now)) return false;
+      }
+      if (!q) return true;
+      const hay = `${concert.title} ${concert.artistName} ${concert.city} ${concert.country} ${concert.venue}`.toLowerCase();
+      return hay.includes(q);
+    });
     const festivals = [...FESTIVALS, ...extraFestivals].filter(
       (row, index, all) => all.findIndex((item) => item.slug === row.slug) === index,
     );

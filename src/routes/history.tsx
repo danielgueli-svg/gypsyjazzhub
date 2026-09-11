@@ -9,10 +9,11 @@ import { artistItunes, artistSpotify } from "@/lib/music";
 import { artistPhoto, groupPhoto } from "@/lib/photos";
 import { ROMANI_MUSIC_SITE } from "@/lib/romani-music";
 import { pageHead, SEO } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/history")({
   head: () => pageHead(SEO.history),
-  loader: async () => ({ notes: await listHistoryCircleNotes() }),
+  loader: async () => ({ notes: await settle("history-notes", [], () => listHistoryCircleNotes()) }),
   component: HistoryPage,
 });
 

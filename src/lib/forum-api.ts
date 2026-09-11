@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { getSql } from "@/lib/db";
+import { getSql, getDbSource } from "@/lib/db";
 import { slugify, toIso } from "@/lib/utils";
 
 export type ForumTopic = {
@@ -20,6 +20,7 @@ export type ForumPost = {
 };
 
 async function ensureForum() {
+  if (getDbSource() === "do") return;
   const sql = await getSql();
   await sql.query(`
     alter table hub_profiles add column if not exists artist_slug text not null default ''

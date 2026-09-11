@@ -6,6 +6,7 @@ import { listHubConcerts } from "@/lib/hub-api";
 import { liveConcertsSeed, resolveArtistSlug } from "@/lib/live-concerts";
 import { SAMOIS_SLUGS } from "@/lib/samois-artists";
 import { BANDS, bandForBill, collaboratorSlugs } from "@/lib/scene";
+import { settle } from "@/lib/settle";
 import { slugify, toIso } from "@/lib/utils";
 import { syncSocialAlertFollow } from "@/lib/alerts";
 import { ensureFanTables } from "@/lib/fans";
@@ -176,7 +177,9 @@ let concertRefresh: Promise<void> | null = null;
 let legendSig = "";
 
 async function ensureSeed() {
-  if (getDbSource() === "none") return;
+  // Catalog lives in memory. Re-upserting it into Durable Object SQL on every
+  // Cloudflare isolate made public pages wait several seconds.
+  if (getDbSource() === "none" || getDbSource() === "do") return;
   const sig = LEGENDS.map((legend) => `${legend.slug}|${legend.bio}|${legend.notable}`).join(";");
   if (sig !== legendSig) seedPromise = null;
   seedPromise ??= seedCatalog()
@@ -505,7 +508,7 @@ async function legendsCatalog() {
 }
 
 export const listLegends = createServerFn({ method: "GET" }).handler(async () => {
-  return legendsCatalog();
+  return settle("legends", mergeLegends([]), legendsCatalog);
 });
 
 export const getLegend = createServerFn({ method: "GET" })
@@ -549,14 +552,17 @@ export const listCollaborators = createServerFn({ method: "GET" })
 export const listMusicians = createServerFn({ method: "GET" })
   .validator((input: { q?: string } = {}) => input)
   .handler(async ({ data }) => {
-    try {
-      await ensureSeed();
-      await ensureFanTables();
-      const sql = await getSql();
-      const q = data.q?.trim() ?? "";
-      const like = `%${q}%`;
-      const rows = q
-        ? await sql<ProfileRow>`
+    return settle("musicians", [] as Profile[], async () => {
+      try {
+        if (getDbSource() !== "do") {
+          await ensureSeed();
+          await ensureFanTables();
+        }
+        const sql = await getSql();
+        const q = data.q?.trim() ?? "";
+        const like = `%${q}%`;
+        const rows = q
+          ? await sql<ProfileRow>`
           select p.*, (
             select count(*)::int from follows f where f.musician_user_id = p.user_id
           ) as follower_count
@@ -570,7 +576,7 @@ export const listMusicians = createServerFn({ method: "GET" })
             )
           order by p.created_at desc
         `
-        : await sql<ProfileRow>`
+          : await sql<ProfileRow>`
           select p.*, (
             select count(*)::int from follows f where f.musician_user_id = p.user_id
           ) as follower_count
@@ -578,20 +584,21 @@ export const listMusicians = createServerFn({ method: "GET" })
           where coalesce(p.member_kind, 'musician') <> 'fan'
           order by p.created_at desc
         `;
-      return rows.map(mapProfile);
-    } catch (err) {
-      console.error("list musicians failed", err);
-      return [];
-    }
+        return rows.map(mapProfile);
+      } catch (err) {
+        console.error("list musicians failed", err);
+        return [];
+      }
+    });
   });
 
 export const getMusician = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     try {
-    await ensureFanTables();
-    const sql = await getSql();
-    const rows = await sql<ProfileRow>`
+      if (getDbSource() !== "do") await ensureFanTables();
+      const sql = await getSql();
+      const rows = await sql<ProfileRow>`
       select p.*, (
         select count(*)::int from follows f where f.musician_user_id = p.user_id
       ) as follower_count
@@ -599,7 +606,7 @@ export const getMusician = createServerFn({ method: "GET" })
       where p.slug = ${slug}
       limit 1
     `;
-    return rows[0] ? mapProfile(rows[0]) : null;
+      return rows[0] ? mapProfile(rows[0]) : null;
     } catch (err) {
       console.error("getMusician db failed", err);
       return null;
@@ -701,7 +708,7 @@ export const listConcerts = createServerFn({ method: "POST" })
     const q = data.q?.trim() ?? "";
     const live = liveConcertsSeed();
 
-    let community: {
+    type CommunityRow = {
       id: number;
       title: string;
       venue: string;
@@ -712,8 +719,8 @@ export const listConcerts = createServerFn({ method: "POST" })
       ticket_url: string;
       display_name: string;
       slug: string;
-    }[] = [];
-    let legendRows: {
+    };
+    type LegendConcertRow = {
       id: number;
       title: string;
       venue: string;
@@ -724,32 +731,33 @@ export const listConcerts = createServerFn({ method: "POST" })
       is_historic: boolean;
       name: string;
       slug: string;
-    }[] = [];
-    let hub: Concert[] = [];
-    try {
-      const sql = await getSql();
-      community = await sql`
+    };
+
+    const [{ community, legendRows }, hub] = await Promise.all([
+      settle(
+        "concerts-db",
+        { community: [] as CommunityRow[], legendRows: [] as LegendConcertRow[] },
+        async () => {
+          const sql = await getSql();
+          const community = await sql<CommunityRow>`
       select c.id, c.title, c.venue, c.city, c.country, c.starts_at, c.description, c.ticket_url,
              p.display_name, p.slug
       from concerts c
       join profiles p on p.user_id = c.user_id
       order by c.starts_at asc
     `;
-      legendRows = await sql`
+          const legendRows = await sql<LegendConcertRow>`
       select lc.id, lc.title, lc.venue, lc.city, lc.country, lc.starts_at, lc.note, lc.is_historic,
              l.name, l.slug
       from legend_concerts lc
       left join legends l on l.slug = lc.legend_slug
       order by lc.starts_at asc
     `;
-    } catch (err) {
-      console.error("list concerts db failed", err);
-    }
-    try {
-      hub = await listHubConcerts({ data: "" });
-    } catch (err) {
-      console.error("list concerts hub failed", err);
-    }
+          return { community, legendRows };
+        },
+      ),
+      settle("concerts-hub", [] as Concert[], () => listHubConcerts({ data: "" })),
+    ]);
 
     const now = Date.now();
     const mapped: Concert[] = [
@@ -855,7 +863,7 @@ export const listLegendConcerts = createServerFn({ method: "GET" })
     }
     let hub: Concert[] = [];
     try {
-      hub = await listHubConcerts({ data: slug });
+      hub = await settle("hub concerts", [] as Concert[], () => listHubConcerts({ data: slug }));
     } catch (err) {
       console.error("hub concerts failed", err);
     }
