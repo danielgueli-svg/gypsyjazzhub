@@ -203,7 +203,7 @@ function Home() {
         {shownJams.length === 0 ? (
           <p className="mt-4 text-sm text-muted">{t("home.noJams")}</p>
         ) : (
-          <ul className="mt-4 grid grid-cols-1 grid-rows-[repeat(3,auto)] gap-x-6 gap-y-1 overflow-hidden [grid-auto-rows:0] sm:grid-cols-2 lg:grid-cols-5">
+          <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-5">
             {shownJams.slice(0, 15).map((jam) => (
               <JamLine key={jam.slug} jam={jam} />
             ))}

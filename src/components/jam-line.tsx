@@ -9,15 +9,15 @@ export function JamLine({ jam, showCountry = true }: { jam: Jam; showCountry?: b
   const place = jamPlace(jam);
   const forum = jam.site?.includes("djangobooks.com") ? jam.site : null;
   return (
-    <li className="break-inside-avoid py-2">
-      <Link to="/jams/$slug" params={{ slug: jam.slug }} className="block hover:underline">
+    <li className="min-w-0 break-inside-avoid py-2">
+      <Link to="/jams/$slug" params={{ slug: jam.slug }} className="block min-w-0 hover:underline">
         {showCountry && jam.country ? (
           <>
-            <CountryLabel name={jam.country} className="inline-flex" />
+            <CountryLabel name={jam.country} className="inline-flex max-w-full" />
             <span className="mx-1.5 text-faint">·</span>
           </>
         ) : null}
-        <span className="font-display text-lg font-semibold">{jam.name}</span>
+        <span className="font-display text-lg font-semibold leading-snug">{jam.name}</span>
         {hours ? (
           <>
             <span className="mx-1.5 text-faint">·</span>
