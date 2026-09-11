@@ -22,6 +22,7 @@ import {
   type HubActivity,
   type HubMember,
   type VisitDay,
+  type VisitPlace,
 } from "@/lib/owner-api";
 import {
   listDiscoveries,
@@ -74,6 +75,8 @@ function OwnerPage() {
     today: VisitDay;
     days: VisitDay[];
     total?: { visitors: number; hits: number };
+    countries?: VisitPlace[];
+    cities?: VisitPlace[];
   } | null>(null);
 
   async function load(isOwner: boolean) {
@@ -263,6 +266,45 @@ function OwnerPage() {
                     visits!.days.map((row) => (
                       <li key={row.day} className="flex justify-between gap-3">
                         <span>{row.day}</span>
+                        <span className="tabular-nums text-muted">
+                          {row.visitors} · {row.hits} hits
+                        </span>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Where from</p>
+                <ul className="mt-3 space-y-1.5 text-sm">
+                  {(visits?.countries ?? []).length === 0 ? (
+                    <li className="text-faint">No country yet — new visits start filling this in.</li>
+                  ) : (
+                    visits!.countries!.map((row) => (
+                      <li key={row.country || "unknown"} className="flex justify-between gap-3">
+                        <span>{row.countryName}</span>
+                        <span className="tabular-nums text-muted">
+                          {row.visitors} · {row.hits} hits
+                        </span>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Cities</p>
+                <ul className="mt-3 space-y-1.5 text-sm">
+                  {(visits?.cities ?? []).length === 0 ? (
+                    <li className="text-faint">City shows when Cloudflare sends it.</li>
+                  ) : (
+                    visits!.cities!.map((row) => (
+                      <li key={`${row.country}-${row.city}`} className="flex justify-between gap-3">
+                        <span>
+                          {row.city}
+                          {row.countryName ? ` · ${row.countryName}` : ""}
+                        </span>
                         <span className="tabular-nums text-muted">
                           {row.visitors} · {row.hits} hits
                         </span>

@@ -23,7 +23,7 @@ import {
   type InstrumentId,
   type ProfileTypeId,
 } from "@/lib/profile-types";
-import { visitStats, type VisitDay } from "@/lib/visits";
+import { visitStats, type VisitDay, type VisitPlace } from "@/lib/visits";
 
 const OWNER_PHRASE = "ile-du-berceau";
 
@@ -110,7 +110,7 @@ export const getVisitStats = createServerFn({ method: "GET" })
     return visitStats();
   });
 
-export type { VisitDay };
+export type { VisitDay, VisitPlace };
 
 export type HubUserRow = {
   id: string;

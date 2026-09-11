@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { getSql } from "@/lib/db";
 
 function visitorId(raw: unknown) {
@@ -25,6 +26,38 @@ function sinceDay(days: number) {
   return amsterdamDay(new Date(Date.now() - days * 86_400_000));
 }
 
+function countryName(code: string) {
+  const iso = code.trim().toUpperCase();
+  if (!iso || iso === "XX" || iso === "T1") return "Unknown";
+  try {
+    return new Intl.DisplayNames(["en"], { type: "region" }).of(iso) ?? iso;
+  } catch {
+    return iso;
+  }
+}
+
+type CfRequest = Request & {
+  cf?: { country?: string; city?: string; region?: string };
+};
+
+function visitPlace() {
+  try {
+    const request = getRequest() as CfRequest | undefined;
+    if (!request) return { country: "", city: "" };
+    const header = request.headers.get("cf-ipcountry")?.trim().toUpperCase() ?? "";
+    let country = (request.cf?.country || header || "").toUpperCase();
+    if (country === "XX" || country === "T1" || country === "A1" || country === "A2") country = "";
+    country = country.replace(/[^A-Z]/g, "").slice(0, 2);
+    const city = String(request.cf?.city ?? "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 80);
+    return { country, city };
+  } catch {
+    return { country: "", city: "" };
+  }
+}
+
 async function ensureVisits() {
   const sql = await getSql();
   await sql.query(`
@@ -34,9 +67,18 @@ async function ensureVisits() {
       hits int not null default 1,
       first_at timestamptz not null default now(),
       last_at timestamptz not null default now(),
+      country text not null default '',
+      city text not null default '',
       primary key (day, visitor_id)
     )
   `);
+  for (const col of ["country text not null default ''", "city text not null default ''"]) {
+    try {
+      await sql.query(`alter table hub_visits add column if not exists ${col}`);
+    } catch {
+      /* column already there */
+    }
+  }
 }
 
 export const pingVisit = createServerFn({ method: "POST" })
@@ -47,12 +89,15 @@ export const pingVisit = createServerFn({ method: "POST" })
       const sql = await getSql();
       const day = amsterdamDay();
       const now = new Date().toISOString();
+      const place = visitPlace();
       await sql`
-        insert into hub_visits (day, visitor_id, hits, last_at)
-        values (${day}, ${id}, 1, ${now})
+        insert into hub_visits (day, visitor_id, hits, last_at, country, city)
+        values (${day}, ${id}, 1, ${now}, ${place.country}, ${place.city})
         on conflict (day, visitor_id) do update
           set hits = hub_visits.hits + 1,
-              last_at = ${now}
+              last_at = ${now},
+              country = case when excluded.country <> '' then excluded.country else hub_visits.country end,
+              city = case when excluded.city <> '' then excluded.city else hub_visits.city end
       `;
       return { ok: true as const };
     } catch {
@@ -66,17 +111,29 @@ export type VisitDay = {
   hits: number;
 };
 
+export type VisitPlace = {
+  country: string;
+  countryName: string;
+  city: string;
+  visitors: number;
+  hits: number;
+};
+
 export type VisitStats = {
   today: VisitDay;
   days: VisitDay[];
   total: { visitors: number; hits: number };
+  countries: VisitPlace[];
+  cities: VisitPlace[];
 };
 
 export async function visitStats(): Promise<VisitStats> {
-  const empty = {
+  const empty: VisitStats = {
     today: { day: amsterdamDay(), visitors: 0, hits: 0 },
-    days: [] as VisitDay[],
+    days: [],
     total: { visitors: 0, hits: 0 },
+    countries: [],
+    cities: [],
   };
   try {
     await ensureVisits();
@@ -109,6 +166,46 @@ export async function visitStats(): Promise<VisitStats> {
         coalesce(sum(hits), 0) as hits
       from hub_visits
     `;
+    const countryRows = await sql<{ country: string; visitors: unknown; hits: unknown }>`
+      select
+        country as country,
+        count(distinct visitor_id) as visitors,
+        coalesce(sum(hits), 0) as hits
+      from hub_visits
+      group by country
+      order by count(distinct visitor_id) desc, coalesce(sum(hits), 0) desc
+    `;
+    const cityRows = await sql<{ country: string; city: string; visitors: unknown; hits: unknown }>`
+      select
+        country as country,
+        city as city,
+        count(distinct visitor_id) as visitors,
+        coalesce(sum(hits), 0) as hits
+      from hub_visits
+      where city <> ''
+      group by country, city
+      order by count(distinct visitor_id) desc, coalesce(sum(hits), 0) desc
+    `;
+    const countries = countryRows.map((row) => {
+      const code = String(row.country ?? "").toUpperCase();
+      return {
+        country: code,
+        countryName: countryName(code),
+        city: "",
+        visitors: num(row.visitors),
+        hits: num(row.hits),
+      };
+    });
+    const cities = cityRows.slice(0, 40).map((row) => {
+      const code = String(row.country ?? "").toUpperCase();
+      return {
+        country: code,
+        countryName: countryName(code),
+        city: String(row.city ?? "").trim(),
+        visitors: num(row.visitors),
+        hits: num(row.hits),
+      };
+    });
     return {
       today: todayRow,
       days,
@@ -116,6 +213,8 @@ export async function visitStats(): Promise<VisitStats> {
         visitors: num(totalRow?.visitors),
         hits: num(totalRow?.hits),
       },
+      countries,
+      cities,
     };
   } catch {
     return empty;
