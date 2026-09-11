@@ -16,6 +16,7 @@ import {
   getVisitStats,
   listHubActivity,
   listHubMembers,
+  eraseHubMember,
   removeHubItem,
   saveOwnerDigest,
   sendOwnerDigest,
@@ -183,6 +184,19 @@ function OwnerPage() {
       setActivity((rows) => rows.filter((row) => !(row.kind === item.kind && row.id === item.id)));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not remove.");
+    }
+  }
+
+  async function onEraseMember(member: HubMember) {
+    if (!window.confirm(`Erase ${member.name || member.email} from the hub? They will need to join again.`)) {
+      return;
+    }
+    setError(null);
+    try {
+      await eraseHubMember({ data: member.id });
+      setMembers((rows) => rows.filter((row) => row.id !== member.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not erase.");
     }
   }
 
@@ -374,26 +388,40 @@ function OwnerPage() {
           <section id="desk-members" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
             <p className="mt-2 text-sm text-muted">
-              {members.length} people with a hub login. Alerts they turned on are in Users & alerts below.
+              {members.length} people with a hub login. Erase bots from this list. Your own login stays.
             </p>
             {members.length === 0 ? (
               <p className="mt-4 text-sm text-faint">No members stored yet.</p>
             ) : (
               <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
                 {members.map((member) => (
-                  <li key={member.id} className="flex flex-wrap justify-between gap-2 px-4 py-3 text-sm">
-                    <span>
+                  <li key={member.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                    <span className="min-w-0">
                       <span className="font-medium">{member.name || "Hub member"}</span>
                       <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
                     </span>
-                    <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
+                      {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => void onEraseMember(member)}
+                        >
+                          Erase
+                        </Button>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>
             )}
           </section>
 
-          <UserDirectory />
+          <UserDirectory
+            onErased={(userId) => setMembers((rows) => rows.filter((row) => row.id !== userId))}
+          />
 
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">On the hub tonight</h2>

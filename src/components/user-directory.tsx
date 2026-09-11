@@ -12,6 +12,7 @@ import {
 import {
   banHubIp,
   banHubMember,
+  eraseHubMember,
   listHubUserDirectory,
   listHubUserStats,
   verifyHubMember,
@@ -57,7 +58,7 @@ function Select({
   );
 }
 
-export function UserDirectory() {
+export function UserDirectory({ onErased }: { onErased?: (userId: string) => void }) {
   const [users, setUsers] = useState<HubUserRow[]>([]);
   const [stats, setStats] = useState<HubUserStats>(EMPTY_STATS);
   const [filter, setFilter] = useState<HubUserFilter>({
@@ -125,6 +126,26 @@ export function UserDirectory() {
     }
   }
 
+  async function erase(user: HubUserRow) {
+    if (!window.confirm(`Erase ${user.name || user.email} from the hub? They will need to join again.`)) {
+      return;
+    }
+    setError(null);
+    try {
+      await eraseHubMember({ data: user.id });
+      setUsers((rows) => rows.filter((row) => row.id !== user.id));
+      setStats((prev) => ({
+        ...prev,
+        totalUsers: Math.max(0, prev.totalUsers - 1),
+        musicians: Math.max(0, prev.musicians - (user.musician ? 1 : 0)),
+        nonMusicians: Math.max(0, prev.nonMusicians - (user.musician ? 0 : 1)),
+      }));
+      onErased?.(user.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not erase.");
+    }
+  }
+
   async function onBanIp(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -143,7 +164,8 @@ export function UserDirectory() {
       <h2 className="font-display text-2xl font-semibold sm:text-3xl">Users & alerts</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everyone who has joined the hub, with profile types, instruments and
-        what they subscribe to for notifications. Ban an account or an IP here.
+        what they subscribe to for notifications. Ban an account, or erase a bot
+        from the hub. Your own login stays.
       </p>
       <form onSubmit={(event) => void onBanIp(event)} className="mt-4 flex max-w-md flex-wrap gap-2">
         <Input
@@ -328,6 +350,11 @@ export function UserDirectory() {
                 <Button type="button" size="sm" variant="outline" onClick={() => void ban(user, !user.banned)}>
                   {user.banned ? "Unban" : "Ban"}
                 </Button>
+                {user.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+                  <Button type="button" size="sm" variant="outline" onClick={() => void erase(user)}>
+                    Erase
+                  </Button>
+                )}
               </div>
               {user.banned ? <p className="mt-1 text-xs text-danger">Banned</p> : null}
             </article>
@@ -415,6 +442,11 @@ export function UserDirectory() {
                       >
                         {user.banned ? "Unban" : "Ban"}
                       </Button>
+                      {user.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+                        <Button type="button" size="sm" variant="outline" onClick={() => void erase(user)}>
+                          Erase
+                        </Button>
+                      )}
                     </div>
                     {user.banned ? <p className="mt-1 text-xs text-danger">Banned</p> : null}
                   </td>

@@ -766,6 +766,40 @@ export const banHubMember = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const eraseHubMember = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((userId: string) => userId.trim())
+  .handler(async ({ context, data: userId }) => {
+    await requireOwner(context.userId);
+    if (!userId) throw new Error("Need a member.");
+    if (userId === context.userId) throw new Error("You cannot erase your own login.");
+    const sql = await getSql();
+    const rows = await sql.query<{ email: string; name: string }>(
+      `select email, name from "user" where id = $1 limit 1`,
+      [userId],
+    );
+    const email = String(rows[0]?.email ?? "").toLowerCase();
+    const name = String(rows[0]?.name ?? "");
+    if (email === OWNER_KEEP_EMAIL || isFoundingMember(email, name)) {
+      throw new Error("That member stays on the hub.");
+    }
+    const run = async (text: string, params: unknown[] = []) => {
+      try {
+        await sql.query(text, params);
+      } catch {
+        /* table may not exist */
+      }
+    };
+    await run(`delete from "session" where "userId" = $1`, [userId]);
+    await run(`delete from account where "userId" = $1`, [userId]);
+    await run(`delete from hub_subscriptions where user_id = $1`, [userId]);
+    await run(`delete from hub_members where user_id = $1`, [userId]);
+    await run(`delete from hub_password_resets where user_id = $1`, [userId]);
+    await run(`delete from profiles where user_id = $1`, [userId]);
+    await run(`delete from "user" where id = $1`, [userId]);
+    return { ok: true as const };
+  });
+
 export const verifyHubMember = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((userId: string) => userId)
