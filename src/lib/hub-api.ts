@@ -12,6 +12,7 @@ import { ensureFanTables } from "@/lib/fans";
 import { slugify, toIso, youtubeVideoId } from "@/lib/utils";
 import { CATALOG_TEACHERS } from "@/lib/teachers";
 import { ensureCatalogArtist } from "@/lib/catalog";
+import { profilePhotoUrl } from "@/lib/profile-photos";
 
 export type ArtistOption = {
   slug: string;
@@ -1345,11 +1346,13 @@ export type JoinedArtist = {
   instagramUrl?: string;
   spotifyUrl?: string;
   contactUrl?: string;
+  photoUrl?: string;
 };
 
 export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async () => {
   try {
     await ensureHub();
+    await ensureFanTables();
     const sql = await getSql();
     const map = new Map<string, JoinedArtist>();
     try {
@@ -1366,10 +1369,12 @@ export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async
         instagram_url: string;
         spotify_url: string;
         contact_url: string;
+        photo_rev: number;
       }>`
         select slug, user_id, display_name, bio, city, country, instruments,
                website_url, youtube_url, instagram_url, coalesce(spotify_url, '') as spotify_url,
-               coalesce(contact_url, '') as contact_url
+               coalesce(contact_url, '') as contact_url,
+               coalesce(photo_rev, 0) as photo_rev
         from profiles
       `;
       for (const row of fromPages) {
@@ -1386,6 +1391,7 @@ export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async
           instagramUrl: row.instagram_url,
           spotifyUrl: row.spotify_url,
           contactUrl: row.contact_url,
+          photoUrl: profilePhotoUrl(row.user_id, row.photo_rev),
         });
       }
     } catch {

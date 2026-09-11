@@ -83,6 +83,7 @@ import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as WorldSlugRouteImport } from './routes/world/$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiConcertMediaIdRouteImport } from './routes/api/concert-media/$id'
+import { Route as ApiProfilePhotoIdRouteImport } from './routes/api/profile-photo/$id'
 import { Route as InstrumentsLuthiersIndexRouteImport } from './routes/instruments/luthiers/index'
 import { Route as InstrumentsLuthiersCountryRouteImport } from './routes/instruments/luthiers/$country'
 import { Route as JamsInSlugRouteImport } from './routes/jams/in/$slug'
@@ -462,6 +463,11 @@ const ApiConcertMediaIdRoute = ApiConcertMediaIdRouteImport.update({
   path: '/api/concert-media/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiProfilePhotoIdRoute = ApiProfilePhotoIdRouteImport.update({
+  id: '/api/profile-photo/$id',
+  path: '/api/profile-photo/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InstrumentsLuthiersIndexRoute =
   InstrumentsLuthiersIndexRouteImport.update({
     id: '/instruments/luthiers/',
@@ -580,6 +586,7 @@ export interface FileRoutesByFullPath {
   '/world/': typeof WorldIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/concert-media/$id': typeof ApiConcertMediaIdRoute
+  '/api/profile-photo/$id': typeof ApiProfilePhotoIdRoute
   '/instruments/luthiers/$country': typeof InstrumentsLuthiersCountryRoute
   '/jams/in/$slug': typeof JamsInSlugRoute
   '/learn/forum/$slug': typeof LearnForumSlugRoute
@@ -664,6 +671,7 @@ export interface FileRoutesByTo {
   '/world': typeof WorldIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/concert-media/$id': typeof ApiConcertMediaIdRoute
+  '/api/profile-photo/$id': typeof ApiProfilePhotoIdRoute
   '/instruments/luthiers/$country': typeof InstrumentsLuthiersCountryRoute
   '/jams/in/$slug': typeof JamsInSlugRoute
   '/learn/forum/$slug': typeof LearnForumSlugRoute
@@ -749,6 +757,7 @@ export interface FileRoutesById {
   '/world/': typeof WorldIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/concert-media/$id': typeof ApiConcertMediaIdRoute
+  '/api/profile-photo/$id': typeof ApiProfilePhotoIdRoute
   '/instruments/luthiers/$country': typeof InstrumentsLuthiersCountryRoute
   '/jams/in/$slug': typeof JamsInSlugRoute
   '/learn/forum/$slug': typeof LearnForumSlugRoute
@@ -835,6 +844,7 @@ export interface FileRouteTypes {
     | '/world/'
     | '/api/auth/$'
     | '/api/concert-media/$id'
+    | '/api/profile-photo/$id'
     | '/instruments/luthiers/$country'
     | '/jams/in/$slug'
     | '/learn/forum/$slug'
@@ -919,6 +929,7 @@ export interface FileRouteTypes {
     | '/world'
     | '/api/auth/$'
     | '/api/concert-media/$id'
+    | '/api/profile-photo/$id'
     | '/instruments/luthiers/$country'
     | '/jams/in/$slug'
     | '/learn/forum/$slug'
@@ -1003,6 +1014,7 @@ export interface FileRouteTypes {
     | '/world/'
     | '/api/auth/$'
     | '/api/concert-media/$id'
+    | '/api/profile-photo/$id'
     | '/instruments/luthiers/$country'
     | '/jams/in/$slug'
     | '/learn/forum/$slug'
@@ -1088,6 +1100,7 @@ export interface RootRouteChildren {
   WorldIndexRoute: typeof WorldIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiConcertMediaIdRoute: typeof ApiConcertMediaIdRoute
+  ApiProfilePhotoIdRoute: typeof ApiProfilePhotoIdRoute
   InstrumentsLuthiersCountryRoute: typeof InstrumentsLuthiersCountryRoute
   JamsInSlugRoute: typeof JamsInSlugRoute
   LearnForumSlugRoute: typeof LearnForumSlugRoute
@@ -1618,6 +1631,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiConcertMediaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/profile-photo/$id': {
+      id: '/api/profile-photo/$id'
+      path: '/api/profile-photo/$id'
+      fullPath: '/api/profile-photo/$id'
+      preLoaderRoute: typeof ApiProfilePhotoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/instruments/luthiers/': {
       id: '/instruments/luthiers/'
       path: '/instruments/luthiers'
@@ -1752,6 +1772,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorldIndexRoute: WorldIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiConcertMediaIdRoute: ApiConcertMediaIdRoute,
+  ApiProfilePhotoIdRoute: ApiProfilePhotoIdRoute,
   InstrumentsLuthiersCountryRoute: InstrumentsLuthiersCountryRoute,
   JamsInSlugRoute: JamsInSlugRoute,
   LearnForumSlugRoute: LearnForumSlugRoute,

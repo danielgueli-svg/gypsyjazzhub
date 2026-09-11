@@ -196,6 +196,7 @@ function MusiciansPage() {
                   instagramUrl: musician.instagramUrl,
                   websiteUrl: musician.websiteUrl,
                   spotifyUrl: musician.spotifyUrl,
+                  photoUrl: musician.photoUrl,
                 }}
               />
             ))}

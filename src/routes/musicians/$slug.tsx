@@ -125,7 +125,10 @@ function MemberMusicianPage({
   const isSelf = user?.id === musician.userId;
   const booking = contactHref(musician.contactUrl);
   const upcoming = concerts.filter((c) => new Date(c.startsAt).getTime() >= Date.now());
-  const photo = artistPhoto(musician.slug, musician.instruments);
+  const catalogPhoto = artistPhoto(musician.slug, musician.instruments);
+  const photo = musician.photoUrl
+    ? { src: musician.photoUrl, credit: musician.displayName }
+    : catalogPhoto;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
@@ -178,7 +181,7 @@ function MemberMusicianPage({
             src={photo.src}
             alt={musician.displayName}
             credit={photo.credit}
-            creditHref={photo.href}
+            creditHref={"href" in photo ? photo.href : undefined}
             className="h-auto w-28 max-h-80 shrink-0 rounded-2xl object-contain object-top shadow-border sm:w-40 sm:max-h-[22rem] lg:w-64"
           />
         ) : null}

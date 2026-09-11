@@ -16,10 +16,14 @@ export type DirectoryCard = {
   instagramUrl?: string;
   websiteUrl?: string;
   spotifyUrl?: string;
+  photoUrl?: string;
 };
 
 export function MusicianCard({ person }: { person: DirectoryCard }) {
-  const photo = artistPhoto(person.slug, person.instruments);
+  const catalog = artistPhoto(person.slug, person.instruments);
+  const photo = person.photoUrl
+    ? { src: person.photoUrl, credit: person.name }
+    : catalog;
   const instruments = formatInstrumentList(person.instruments).slice(0, 3);
   return (
     <article className="break-inside-avoid rounded-2xl bg-surface p-4 shadow-border">

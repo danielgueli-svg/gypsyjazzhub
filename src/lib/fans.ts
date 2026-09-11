@@ -100,6 +100,15 @@ export async function ensureProfileColumns() {
     )
   `);
   await sql.query(`
+    create table if not exists profile_photos (
+      user_id text primary key,
+      mime text not null,
+      filename text not null,
+      bytes text not null,
+      updated_at text not null default (datetime('now'))
+    )
+  `);
+  await sql.query(`
     create table if not exists follows (
       follower_id text not null,
       musician_user_id text not null,
@@ -137,6 +146,7 @@ export async function ensureProfileColumns() {
     "open_for_invites integer not null default 0",
     "looking_for_gigs integer not null default 0",
     "available_to_jam integer not null default 0",
+    "photo_rev integer not null default 0",
   ]) {
     try {
       await sql.query(`alter table profiles add column ${col}`);

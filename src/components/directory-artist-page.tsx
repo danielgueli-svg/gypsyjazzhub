@@ -64,7 +64,10 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
   const upcoming = concerts.filter((c) => !c.isHistoric && new Date(c.startsAt).getTime() >= Date.now());
   const joined = claimed || Boolean(member);
   const filePhoto = artistPhoto(legend.slug, legend.instruments);
-  const photo = filePhoto ?? (legend.photoUrl
+  const memberPhoto = member?.photoUrl
+    ? { src: member.photoUrl, credit: member.displayName || legend.name }
+    : null;
+  const photo = memberPhoto ?? filePhoto ?? (legend.photoUrl
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
   const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;

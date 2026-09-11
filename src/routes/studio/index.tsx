@@ -54,6 +54,12 @@ import { listArtistOptions, type ArtistOption } from "@/lib/hub-api";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
 import { listMyFavorites, type Favorite } from "@/lib/favorites";
 import { cn, formatConcertWhen } from "@/lib/utils";
+import {
+  ProfilePhotoField,
+  compressProfilePhoto,
+  type PendingPhoto,
+} from "@/components/profile-photo-field";
+import { deleteMyPhoto, saveMyPhoto } from "@/lib/profile-photos";
 
 type Tab = "add" | "page" | "gigs" | "saved" | "alerts" | "inbox" | "invites";
 const TABS: Tab[] = ["add", "page", "gigs", "saved", "alerts", "inbox", "invites"];
@@ -320,6 +326,27 @@ function ProfileForm({
   const [openForInvites, setOpen] = useState(profile?.openForInvites ?? false);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(profile?.photoUrl ?? "");
+  const [pendingPhoto, setPendingPhoto] = useState<PendingPhoto | null>(null);
+  const [dropPhoto, setDropPhoto] = useState(false);
+
+  async function onPickPhoto(file: File) {
+    setStatus(null);
+    try {
+      const pending = await compressProfilePhoto(file);
+      setPendingPhoto(pending);
+      setDropPhoto(false);
+      setPhotoPreview(pending.data);
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : "Could not use that photo.");
+    }
+  }
+
+  function onRemovePhoto() {
+    setPendingPhoto(null);
+    setDropPhoto(Boolean(profile?.photoUrl));
+    setPhotoPreview("");
+  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -345,7 +372,18 @@ function ProfileForm({
           openForInvites,
         },
       });
-      onSaved(saved);
+      let next = saved;
+      if (pendingPhoto) {
+        const photo = await saveMyPhoto({ data: pendingPhoto });
+        next = { ...saved, photoUrl: photo.photoUrl };
+        setPendingPhoto(null);
+      } else if (dropPhoto) {
+        await deleteMyPhoto();
+        next = { ...saved, photoUrl: "" };
+        setDropPhoto(false);
+      }
+      setPhotoPreview(next.photoUrl);
+      onSaved(next);
       setStatus("Page saved.");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Could not save.");
@@ -440,6 +478,12 @@ function ProfileForm({
             />
           </Field>
         </div>
+        <ProfilePhotoField
+          preview={photoPreview}
+          busy={busy}
+          onPick={(file) => void onPickPhoto(file)}
+          onRemove={onRemovePhoto}
+        />
         <Field label="Bio" htmlFor="bio">
           <Textarea
             id="bio"
