@@ -4856,6 +4856,19 @@ export const CIRCLE_ARTISTS = [
     youtube_url: "",
     sort_order: 479,
   },
+  {
+    slug: "honey-boulton",
+    name: "Honey Boulton",
+    years: "",
+    origin: "United Kingdom",
+    instruments: "Guitar",
+    era: "The Circle",
+    bio: "London guitarist. Guest of Harry Diplock’s Green Note Sessions, Camden.",
+    notable: "Green Note Sessions; Harry Diplock",
+    youtube_url: "",
+    instagram_url: "https://www.instagram.com/honeyboulton/",
+    sort_order: 480,
+  },
 ];
 
 const MBSQ = ["marcia-bamberg", "john-ligthart", "ronald-weel", "daniel-gueli"] as const;
@@ -6321,6 +6334,26 @@ export const CIRCLE_CONCERTS = [
     starts_at: "2026-09-17T18:30:00.000Z",
     is_historic: false,
     note: "Django In London. Thursday 19:30. St Mary's, Upper Street, Islington N1 2TX. djangoinlondon.eventbrite.com",
+  },
+  {
+    legend_slug: "harry-diplock",
+    title: "Green Note Sessions — Honey Boulton",
+    venue: "Green Note",
+    city: "London",
+    country: "United Kingdom",
+    starts_at: "2026-09-13T18:30:00.000Z",
+    is_historic: false,
+    note: "Sunday 13 Sep 2026, 19:30. Harry Diplock’s Green Note Sessions; guest Honey Boulton. Limited seating. 106 Parkway, Camden NW1 7AN.",
+  },
+  {
+    legend_slug: "honey-boulton",
+    title: "Green Note Sessions — Honey Boulton",
+    venue: "Green Note",
+    city: "London",
+    country: "United Kingdom",
+    starts_at: "2026-09-13T18:30:00.000Z",
+    is_historic: false,
+    note: "Sunday 13 Sep 2026, 19:30. Guest of Harry Diplock’s Green Note Sessions. Limited seating. 106 Parkway, Camden NW1 7AN.",
   },
   {
     legend_slug: "hugo-guezbar",
