@@ -206,7 +206,7 @@ function Home() {
         ) : (
           <ListFold items={shownJams} limit={jamCountry ? 8 : shownJams.length || 24}>
             {(rows) => (
-              <ul className="mt-4">
+              <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-5">
                 {rows.map((jam) => (
                   <JamLine key={jam.slug} jam={jam} />
                 ))}
