@@ -12,6 +12,18 @@
  */
 export const emailAndPasswordEnabled = true;
 
+/** Reserved test domains — never store these as real hub members. */
+export function isReservedTestEmail(email: string) {
+  const domain = email.trim().toLowerCase().split("@")[1] ?? "";
+  return (
+    domain === "gypsyjazzhub.test" ||
+    domain.endsWith(".test") ||
+    domain.endsWith(".example") ||
+    domain.endsWith(".invalid") ||
+    domain.endsWith(".localhost")
+  );
+}
+
 const ITERATIONS = 100_000;
 const encoder = new TextEncoder();
 

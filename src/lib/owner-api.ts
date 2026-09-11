@@ -24,6 +24,7 @@ import {
   type ProfileTypeId,
 } from "@/lib/profile-types";
 import { visitStats, type VisitDay, type VisitPlace } from "@/lib/visits";
+import { isReservedTestEmail } from "@/lib/auth/email-password";
 
 const OWNER_PHRASE = "ile-du-berceau";
 const OWNER_KEEP_EMAIL = "danielgueli@mac.com";
@@ -34,6 +35,7 @@ function isTestAccount(email: string, name = "", id = "") {
   if (e === OWNER_KEEP_EMAIL) return false;
   if (id === "dev-user" || id === "hub-seed") return true;
   if (
+    isReservedTestEmail(e) ||
     e.endsWith("@example.com") ||
     e.endsWith("@example.org") ||
     e.endsWith("@example.net") ||
@@ -47,6 +49,13 @@ function isTestAccount(email: string, name = "", id = "") {
   }
   const local = e.split("@")[0] ?? "";
   if (/^(test|tester|testing|dummy|fake)(\d+)?([._+-].*)?$/.test(local)) return true;
+  if (
+    /^(hourly|hour check|hour-check|log ui|logui|footer check|footer-check|cookie persist|cookie-persist|cookie probe|cookieprobe|login e2e|login-e2e|login check|logincheck)$/.test(
+      n,
+    )
+  ) {
+    return true;
+  }
   if (/^(test|tester|testing|test user|dummy|fake|fake user)$/.test(n)) return true;
   if (n.startsWith("test ")) return true;
   return false;

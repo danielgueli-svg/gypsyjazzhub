@@ -36,7 +36,7 @@ import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
 import { ensureDbReady, getPglite, readDatabaseUrl } from "../db";
 import { doSqliteDialect, hubDbNamespace } from "../do-sql";
 import { isCloudflareWorker, PUBLIC_SITE_ORIGIN, readEnv } from "../runtime-env";
-import { emailAndPasswordEnabled, hashPassword, verifyPassword } from "./email-password";
+import { emailAndPasswordEnabled, hashPassword, isReservedTestEmail, verifyPassword } from "./email-password";
 import { GROK_PROVIDERS } from "./providers";
 import { pgliteDialect } from "./pglite-dialect";
 import { safeTanstackCookies } from "./tanstack-cookies";
@@ -247,6 +247,19 @@ function createAuthInstance() {
   // window and reduces auth flicker. See the `auth` skill for the full
   // flicker-prevention guidance (gate on `isPending`; SSR the session).
   session: { cookieCache: { enabled: true, maxAge: 300 } },
+
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          if (isReservedTestEmail(user.email)) {
+            throw new Error("That email cannot join the hub.");
+          }
+          return { data: user };
+        },
+      },
+    },
+  },
 
   // Local email/password — toggled only via `./email-password` (not a plugin).
   ...(emailAndPasswordEnabled
