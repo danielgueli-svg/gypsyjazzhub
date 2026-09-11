@@ -22,10 +22,17 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Start preview
         run: |
+          rm -rf node_modules/.vite
           npm run dev -- --host 127.0.0.1 --port 8080 > /tmp/dev.log 2>&1 &
           echo $! > /tmp/dev.pid
           for i in $(seq 1 40); do
             if curl -sf http://127.0.0.1:8080/ >/dev/null; then exit 0; fi
+            # Fail fast if Vite already crashed (optimizeDeps / resolve errors)
+            if ! kill -0 "$(cat /tmp/dev.pid)" 2>/dev/null; then
+              echo "dev server exited early"
+              cat /tmp/dev.log
+              exit 1
+            fi
             sleep 3
           done
           echo "dev server did not start"
