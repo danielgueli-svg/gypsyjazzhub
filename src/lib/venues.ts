@@ -244,6 +244,16 @@ export const VENUES: Venue[] = [
     bio: "38 rue de Rivoli, 75004. Vaulted cellar at Hôtel de Ville. Django Afternoons and gypsy jazz guitar on the Paris list.",
   },
   {
+    slug: "atelier-d-andre",
+    name: "Atelier d’André",
+    city: "Paris",
+    country: "France",
+    kind: "Club",
+    site: "",
+    contact: "",
+    bio: "36 rue Saint-André des Arts, 75006. Recurring Thursday gypsy jazz series. Dates as posted.",
+  },
+  {
     slug: "the-green-linnet",
     name: "The Green Linnet",
     city: "Paris",

@@ -825,6 +825,24 @@ export const FESTIVALS: Festival[] = [
     nextStartsAt: "2026-12-27T19:00:00.000Z",
     relatedSlugs: ["jimmy-rosenberg", "gismo-graf"],
   },
+  {
+    slug: "jazzabar",
+    name: "Festival Jazzabar",
+    city: "Bar-sur-Aube",
+    country: "France",
+    when: "11 September 2026",
+    founded: "",
+    site: "",
+    bio: "17e Festival Jazzabar. Friday 11 September 2026, Salle des fêtes, Bar-sur-Aube (10200). Quintette du Hot Club de France at 22:00.",
+    nextStartsAt: "2026-09-11T20:00:00.000Z",
+    relatedSlugs: [
+      "duved-dunayevsky",
+      "daniel-garlitsky",
+      "pierre-richeux",
+      "andrea-soria",
+      "scott-koehler",
+    ],
+  },
 ];
 
 export function festivalsInCountry(atlasName: string): Festival[] {
