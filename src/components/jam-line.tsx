@@ -3,7 +3,7 @@ import { CountryLabel } from "@/components/country-label";
 import type { Jam } from "@/lib/jams";
 import { jamHours, jamPlace } from "@/lib/jams";
 
-export function JamLine({ jam }: { jam: Jam }) {
+export function JamLine({ jam, showCountry = true }: { jam: Jam; showCountry?: boolean }) {
   const when = jam.kind === "meetup" ? "Meetup" : jam.when;
   const hours = jamHours(jam);
   const place = jamPlace(jam);
@@ -11,7 +11,7 @@ export function JamLine({ jam }: { jam: Jam }) {
   return (
     <li className="break-inside-avoid py-2">
       <Link to="/jams/$slug" params={{ slug: jam.slug }} className="block hover:underline">
-        {jam.country ? (
+        {showCountry && jam.country ? (
           <>
             <CountryLabel name={jam.country} className="inline-flex" />
             <span className="mx-1.5 text-faint">·</span>

@@ -1324,21 +1324,13 @@ export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
       all.push({ ...jam, nextStartsAt: rollJamNext(jam, now) });
     }
   }
-  const counts: Record<string, number> = {};
-  for (const jam of all) counts[jam.country] = (counts[jam.country] ?? 0) + 1;
   const present = [...new Set(all.map((jam) => jam.country))];
-  const ordered = present.sort(
-    (a, b) => (counts[b] ?? 0) - (counts[a] ?? 0) || a.localeCompare(b),
-  );
+  const ordered = present.sort((a, b) => a.localeCompare(b));
   return ordered.map((country) => ({
     country,
     jams: all
       .filter((jam) => jam.country === country)
-      .sort((a, b) => {
-        const meetup = Number((b.kind ?? "regular") === "meetup") - Number((a.kind ?? "regular") === "meetup");
-        if (meetup) return meetup;
-        return new Date(a.nextStartsAt).getTime() - new Date(b.nextStartsAt).getTime();
-      }),
+      .sort((a, b) => a.city.localeCompare(b.city) || a.name.localeCompare(b.name)),
   }));
 }
 

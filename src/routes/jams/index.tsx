@@ -2,12 +2,11 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Contribute } from "@/components/contribute";
 import { EventFilters } from "@/components/event-filters";
 import { JamLine } from "@/components/jam-line";
-import { ListFold } from "@/components/list-fold";
 import { Button } from "@/components/ui/button";
 import { CountryLabel } from "@/components/country-label";
-import { countrySlug, preferCountryNames, sameCountry } from "@/lib/geo";
+import { countrySlug, displayCountry } from "@/lib/geo";
 import { listHubJams } from "@/lib/hub-api";
-import { localeHomeCountry, useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { jamsByCountry, type Jam } from "@/lib/jams";
 import { filterAgenda, jamToAgenda, uniqueCities, uniqueCountries } from "@/lib/agenda";
 import { pageHead, SEO } from "@/lib/seo";
@@ -33,13 +32,16 @@ function JamsPage() {
   const groups = jamsByCountry(extra);
   const { t, locale } = useI18n();
   const router = useRouter();
-  const home = localeHomeCountry(locale);
-  const ordered = [...groups].sort(
-    (a, b) => Number(sameCountry(b.country, home)) - Number(sameCountry(a.country, home)),
+  const ordered = [...groups].sort((a, b) =>
+    displayCountry(a.country, locale).localeCompare(displayCountry(b.country, locale), locale, {
+      sensitivity: "base",
+    }),
   );
   const allJams = groups.flatMap((g) => g.jams);
   const cities = uniqueCities(allJams);
-  const countries = preferCountryNames(uniqueCountries(allJams), home);
+  const countries = uniqueCountries(allJams).sort((a, b) =>
+    displayCountry(a, locale).localeCompare(displayCountry(b, locale), locale, { sensitivity: "base" }),
+  );
 
   function allowed(jam: Jam) {
     const item = jamToAgenda(jam);
@@ -108,15 +110,11 @@ function JamsPage() {
                 <CountryLabel name={group.country} />
               </Link>
               <span className="ml-2 text-sm text-muted">({jams.length})</span>
-              <ListFold items={jams} limit={10}>
-                {(rows) => (
-                  <ul className="mt-2 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-5">
-                    {rows.map((jam) => (
-                      <JamLine key={jam.slug} jam={jam} />
-                    ))}
-                  </ul>
-                )}
-              </ListFold>
+              <ul className="mt-2">
+                {jams.map((jam) => (
+                  <JamLine key={jam.slug} jam={jam} showCountry={false} />
+                ))}
+              </ul>
             </section>
           );
         })}

@@ -53,9 +53,9 @@ function JamsInCountry() {
       {group.jams.length === 0 ? (
         <p className="mt-8 text-sm text-muted">{t("country.noJams")}</p>
       ) : (
-        <ul className="mt-8 columns-1 gap-x-10 sm:columns-2">
+        <ul className="mt-8">
           {group.jams.map((jam) => (
-            <JamLine key={jam.slug} jam={jam} />
+            <JamLine key={jam.slug} jam={jam} showCountry={false} />
           ))}
         </ul>
       )}
