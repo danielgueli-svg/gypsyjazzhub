@@ -1,5 +1,6 @@
 import { isCloudflareWorker, readEnv } from "@/lib/runtime-env";
 import { createDoSql, hubDbNamespace } from "@/lib/do-sql";
+import { ensureOwnerAccount } from "@/lib/owner-bootstrap";
 
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite" | "do" | "none";
@@ -218,7 +219,13 @@ async function createSql(): Promise<Sql> {
   }
   if (readDatabaseUrl()) return createNeonSql();
   if (isCloudflareWorker()) {
-    if (hubDbNamespace()) return createDoSql();
+    if (hubDbNamespace()) {
+      const sql = await createDoSql();
+      await ensureOwnerAccount().catch((err) => {
+        console.error("[db] owner login bootstrap failed:", err);
+      });
+      return sql;
+    }
     return Promise.resolve(emptySql());
   }
   return createPgliteSql();
