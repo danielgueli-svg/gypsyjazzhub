@@ -27,14 +27,18 @@ export const Route = createFileRoute("/jams/$slug")({
       .filter((legend) => Boolean(legend));
     return { jam, related, chat };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const path = `/jams/${params.slug}`;
     const jam = loaderData?.jam;
-    if (!jam) return pageHead({ title: "Jam session", description: "Gypsy jazz jam session." });
+    if (!jam) {
+      return pageHead({ title: "Jam session", description: "Gypsy jazz jam session.", path });
+    }
     return pageHead({
       title: `${jam.name} — gypsy jazz jam session`,
       description:
         jam.bio ||
         `${jam.name} is a gypsy jazz jam session in ${jam.city}, ${jam.country}.`,
+      path,
     });
   },
   component: JamPage,

@@ -25,13 +25,21 @@ export const Route = createFileRoute("/concerts/$id")({
     const rest = upcoming.filter((row) => row.id !== concert.id).slice(0, 4);
     return { concert, reviews, agenda: [concert, ...rest].slice(0, 5) };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const path = `/concerts/${params.id}`;
     const concert = loaderData?.concert;
-    if (!concert) return pageHead({ title: "Concert", description: "A gypsy jazz night on Gypsy Jazz Hub." });
+    if (!concert) {
+      return pageHead({
+        title: "Concert",
+        description: "A gypsy jazz night on Gypsy Jazz Hub.",
+        path,
+      });
+    }
     const bill = concert.title?.trim() || concert.artistName;
     return pageHead({
       title: `${bill} — ${concert.city || concert.country}`,
       description: `${bill} in ${[concert.venue, concert.city, concert.country].filter(Boolean).join(", ")}. Reviews and photos from people who were there.`,
+      path,
     });
   },
   component: ConcertNightPage,

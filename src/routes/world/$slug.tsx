@@ -43,11 +43,12 @@ export const Route = createFileRoute("/world/$slug")({
       teachers,
     };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const name = loaderData?.country?.displayName ?? loaderData?.selected ?? "this country";
     return pageHead({
       title: `Gypsy jazz in ${name}`,
       description: `Gypsy jazz jam sessions, concerts, festivals and musicians in ${name}. Jazz Manouche events on Gypsy Jazz Hub.`,
+      path: `/world/${params.slug}`,
     });
   },
   component: WorldCountryPage,

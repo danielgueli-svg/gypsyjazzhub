@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite dev --host 0.0.0.0 --port 8080",
     "dev:local": "vite dev --host 127.0.0.1 --port 3000",
-    "build": "vite build && node scripts/patch-ssr-exports.mjs && npm run db:migrate",
+    "build": "npm run sitemap && vite build && node scripts/patch-ssr-exports.mjs && npm run db:migrate",
     "db:migrate": "node scripts/migrate.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
@@ -17,6 +17,7 @@
     "test": "node --test 'scripts/**/*.test.mjs'",
     "site-check": "node scripts/site-check.mjs --globe",
     "site-check:live": "node scripts/site-check.mjs --base https://www.gypsyjazzhub.com",
+    "sitemap": "node scripts/build-sitemap.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

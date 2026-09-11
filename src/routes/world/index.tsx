@@ -15,6 +15,7 @@ export const Route = createFileRoute("/world/")({
       title: "Countries",
       description:
         "Gypsy jazz by country — spin the globe for jams, concerts, luthiers and shops.",
+      path: "/world",
     }),
   loader: async () => {
     const [concerts, legends, musicians, hubFestivals, hubJams, hubVenues, hubLuthiers, hubCountries] =

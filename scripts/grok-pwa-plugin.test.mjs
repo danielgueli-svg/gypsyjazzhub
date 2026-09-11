@@ -269,6 +269,29 @@ test("placeholder og:image appends site.color when it is 6-digit hex", () => {
   assert.doesNotMatch(custom, /color=/);
 });
 
+test("document title wins over site.json title for og:title", () => {
+  const out = injectGrokPwaHead(
+    '<html><head><title>Stochelo Rosenberg — gypsy jazz | Gypsy Jazz Hub</title></head></html>',
+    { site: { title: "Gypsy Jazz Hub" } },
+  );
+  assert.match(
+    out,
+    /property="og:title" content="Stochelo Rosenberg — gypsy jazz \| Gypsy Jazz Hub"/,
+  );
+  assert.equal(out.split('property="og:title"').length - 1, 1);
+});
+
+test("canonical link is copied to og:url", () => {
+  const out = injectGrokPwaHead(
+    '<html><head><title>Jam</title><link rel="canonical" href="https://www.gypsyjazzhub.com/jams/paris-green-linnet"></head></html>',
+    { site: { title: "Gypsy Jazz Hub" } },
+  );
+  assert.match(
+    out,
+    /property="og:url" content="https:\/\/www\.gypsyjazzhub\.com\/jams\/paris-green-linnet"/,
+  );
+});
+
 test("document title entities are not double-escaped on og:title", () => {
   const out = injectGrokPwaHead(
     "<html><head><title>Cats &amp; Dogs</title></head></html>",

@@ -13,9 +13,15 @@ export const Route = createFileRoute("/news/$slug")({
     }
     return { item };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const item = loaderData?.item;
-    if (!item) return pageHead({ title: "News", description: "Gypsy jazz news." });
+    if (!item) {
+      return pageHead({
+        title: "News",
+        description: "Gypsy jazz news.",
+        path: `/news/${params.slug}`,
+      });
+    }
     return pageHead({
       title: item.title,
       description: item.body,

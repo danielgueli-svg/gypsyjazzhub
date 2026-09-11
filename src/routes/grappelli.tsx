@@ -21,6 +21,7 @@ export const Route = createFileRoute("/grappelli")({
       title: "Stéphane Grappelli — gypsy jazz violin",
       description:
         "Stéphane Grappelli, violin of the Quintette du Hot Club de France. Bio, recordings and the living gypsy jazz violin line.",
+      path: "/grappelli",
     }),
   loader: async () => {
     const extras = await loadArtistExtras("stephane-grappelli");

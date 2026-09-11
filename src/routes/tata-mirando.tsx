@@ -16,6 +16,7 @@ export const Route = createFileRoute("/tata-mirando")({
       title: "Tata Mirando — Dutch Sinti orchestra",
       description:
         "Joseph Weiss, Tata Mirando, and the Weiss family orchestra in the Netherlands: history, later houses, and where to listen.",
+      path: "/tata-mirando",
     }),
   component: TataMirandoPage,
 });

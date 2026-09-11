@@ -69,19 +69,28 @@ export const Route = createFileRoute("/musicians/$slug")({
       : [];
     return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const path = `/musicians/${params.slug}`;
     if (loaderData?.kind === "directory") {
       const legend = loaderData.directory.legend;
       return pageHead({
         title: `${legend.name} — gypsy jazz ${legend.instruments}`,
         description: legend.bio || `${legend.name} is a gypsy jazz musician on Gypsy Jazz Hub.`,
+        path,
       });
     }
     const musician = loaderData?.musician;
-    if (!musician) return pageHead({ title: "Musician", description: "Gypsy jazz musician on Gypsy Jazz Hub." });
+    if (!musician) {
+      return pageHead({
+        title: "Musician",
+        description: "Gypsy jazz musician on Gypsy Jazz Hub.",
+        path,
+      });
+    }
     return pageHead({
       title: `${musician.displayName} — gypsy jazz`,
       description: musician.bio || `${musician.displayName} is a gypsy jazz musician on Gypsy Jazz Hub.`,
+      path,
     });
   },
   component: MusicianRoute,
