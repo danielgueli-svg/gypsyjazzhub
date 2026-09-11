@@ -44,7 +44,7 @@ function Select({
   label: string;
 }) {
   return (
-    <label className="block min-w-40 flex-1 text-sm">
+    <label className="block w-full min-w-0 flex-1 text-sm sm:min-w-40">
       <span className="mb-1.5 block text-muted">{label}</span>
       <select
         value={value}
@@ -139,8 +139,8 @@ export function UserDirectory() {
   }
 
   return (
-    <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">Users & alerts</h2>
+    <section id="desk-users" className="mt-12 scroll-mt-20">
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">Users & alerts</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everyone who has joined the hub, with profile types, instruments and
         what they subscribe to for notifications. Ban an account or an IP here.
@@ -200,7 +200,7 @@ export function UserDirectory() {
       ) : null}
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <label className="block min-w-48 flex-1 text-sm">
+        <label className="block w-full min-w-0 flex-1 text-sm sm:min-w-48">
           <span className="mb-1.5 block text-muted">Search</span>
           <Input
             value={filter.q ?? ""}
@@ -265,7 +265,77 @@ export function UserDirectory() {
 
       {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
 
-      <div className="mt-4 overflow-x-auto rounded-2xl bg-surface shadow-border">
+      <div className="mt-4 space-y-3 md:hidden">
+        {!ready ? (
+          <p className="rounded-2xl bg-surface px-4 py-6 text-sm text-muted shadow-border">Loading…</p>
+        ) : users.length === 0 ? (
+          <p className="rounded-2xl bg-surface px-4 py-6 text-sm text-muted shadow-border">
+            No members match these filters yet.
+          </p>
+        ) : (
+          users.map((user) => (
+            <article key={user.id} className="rounded-2xl bg-surface p-4 shadow-border">
+              <p className="font-medium leading-tight break-words">{user.name}</p>
+              <p className="mt-0.5 break-all text-xs text-muted">{user.email}</p>
+              <p className="mt-1 text-xs text-faint">{formatConcertWhen(user.createdAt)}</p>
+              <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+                <div>
+                  <dt className="text-faint">Country</dt>
+                  <dd className="mt-0.5 text-muted">
+                    {user.country ? displayCountry(user.country) : "—"}
+                    {user.city ? ` · ${user.city}` : ""}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-faint">Musician</dt>
+                  <dd className="mt-0.5 text-muted">{user.musician ? "Musician" : "Non-musician"}</dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-faint">Profile</dt>
+                  <dd className="mt-0.5 text-muted">
+                    {user.profileTypes.length
+                      ? user.profileTypes.map((id) => typeLabel(id)).join(", ")
+                      : "—"}
+                  </dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-faint">Instrument</dt>
+                  <dd className="mt-0.5 text-muted">
+                    {user.instrumentIds.length
+                      ? user.instrumentIds.map((id) => instrumentLabel(id)).join(", ")
+                      : user.instruments || "—"}
+                  </dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-faint">Subscriptions</dt>
+                  <dd className="mt-0.5 text-muted">
+                    {user.subscriptions.length
+                      ? user.subscriptions
+                          .slice(0, 4)
+                          .map((sub) => `${subscriptionLabel(sub.kind)} · ${sub.targetName}`)
+                          .join("; ")
+                      : "—"}
+                    {user.subscriptions.length > 4 ? ` +${user.subscriptions.length - 4}` : ""}
+                  </dd>
+                </div>
+              </dl>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {user.verified ? null : (
+                  <Button type="button" size="sm" variant="outline" onClick={() => void verify(user)}>
+                    Verify
+                  </Button>
+                )}
+                <Button type="button" size="sm" variant="outline" onClick={() => void ban(user, !user.banned)}>
+                  {user.banned ? "Unban" : "Ban"}
+                </Button>
+              </div>
+              {user.banned ? <p className="mt-1 text-xs text-danger">Banned</p> : null}
+            </article>
+          ))
+        )}
+      </div>
+
+      <div className="mt-4 hidden overflow-x-auto rounded-2xl bg-surface shadow-border md:block">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="text-faint">
             <tr>

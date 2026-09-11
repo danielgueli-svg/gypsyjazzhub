@@ -212,15 +212,36 @@ function OwnerPage() {
   const todayActivity = activity.filter((row) => new Date(row.when).getTime() >= dayAgo);
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
+    <main className="mx-auto w-full max-w-6xl min-w-0 flex-1 overflow-x-hidden px-3 py-8 sm:px-6 sm:py-10">
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Owner</p>
-      <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">
+      <h1 className="mt-3 font-display text-3xl font-semibold leading-tight sm:text-5xl">
         Owner desk
       </h1>
-      <p className="mt-3 max-w-xl text-sm text-muted">
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
         Members, new pages, concerts, jams, festivals and chat. Take anything
         down that should not stay.
       </p>
+      {owner ? (
+        <nav className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {[
+            ["#desk-visits", "Visits"],
+            ["#desk-today", "Today"],
+            ["#desk-members", "Members"],
+            ["#desk-users", "Users"],
+            ["#desk-mail", "Mail"],
+            ["#desk-scan", "Scan"],
+            ["#desk-content", "Content"],
+          ].map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className="shrink-0 rounded-full bg-surface px-3 py-1.5 text-xs font-medium text-fg shadow-border"
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      ) : null}
 
       {!owner ? (
         <form onSubmit={onClaim} className="mt-10 max-w-md space-y-3 rounded-2xl bg-surface p-6 shadow-border">
@@ -240,15 +261,15 @@ function OwnerPage() {
         </form>
       ) : (
         <>
-          <section className="mt-10">
-            <h2 className="font-display text-3xl font-semibold">Visits</h2>
+          <section id="desk-visits" className="mt-8 scroll-mt-20 sm:mt-10">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Visits</h2>
             <p className="mt-2 text-sm text-muted">
               Every public page open. Unique people use one browser. Amsterdam day.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl bg-surface p-5 shadow-border sm:col-span-1">
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Site visits</p>
-                <p className="mt-2 font-display text-5xl font-semibold tabular-nums">
+                <p className="mt-2 font-display text-4xl font-semibold tabular-nums sm:text-5xl">
                   {visits?.total?.hits ?? 0}
                 </p>
                 <p className="mt-1 text-sm text-muted">
@@ -266,15 +287,15 @@ function OwnerPage() {
                   {(visits?.today?.hits ?? 0) === 1 ? "" : "s"}
                 </p>
               </div>
-              <div className="rounded-2xl bg-surface p-5 shadow-border">
+              <div className="rounded-2xl bg-surface p-4 shadow-border sm:p-5">
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Last 14 days</p>
-                <ul className="mt-3 space-y-1.5 text-sm">
+                <ul className="mt-3 max-h-56 space-y-1.5 overflow-y-auto text-sm">
                   {(visits?.days ?? []).length === 0 ? (
                     <li className="text-faint">No visits counted yet.</li>
                   ) : (
                     visits!.days.map((row) => (
                       <li key={row.day} className="flex justify-between gap-3">
-                        <span>{row.day}</span>
+                        <span className="min-w-0 truncate">{row.day}</span>
                         <span className="tabular-nums text-muted">
                           {row.visitors} · {row.hits} hits
                         </span>
@@ -293,7 +314,7 @@ function OwnerPage() {
                   ) : (
                     visits!.countries!.map((row) => (
                       <li key={row.country || "unknown"} className="flex justify-between gap-3">
-                        <span>{row.countryName}</span>
+                        <span className="min-w-0 truncate">{row.countryName}</span>
                         <span className="tabular-nums text-muted">
                           {row.visitors} · {row.hits} hits
                         </span>
@@ -310,7 +331,7 @@ function OwnerPage() {
                   ) : (
                     visits!.cities!.map((row) => (
                       <li key={`${row.country}-${row.city}`} className="flex justify-between gap-3">
-                        <span>
+                        <span className="min-w-0 truncate">
                           {row.city}
                           {row.countryName ? ` · ${row.countryName}` : ""}
                         </span>
@@ -325,8 +346,8 @@ function OwnerPage() {
             </div>
           </section>
 
-          <section className="mt-10">
-            <h2 className="font-display text-3xl font-semibold">Last 24 hours</h2>
+          <section id="desk-today" className="mt-10 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Last 24 hours</h2>
             <p className="mt-2 text-sm text-muted">
               {todayMembers.length} new member{todayMembers.length === 1 ? "" : "s"} ·{" "}
               {todayActivity.length} new post{todayActivity.length === 1 ? "" : "s"}
@@ -337,7 +358,8 @@ function OwnerPage() {
               <ul className="mt-4 space-y-2 text-sm">
                 {todayMembers.map((member) => (
                   <li key={member.id} className="rounded-xl bg-surface px-4 py-3 shadow-border">
-                    Joined · {member.name} · {member.email}
+                    Joined · <span className="break-words">{member.name}</span>
+                    <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
                   </li>
                 ))}
                 {todayActivity.map((item) => (
@@ -349,8 +371,8 @@ function OwnerPage() {
             )}
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-3xl font-semibold">Members</h2>
+          <section id="desk-members" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
             <p className="mt-2 text-sm text-muted">
               {members.length} people with a hub login. Alerts they turned on are in Users & alerts below.
             </p>
@@ -362,7 +384,7 @@ function OwnerPage() {
                   <li key={member.id} className="flex flex-wrap justify-between gap-2 px-4 py-3 text-sm">
                     <span>
                       <span className="font-medium">{member.name || "Hub member"}</span>
-                      <span className="mt-0.5 block text-xs text-muted">{member.email}</span>
+                      <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
                     </span>
                     <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
                   </li>
@@ -374,7 +396,7 @@ function OwnerPage() {
           <UserDirectory />
 
           <section className="mt-12">
-            <h2 className="font-display text-3xl font-semibold">On the hub tonight</h2>
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">On the hub tonight</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
               Hidden from the front page for now. This is the public activity
               strip — jams, concerts, new pages, news — so you can look at it
@@ -395,8 +417,8 @@ function OwnerPage() {
 
           <CatalogPanel onError={setError} />
 
-          <section className="mt-12">
-            <h2 className="font-display text-3xl font-semibold">Daily mail</h2>
+          <section id="desk-mail" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Daily mail</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
               Every morning a short mail: new members, concerts, jams, festivals,
               clips, and scan finds waiting for you. First test may ask you to
@@ -453,8 +475,8 @@ function OwnerPage() {
             ) : null}
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-3xl font-semibold">Daily scan</h2>
+          <section id="desk-scan" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Daily scan</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
               Every day the hub looks for new dates and new rooms. A concert
               goes on the calendar only with two confirmations — artist website
@@ -557,8 +579,8 @@ function OwnerPage() {
             )}
           </section>
 
-          <section className="mt-12">
-            <h2 className="font-display text-3xl font-semibold">Content</h2>
+          <section id="desk-content" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Content</h2>
             {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
             <ul className="mt-4 space-y-2">
               {activity.map((item) => (
@@ -624,7 +646,7 @@ function PendingHubPanel({
 
   return (
     <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">Waiting for a look</h2>
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">Waiting for a look</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Member-submitted jams, concerts, festivals, teachers, venues and notes.
         First posts from a new account wait here. Publish them and they land on the site. Take down anything that should
@@ -690,7 +712,7 @@ function ContactMessagesPanel() {
 
   return (
     <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">Contact the Board</h2>
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">Contact the Board</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Notes sent from the footer form. Suggestions, corrections, and feedback.
       </p>
@@ -749,7 +771,7 @@ function CountryRequestsPanel() {
 
   return (
     <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">New country requests</h2>
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">New country requests</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Members ask to open a country that is not on the hub yet. Approve it
         and the page exists — they can put concerts and jams on it.
@@ -824,7 +846,7 @@ function CatalogPanel({ onError }: { onError: (msg: string | null) => void }) {
 
   return (
     <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">Artist pages</h2>
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">Artist pages</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         A new name on a concert, jam, clip or scan opens a page automatically —
         name, country if we have it, a placeholder photo. Bios stay empty until
