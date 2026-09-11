@@ -124,6 +124,54 @@ function toSqlFromDo(): Sql {
   return sql;
 }
 
+const AUTH_TABLES_SQL = `
+create table if not exists "user" (
+  "id" text not null primary key,
+  "name" text not null,
+  "email" text not null unique,
+  "emailVerified" integer not null,
+  "image" text,
+  "createdAt" text not null default (datetime('now')),
+  "updatedAt" text not null default (datetime('now'))
+);
+create table if not exists "session" (
+  "id" text not null primary key,
+  "expiresAt" text not null,
+  "token" text not null unique,
+  "createdAt" text not null default (datetime('now')),
+  "updatedAt" text not null,
+  "ipAddress" text,
+  "userAgent" text,
+  "userId" text not null references "user" ("id") on delete cascade
+);
+create table if not exists "account" (
+  "id" text not null primary key,
+  "accountId" text not null,
+  "providerId" text not null,
+  "userId" text not null references "user" ("id") on delete cascade,
+  "accessToken" text,
+  "refreshToken" text,
+  "idToken" text,
+  "accessTokenExpiresAt" text,
+  "refreshTokenExpiresAt" text,
+  "scope" text,
+  "password" text,
+  "createdAt" text not null default (datetime('now')),
+  "updatedAt" text not null
+);
+create table if not exists "verification" (
+  "id" text not null primary key,
+  "identifier" text not null,
+  "value" text not null,
+  "expiresAt" text not null,
+  "createdAt" text not null default (datetime('now')),
+  "updatedAt" text not null default (datetime('now'))
+);
+create index if not exists "session_userId_idx" on "session" ("userId");
+create index if not exists "account_userId_idx" on "account" ("userId");
+create index if not exists "verification_identifier_idx" on "verification" ("identifier");
+`;
+
 export async function migrateDoSql(): Promise<void> {
   const stub = hubDbStub();
   if (!stub) return;
@@ -134,6 +182,13 @@ export async function migrateDoSql(): Promise<void> {
   });
   const doneRows = await runDoSql("select name from _migrations");
   const done = new Set(doneRows.map((row) => String(row.name)));
+  const tables = await runDoSql(
+    "select name from sqlite_master where type = 'table' and name = 'user'",
+  );
+  if (!tables.length) {
+    done.delete("0001_auth.sql");
+    await runDoSql("delete from _migrations where name = $1", ["0001_auth.sql"]);
+  }
   const migrations = import.meta.glob("/migrations/*.sql", {
     query: "?raw",
     import: "default",
@@ -149,6 +204,15 @@ export async function migrateDoSql(): Promise<void> {
         ...parts.map((sql) => ({ sql, params: [] as unknown[] })),
         { sql: "insert into _migrations (name) values (?)", params: [name] },
       ],
+    });
+  }
+  const stillMissing = await runDoSql(
+    "select name from sqlite_master where type = 'table' and name = 'user'",
+  );
+  if (!stillMissing.length) {
+    await callDo(stub, {
+      type: "batch",
+      statements: sqlStatements(AUTH_TABLES_SQL).map((sql) => ({ sql, params: [] as unknown[] })),
     });
   }
 }

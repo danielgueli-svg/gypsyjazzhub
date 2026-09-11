@@ -3,9 +3,17 @@ export const PUBLIC_SITE_ORIGIN = "https://www.gypsyjazzhub.com";
 
 /** Read an env var, treating empty/whitespace as unset. */
 export function readEnv(key: string): string | undefined {
-  const value =
+  const fromProcess =
     typeof process !== "undefined" ? process.env[key]?.trim() : undefined;
-  return value ? value : undefined;
+  if (fromProcess) return fromProcess;
+  try {
+    const env = (globalThis as { __env__?: Record<string, unknown> }).__env__;
+    const value = env?.[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  } catch {
+    /* Worker bindings may be missing at module load. */
+  }
+  return undefined;
 }
 
 /**

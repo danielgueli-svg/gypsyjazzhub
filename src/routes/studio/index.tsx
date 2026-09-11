@@ -1010,8 +1010,8 @@ function AlertsPanel() {
         <h2 className="font-display text-2xl font-semibold">Mail</h2>
         <p className="text-sm text-muted">
           {email.includes("@")
-            ? `Goes to ${email}. Change it on your Google, X or email account.`
-            : "Sign in with an email, Google or X so we know where to write."}
+            ? `Goes to ${email}. Change it on the email you signed in with.`
+            : "Sign in with an email so we know where to write."}
         </p>
         <p className="text-xs leading-relaxed text-faint">
           Every new date, weekly or monthly — never a mail on a quiet stretch. Each

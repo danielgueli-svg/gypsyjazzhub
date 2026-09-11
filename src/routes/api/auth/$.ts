@@ -12,7 +12,9 @@ async function handleAuth(request: Request) {
         return Response.json(
           {
             message:
-              "Could not join. Email sign-in failed on this host — try Google, or try again in a minute.",
+              res.status >= 500
+                ? "Could not sign in — the hub login store is not ready. Try again in a minute."
+                : "Could not join. Email sign-in failed on this host — try again in a minute.",
             code: "AUTH_EMPTY",
             status: res.status,
           },

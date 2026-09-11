@@ -1,12 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import {
-  GROK_PROVIDERS,
-  authClient,
-  authEnabled,
-  setBearerToken,
-  signIn,
-} from "@/lib/auth/client";
+import { authClient, authEnabled, setBearerToken } from "@/lib/auth/client";
 import { pathAfterLogin } from "@/lib/auth/after-login";
 import { takeReturnTo } from "@/lib/auth/return-to";
 import { startHubEmailVerification } from "@/lib/hub-api";
@@ -72,10 +66,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         if (created.error) {
           const message = created.error.message ?? "";
           if (!alreadyMember(message)) {
-            throw new Error(
-              message.trim() ||
-                "Could not join. Try Google, or a Gmail address — some mail hosts bounce the confirm step.",
-            );
+            throw new Error(message.trim() || t("login.joinFail"));
           }
           firstTime = false;
           const existing = await authClient.signIn.email({
@@ -85,9 +76,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           });
           keepToken(existing);
           if (existing.error) {
-            throw new Error(
-              "This email is already in the hub. Sign in with the same password — or use Google / X if that is how you joined.",
-            );
+            throw new Error(t("login.already"));
           }
         } else {
           try {
@@ -109,27 +98,27 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         if (result.error) {
           throw new Error(
             result.error.message?.includes("PASSWORD") || /invalid/i.test(result.error.message ?? "")
-              ? "Email or password is wrong. If you joined with Google or X, use that button."
-              : result.error.message || "Could not sign in.",
+              ? t("login.badPass")
+              : result.error.message || t("login.fail"),
           );
         }
       }
       await goAfterLogin(firstTime);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not sign in.");
+      setError(err instanceof Error ? err.message : t("login.fail"));
     } finally {
       setBusy(false);
     }
   }
 
   if (isPending) {
-    return <div className="h-12 w-40 animate-pulse rounded-md bg-raised" />;
+    return <div className="h-12 w-full animate-pulse rounded-md bg-raised" />;
   }
   if (user) {
     return (
       <div className="space-y-3">
         <p className="text-sm text-muted">
-          You are logged in as {user.displayName ?? user.primaryEmail}.
+          {t("login.loggedInAs")} {user.displayName ?? user.primaryEmail}.
         </p>
         <Button asChild>
           <Link to="/studio">{t("nav.hubProfile")}</Link>
@@ -138,7 +127,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
     );
   }
   if (!authEnabled) {
-    return <p className="text-sm text-muted">Sign-in is disabled.</p>;
+    return <p className="text-sm text-muted">{t("login.disabled")}</p>;
   }
 
   return (
@@ -152,18 +141,18 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         </div>
         {mode === "up" ? (
           <div className="space-y-1.5">
-            <Label htmlFor="join-name">Name</Label>
+            <Label htmlFor="join-name">{t("login.name")}</Label>
             <Input
               id="join-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="The name others will see"
+              placeholder={t("login.namePlaceholder")}
               autoComplete="name"
             />
           </div>
         ) : null}
         <div className="space-y-1.5">
-          <Label htmlFor="join-email">Email</Label>
+          <Label htmlFor="join-email">{t("login.email")}</Label>
           <Input
             id="join-email"
             type="email"
@@ -174,7 +163,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="join-password">Password</Label>
+          <Label htmlFor="join-password">{t("login.password")}</Label>
           <Input
             id="join-password"
             type="password"
@@ -187,33 +176,9 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         </div>
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <Button type="submit" disabled={busy} className="w-full">
-          {busy ? "Please wait…" : mode === "up" ? "Join the hub" : "Sign in with email"}
+          {busy ? t("login.wait") : mode === "up" ? t("login.submitUp") : t("login.submitIn")}
         </Button>
       </form>
-      <div className="my-6 flex items-center gap-3 text-[11px] tracking-wide text-faint uppercase">
-        <span className="h-px flex-1 bg-border" />
-        or
-        <span className="h-px flex-1 bg-border" />
-      </div>
-      <div className="grid gap-2">
-        {GROK_PROVIDERS.map((provider) => (
-          <Button
-            key={provider.providerId}
-            type="button"
-            variant="outline"
-            onClick={() =>
-              void signIn(provider.providerId, {
-                callbackURL: "/welcome",
-                errorCallbackURL: "/login?error=signin",
-              }).catch((err) =>
-                setError(err instanceof Error ? err.message : "Could not sign in."),
-              )
-            }
-          >
-            Continue with {provider.label}
-          </Button>
-        ))}
-      </div>
       <button
         type="button"
         className="mt-4 text-sm text-muted hover:text-fg"
@@ -222,7 +187,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           setError(null);
         }}
       >
-        {mode === "up" ? "Already in the hub? Sign in" : "New here? Join the hub"}
+        {mode === "up" ? t("login.switchToIn") : t("login.switchToUp")}
       </button>
     </>
   );
