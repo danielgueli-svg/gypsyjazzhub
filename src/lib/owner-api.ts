@@ -26,6 +26,84 @@ import {
 import { visitStats, type VisitDay, type VisitPlace } from "@/lib/visits";
 
 const OWNER_PHRASE = "ile-du-berceau";
+const OWNER_KEEP_EMAIL = "danielgueli@mac.com";
+
+function isTestAccount(email: string, name = "", id = "") {
+  const e = email.trim().toLowerCase();
+  const n = name.trim().toLowerCase();
+  if (e === OWNER_KEEP_EMAIL) return false;
+  if (id === "dev-user" || id === "hub-seed") return true;
+  if (
+    e.endsWith("@example.com") ||
+    e.endsWith("@example.org") ||
+    e.endsWith("@example.net") ||
+    e.endsWith("@test.com") ||
+    e.endsWith("@mailinator.com") ||
+    e.endsWith("@yopmail.com") ||
+    e.includes("grok-sandbox") ||
+    e.endsWith("@grok.me")
+  ) {
+    return true;
+  }
+  const local = e.split("@")[0] ?? "";
+  if (/^(test|tester|testing|dummy|fake)(\d+)?([._+-].*)?$/.test(local)) return true;
+  if (/^(test|tester|testing|test user|dummy|fake|fake user)$/.test(n)) return true;
+  if (n.startsWith("test ")) return true;
+  return false;
+}
+
+async function purgeTestAccounts() {
+  const sql = await getSql();
+  let rows: { id: string; name: string; email: string }[] = [];
+  try {
+    rows = await sql<{ id: string; name: string; email: string }>`
+      select id, name, email from "user"
+    `;
+  } catch {
+    return;
+  }
+  const ids = new Set<string>();
+  for (const row of rows) {
+    if (isTestAccount(row.email, row.name, row.id)) ids.add(row.id);
+  }
+  try {
+    const extra = await sql<{ user_id: string; email: string }>`
+      select user_id, email from hub_members
+    `;
+    for (const row of extra) {
+      if (isTestAccount(row.email, "", row.user_id)) ids.add(row.user_id);
+    }
+  } catch {
+    /* optional */
+  }
+  for (const id of ids) {
+    try {
+      await sql`delete from "session" where "userId" = ${id}`;
+    } catch {
+      /* */
+    }
+    try {
+      await sql`delete from account where "userId" = ${id}`;
+    } catch {
+      /* */
+    }
+    try {
+      await sql`delete from hub_subscriptions where user_id = ${id}`;
+    } catch {
+      /* */
+    }
+    try {
+      await sql`delete from hub_members where user_id = ${id}`;
+    } catch {
+      /* */
+    }
+    try {
+      await sql`delete from "user" where id = ${id}`;
+    } catch {
+      /* */
+    }
+  }
+}
 
 export type HubMember = {
   id: string;
@@ -86,6 +164,7 @@ export const listHubMembers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     await requireOwner(context.userId);
+    await purgeTestAccounts();
     const sql = await getSql();
     let rows: { id: string; name: string; email: string; createdAt: unknown }[] = [];
     try {
@@ -123,7 +202,7 @@ export const listHubMembers = createServerFn({ method: "GET" })
     } catch {
       /* hub_members optional */
     }
-    return members;
+    return members.filter((row) => !isTestAccount(row.email, row.name, row.id));
   });
 
 export const getVisitStats = createServerFn({ method: "GET" })
@@ -305,6 +384,11 @@ async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> 
   } catch {
     /* subscriptions table is optional */
   }
+  try {
+    await purgeTestAccounts();
+  } catch {
+    /* keep listing even if purge fails */
+  }
   const sql = await getSql();
   const rows = await loadUsersRaw();
   let subRows: {
@@ -382,6 +466,7 @@ async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> 
   } catch {
     /* hub_members optional */
   }
+  users = users.filter((row) => !isTestAccount(row.email, row.name, row.id));
   const q = filter.q?.trim().toLowerCase() ?? "";
   if (q) {
     users = users.filter((row) =>
