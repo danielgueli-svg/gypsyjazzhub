@@ -2,7 +2,7 @@ import { slugify } from "@/lib/utils";
 import { CAMPS, type Camp } from "@/lib/camps";
 import type { Concert, Legend, Profile } from "@/lib/api";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
-import { JAMS, type Jam } from "@/lib/jams";
+import { JAMS, rollJamNext, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
 import { LUTHIERS, type Luthier } from "@/lib/luthiers";
 import { SHOPS, type Shop } from "@/lib/shops";
@@ -1051,14 +1051,16 @@ export function buildGlobeIndex(
   }
 
   const nowJam = Date.now();
+  const catalogSlugs = new Set(JAMS.map((jam) => jam.slug));
   for (const jam of [...JAMS, ...extraJams]) {
     const place = primaryCountry(jam.country);
     if (!place) continue;
     const row = ensure(place);
-    const past = new Date(jam.nextStartsAt).getTime() < nowJam;
-    if (past && jam.kind === "meetup") continue;
+    const rolled = { ...jam, nextStartsAt: rollJamNext(jam, nowJam) };
+    const past = new Date(rolled.nextStartsAt).getTime() < nowJam;
+    if (past && !catalogSlugs.has(jam.slug)) continue;
     if (!row.jams.some((item) => item.slug === jam.slug)) {
-      row.jams.push(jam);
+      row.jams.push(rolled);
     }
   }
 

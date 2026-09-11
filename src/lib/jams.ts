@@ -1275,9 +1275,12 @@ function isPostedNotRecurring(when: string) {
 }
 
 function isWeekly(when: string) {
-  return /weekly|every (monday|tuesday|wednesday|thursday|friday|saturday|sunday)|weekends|mondays|tuesdays|wednesdays|thursdays|fridays|saturdays|sundays/i.test(
+  if (/every other|biweekly|1st |2nd |3rd |4th |first |last |when posted|no regular/i.test(when)) {
+    return false;
+  }
+  return /\b(weekly|every (monday|tuesday|wednesday|thursday|friday|saturday|sunday)|weekends|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sundays?)\b/i.test(
     when,
-  ) && !/every other|biweekly|1st|2nd|3rd|4th|first |last /i.test(when);
+  );
 }
 
 function isBiweekly(when: string) {
@@ -1304,17 +1307,22 @@ export function rollJamNext(jam: Jam, now = Date.now()): string {
   return date.toISOString();
 }
 
+export function catalogJams(now = Date.now()) {
+  return JAMS.map((jam) => ({ ...jam, nextStartsAt: rollJamNext(jam, now) }));
+}
+
 export function upcomingJams(now = Date.now()) {
-  return JAMS.map((jam) => ({ ...jam, nextStartsAt: rollJamNext(jam, now) }))
+  return catalogJams(now)
     .filter((jam) => new Date(jam.nextStartsAt).getTime() >= now)
     .sort((a, b) => new Date(a.nextStartsAt).getTime() - new Date(b.nextStartsAt).getTime());
 }
 
 export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
-  const all = [...upcomingJams(now)];
+  const all = [...catalogJams(now)];
   for (const jam of extra) {
-    if (new Date(jam.nextStartsAt).getTime() < now) continue;
-    if (!all.some((row) => row.slug === jam.slug)) all.push(jam);
+    if (!all.some((row) => row.slug === jam.slug)) {
+      all.push({ ...jam, nextStartsAt: rollJamNext(jam, now) });
+    }
   }
   const counts: Record<string, number> = {};
   for (const jam of all) counts[jam.country] = (counts[jam.country] ?? 0) + 1;
@@ -1335,5 +1343,5 @@ export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
 }
 
 export function jamsInCountry(atlasName: string, now = Date.now()) {
-  return upcomingJams(now).filter((jam) => jam.country === atlasName);
+  return catalogJams(now).filter((jam) => jam.country === atlasName);
 }
