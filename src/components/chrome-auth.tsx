@@ -8,6 +8,29 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+type MenuPos = { top: number; left: number; bottom: number; up: boolean; maxHeight: number; width: number };
+
+function fitMenu(rect: DOMRect, preferUp: boolean): MenuPos {
+  const margin = 8;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = Math.min(256, vw - margin * 2);
+  const spaceBelow = vh - rect.bottom - margin;
+  const spaceAbove = rect.top - margin;
+  const up = preferUp ? spaceAbove > 160 || spaceAbove > spaceBelow : spaceBelow < 180 && spaceAbove > spaceBelow;
+  let left = rect.right - width;
+  if (left < margin) left = margin;
+  if (left + width > vw - margin) left = Math.max(margin, vw - margin - width);
+  return {
+    up,
+    left,
+    top: rect.bottom + 8,
+    bottom: Math.max(margin, vh - rect.top + 8),
+    maxHeight: Math.max(140, up ? spaceAbove : spaceBelow),
+    width,
+  };
+}
+
 /** Header + footer auth chrome. Never renders Log in while a session exists or is still loading. */
 export function ChromeAuth({
   className,
@@ -25,7 +48,7 @@ export function ChromeAuth({
   const [open, setOpen] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: 0, right: 0, bottom: 0, up: false });
+  const [pos, setPos] = useState<MenuPos>({ top: 0, left: 0, bottom: 0, up: false, maxHeight: 240, width: 240 });
   const wood = tone === "wood";
 
   useEffect(() => {
@@ -38,13 +61,21 @@ export function ChromeAuth({
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
+    const onMove = () => {
+      const rect = btn.current?.getBoundingClientRect();
+      if (rect) setPos(fitMenu(rect, wood));
+    };
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", onMove);
+    window.addEventListener("scroll", onMove, true);
     return () => {
       document.removeEventListener("mousedown", onDoc);
       document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onMove);
+      window.removeEventListener("scroll", onMove, true);
     };
-  }, [open]);
+  }, [open, wood]);
 
   if (isPending) {
     return (
@@ -52,6 +83,7 @@ export function ChromeAuth({
         className={cn(
           "h-11 w-24 animate-pulse rounded-md bg-black/10",
           wood && "h-11 w-24 bg-[#2a1c10]/20 sm:h-12",
+          !sheet && !wood && "max-md:hidden",
           className,
         )}
       />
@@ -62,10 +94,13 @@ export function ChromeAuth({
       <Button
         asChild
         className={cn(
-          "h-9 px-2.5 text-xs sm:h-11 sm:px-4 sm:text-sm",
           sheet && "w-full justify-center",
-          wood &&
-            "h-11 bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:px-8 sm:text-base",
+          wood
+            ? "h-11 w-full bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+            : cn(
+                "h-9 px-2.5 text-xs sm:h-11 sm:px-4 sm:text-sm",
+                !sheet && "max-md:hidden",
+              ),
           className,
         )}
       >
@@ -139,25 +174,18 @@ export function ChromeAuth({
         type="button"
         onClick={() => {
           const rect = btn.current?.getBoundingClientRect();
-          if (rect) {
-            setPos({
-              top: rect.bottom + 8,
-              right: Math.max(8, window.innerWidth - rect.right),
-              bottom: Math.max(8, window.innerHeight - rect.top + 8),
-              up: wood,
-            });
-          }
+          if (rect) setPos(fitMenu(rect, wood));
           setOpen((v) => !v);
         }}
         aria-expanded={open}
         aria-haspopup="menu"
         className={cn(
-          "inline-flex h-9 items-center gap-0.5 rounded-md border border-black/20 bg-black/10 px-2 text-xs font-semibold text-inherit hover:bg-black/15 sm:h-11 sm:gap-1 sm:px-3 sm:text-sm",
+          "inline-flex h-9 max-w-[9.5rem] items-center gap-0.5 truncate rounded-md border border-black/20 bg-black/10 px-2 text-xs font-semibold text-inherit hover:bg-black/15 sm:h-11 sm:max-w-none sm:gap-1 sm:px-3 sm:text-sm",
           wood &&
-            "h-11 border-transparent bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:px-8 sm:text-base",
+            "h-11 w-full max-w-none border-transparent bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:w-auto sm:px-8 sm:text-base",
         )}
       >
-        {t("nav.desk")}
+        <span className="min-w-0 truncate">{t("nav.desk")}</span>
         <ChevronDown className={cn("size-4 shrink-0", open && "rotate-180")} />
       </button>
       {open && typeof document !== "undefined"
@@ -167,10 +195,10 @@ export function ChromeAuth({
               role="menu"
               style={
                 pos.up
-                  ? { bottom: pos.bottom, right: pos.right }
-                  : { top: pos.top, right: pos.right }
+                  ? { bottom: pos.bottom, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }
+                  : { top: pos.top, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }
               }
-              className="fixed z-[400] min-w-[15rem] rounded-xl border border-border bg-surface p-1.5 text-fg shadow-border"
+              className="fixed z-[400] overflow-y-auto rounded-xl border border-border bg-surface p-1.5 text-fg shadow-border"
             >
               {items}
             </div>,

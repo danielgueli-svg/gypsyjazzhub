@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Flag } from "@/components/flag";
 import { LOCALES, useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -90,22 +91,60 @@ function LanguageMenu({
   const { locale, setLocale, t } = useI18n();
   const current = LOCALES.find((item) => item.id === locale) ?? LOCALES[0];
   const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ top: 0, left: 0, bottom: 0, up: false, maxHeight: 320, width: 224 });
+
+  function place() {
+    const rect = btn.current?.getBoundingClientRect();
+    if (!rect) return;
+    const margin = 8;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const width = Math.min(224, vw - margin * 2);
+    const spaceBelow = vh - rect.bottom - margin;
+    const spaceAbove = rect.top - margin;
+    const up = onDark || (spaceBelow < 220 && spaceAbove > spaceBelow);
+    let left = rect.right - width;
+    if (left < margin) left = margin;
+    if (left + width > vw - margin) left = Math.max(margin, vw - margin - width);
+    setPos({
+      up,
+      left,
+      top: rect.bottom + 8,
+      bottom: Math.max(margin, vh - rect.top + 8),
+      maxHeight: Math.max(160, Math.min(320, up ? spaceAbove : spaceBelow)),
+      width,
+    });
+  }
 
   useEffect(() => {
     if (!open) return;
     const onDoc = (event: MouseEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
+      const node = event.target as Node;
+      if (btn.current?.contains(node) || menu.current?.contains(node)) return;
+      setOpen(false);
     };
+    const onMove = () => place();
     document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
+    window.addEventListener("resize", onMove);
+    window.addEventListener("scroll", onMove, true);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      window.removeEventListener("resize", onMove);
+      window.removeEventListener("scroll", onMove, true);
+    };
   }, [open]);
 
   return (
-    <div ref={root} className="site-lang relative">
+    <div className="site-lang relative">
       <button
+        ref={btn}
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          place();
+          setOpen((v) => !v);
+        }}
         aria-expanded={open}
         aria-label={t("lang.label")}
         title={current.native}
@@ -135,40 +174,44 @@ function LanguageMenu({
           )}
         />
       </button>
-      {open ? (
-        <div
-          className={cn(
-            "site-lang-menu absolute z-[120] w-56 rounded-xl bg-surface p-2 shadow-border",
-            onDark ? "bottom-full left-0 mb-2" : "right-0 top-full mt-2",
-          )}
-        >
-          <p className="px-2 py-1.5 text-[11px] tracking-[0.16em] text-faint uppercase">
-            {t("lang.label")}
-          </p>
-          <div className="max-h-80 overflow-y-auto">
-            {LOCALES.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  setLocale(item.id);
-                  setOpen(false);
-                }}
-                aria-pressed={locale === item.id}
-                className={cn(
-                  "flex w-full items-center gap-3 rounded-md px-2 py-2.5 text-left text-sm",
-                  locale === item.id
-                    ? "bg-accent text-accent-fg"
-                    : "text-fg hover:bg-raised",
-                )}
-              >
-                <Flag iso={item.iso} className="h-4 w-6" />
-                <span>{item.native}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
+      {open && typeof document !== "undefined"
+        ? createPortal(
+            <div
+              ref={menu}
+              style={
+                pos.up
+                  ? { bottom: pos.bottom, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }
+                  : { top: pos.top, left: pos.left, width: pos.width, maxHeight: pos.maxHeight }
+              }
+              className="site-lang-menu fixed z-[400] overflow-y-auto rounded-xl bg-surface p-2 text-fg shadow-border"
+            >
+              <p className="px-2 py-1.5 text-[11px] tracking-[0.16em] text-faint uppercase">
+                {t("lang.label")}
+              </p>
+              {LOCALES.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setLocale(item.id);
+                    setOpen(false);
+                  }}
+                  aria-pressed={locale === item.id}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-md px-2 py-2.5 text-left text-sm",
+                    locale === item.id
+                      ? "bg-accent text-accent-fg"
+                      : "text-fg hover:bg-raised",
+                  )}
+                >
+                  <Flag iso={item.iso} className="h-4 w-6" />
+                  <span>{item.native}</span>
+                </button>
+              ))}
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }
