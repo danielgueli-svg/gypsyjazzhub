@@ -50,9 +50,10 @@ function copyHashed(assetsDir, destDir, prefix, destName) {
 }
 
 const root = join(process.cwd(), ".vercel/output/functions");
+const cfRoot = join(process.cwd(), ".output/server");
 let patched = 0;
 
-for (const file of walk(root)) {
+for (const file of [...walk(root), ...walk(cfRoot)]) {
   let src = readFileSync(file, "utf8");
   let next = src;
 
