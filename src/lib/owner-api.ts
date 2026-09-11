@@ -28,11 +28,29 @@ import { isReservedTestEmail } from "@/lib/auth/email-password";
 
 const OWNER_PHRASE = "ile-du-berceau";
 const OWNER_KEEP_EMAIL = "danielgueli@mac.com";
+const FOUNDING_KEEP_EMAILS = new Set([
+  OWNER_KEEP_EMAIL,
+  "mbamberg@kpnplanet.nl",
+]);
+
+function compactName(name: string) {
+  return name.trim().toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function isFoundingMember(email: string, name = "") {
+  const e = email.trim().toLowerCase();
+  if (FOUNDING_KEEP_EMAILS.has(e)) return true;
+  const n = compactName(name);
+  if (!n) return false;
+  if (n.includes("marciabamber") || n.includes("bamberg")) return true;
+  if (n.includes("ronaldweel") || (n.includes("weel") && n.includes("ronald"))) return true;
+  return false;
+}
 
 function isTestAccount(email: string, name = "", id = "") {
+  if (isFoundingMember(email, name)) return false;
   const e = email.trim().toLowerCase();
   const n = name.trim().toLowerCase();
-  if (e === OWNER_KEEP_EMAIL) return false;
   if (id === "dev-user" || id === "hub-seed") return true;
   if (
     isReservedTestEmail(e) ||
@@ -42,8 +60,7 @@ function isTestAccount(email: string, name = "", id = "") {
     e.endsWith("@test.com") ||
     e.endsWith("@mailinator.com") ||
     e.endsWith("@yopmail.com") ||
-    e.includes("grok-sandbox") ||
-    e.endsWith("@grok.me")
+    e.includes("grok-sandbox")
   ) {
     return true;
   }
@@ -61,7 +78,9 @@ function isTestAccount(email: string, name = "", id = "") {
   return false;
 }
 
-const TEST_EMAIL = `lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test' or lower(email) = 'nobody@example.com'`;
+const TEST_EMAIL = `lower(email) like '%@gypsyjazzhub.test'
+  or lower(email) = 'nobody@example.com'
+  or (instr(lower(email), '@') > 0 and substr(lower(email), instr(lower(email), '@') + 1) like '%.test')`;
 
 async function purgeTestAccounts() {
   const sql = await getSql();

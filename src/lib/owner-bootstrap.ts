@@ -5,6 +5,17 @@ import { readEnv } from "@/lib/runtime-env";
 const OWNER_EMAIL = "danielgueli@mac.com";
 const OWNER_NAME = "Daniel Gueli";
 
+const FOUNDING_MEMBERS = [
+  {
+    name: "Marcia Bamberg",
+    email: "mbamberg@kpnplanet.nl",
+    country: "Netherlands",
+    city: "Obdam",
+    instruments: "vocal",
+    slug: "marcia-bamberg",
+  },
+] as const;
+
 function nowIso() {
   return new Date().toISOString();
 }
@@ -13,10 +24,78 @@ function newId() {
   return crypto.randomUUID();
 }
 
+async function ensureFoundingMembers() {
+  const now = nowIso();
+  for (const member of FOUNDING_MEMBERS) {
+    const email = member.email.toLowerCase();
+    const existing = await runDoSql(
+      `select id from "user" where lower(email) = $1 limit 1`,
+      [email],
+    );
+    let userId = String(existing[0]?.id ?? "");
+    if (!userId) {
+      const byName = await runDoSql(
+        `select id from "user" where lower(replace(name, ' ', '')) like $1 limit 1`,
+        [`%${member.name.toLowerCase().replace(/\s/g, "")}%`],
+      );
+      userId = String(byName[0]?.id ?? "");
+    }
+    if (!userId) {
+      userId = newId();
+      const hash = await hashPassword(`${newId()}${newId()}`);
+      await runDoSql(
+        `insert into "user" (id, name, email, "emailVerified", "createdAt", "updatedAt")
+         values ($1, $2, $3, $4, $5, $6)`,
+        [userId, member.name, email, 1, now, now],
+      );
+      await runDoSql(
+        `insert into account (id, "accountId", "providerId", "userId", password, "createdAt", "updatedAt")
+         values ($1, $2, $3, $4, $5, $6, $7)`,
+        [newId(), userId, "credential", userId, hash, now, now],
+      );
+    } else {
+      await runDoSql(
+        `update "user" set name = $1, "emailVerified" = 1, "updatedAt" = $2 where id = $3`,
+        [member.name, now, userId],
+      );
+    }
+    try {
+      await runDoSql(
+        `insert into hub_members (user_id, email, verified)
+         values ($1, $2, 1)
+         on conflict (user_id) do update set email = excluded.email, verified = 1`,
+        [userId, email],
+      );
+    } catch {
+      /* hub_members may not exist yet */
+    }
+    await runDoSql(
+      `insert into profiles (user_id, slug, display_name, city, country, instruments, created_at, updated_at)
+       values ($1, $2, $3, $4, $5, $6, $7, $8)
+       on conflict (user_id) do update set
+         display_name = excluded.display_name,
+         city = excluded.city,
+         country = excluded.country,
+         instruments = excluded.instruments,
+         updated_at = excluded.updated_at`,
+      [userId, member.slug, member.name, member.city, member.country, member.instruments, now, now],
+    ).catch(() => undefined);
+  }
+}
+
 /** Create the owner email login once. Do not re-hash on every Worker boot. */
 export async function ensureOwnerAccount() {
-  const password = readEnv("OWNER_PASSWORD");
-  if (!password || password.length < 8) return;
+  try {
+    const password = readEnv("OWNER_PASSWORD");
+    if (password && password.length >= 8) {
+      await restoreOwnerLogin(password);
+    }
+  } finally {
+    await ensureFoundingMembers().catch(() => undefined);
+  }
+}
+
+async function restoreOwnerLogin(password: string) {
   const email = OWNER_EMAIL.toLowerCase();
   const now = nowIso();
   const users = await runDoSql(
