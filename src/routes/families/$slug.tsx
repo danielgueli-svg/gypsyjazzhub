@@ -18,6 +18,7 @@ export const Route = createFileRoute("/families/$slug")({
     return pageHead({
       title: family ? `${family.name} — gypsy jazz` : "Family",
       description: family?.summary ?? "Sinti and Manouche family houses on Gypsy Jazz Hub.",
+      path: `/families/${params.slug}`,
     });
   },
   loader: ({ params }): { family: Family } => {

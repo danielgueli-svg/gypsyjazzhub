@@ -56,11 +56,12 @@ export const Route = createFileRoute("/instruments/luthiers/$country")({
       shops,
     };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const name = loaderData?.country?.displayName ?? loaderData?.atlasName ?? "this country";
     return pageHead({
       title: `Luthiers & shops in ${name}`,
       description: `Gypsy jazz guitar shops, violin luthiers and double bass workshops in ${name}.`,
+      path: `/instruments/luthiers/${params.country}`,
     });
   },
   component: CountryLuthiersPage,

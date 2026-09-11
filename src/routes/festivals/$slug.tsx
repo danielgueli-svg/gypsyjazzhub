@@ -36,14 +36,18 @@ export const Route = createFileRoute("/festivals/$slug")({
       concerts: uniqueBills(upcoming.filter((concert) => concertBelongsToFestival(festival, concert))),
     };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const path = `/festivals/${params.slug}`;
     const festival = loaderData?.festival;
-    if (!festival) return pageHead({ title: "Festival", description: "Gypsy jazz festival." });
+    if (!festival) {
+      return pageHead({ title: "Festival", description: "Gypsy jazz festival.", path });
+    }
     return pageHead({
       title: `${festival.name} — gypsy jazz festival`,
       description:
         festival.bio ||
         `${festival.name} is a gypsy jazz festival in ${festival.city}, ${festival.country}.`,
+      path,
     });
   },
   component: FestivalPage,

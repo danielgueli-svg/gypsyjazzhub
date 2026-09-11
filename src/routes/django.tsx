@@ -21,6 +21,7 @@ export const Route = createFileRoute("/django")({
       title: "Django Reinhardt — gypsy jazz guitar",
       description:
         "Django Reinhardt invented gypsy jazz. Bio, recordings, lineage and dates for the guitarist of the Quintette du Hot Club de France.",
+      path: "/django",
     }),
   loader: async () => {
     const extras = await loadArtistExtras("django-reinhardt");

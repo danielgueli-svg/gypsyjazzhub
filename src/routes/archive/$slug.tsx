@@ -23,6 +23,7 @@ export const Route = createFileRoute("/archive/$slug")({
     return pageHead({
       title: `Archive — ${country}`,
       description: `Older orchestras, family houses and past chairs in ${country}. The country archive on Gypsy Jazz Hub.`,
+      path: `/archive/${params.slug}`,
     });
   },
   loader: async ({ params }): Promise<{

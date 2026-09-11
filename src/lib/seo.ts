@@ -171,6 +171,7 @@ export const SEO = {
     title: "Gypsy jazz violins & violas",
     description:
       "Violin and viola makers and workshops for gypsy jazz players — instruments, repairs and setup, listed by country.",
+    path: "/instruments/violins",
   },
   instrumentsOther: {
     title: "Other gypsy jazz instruments",

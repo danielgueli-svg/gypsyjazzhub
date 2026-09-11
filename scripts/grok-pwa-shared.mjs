@@ -303,14 +303,26 @@ export function resolveOgTitle(
   host = "",
   documentTitle = "",
 ) {
-  const fromSite = String(site.title ?? "").trim();
-  if (fromSite) return fromSite;
+  // Prefer the document <title> so musician/concert pages keep per-page og:title.
+  // Fall back to site.json title for shell HTML that has no <title> yet.
   const fromDoc = String(documentTitle ?? "").trim();
   if (fromDoc) return fromDoc;
+  const fromSite = String(site.title ?? "").trim();
+  if (fromSite) return fromSite;
   const fromHost = appNameFromHost(host);
   if (fromHost && fromHost !== DEFAULT_APP_NAME) return fromHost;
   const fromArg = String(appName ?? "").trim();
   return fromArg || DEFAULT_APP_NAME;
+}
+
+export function canonicalFromDocument(html) {
+  const tags = String(html ?? "").match(/<link\b[^>]*>/gi) || [];
+  for (const tag of tags) {
+    if (!/\brel\s*=\s*["']canonical["']/i.test(tag)) continue;
+    const href = tag.match(/\bhref\s*=\s*["']([^"']+)["']/i);
+    if (href?.[1]) return href[1].trim();
+  }
+  return "";
 }
 
 export function siteHasCustomCard(site = {}) {
@@ -338,6 +350,7 @@ export function grokOgHeadTags({
   appName = DEFAULT_APP_NAME,
   site = {},
   documentTitle = "",
+  canonicalUrl = "",
   cwd = process.cwd(),
 } = {}) {
   const title = resolveOgTitle(site, appName, host, documentTitle);
@@ -349,6 +362,10 @@ export function grokOgHeadTags({
   const description = String(site.description ?? "").trim();
   if (description) {
     tags.push(`<meta property="og:description" content="${escapeHtml(description)}">`);
+  }
+  const ogUrl = String(canonicalUrl ?? "").trim();
+  if (ogUrl) {
+    tags.push(`<meta property="og:url" content="${escapeHtml(ogUrl)}">`);
   }
   if (String(site.type ?? "").toLowerCase() === "x:game") {
     tags.push(`<meta property="og:type" content="x:game">`);
@@ -426,12 +443,9 @@ export function injectGrokPwaHead(html, ctx = {}) {
   if (typeof html !== "string") return html;
   const { site, projectId, creator, creatorId, host, cwd } = normalizeHeadContext(ctx);
   const documentTitle = titleFromDocument(html);
-  const appName = resolveOgTitle(
-    site,
-    ctx.appName ?? DEFAULT_APP_NAME,
-    host,
-    documentTitle,
-  );
+  const canonicalUrl = canonicalFromDocument(html);
+  // PWA chrome keeps the site/app name; og:title uses the document title.
+  const appName = resolveOgTitle(site, ctx.appName ?? DEFAULT_APP_NAME, host, "");
   let next = stripShareMetaTags(html);
 
   const missing = grokPwaHeadTags(appName)
@@ -444,7 +458,7 @@ export function injectGrokPwaHead(html, ctx = {}) {
 
   next = insertAfterHeadOpen(
     next,
-    grokOgHeadTags({ host, appName, site, documentTitle, cwd }).join(""),
+    grokOgHeadTags({ host, appName, site, documentTitle, canonicalUrl, cwd }).join(""),
   );
 
   if (!next.includes("/grok-app-builder/extensions.js")) {
