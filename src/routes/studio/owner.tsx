@@ -340,6 +340,28 @@ function OwnerPage() {
             )}
           </section>
 
+          <section className="mt-12">
+            <h2 className="font-display text-3xl font-semibold">Members</h2>
+            <p className="mt-2 text-sm text-muted">
+              {members.length} people with a hub login. Alerts they turned on are in Users & alerts below.
+            </p>
+            {members.length === 0 ? (
+              <p className="mt-4 text-sm text-faint">No members stored yet.</p>
+            ) : (
+              <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+                {members.map((member) => (
+                  <li key={member.id} className="flex flex-wrap justify-between gap-2 px-4 py-3 text-sm">
+                    <span>
+                      <span className="font-medium">{member.name || "Hub member"}</span>
+                      <span className="mt-0.5 block text-xs text-muted">{member.email}</span>
+                    </span>
+                    <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
           <UserDirectory />
 
           <section className="mt-12">

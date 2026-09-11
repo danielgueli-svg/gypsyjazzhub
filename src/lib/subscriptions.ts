@@ -45,7 +45,11 @@ export async function ensureSubscriptionTables() {
     `);
     await sql.query(`create index if not exists hub_subscriptions_user_idx on hub_subscriptions (user_id)`);
     await sql.query(`create index if not exists hub_subscriptions_kind_idx on hub_subscriptions (kind)`);
-    await sql.query(`alter table profiles add column if not exists profile_types text not null default ''`);
+    try {
+      await sql.query(`alter table profiles add column if not exists profile_types text not null default ''`);
+    } catch {
+      /* profiles table is optional on Workers */
+    }
     try {
       await sql.query(`
         insert into hub_subscriptions (user_id, kind, target_id, target_name)

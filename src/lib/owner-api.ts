@@ -94,13 +94,31 @@ export const listHubMembers = createServerFn({ method: "GET" })
       createdAt: unknown;
     }>`
       select id, name, email, "createdAt" from "user" order by "createdAt" desc
-    `;
-    return rows.map((row) => ({
+    `.catch(() => []);
+    const members: HubMember[] = rows.map((row) => ({
       id: row.id,
       name: row.name,
       email: row.email,
       createdAt: toIso(row.createdAt),
-    })) satisfies HubMember[];
+    }));
+    try {
+      const extra = await sql<{ user_id: string; email: string; created_at: unknown }>`
+        select user_id, email, created_at from hub_members
+      `;
+      const have = new Set(members.map((row) => row.id));
+      for (const row of extra) {
+        if (have.has(row.user_id)) continue;
+        members.push({
+          id: row.user_id,
+          name: (row.email || "").split("@")[0] || "Hub member",
+          email: row.email || "",
+          createdAt: toIso(row.created_at),
+        });
+      }
+    } catch {
+      /* hub_members optional */
+    }
+    return members;
   });
 
 export const getVisitStats = createServerFn({ method: "GET" })
@@ -192,41 +210,163 @@ function mapUserRow(row: {
   };
 }
 
-async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> {
-  await ensureSubscriptionTables();
+async function loadUsersRaw() {
   const sql = await getSql();
-  const rows = await sql<{
-    id: string;
-    name: string;
-    email: string;
-    createdAt: unknown;
-    country: string | null;
-    city: string | null;
-    member_kind: string | null;
-    profile_types: string | null;
-    instruments: string | null;
-    subs: string | null;
+  try {
+    return await sql<{
+      id: string;
+      name: string;
+      email: string;
+      createdAt: unknown;
+      country: string | null;
+      city: string | null;
+      member_kind: string | null;
+      profile_types: string | null;
+      instruments: string | null;
+    }>`
+      select
+        u.id,
+        u.name,
+        u.email,
+        u."createdAt",
+        p.country,
+        p.city,
+        p.member_kind,
+        p.profile_types,
+        p.instruments
+      from "user" u
+      left join profiles p on p.user_id = u.id
+      order by u."createdAt" desc
+    `;
+  } catch {
+    try {
+      return await sql<{
+        id: string;
+        name: string;
+        email: string;
+        createdAt: unknown;
+        country: string | null;
+        city: string | null;
+        member_kind: string | null;
+        profile_types: string | null;
+        instruments: string | null;
+      }>`
+        select
+          u.id,
+          u.name,
+          u.email,
+          u."createdAt",
+          p.country,
+          p.city,
+          '' as member_kind,
+          '' as profile_types,
+          p.instruments
+        from "user" u
+        left join profiles p on p.user_id = u.id
+        order by u."createdAt" desc
+      `;
+    } catch {
+      return await sql<{
+        id: string;
+        name: string;
+        email: string;
+        createdAt: unknown;
+        country: string | null;
+        city: string | null;
+        member_kind: string | null;
+        profile_types: string | null;
+        instruments: string | null;
+      }>`
+        select
+          id,
+          name,
+          email,
+          "createdAt",
+          '' as country,
+          '' as city,
+          '' as member_kind,
+          '' as profile_types,
+          '' as instruments
+        from "user"
+        order by "createdAt" desc
+      `;
+    }
+  }
+}
+
+async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> {
+  try {
+    await ensureSubscriptionTables();
+  } catch {
+    /* subscriptions table is optional */
+  }
+  const sql = await getSql();
+  const rows = await loadUsersRaw();
+  const subRows = await sql<{
+    user_id: string;
+    kind: string;
+    target_id: string;
+    target_name: string;
   }>`
-    select
-      u.id,
-      u.name,
-      u.email,
-      u."createdAt",
-      p.country,
-      p.city,
-      p.member_kind,
-      p.profile_types,
-      p.instruments,
-      (
-        select string_agg(s.kind || chr(9) || s.target_id || chr(9) || s.target_name, '||')
-        from hub_subscriptions s
-        where s.user_id = u.id
-      ) as subs
-    from "user" u
-    left join profiles p on p.user_id = u.id
-    order by u."createdAt" desc
-  `;
-  let users = rows.map(mapUserRow);
+    select user_id, kind, target_id, target_name from hub_subscriptions
+  `.catch(() => []);
+  const byUser = new Map<string, string[]>();
+  for (const row of subRows) {
+    const line = `${row.kind}\t${row.target_id}\t${row.target_name ?? ""}`;
+    const list = byUser.get(row.user_id) ?? [];
+    list.push(line);
+    byUser.set(row.user_id, list);
+  }
+  let users = rows.map((row) =>
+    mapUserRow({
+      ...row,
+      subs: (byUser.get(row.id) ?? []).join("||"),
+    }),
+  );
+  try {
+    const { ensureGuard } = await import("@/lib/hub-guard");
+    await ensureGuard();
+    const extra = await sql<{
+      user_id: string;
+      email: string;
+      verified: number;
+      banned: number;
+      created_at: unknown;
+    }>`
+      select user_id, email, verified, banned, created_at from hub_members
+    `;
+    const have = new Set(users.map((row) => row.id));
+    for (const row of extra) {
+      if (have.has(row.user_id)) continue;
+      const email = row.email || "";
+      users.push(
+        mapUserRow({
+          id: row.user_id,
+          name: email.split("@")[0] || "Hub member",
+          email,
+          createdAt: row.created_at,
+          country: "",
+          city: "",
+          member_kind: "",
+          profile_types: "",
+          instruments: "",
+          subs: (byUser.get(row.user_id) ?? []).join("||"),
+        }),
+      );
+      have.add(row.user_id);
+    }
+    const flags = new Map(extra.map((row) => [row.user_id, row]));
+    users = users.map((user) => {
+      const row = flags.get(user.id);
+      return {
+        ...user,
+        banned: Boolean(row?.banned),
+        verified: row ? Boolean(row.verified) : true,
+      };
+    });
+  } catch {
+    /* hub_members optional */
+  }
   const q = filter.q?.trim().toLowerCase() ?? "";
   if (q) {
     users = users.filter((row) =>
@@ -247,24 +387,6 @@ async function loadDirectory(filter: HubUserFilter = {}): Promise<HubUserRow[]> 
   if (filter.musician === "non") users = users.filter((row) => !row.musician);
   if (filter.instrument) {
     users = users.filter((row) => row.instrumentIds.includes(filter.instrument as InstrumentId));
-  }
-  try {
-    const { ensureGuard } = await import("@/lib/hub-guard");
-    await ensureGuard();
-    const flags = await sql<{ user_id: string; banned: number; verified: number }>`
-      select user_id, banned, verified from hub_members
-    `;
-    const map = new Map(flags.map((row) => [row.user_id, row]));
-    users = users.map((user) => {
-      const row = map.get(user.id);
-      return {
-        ...user,
-        banned: Boolean(row?.banned),
-        verified: row ? Boolean(row.verified) : true,
-      };
-    });
-  } catch {
-    /* flags optional */
   }
   return users;
 }
