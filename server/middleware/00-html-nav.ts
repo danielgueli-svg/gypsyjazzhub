@@ -14,7 +14,7 @@ const FALLBACK = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><me
 const PUBLIC_ORIGIN = "https://www.gypsyjazzhub.com";
 const APEX_HOST = "gypsyjazzhub.com";
 const WWW_ORIGIN = "https://www.gypsyjazzhub.com";
-const PRIVATE_PAGE = /^\/(login|studio|join|welcome|verify-email|add|board|agenda)(\/|$)/;
+const PRIVATE_PAGE = /^\/(login|studio|join|welcome|verify-email|add|board|agenda|forgot-password|reset-password)(\/|$)/;
 const HTML_CACHE_CONTROL = "public, s-maxage=120, stale-while-revalidate=600";
 
 function isPageGet(method: string, path: string) {

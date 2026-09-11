@@ -1893,3 +1893,17 @@ export const confirmHubEmail = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const requestHubPasswordReset = createServerFn({ method: "POST" })
+  .validator((email: string) => email.trim())
+  .handler(async ({ data: email }) => {
+    const { requestPasswordReset } = await import("@/lib/password-reset");
+    return requestPasswordReset(email);
+  });
+
+export const applyHubPasswordReset = createServerFn({ method: "POST" })
+  .validator((input: { token: string; password: string }) => input)
+  .handler(async ({ data }) => {
+    const { applyPasswordReset } = await import("@/lib/password-reset");
+    return applyPasswordReset(data.token, data.password);
+  });
+

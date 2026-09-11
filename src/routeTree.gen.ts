@@ -16,10 +16,12 @@ import { Route as BoardRouteImport } from './routes/board'
 import { Route as CampsRouteImport } from './routes/camps'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
 import { Route as DjangoRouteImport } from './routes/django'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as GrappelliRouteImport } from './routes/grappelli'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SceneRouteImport } from './routes/scene'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as TataMirandoRouteImport } from './routes/tata-mirando'
@@ -125,6 +127,11 @@ const DjangoRoute = DjangoRouteImport.update({
   path: '/django',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GrappelliRoute = GrappelliRouteImport.update({
   id: '/grappelli',
   path: '/grappelli',
@@ -143,6 +150,11 @@ const JoinRoute = JoinRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SceneRoute = SceneRouteImport.update({
@@ -501,10 +513,12 @@ export interface FileRoutesByFullPath {
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
   '/tata-mirando': typeof TataMirandoRoute
@@ -583,10 +597,12 @@ export interface FileRoutesByTo {
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
   '/tata-mirando': typeof TataMirandoRoute
@@ -666,10 +682,12 @@ export interface FileRoutesById {
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
   '/tata-mirando': typeof TataMirandoRoute
@@ -750,10 +768,12 @@ export interface FileRouteTypes {
     | '/camps'
     | '/denis-chang'
     | '/django'
+    | '/forgot-password'
     | '/grappelli'
     | '/history'
     | '/join'
     | '/login'
+    | '/reset-password'
     | '/scene'
     | '/search'
     | '/tata-mirando'
@@ -832,10 +852,12 @@ export interface FileRouteTypes {
     | '/camps'
     | '/denis-chang'
     | '/django'
+    | '/forgot-password'
     | '/grappelli'
     | '/history'
     | '/join'
     | '/login'
+    | '/reset-password'
     | '/scene'
     | '/search'
     | '/tata-mirando'
@@ -914,10 +936,12 @@ export interface FileRouteTypes {
     | '/camps'
     | '/denis-chang'
     | '/django'
+    | '/forgot-password'
     | '/grappelli'
     | '/history'
     | '/join'
     | '/login'
+    | '/reset-password'
     | '/scene'
     | '/search'
     | '/tata-mirando'
@@ -997,10 +1021,12 @@ export interface RootRouteChildren {
   CampsRoute: typeof CampsRoute
   DenisChangRoute: typeof DenisChangRoute
   DjangoRoute: typeof DjangoRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   GrappelliRoute: typeof GrappelliRoute
   HistoryRoute: typeof HistoryRoute
   JoinRoute: typeof JoinRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SceneRoute: typeof SceneRoute
   SearchRoute: typeof SearchRoute
   TataMirandoRoute: typeof TataMirandoRoute
@@ -1123,6 +1149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DjangoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/grappelli': {
       id: '/grappelli'
       path: '/grappelli'
@@ -1149,6 +1182,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/scene': {
@@ -1645,10 +1685,12 @@ const rootRouteChildren: RootRouteChildren = {
   CampsRoute: CampsRoute,
   DenisChangRoute: DenisChangRoute,
   DjangoRoute: DjangoRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   GrappelliRoute: GrappelliRoute,
   HistoryRoute: HistoryRoute,
   JoinRoute: JoinRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SceneRoute: SceneRoute,
   SearchRoute: SearchRoute,
   TataMirandoRoute: TataMirandoRoute,

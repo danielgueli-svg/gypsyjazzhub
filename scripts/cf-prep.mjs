@@ -58,6 +58,9 @@ cfg.vars = {
 if (process.env.BETTER_AUTH_SECRET) {
   cfg.vars.BETTER_AUTH_SECRET = process.env.BETTER_AUTH_SECRET;
 }
+if (process.env.RESEND_API_KEY) {
+  cfg.vars.RESEND_API_KEY = process.env.RESEND_API_KEY;
+}
 cfg.durable_objects = {
   bindings: [{ name: "HUB_DB", class_name: "HubDb" }],
 };

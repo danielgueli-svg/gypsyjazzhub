@@ -179,6 +179,13 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           {busy ? t("login.wait") : mode === "up" ? t("login.submitUp") : t("login.submitIn")}
         </Button>
       </form>
+      {mode === "in" ? (
+        <p className="mt-3 text-sm">
+          <Link to="/forgot-password" className="text-muted hover:text-fg hover:underline">
+            {t("login.forgot")}
+          </Link>
+        </p>
+      ) : null}
       <button
         type="button"
         className="mt-4 text-sm text-muted hover:text-fg"
