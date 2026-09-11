@@ -103,7 +103,7 @@ export const listForumTopics = createServerFn({ method: "GET" }).handler(async (
     replies: number;
   }>`
     select t.slug, t.title, t.body, t.author_name, t.created_at,
-           (select count(*)::int from hub_forum_posts p where p.topic_id = t.id) as replies
+           (select count(*) from hub_forum_posts p where p.topic_id = t.id) as replies
     from hub_forum_topics t
     where trim(t.title) <> '' and trim(t.body) <> '' and t.slug <> 'israel'
     order by t.created_at desc
