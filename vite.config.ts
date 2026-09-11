@@ -304,6 +304,19 @@ export default defineConfig(({ command, isPreview }) => ({
     strictPort: true,
   },
   resolve: { tsconfigPaths: true },
+  // TanStack Start exposes virtual package imports (#tanstack-router-entry,
+  // #tanstack-start-entry) from start-server-core. Vite 8/Rolldown must not
+  // pre-bundle that package or `npm run dev` dies during optimizeDeps.
+  // Do NOT mark start-server-core as ssr.external — that skips Vite's virtual
+  // module resolver and Node then throws ERR_PACKAGE_IMPORT_NOT_DEFINED.
+  optimizeDeps: {
+    exclude: [
+      "@tanstack/start-server-core",
+      "@tanstack/react-start",
+      "@tanstack/react-start/server",
+      "@tanstack/react-start-server",
+    ],
+  },
   plugins: [
     pgliteBootstrapPlugin(),
     htmlNavPlugin(),

@@ -1,10 +1,9 @@
 /**
  * Safer stand-in for better-auth's `tanstackStartCookies()`.
  *
- * The stock plugin does `const { setCookie } = await import("@tanstack/react-start/server")`.
- * On this TanStack Start build that named export is sometimes missing, so every
- * get-session (and every hub-desk save) throws:
- *   Cannot destructure property 'setCookie' of '(intermediate value)' as it is undefined
+ * Import cookie helpers from `@tanstack/react-start/server` (not the internal
+ * `@tanstack/start-server-core`). Direct start-server-core imports make Vite 8
+ * pre-bundle virtual modules (`#tanstack-router-entry`) and crash `npm run dev`.
  *
  * Cookie writes still happen when `setCookie` is actually there. If it is not,
  * we no-op — session still authenticates via the cookie / bearer already on the
@@ -28,7 +27,7 @@ export function safeTanstackCookies() {
             if (!raw) return;
             let setCookie: ((name: string, value: string, opts?: object) => void) | undefined;
             try {
-              const mod = (await import("@tanstack/start-server-core")) as {
+              const mod = (await import("@tanstack/react-start/server")) as {
                 setCookie?: (name: string, value: string, opts?: object) => void;
               };
               setCookie = typeof mod.setCookie === "function" ? mod.setCookie : undefined;
