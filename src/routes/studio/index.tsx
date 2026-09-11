@@ -530,10 +530,10 @@ function ProfileForm({
       {status ? <p className="text-sm text-muted">{status}</p> : null}
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={busy}>
-          {busy ? "Saving…" : "Save page"}
+          {busy ? "Saving…" : profile ? "Save changes" : "Save page"}
         </Button>
         <p className="text-sm text-muted">
-          After you save, this information appears on the website.
+          After you save, this appears on the website. Come back anytime to edit.
         </p>
         {profile ? (
           <Link
