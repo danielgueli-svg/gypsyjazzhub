@@ -8,6 +8,7 @@ import { buildGlobeIndex, countrySlug, displayCountry, globeButtonNames } from "
 import { listHubFestivals, listHubJams, listHubLuthiers, listHubVenues } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/world/")({
   head: () =>
@@ -22,12 +23,12 @@ export const Route = createFileRoute("/world/")({
       await Promise.all([
         listConcerts({ data: { filter: "upcoming" } }),
         listLegends(),
-        listMusicians({ data: {} }),
-        listHubFestivals(),
-        listHubJams(),
-        listHubVenues(),
-        listHubLuthiers(),
-        listHubCountries(),
+        settle("world-members", [], () => listMusicians({ data: {} })),
+        settle("world-fests", [], () => listHubFestivals()),
+        settle("world-jams", [], () => listHubJams()),
+        settle("world-venues", [], () => listHubVenues()),
+        settle("world-luthiers", [], () => listHubLuthiers()),
+        settle("world-countries", [], () => listHubCountries()),
       ]);
     const upcoming = concerts.filter(
       (c) => !c.isHistoric && new Date(c.startsAt).getTime() >= Date.now(),

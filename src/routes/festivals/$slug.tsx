@@ -14,6 +14,7 @@ import { getHubFestival, listHubChat } from "@/lib/hub-api";
 import { groupsForFestival } from "@/lib/scene";
 import { formatConcertWhen } from "@/lib/utils";
 import { pageHead } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/festivals/$slug")({
   loader: async ({ params }) => {
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/festivals/$slug")({
     if (!festival) throw notFound();
     const [legends, chat, upcoming] = await Promise.all([
       listLegends(),
-      listHubChat({ data: { kind: "festival", slug: festival.slug } }),
+      settle("fest-chat", [], () => listHubChat({ data: { kind: "festival", slug: festival.slug } })),
       listConcerts({ data: { filter: "upcoming" } }),
     ]);
     const related = festival.relatedSlugs

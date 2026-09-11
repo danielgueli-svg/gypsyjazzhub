@@ -13,6 +13,7 @@ import { CountryLabel } from "@/components/country-label";
 import { getHubJam, listHubChat } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/jams/$slug")({
   loader: async ({ params }) => {
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/jams/$slug")({
     if (!jam) throw notFound();
     const [legends, chat] = await Promise.all([
       listLegends(),
-      listHubChat({ data: { kind: "jam", slug: jam.slug } }),
+      settle("jam-chat", [], () => listHubChat({ data: { kind: "jam", slug: jam.slug } })),
     ]);
     const related = jam.relatedSlugs
       .map((slug) => legends.find((legend) => legend.slug === slug))

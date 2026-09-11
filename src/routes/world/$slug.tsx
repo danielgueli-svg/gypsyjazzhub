@@ -5,6 +5,7 @@ import { buildGlobeIndex, findCountry, siteCountryNames } from "@/lib/geo";
 import { listHubChat, listHubFestivals, listHubJams, listHubLuthiers, listHubTeachers, listHubVenues } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { pageHead } from "@/lib/seo";
+import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/world/$slug")({
   loader: async ({ params }) => {
@@ -12,14 +13,14 @@ export const Route = createFileRoute("/world/$slug")({
       await Promise.all([
         listConcerts({ data: { filter: "upcoming" } }),
         listLegends(),
-        listMusicians({ data: {} }),
-        listHubFestivals(),
-        listHubJams(),
-        listHubVenues(),
-        listHubLuthiers(),
-        listHubChat({ data: { kind: "country", slug: params.slug } }),
-        listHubTeachers({ data: params.slug }),
-        listHubCountries(),
+        settle("country-members", [], () => listMusicians({ data: {} })),
+        settle("country-fests", [], () => listHubFestivals()),
+        settle("country-jams", [], () => listHubJams()),
+        settle("country-venues", [], () => listHubVenues()),
+        settle("country-luthiers", [], () => listHubLuthiers()),
+        settle("country-chat", [], () => listHubChat({ data: { kind: "country", slug: params.slug } })),
+        settle("country-teachers", [], () => listHubTeachers({ data: params.slug })),
+        settle("country-hub", [], () => listHubCountries()),
       ]);
     const upcoming = concerts.filter(
       (c) => !c.isHistoric && new Date(c.startsAt).getTime() >= Date.now(),
