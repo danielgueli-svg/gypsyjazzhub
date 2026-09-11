@@ -61,29 +61,31 @@ function isTestAccount(email: string, name = "", id = "") {
   return false;
 }
 
+const TEST_EMAIL = `lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test' or lower(email) = 'nobody@example.com'`;
+
 async function purgeTestAccounts() {
   const sql = await getSql();
   try {
     await sql.query(`
       delete from "session" where "userId" in (
-        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+        select id from "user" where ${TEST_EMAIL}
       )
     `);
     await sql.query(`
       delete from account where "userId" in (
-        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+        select id from "user" where ${TEST_EMAIL}
       )
     `);
     await sql.query(`
       delete from hub_subscriptions where user_id in (
-        select id from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+        select id from "user" where ${TEST_EMAIL}
       )
     `);
     await sql.query(`
-      delete from hub_members where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+      delete from hub_members where ${TEST_EMAIL}
     `);
     await sql.query(`
-      delete from "user" where lower(email) like '%@gypsyjazzhub.test' or lower(email) like '%.test'
+      delete from "user" where ${TEST_EMAIL}
     `);
   } catch {
     /* best-effort */

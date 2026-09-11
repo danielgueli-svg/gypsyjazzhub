@@ -21,7 +21,7 @@ function keepToken(result: { data?: { token?: string | null } | null }) {
 
 export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) {
   const { t } = useI18n();
-  const { user, isPending } = useCurrentUserState();
+  const { user } = useCurrentUserState();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">(defaultMode);
   const [name, setName] = useState("");
@@ -84,7 +84,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             await navigate({ to: "/verify-email", search: { token: sent.token } });
             return;
           } catch {
-            await navigate({ to: "/verify-email" });
+            await goAfterLogin(true);
             return;
           }
         }
@@ -96,10 +96,13 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         });
         keepToken(result);
         if (result.error) {
+          const raw = result.error.message ?? "";
           throw new Error(
-            result.error.message?.includes("PASSWORD") || /invalid/i.test(result.error.message ?? "")
-              ? t("login.badPass")
-              : result.error.message || t("login.fail"),
+            /PASSWORD_TOO_SHORT|too short/i.test(raw)
+              ? t("login.passHint")
+              : raw.includes("PASSWORD") || /invalid/i.test(raw)
+                ? t("login.badPass")
+                : raw || t("login.fail"),
           );
         }
       }
@@ -111,9 +114,6 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
     }
   }
 
-  if (isPending) {
-    return <div className="h-12 w-full animate-pulse rounded-md bg-raised" />;
-  }
   if (user) {
     return (
       <div className="space-y-3">
@@ -173,6 +173,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             onChange={(e) => setPassword(e.target.value)}
             autoComplete={mode === "up" ? "new-password" : "current-password"}
           />
+          <p className="text-xs text-muted">{t("login.passHint")}</p>
         </div>
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <Button type="submit" disabled={busy} className="w-full">
