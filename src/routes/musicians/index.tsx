@@ -175,7 +175,7 @@ function MusiciansPage() {
         {total} {t("musicians.results")}
       </p>
 
-      {musicians.length > 0 && !filtering ? (
+      {musicians.length > 0 ? (
         <section className="mt-10">
           <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
             {t("musicians.hubMembers")}

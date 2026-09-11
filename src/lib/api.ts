@@ -489,7 +489,7 @@ function mergeConcertLists(lists: Concert[][]): Concert[] {
 
 async function uniqueSlug(base: string, userId: string) {
   const sql = await getSql();
-  const root = slugify(base);
+  const root = slugify(base) || "hub-member";
   let candidate = root;
   let n = 2;
   for (;;) {
@@ -554,31 +554,29 @@ export const listMusicians = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     return settle("musicians", [] as Profile[], async () => {
       try {
-        if (getDbSource() !== "do") {
-          await ensureSeed();
-          await ensureFanTables();
-        }
+        await ensureFanTables();
         const sql = await getSql();
         const q = data.q?.trim() ?? "";
         const like = `%${q}%`;
         const rows = q
           ? await sql<ProfileRow>`
           select p.*, (
-            select count(*)::int from follows f where f.musician_user_id = p.user_id
+            select count(*) from follows f where f.musician_user_id = p.user_id
           ) as follower_count
           from profiles p
           where coalesce(p.member_kind, 'musician') <> 'fan'
             and (
-              p.display_name ilike ${like}
-              or p.city ilike ${like}
-              or p.country ilike ${like}
-              or p.instruments ilike ${like}
+              p.display_name like ${like}
+              or p.city like ${like}
+              or p.country like ${like}
+              or p.instruments like ${like}
+              or p.bio like ${like}
             )
           order by p.created_at desc
         `
           : await sql<ProfileRow>`
           select p.*, (
-            select count(*)::int from follows f where f.musician_user_id = p.user_id
+            select count(*) from follows f where f.musician_user_id = p.user_id
           ) as follower_count
           from profiles p
           where coalesce(p.member_kind, 'musician') <> 'fan'
@@ -587,7 +585,19 @@ export const listMusicians = createServerFn({ method: "GET" })
         return rows.map(mapProfile);
       } catch (err) {
         console.error("list musicians failed", err);
-        return [];
+        try {
+          await ensureFanTables();
+          const sql = await getSql();
+          const rows = await sql<ProfileRow>`
+            select * from profiles
+            where coalesce(member_kind, 'musician') <> 'fan'
+            order by created_at desc
+          `;
+          return rows.map(mapProfile);
+        } catch (err2) {
+          console.error("list musicians fallback failed", err2);
+          return [];
+        }
       }
     });
   });
@@ -596,17 +606,24 @@ export const getMusician = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
   .handler(async ({ data: slug }) => {
     try {
-      if (getDbSource() !== "do") await ensureFanTables();
+      await ensureFanTables();
       const sql = await getSql();
-      const rows = await sql<ProfileRow>`
+      try {
+        const rows = await sql<ProfileRow>`
       select p.*, (
-        select count(*)::int from follows f where f.musician_user_id = p.user_id
+        select count(*) from follows f where f.musician_user_id = p.user_id
       ) as follower_count
       from profiles p
       where p.slug = ${slug}
       limit 1
     `;
-      return rows[0] ? mapProfile(rows[0]) : null;
+        return rows[0] ? mapProfile(rows[0]) : null;
+      } catch {
+        const rows = await sql<ProfileRow>`
+          select * from profiles where slug = ${slug} limit 1
+        `;
+        return rows[0] ? mapProfile(rows[0]) : null;
+      }
     } catch (err) {
       console.error("getMusician db failed", err);
       return null;
@@ -618,15 +635,22 @@ export const getMyProfile = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await ensureFanTables();
     const sql = await getSql();
-    const rows = await sql<ProfileRow>`
+    try {
+      const rows = await sql<ProfileRow>`
       select p.*, (
-        select count(*)::int from follows f where f.musician_user_id = p.user_id
+        select count(*) from follows f where f.musician_user_id = p.user_id
       ) as follower_count
       from profiles p
       where p.user_id = ${context.userId}
       limit 1
     `;
-    return rows[0] ? mapProfile(rows[0]) : null;
+      return rows[0] ? mapProfile(rows[0]) : null;
+    } catch {
+      const rows = await sql<ProfileRow>`
+        select * from profiles where user_id = ${context.userId} limit 1
+      `;
+      return rows[0] ? mapProfile(rows[0]) : null;
+    }
   });
 
 export const saveMyProfile = createServerFn({ method: "POST" })
@@ -708,6 +732,18 @@ export const saveMyProfile = createServerFn({ method: "POST" })
         `;
       }
       if (!rows[0]) throw new Error("Could not save your page.");
+      try {
+        await sql`
+          insert into hub_profiles (user_id, chat_name, artist_slug, updated_at)
+          values (${context.userId}, ${displayName}, ${slug}, now())
+          on conflict (user_id) do update set
+            chat_name = excluded.chat_name,
+            artist_slug = excluded.artist_slug,
+            updated_at = now()
+        `;
+      } catch {
+        /* claim table optional */
+      }
       return mapProfile(rows[0]);
     } catch (err) {
       if (err instanceof Error && err.message === "Give your page a name.") throw err;
@@ -1070,11 +1106,13 @@ export const addConcert = createServerFn({ method: "POST" })
     const starts = new Date(data.startsAt);
     if (Number.isNaN(starts.getTime())) throw new Error("Pick a valid date.");
     const sql = await getSql();
+    await ensureFanTables();
     const profile = await sql<{ slug: string }>`
       select slug from profiles where user_id = ${context.userId} limit 1
     `;
     if (!profile[0]) throw new Error("Create your musician page before posting a concert.");
-    const rows = await sql<{ id: number }>`
+    try {
+      const rows = await sql<{ id: number }>`
       insert into concerts (user_id, title, venue, city, country, starts_at, description, ticket_url)
       values (
         ${context.userId}, ${title}, ${data.venue.trim()}, ${data.city.trim()},
@@ -1083,7 +1121,11 @@ export const addConcert = createServerFn({ method: "POST" })
       )
       returning id
     `;
-    return { id: rows[0]!.id };
+      return { id: Number(rows[0]?.id ?? 0) };
+    } catch (err) {
+      console.error("addConcert failed", err);
+      throw new Error("Could not save that concert. Try again in a moment.");
+    }
   });
 
 export const deleteConcert = createServerFn({ method: "POST" })

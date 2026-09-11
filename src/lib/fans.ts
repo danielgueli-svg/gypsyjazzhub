@@ -107,6 +107,28 @@ export async function ensureProfileColumns() {
       primary key (follower_id, musician_user_id)
     )
   `);
+  await sql.query(`
+    create table if not exists hub_profiles (
+      user_id text primary key,
+      chat_name text not null default '',
+      artist_slug text not null default '',
+      updated_at text not null default (datetime('now'))
+    )
+  `);
+  await sql.query(`
+    create table if not exists concerts (
+      id integer primary key autoincrement,
+      user_id text not null,
+      title text not null,
+      venue text not null default '',
+      city text not null default '',
+      country text not null default '',
+      starts_at text not null,
+      description text not null default '',
+      ticket_url text not null default '',
+      created_at text not null default (datetime('now'))
+    )
+  `);
   for (const col of [
     "contact_url text not null default ''",
     "spotify_url text not null default ''",

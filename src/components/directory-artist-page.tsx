@@ -67,13 +67,20 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
   const photo = filePhoto ?? (legend.photoUrl
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
+  const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;
+  const bio = member?.bio?.trim() || legend.bio;
+  const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
+  const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
+  const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;
+  const spotifyUrl = member?.spotifyUrl?.trim() || legend.spotifyUrl;
+  const instruments = member?.instruments?.trim() || legend.instruments;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
       <div className="flex items-start gap-4 sm:gap-6">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] tracking-[0.2em] text-faint uppercase">
-            {legend.instruments}
+            {instruments}
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold sm:text-6xl">
             <span className="inline-flex flex-wrap items-baseline gap-3">
@@ -82,9 +89,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             </span>
           </h1>
           <p className="mt-3 text-muted">
-            {basedInCountry(legend.origin)
-              ? `Based in ${basedInCountry(legend.origin)}`
-              : "On the road"}
+            {basedInCountry(place) ? `Based in ${basedInCountry(place)}` : "On the road"}
           </p>
           {legend.years && legend.years !== legend.origin ? (
             <p className="mt-1 text-sm text-faint">{legend.years}</p>
@@ -97,8 +102,8 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
               </Link>
             ))}
           </div>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{legend.bio}</p>
-          {legend.notable ? (
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
+          {legend.notable && !member?.bio?.trim() ? (
             <p className="mt-3 text-sm text-faint">{legend.notable}</p>
           ) : null}
           {SCENE_LINKS[legend.slug]?.length ? (
@@ -110,25 +115,25 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
               ))}
             </p>
           ) : null}
-          {legend.websiteUrl || legend.youtubeUrl || legend.instagramUrl || legend.spotifyUrl ? (
+          {websiteUrl || youtubeUrl || instagramUrl || spotifyUrl ? (
             <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              {legend.websiteUrl ? (
-                <a href={legend.websiteUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
+              {websiteUrl ? (
+                <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
                   Website
                 </a>
               ) : null}
-              {legend.youtubeUrl ? (
-                <a href={legend.youtubeUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
+              {youtubeUrl ? (
+                <a href={youtubeUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
                   YouTube
                 </a>
               ) : null}
-              {legend.instagramUrl ? (
-                <a href={legend.instagramUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
+              {instagramUrl ? (
+                <a href={instagramUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
                   Instagram
                 </a>
               ) : null}
-              {legend.spotifyUrl ? (
-                <a href={legend.spotifyUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
+              {spotifyUrl ? (
+                <a href={spotifyUrl} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
                   Spotify
                 </a>
               ) : null}

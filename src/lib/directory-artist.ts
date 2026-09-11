@@ -35,7 +35,12 @@ export async function loadDirectoryArtist(slug: string) {
   });
   if (!legend) return null;
   const extras = await loadArtistExtras(legend.slug);
-  const member = extras.joined.find((row) => row.slug === legend.slug) ?? null;
+  const member =
+    extras.joined.find((row) => row.slug === legend.slug) ??
+    extras.joined.find(
+      (row) => (row.displayName ?? "").trim().toLowerCase() === legend.name.trim().toLowerCase(),
+    ) ??
+    null;
   return {
     legend,
     concerts: extras.concerts,

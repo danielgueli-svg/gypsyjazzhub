@@ -1335,22 +1335,76 @@ export const addHubChat = createServerFn({ method: "POST" })
 export type JoinedArtist = {
   slug: string;
   userId: string;
+  displayName?: string;
+  bio?: string;
+  city?: string;
+  country?: string;
+  instruments?: string;
+  websiteUrl?: string;
+  youtubeUrl?: string;
+  instagramUrl?: string;
+  spotifyUrl?: string;
+  contactUrl?: string;
 };
 
 export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async () => {
   try {
     await ensureHub();
     const sql = await getSql();
-    const fromPages = await sql<{ slug: string; user_id: string }>`
-    select slug, user_id from profiles
-  `;
-    const fromClaims = await sql<{ artist_slug: string; user_id: string }>`
-    select artist_slug, user_id from hub_profiles where artist_slug <> ''
-  `;
-    const map = new Map<string, string>();
-    for (const row of fromPages) map.set(row.slug, row.user_id);
-    for (const row of fromClaims) map.set(row.artist_slug, row.user_id);
-    return [...map.entries()].map(([slug, userId]) => ({ slug, userId })) satisfies JoinedArtist[];
+    const map = new Map<string, JoinedArtist>();
+    try {
+      const fromPages = await sql<{
+        slug: string;
+        user_id: string;
+        display_name: string;
+        bio: string;
+        city: string;
+        country: string;
+        instruments: string;
+        website_url: string;
+        youtube_url: string;
+        instagram_url: string;
+        spotify_url: string;
+        contact_url: string;
+      }>`
+        select slug, user_id, display_name, bio, city, country, instruments,
+               website_url, youtube_url, instagram_url, coalesce(spotify_url, '') as spotify_url,
+               coalesce(contact_url, '') as contact_url
+        from profiles
+      `;
+      for (const row of fromPages) {
+        map.set(row.slug, {
+          slug: row.slug,
+          userId: row.user_id,
+          displayName: row.display_name,
+          bio: row.bio,
+          city: row.city,
+          country: row.country,
+          instruments: row.instruments,
+          websiteUrl: row.website_url,
+          youtubeUrl: row.youtube_url,
+          instagramUrl: row.instagram_url,
+          spotifyUrl: row.spotify_url,
+          contactUrl: row.contact_url,
+        });
+      }
+    } catch {
+      const fromPages = await sql<{ slug: string; user_id: string }>`select slug, user_id from profiles`;
+      for (const row of fromPages) map.set(row.slug, { slug: row.slug, userId: row.user_id });
+    }
+    try {
+      const fromClaims = await sql<{ artist_slug: string; user_id: string }>`
+        select artist_slug, user_id from hub_profiles where artist_slug <> ''
+      `;
+      for (const row of fromClaims) {
+        const have = map.get(row.artist_slug);
+        if (!have) map.set(row.artist_slug, { slug: row.artist_slug, userId: row.user_id });
+        else if (!have.userId) have.userId = row.user_id;
+      }
+    } catch {
+      /* claims optional */
+    }
+    return [...map.values()] satisfies JoinedArtist[];
   } catch (err) {
     console.error("list joined artists failed", err);
     return [];
