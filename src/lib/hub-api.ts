@@ -12,7 +12,7 @@ import { ensureFanTables } from "@/lib/fans";
 import { slugify, toIso, youtubeVideoId } from "@/lib/utils";
 import { CATALOG_TEACHERS } from "@/lib/teachers";
 import { ensureCatalogArtist } from "@/lib/catalog";
-import { profilePhotoUrl } from "@/lib/profile-photos";
+import { namedPhotoUrl } from "@/lib/profile-photos";
 
 export type ArtistOption = {
   slug: string;
@@ -1391,7 +1391,7 @@ export const listJoinedArtists = createServerFn({ method: "GET" }).handler(async
           instagramUrl: row.instagram_url,
           spotifyUrl: row.spotify_url,
           contactUrl: row.contact_url,
-          photoUrl: profilePhotoUrl(row.user_id, row.photo_rev),
+          photoUrl: namedPhotoUrl(row.slug, row.photo_rev),
         });
       }
     } catch {

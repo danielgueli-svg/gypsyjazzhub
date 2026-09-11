@@ -100,6 +100,20 @@ export async function ensureProfileColumns() {
     )
   `);
   await sql.query(`
+    create table if not exists hub_photos (
+      slug text primary key,
+      name text not null default '',
+      mime text not null,
+      filename text not null,
+      bytes text not null,
+      byte_size integer not null default 0,
+      kind text not null default 'portrait',
+      owner_user_id text not null default '',
+      created_at text not null default (datetime('now')),
+      updated_at text not null default (datetime('now'))
+    )
+  `);
+  await sql.query(`
     create table if not exists profile_photos (
       user_id text primary key,
       mime text not null,
@@ -147,6 +161,7 @@ export async function ensureProfileColumns() {
     "looking_for_gigs integer not null default 0",
     "available_to_jam integer not null default 0",
     "photo_rev integer not null default 0",
+    "photo_slug text not null default ''",
   ]) {
     try {
       await sql.query(`alter table profiles add column ${col}`);

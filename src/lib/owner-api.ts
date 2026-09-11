@@ -24,6 +24,7 @@ import {
   type ProfileTypeId,
 } from "@/lib/profile-types";
 import { visitStats, type VisitDay, type VisitPlace } from "@/lib/visits";
+import { photoStorage, type PhotoStorage } from "@/lib/profile-photos";
 import { isReservedTestEmail } from "@/lib/auth/email-password";
 import { HUB_OWNER_EMAIL } from "@/lib/hub-owner";
 
@@ -248,7 +249,14 @@ export const getVisitStats = createServerFn({ method: "GET" })
     return visitStats();
   });
 
-export type { VisitDay, VisitPlace };
+export const getPhotoStorage = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    return photoStorage();
+  });
+
+export type { VisitDay, VisitPlace, PhotoStorage };
 
 export type HubUserRow = {
   id: string;

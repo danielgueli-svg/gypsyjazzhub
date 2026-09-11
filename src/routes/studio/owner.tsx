@@ -15,6 +15,7 @@ import {
   claimOwner,
   getOwnerDigest,
   getVisitStats,
+  getPhotoStorage,
   listHubActivity,
   listHubMembers,
   eraseHubMember,
@@ -25,6 +26,7 @@ import {
   type HubMember,
   type VisitDay,
   type VisitPlace,
+  type PhotoStorage,
 } from "@/lib/owner-api";
 import {
   listDiscoveries,
@@ -53,6 +55,13 @@ export const Route = createFileRoute("/studio/owner")({
   component: OwnerPage,
 });
 
+function fmtBytes(n: number) {
+  if (!Number.isFinite(n) || n <= 0) return "0 KB";
+  if (n < 1_000_000) return `${Math.max(1, Math.round(n / 1000))} KB`;
+  if (n < 1_000_000_000) return `${(n / 1_000_000).toFixed(1)} MB`;
+  return `${(n / 1_000_000_000).toFixed(2)} GB`;
+}
+
 function OwnerPage() {
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
@@ -80,10 +89,11 @@ function OwnerPage() {
     countries?: VisitPlace[];
     cities?: VisitPlace[];
   } | null>(null);
+  const [photos, setPhotos] = useState<PhotoStorage | null>(null);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
-    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits] = await Promise.all([
+    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos] = await Promise.all([
       listHubMembers().catch(() => []),
       listHubActivity().catch(() => []),
       listDiscoveries().catch(() => []),
@@ -94,6 +104,7 @@ function OwnerPage() {
       listPendingHub().catch(() => []),
       listPublicActivity().catch(() => []),
       getVisitStats().catch(() => null),
+      getPhotoStorage().catch(() => null),
     ]);
     setMembers(nextMembers);
     setActivity(nextActivity);
@@ -104,6 +115,7 @@ function OwnerPage() {
     setPending(nextPending);
     setPublicActivity(nextPublic);
     setVisits(nextVisits);
+    setPhotos(nextPhotos);
   }
 
   useEffect(() => {
@@ -259,6 +271,7 @@ function OwnerPage() {
         <nav className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {[
             ["#desk-visits", "Visits"],
+            ["#desk-photos", "Photos"],
             ["#desk-today", "Today"],
             ["#desk-members", "Members"],
             ["#desk-users", "Users"],
@@ -376,6 +389,44 @@ function OwnerPage() {
                     ))
                   )}
                 </ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="desk-photos" className="mt-10 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Photos</h2>
+            <p className="mt-2 max-w-xl text-sm text-muted">
+              Stored by name in the hub library, so a portrait can be reused on
+              musician pages, cards and later on concerts or jams. One file per
+              name, JPEG or PNG, 400 KB after resize.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Used</p>
+                <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
+                  {fmtBytes(photos?.usedBytes ?? 0)}
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  of {fmtBytes(photos?.limitBytes ?? 10_000_000_000)}
+                </p>
+              </div>
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">In the library</p>
+                <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
+                  {photos?.portraits ?? 0}
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  named portraits · {photos?.concertShots ?? 0} concert shots
+                </p>
+              </div>
+              <div className="rounded-2xl bg-surface p-5 shadow-border">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Room left</p>
+                <p className="mt-2 font-display text-4xl font-semibold tabular-nums">
+                  {fmtBytes(photos?.remainingBytes ?? 0)}
+                </p>
+                <p className="mt-1 text-sm text-muted">
+                  about {photos?.aboutPhotosLeft ?? 0} more portraits
+                </p>
               </div>
             </div>
           </section>

@@ -18,7 +18,7 @@ import {
   typesFromMemberKind,
   type ProfileTypeId,
 } from "@/lib/profile-types";
-import { profilePhotoUrl } from "@/lib/profile-photos";
+import { namedPhotoUrl } from "@/lib/profile-photos";
 
 function urlFromText(text: string) {
   return (text ?? "").match(/https?:\/\/[^\s)]+/i)?.[0] ?? "";
@@ -151,6 +151,7 @@ type ProfileRow = {
   created_at: unknown;
   follower_count?: number;
   photo_rev?: number;
+  photo_slug?: string;
 };
 
 type LegendRow = {
@@ -434,7 +435,7 @@ function mapProfile(row: ProfileRow): Profile {
     openForInvites: Boolean(row.open_for_invites),
     createdAt: toIso(row.created_at),
     followerCount: Number(row.follower_count ?? 0),
-    photoUrl: profilePhotoUrl(row.user_id, row.photo_rev),
+    photoUrl: namedPhotoUrl(row.photo_slug || row.slug, row.photo_rev),
   };
 }
 
