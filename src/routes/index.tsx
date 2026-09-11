@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { ConcertRow } from "@/components/concert-row";
 import { Button } from "@/components/ui/button";
 import { JamLine } from "@/components/jam-line";
-import { ListFold } from "@/components/list-fold";
 import { NewsBanner } from "@/components/news-story";
 import { WorldGlobe } from "@/components/world-globe";
 import { listConcerts, listLegends, listMusicians } from "@/lib/api";
@@ -204,15 +203,11 @@ function Home() {
         {shownJams.length === 0 ? (
           <p className="mt-4 text-sm text-muted">{t("home.noJams")}</p>
         ) : (
-          <ListFold items={shownJams} limit={jamCountry ? 8 : shownJams.length || 24}>
-            {(rows) => (
-              <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-5">
-                {rows.map((jam) => (
-                  <JamLine key={jam.slug} jam={jam} />
-                ))}
-              </ul>
-            )}
-          </ListFold>
+          <ul className="mt-4 grid grid-cols-1 grid-rows-[repeat(3,auto)] gap-x-6 gap-y-1 overflow-hidden [grid-auto-rows:0] sm:grid-cols-2 lg:grid-cols-5">
+            {shownJams.slice(0, 15).map((jam) => (
+              <JamLine key={jam.slug} jam={jam} />
+            ))}
+          </ul>
         )}
       </section>
 
