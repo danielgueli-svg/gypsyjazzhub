@@ -48,7 +48,7 @@ function VerifyEmail() {
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Account</p>
       <h1 className="mt-3 font-display text-4xl font-semibold">Verify your email</h1>
       <p className="mt-3 text-sm leading-relaxed text-muted">
-        New email accounts confirm before they can post a concert, jam, festival, musician page or teacher. Google and X sign-in skip this step.
+        New email accounts confirm before they can post a concert, jam, festival, musician page or teacher.
       </p>
       {status ? <p className="mt-6 text-sm text-muted">{status}</p> : null}
       {link ? (

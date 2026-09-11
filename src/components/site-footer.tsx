@@ -5,6 +5,7 @@ import { HubSearch } from "@/components/hub-search";
 import { LanguageSwitch } from "@/components/language-switch";
 import { SharePage } from "@/components/share-page";
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut } from "@/lib/auth/gates";
 import { useI18n } from "@/lib/i18n";
 
 const COMMUNITY = [
@@ -81,12 +82,22 @@ export function SiteFooter() {
             <HubSearch tone="wood" />
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0">
-            <Button
-              asChild
-              className="h-11 bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:px-8 sm:text-base"
-            >
-              <Link to="/login">{t("nav.login")}</Link>
-            </Button>
+            <SignedOut>
+              <Button
+                asChild
+                className="h-11 bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:px-8 sm:text-base"
+              >
+                <Link to="/login">{t("nav.login")}</Link>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <Button
+                asChild
+                className="h-11 bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:h-12 sm:px-8 sm:text-base"
+              >
+                <Link to="/studio">{t("nav.desk")}</Link>
+              </Button>
+            </SignedIn>
             <ContactBoardButton className="h-11 w-full whitespace-nowrap bg-[#2a1c10] px-3 text-sm text-[#efe3b6] hover:opacity-90 sm:hidden" />
           </div>
         </div>

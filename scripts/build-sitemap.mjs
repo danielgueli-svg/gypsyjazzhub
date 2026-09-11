@@ -94,9 +94,14 @@ for (const slug of slugsFrom("src/lib/festivals.ts")) {
 for (const slug of slugsFrom("src/lib/families.ts")) {
   paths.add(`/families/${slug}`);
 }
-for (const slug of slugsFrom("src/lib/news-copy.ts").concat(slugsFrom("src/lib/music.ts"))) {
-  // news items may live in music.ts or news-copy.ts depending on tree
-  if (slug.length > 2) paths.add(`/news/${slug}`);
+function newsSlugs() {
+  const text = read("src/lib/music.ts");
+  const block = text.match(/export const NEWS(?:: [^=]+)? = \[([\s\S]*?)\n\];/);
+  if (!block) return [];
+  return [...block[1].matchAll(/^\s*slug:\s*"([^"]+)"/gm)].map((m) => m[1]);
+}
+for (const slug of newsSlugs()) {
+  paths.add(`/news/${slug}`);
 }
 
 const shops = slugsFrom("public/sitemap.xml").filter((s) => false);
