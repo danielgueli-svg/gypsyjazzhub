@@ -142,17 +142,17 @@ export function SiteHeader() {
 
   return (
     <header ref={root} className="spruce-bar sticky top-0 z-50 border-b border-black/15">
-      <div className="header-row relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1 px-2 sm:h-20 sm:gap-3 sm:px-6">
+      <div className="header-row relative z-[90] mx-auto flex h-16 max-w-6xl items-center gap-1.5 px-2 sm:h-20 sm:gap-3 sm:px-6">
         <Link
           to="/"
           aria-label="Gypsy Jazz Hub"
-          className="relative z-[100] flex h-11 min-w-11 shrink-0 items-center gap-1.5 text-inherit sm:h-auto sm:gap-3"
+          className="relative z-[100] flex h-12 shrink-0 items-center gap-1.5 text-inherit sm:h-auto sm:gap-3"
           onClick={() => {
             setSheetOpen(false);
             setOpenKey(null);
           }}
         >
-          <BrandMark className="h-9 w-auto max-w-[3.25rem] shrink-0 object-contain sm:h-14 sm:max-w-none" />
+          <BrandMark className="h-12 w-auto shrink-0 object-contain sm:h-14" />
           <span className="hidden min-w-0 font-display text-lg font-semibold leading-tight tracking-tight sm:inline sm:text-3xl">
             Gypsy Jazz Hub
           </span>
@@ -168,7 +168,7 @@ export function SiteHeader() {
           <ChromeAuth className="max-md:hidden" />
           <button
             type="button"
-            className="inline-flex h-9 items-center gap-1 rounded-md bg-[#d9a24e] px-2.5 text-xs font-semibold text-[#2a1c10] hover:bg-[#e4b05a] md:hidden"
+            className="inline-flex h-11 items-center gap-1 rounded-md bg-[#d9a24e] px-3 text-sm font-semibold text-[#2a1c10] hover:bg-[#e4b05a] md:hidden"
             onClick={() => {
               setSheetOpen((v) => !v);
               setOpenKey(null);
@@ -176,7 +176,7 @@ export function SiteHeader() {
             aria-expanded={sheetOpen}
             aria-label={sheetOpen ? t("nav.close") : t("nav.menu")}
           >
-            {sheetOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+            {sheetOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             <span className="max-[359px]:hidden">{t("nav.menu")}</span>
           </button>
         </div>

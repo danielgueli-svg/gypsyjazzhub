@@ -151,7 +151,7 @@ function LanguageMenu({
         className={cn(
           "inline-flex items-center justify-center rounded-md",
           prominent
-            ? "h-9 gap-1 px-1.5 text-inherit hover:bg-black/10 sm:h-14 sm:gap-1.5 sm:px-2.5"
+            ? "h-11 gap-1 px-1.5 text-inherit hover:bg-black/10 sm:h-14 sm:gap-1.5 sm:px-2.5"
             : onDark
               ? "size-10 gap-2 px-2 text-white hover:bg-white/10 sm:h-12 sm:w-auto sm:px-3"
               : "size-12 gap-2 px-2 text-inherit hover:bg-black/10 sm:h-12 sm:w-auto sm:px-3",
@@ -162,7 +162,7 @@ function LanguageMenu({
           eager
           className={
             prominent
-              ? "h-5 w-7 rounded-sm sm:h-8 sm:w-11"
+              ? "h-6 w-9 rounded-sm sm:h-8 sm:w-11"
               : "h-5 w-7 sm:h-6 sm:w-8"
           }
         />
