@@ -1135,7 +1135,7 @@ export const JAMS: Jam[] = [
     hours: "14:00–18:00",
     when: "3rd Saturday",
     nextStartsAt: "2026-09-19T12:00:00.000Z",
-    bio: "Manouche Den Haag — 3rd Saturday afternoon, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. Ask before you sit in. Listed by Hot Club de France Nederland.",
+    bio: "Manouche Den Haag — 3rd Saturday afternoon, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. By invitation: email her first to join, evelien@box.nl. Listed by Hot Club de France Nederland.",
     relatedSlugs: [],
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
   },
