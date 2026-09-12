@@ -133,8 +133,14 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     setNote(null);
     setResetting(user.id);
     try {
-      await sendOwnerPasswordReset({ data: user.id });
-      setNote(`Password reset mail sent to ${user.email}. They choose a password, then get a confirmation mail.`);
+      const result = await sendOwnerPasswordReset({ data: user.id });
+      if (result.sent) {
+        setNote(`Password reset mail sent to ${user.email}. They choose a password, then get a confirmation mail.`);
+      } else if (result.link) {
+        setNote(`Mail did not go out. Copy this link and send it to ${user.email}: ${result.link}`);
+      } else {
+        setNote(`Reset ready for ${user.email}, but the mail did not go out.`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not send reset mail.");
     } finally {

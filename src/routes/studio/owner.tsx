@@ -225,8 +225,16 @@ function OwnerPage() {
     setError(null);
     setResetting(member.id);
     try {
-      await sendOwnerPasswordReset({ data: member.id });
-      setDigestNote(`Password reset mail sent to ${member.email}.`);
+      const result = await sendOwnerPasswordReset({ data: member.id });
+      if (result.sent) {
+        setDigestNote(`Password reset mail sent to ${member.email}.`);
+      } else if (result.link) {
+        setDigestNote(
+          `Mail did not go out. Copy this link and send it to ${member.email}: ${result.link}`,
+        );
+      } else {
+        setDigestNote(`Reset ready for ${member.email}, but the mail did not go out.`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not send reset mail.");
     } finally {

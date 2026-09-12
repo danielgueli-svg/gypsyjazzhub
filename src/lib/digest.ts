@@ -319,8 +319,21 @@ export async function sendHubMail(to: string, subject: string, body: string) {
     },
   );
   const text = await response.text();
-  if (!response.ok) {
-    throw new Error(text.slice(0, 200) || "Could not send mail");
+  let parsed: { success?: string | boolean; message?: string } = {};
+  try {
+    parsed = JSON.parse(text) as { success?: string | boolean; message?: string };
+  } catch {
+    parsed = {};
+  }
+  const ok =
+    response.ok &&
+    parsed.success !== false &&
+    parsed.success !== "false" &&
+    !/activation/i.test(parsed.message ?? text);
+  if (!ok) {
+    throw new Error(
+      (parsed.message || text).slice(0, 200) || "Could not send mail",
+    );
   }
   return "sent — first time, confirm the FormSubmit mail in your inbox";
 }

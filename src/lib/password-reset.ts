@@ -99,10 +99,13 @@ export async function requestPasswordReset(
   try {
     await sendHubMail(email, mail.subject, mail.body);
   } catch {
+    if (opts.force) {
+      return { ok: true as const, sent: false as const, email, link };
+    }
     await sql.query(`delete from hub_password_resets where token_hash = $1`, [hash]);
     throw new Error("Could not send the reset email. Try again in a few minutes.");
   }
-  return { ok: true as const, sent: true as const };
+  return { ok: true as const, sent: true as const, email };
 }
 
 export async function applyPasswordReset(tokenRaw: string, password: string) {

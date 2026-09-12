@@ -789,8 +789,13 @@ export const sendOwnerPasswordReset = createServerFn({ method: "POST" })
     const email = String(rows[0]?.email ?? "").trim();
     if (!email.includes("@")) throw new Error("That member has no email.");
     const { requestPasswordReset } = await import("@/lib/password-reset");
-    await requestPasswordReset(email, { force: true, mustExist: true });
-    return { ok: true as const, email };
+    const result = await requestPasswordReset(email, { force: true, mustExist: true });
+    return {
+      ok: true as const,
+      email,
+      sent: Boolean(result.sent),
+      link: "link" in result ? result.link : "",
+    };
   });
 
 export const eraseHubMember = createServerFn({ method: "POST" })
