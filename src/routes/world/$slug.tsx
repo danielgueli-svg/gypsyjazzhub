@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CountryView } from "@/components/country-view";
 import { listConcerts, listLegends, listMusicians } from "@/lib/api";
 import { buildGlobeIndex, findCountry, siteCountryNames } from "@/lib/geo";
-import { listHubChat, listHubFestivals, listHubJams, listHubLuthiers, listHubTeachers, listHubVenues } from "@/lib/hub-api";
+import { catalogTeachersForCountry, listHubChat, listHubFestivals, listHubJams, listHubLuthiers, listHubTeachers, listHubVenues } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { pageHead } from "@/lib/seo";
 import { settle } from "@/lib/settle";
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/world/$slug")({
         settle("country-venues", [], () => listHubVenues()),
         settle("country-luthiers", [], () => listHubLuthiers()),
         settle("country-chat", [], () => listHubChat({ data: { kind: "country", slug: params.slug } })),
-        settle("country-teachers", [], () => listHubTeachers({ data: params.slug })),
+        settle("country-teachers", catalogTeachersForCountry(params.slug), () => listHubTeachers({ data: params.slug })),
         settle("country-hub", [], () => listHubCountries()),
       ]);
     const upcoming = concerts.filter(

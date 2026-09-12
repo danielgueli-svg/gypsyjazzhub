@@ -1446,7 +1446,7 @@ export type HubTeacher = {
   artistSlug: string;
 };
 
-function catalogTeachers(countrySlug?: string): HubTeacher[] {
+export function catalogTeachersForCountry(countrySlug?: string): HubTeacher[] {
   const rows = CATALOG_TEACHERS.filter(
     (row) => !countrySlug || row.countrySlug === countrySlug,
   );
@@ -1462,6 +1462,10 @@ function catalogTeachers(countrySlug?: string): HubTeacher[] {
     userId: "",
     artistSlug: teacher.artistSlug,
   }));
+}
+
+function catalogTeachers(countrySlug?: string): HubTeacher[] {
+  return catalogTeachersForCountry(countrySlug);
 }
 
 function mergeHubTeachers(fromDb: HubTeacher[], countrySlug?: string): HubTeacher[] {
