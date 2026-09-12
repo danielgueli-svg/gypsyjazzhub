@@ -30,6 +30,7 @@ import { isArchiveBand } from "@/lib/archive";
 import { romaniMusicCountryUrl } from "@/lib/romani-music";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { hotClubsForCountry, type HotClub } from "@/lib/hot-clubs";
+import { hotClubBio } from "@/lib/hot-club-copy";
 import { isThinGypsyScene, jamHours, jamPlace } from "@/lib/jams";
 import { whenLabel } from "@/lib/festival-copy";
 import { sortVenues, venueScene, type Venue } from "@/lib/venues";
@@ -622,9 +623,10 @@ function VenueLines({
 }
 
 function HotClubBlock({ clubs }: { clubs: HotClub[] }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const featured = clubs.filter((club) => club.featured);
   const rest = clubs.filter((club) => !club.featured);
+  const kindLabel = (kind: HotClub["kind"]) => t(`country.hotKind.${kind}`);
   return (
     <section id="hot-clubs" className="mt-10 scroll-mt-40">
       {featured.map((club) => (
@@ -637,7 +639,9 @@ function HotClubBlock({ clubs }: { clubs: HotClub[] }) {
         >
           <p className="text-[11px] tracking-[0.28em] text-[#e6c15a] uppercase">{t("country.hotClub")}</p>
           <h2 className="mt-2 font-display text-3xl font-semibold text-[#fff1b0] sm:text-4xl">{club.name}</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#f3e6cf]">{club.bio}</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#f3e6cf]">
+            {hotClubBio(club.slug, locale, club.bio)}
+          </p>
           {club.site ? (
             <p className="mt-4 text-sm font-medium text-[#e6c15a]">{club.site.replace(/^https?:\/\//, "")} →</p>
           ) : null}
@@ -664,9 +668,9 @@ function HotClubBlock({ clubs }: { clubs: HotClub[] }) {
                 )}
                 <span className="text-sm text-muted">
                   {" "}
-                  · {club.city} · {club.kind}
+                  · {club.city} · {kindLabel(club.kind)}
                 </span>
-                <p className="mt-0.5 max-w-xl text-sm text-muted">{club.bio}</p>
+                <p className="mt-0.5 max-w-xl text-sm text-muted">{hotClubBio(club.slug, locale, club.bio)}</p>
               </li>
             ))}
           </ul>

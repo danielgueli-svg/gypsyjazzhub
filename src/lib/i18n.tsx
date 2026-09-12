@@ -21,6 +21,7 @@ import {
 } from "@/lib/news-copy";
 import { csDict, huDict, plDict, roDict, srDict } from "@/lib/i18n-east";
 import { FESTIVAL_UI } from "@/lib/i18n-festivals";
+import { HOT_CLUB_UI } from "@/lib/i18n-hot-clubs";
 
 export const LOCALES = [
   { id: "en", native: "English", latin: "English", short: "EN", flag: "🇬🇧", iso: "gb" },
@@ -4609,27 +4610,27 @@ const ru: Dict = {
 };
 
 const DICTS: Record<LocaleId, Dict> = {
-  en: { ...en, ...FESTIVAL_UI.en },
-  he: { ...en, ...FESTIVAL_UI.en },
-  nl: { ...nl, ...FESTIVAL_UI.nl },
-  es: { ...es, ...FESTIVAL_UI.es },
-  de: { ...de, ...FESTIVAL_UI.de },
-  fr: { ...fr, ...FESTIVAL_UI.fr },
-  it: { ...it, ...FESTIVAL_UI.it },
-  ja: { ...ja, ...FESTIVAL_UI.ja },
-  ko: { ...ko, ...FESTIVAL_UI.ko },
-  zh: { ...zh, ...FESTIVAL_UI.zh },
-  "zh-tw": { ...zhTw, ...FESTIVAL_UI["zh-tw"] },
-  id: { ...id, ...FESTIVAL_UI.id },
-  th: { ...th, ...FESTIVAL_UI.th },
-  hu: { ...hu, ...FESTIVAL_UI.hu },
-  ro: { ...ro, ...FESTIVAL_UI.ro },
-  sr: { ...sr, ...FESTIVAL_UI.sr },
-  cs: { ...cs, ...FESTIVAL_UI.cs },
-  pl: { ...pl, ...FESTIVAL_UI.pl },
-  hr: { ...hr, ...FESTIVAL_UI.hr },
-  pt: { ...pt, ...FESTIVAL_UI.pt },
-  ru: { ...ru, ...FESTIVAL_UI.ru },
+  en: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en },
+  he: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en },
+  nl: { ...nl, ...FESTIVAL_UI.nl, ...HOT_CLUB_UI.nl },
+  es: { ...es, ...FESTIVAL_UI.es, ...HOT_CLUB_UI.es },
+  de: { ...de, ...FESTIVAL_UI.de, ...HOT_CLUB_UI.de },
+  fr: { ...fr, ...FESTIVAL_UI.fr, ...HOT_CLUB_UI.fr },
+  it: { ...it, ...FESTIVAL_UI.it, ...HOT_CLUB_UI.it },
+  ja: { ...ja, ...FESTIVAL_UI.ja, ...HOT_CLUB_UI.ja },
+  ko: { ...ko, ...FESTIVAL_UI.ko, ...HOT_CLUB_UI.ko },
+  zh: { ...zh, ...FESTIVAL_UI.zh, ...HOT_CLUB_UI.zh },
+  "zh-tw": { ...zhTw, ...FESTIVAL_UI["zh-tw"], ...HOT_CLUB_UI["zh-tw"] },
+  id: { ...id, ...FESTIVAL_UI.id, ...HOT_CLUB_UI.id },
+  th: { ...th, ...FESTIVAL_UI.th, ...HOT_CLUB_UI.th },
+  hu: { ...hu, ...FESTIVAL_UI.hu, ...HOT_CLUB_UI.hu },
+  ro: { ...ro, ...FESTIVAL_UI.ro, ...HOT_CLUB_UI.ro },
+  sr: { ...sr, ...FESTIVAL_UI.sr, ...HOT_CLUB_UI.sr },
+  cs: { ...cs, ...FESTIVAL_UI.cs, ...HOT_CLUB_UI.cs },
+  pl: { ...pl, ...FESTIVAL_UI.pl, ...HOT_CLUB_UI.pl },
+  hr: { ...hr, ...FESTIVAL_UI.hr, ...HOT_CLUB_UI.hr },
+  pt: { ...pt, ...FESTIVAL_UI.pt, ...HOT_CLUB_UI.pt },
+  ru: { ...ru, ...FESTIVAL_UI.ru, ...HOT_CLUB_UI.ru },
 };
 
 const STORAGE = "gjh-locale";
