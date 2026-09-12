@@ -4,6 +4,8 @@ import { ShopName } from "@/components/shop-name";
 import { siteHost, type Luthier } from "@/lib/luthiers";
 import type { Shop } from "@/lib/shops";
 import { useI18n } from "@/lib/i18n";
+import { makerBio } from "@/lib/maker-copy";
+import { translateMakerPhrase } from "@/lib/i18n-makers";
 
 function shortNote(note?: string, bio?: string) {
   const n = (note ?? "").trim();
@@ -27,6 +29,7 @@ export type MakerEntry = {
   city?: string;
   site?: string;
   note?: string;
+  craft?: "guitar" | "bass" | "violin" | "shop";
 };
 
 export function luthierEntry(row: Luthier): MakerEntry {
@@ -36,6 +39,7 @@ export function luthierEntry(row: Luthier): MakerEntry {
     city: row.city,
     site: row.site,
     note: shortNote(row.note, row.bio),
+    craft: row.craft,
   };
 }
 
@@ -46,13 +50,28 @@ export function shopEntry(row: Shop): MakerEntry {
     city: row.city,
     site: row.site,
     note: shortNote("", row.bio),
+    craft: "shop",
   };
 }
 
+function caption(row: MakerEntry, locale: string, t: (key: string) => string) {
+  const localized = makerBio(row.key, locale);
+  if (localized) return localized;
+  if (row.note) {
+    const phrase = translateMakerPhrase(row.note, locale);
+    if (phrase !== row.note || locale === "en" || locale === "he") return phrase;
+  }
+  if (row.craft) return t(`makers.craft.${row.craft}`);
+  return row.note ?? "";
+}
+
 export function MakerRows({ entries }: { entries: MakerEntry[] }) {
+  const { t, locale } = useI18n();
   return (
     <ul className="columns-1 gap-x-10 sm:columns-2">
-      {entries.map((row) => (
+      {entries.map((row) => {
+        const note = caption(row, locale, t);
+        return (
         <li key={row.key} className="break-inside-avoid py-2">
           {row.title}
           {row.city ? <span className="text-sm text-muted"> · {row.city}</span> : null}
@@ -68,9 +87,10 @@ export function MakerRows({ entries }: { entries: MakerEntry[] }) {
               </a>
             </p>
           ) : null}
-          {row.note ? <p className="text-sm text-muted">{row.note}</p> : null}
+          {note ? <p className="text-sm text-muted">{note}</p> : null}
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }
