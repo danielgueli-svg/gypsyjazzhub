@@ -1,6 +1,8 @@
 import { hashPassword, isReservedTestEmail } from "@/lib/auth/email-password";
 import { getSql } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
+import { parseMailLocale, passwordMail } from "@/lib/welcome-mail";
+import { getRequest } from "@tanstack/react-start/server";
 
 const TTL_MS = 60 * 60 * 1000;
 const COOLDOWN_MS = 10 * 60 * 1000;
@@ -68,25 +70,34 @@ export async function requestPasswordReset(
     ],
   );
   const link = `https://www.gypsyjazzhub.com/reset-password?token=${encodeURIComponent(token)}`;
+  let locale = parseMailLocale("en");
+  let haveStored = false;
   try {
-    await sendHubMail(
-      email,
-      "Set your Gypsy Jazz Hub password",
-      [
-        `Hi${users[0].name ? ` ${users[0].name}` : ""},`,
-        "",
-        "Open this link to choose a password for Gypsy Jazz Hub. It works for one hour:",
-        link,
-        "",
-        "After that you can sign in with your email and that password.",
-        "We will send a confirmation mail when the password is saved.",
-        "",
-        "If you did not ask, ignore this mail.",
-        "",
-        "Gypsy Jazz Hub",
-        "https://www.gypsyjazzhub.com/",
-      ].join("\n"),
+    const rows = await sql.query<{ locale: string }>(
+      `select locale from hub_members where user_id = $1 limit 1`,
+      [userId],
     );
+    if (rows[0]?.locale) {
+      locale = parseMailLocale(String(rows[0].locale));
+      haveStored = true;
+    }
+  } catch {
+    /* older rows */
+  }
+  if (!haveStored) {
+    try {
+      const request = getRequest();
+      const cookie = request?.headers.get("cookie") ?? "";
+      const match = cookie.match(/(?:^|;\s*)gjh-locale=([^;]*)/);
+      if (match?.[1]) locale = parseMailLocale(decodeURIComponent(match[1]));
+      else locale = parseMailLocale(request?.headers.get("accept-language"));
+    } catch {
+      /* stay en */
+    }
+  }
+  const mail = passwordMail(locale, String(users[0].name ?? ""), link);
+  try {
+    await sendHubMail(email, mail.subject, mail.body);
   } catch {
     await sql.query(`delete from hub_password_resets where token_hash = $1`, [hash]);
     throw new Error("Could not send the reset email. Try again in a few minutes.");
