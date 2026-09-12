@@ -90,12 +90,12 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
         <div className="grid gap-6 md:grid-cols-7 md:gap-10">
           <div className="md:col-span-3">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <Link to="/" aria-label="Gypsy Jazz Hub" className="flex items-center gap-2 text-inherit sm:gap-3">
               <BrandMark className="h-10 w-auto shrink-0 sm:h-12" />
               <span className="font-display text-xl font-semibold text-[#2a1c10] sm:text-3xl">
                 Gypsy Jazz Hub
               </span>
-            </div>
+            </Link>
             <p className="mt-2 text-sm text-[#2a1c10]/80">gypsyjazzhub.com</p>
             <p className="mt-1 text-sm text-[#2a1c10]/80">{t("footer.tagline")}</p>
             <div className="mt-4 hidden sm:block">

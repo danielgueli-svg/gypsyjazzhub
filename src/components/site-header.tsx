@@ -143,7 +143,15 @@ export function SiteHeader() {
   return (
     <header ref={root} className="spruce-bar sticky top-0 z-50 border-b border-black/15">
       <div className="header-row relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1 overflow-x-hidden px-2 sm:h-20 sm:gap-3 sm:px-6">
-        <Link to="/" aria-label="Gypsy Jazz Hub" className="flex min-w-0 shrink items-center gap-1.5 text-inherit sm:gap-3">
+        <Link
+          to="/"
+          aria-label="Gypsy Jazz Hub"
+          className="relative z-[100] flex h-11 min-w-11 shrink-0 items-center gap-1.5 text-inherit sm:h-auto sm:gap-3"
+          onClick={() => {
+            setSheetOpen(false);
+            setOpenKey(null);
+          }}
+        >
           <BrandMark className="h-10 w-auto shrink-0 sm:h-14" />
           <span className="hidden min-w-0 font-display text-lg font-semibold leading-tight tracking-tight sm:inline sm:text-3xl">
             Gypsy Jazz Hub
