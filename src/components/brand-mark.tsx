@@ -5,7 +5,7 @@ export function BrandMark({ className }: { className?: string }) {
     <img
       src="/logo.png"
       alt="Gypsy Jazz Hub"
-      className={cn("pointer-events-none h-9 w-auto sm:h-14", className)}
+      className={cn("pointer-events-none h-9 w-auto object-contain sm:h-14", className)}
     />
   );
 }

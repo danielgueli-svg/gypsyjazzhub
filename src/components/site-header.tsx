@@ -152,7 +152,7 @@ export function SiteHeader() {
             setOpenKey(null);
           }}
         >
-          <BrandMark className="h-10 w-auto shrink-0 sm:h-14" />
+          <BrandMark className="h-9 w-auto max-w-[3.25rem] shrink-0 object-contain sm:h-14 sm:max-w-none" />
           <span className="hidden min-w-0 font-display text-lg font-semibold leading-tight tracking-tight sm:inline sm:text-3xl">
             Gypsy Jazz Hub
           </span>
@@ -177,7 +177,7 @@ export function SiteHeader() {
             aria-label={sheetOpen ? t("nav.close") : t("nav.menu")}
           >
             {sheetOpen ? <X className="size-4" /> : <Menu className="size-4" />}
-            {t("nav.menu")}
+            <span className="max-[359px]:hidden">{t("nav.menu")}</span>
           </button>
         </div>
         <LanguageSwitch compact prominent />
