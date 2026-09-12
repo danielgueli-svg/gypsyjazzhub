@@ -173,10 +173,10 @@ export function CountryView({
           { id: "festivals", label: t("nav.festivals") },
           { id: "camps", label: t("nav.camps") },
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
-          (livingBands.length || (country?.bands ?? []).length) ? { id: "groups", label: t("nav.groups") } : null,
-          { id: "venues", label: t("country.venues") },
           { id: "makers", label: t("country.makers") },
           { id: "teachers", label: t("country.teachers") },
+          (livingBands.length || (country?.bands ?? []).length) ? { id: "groups", label: t("nav.groups") } : null,
+          { id: "venues", label: t("country.venues") },
           { id: "players", label: t("country.currently") },
           artists.some((artist) => artist.past) ? { id: "past", label: t("country.past") } : null,
           { id: "archive", label: t("country.archive") },
@@ -351,6 +351,17 @@ export function CountryView({
 
       {hotClubs.length > 0 ? <HotClubBlock clubs={hotClubs} /> : null}
 
+      <CountryMakersPreview
+        guitar={guitarLuthiers}
+        violin={violinLuthiers}
+        bass={bassLuthiers}
+        shops={shops}
+        countryName={name}
+        countrySlug={slug}
+      />
+
+      <Teachers teachers={teachers} countrySlug={slug} countryName={name} />
+
       {livingBands.length > 0 ? (
         <section id="groups" className="mt-12 scroll-mt-40">
           <h2 className="font-display text-3xl font-semibold">
@@ -391,17 +402,6 @@ export function CountryView({
         <VenueLines venues={venues} empty={t("country.noVenues")} booksJazz={t("country.venue.booksJazz")} />
       </section>
       )}
-
-      <CountryMakersPreview
-        guitar={guitarLuthiers}
-        violin={violinLuthiers}
-        bass={bassLuthiers}
-        shops={shops}
-        countryName={name}
-        countrySlug={slug}
-      />
-
-      <Teachers teachers={teachers} countrySlug={slug} countryName={name} />
 
       <section id="players" className="mt-12 scroll-mt-40">
         <h2 className="font-display text-3xl font-semibold">{t("country.currently")}</h2>
