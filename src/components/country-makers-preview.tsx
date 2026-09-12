@@ -8,13 +8,14 @@ import { useI18n } from "@/lib/i18n";
 const PREVIEW = 5;
 
 function pickPreview(shops: Shop[], violin: Luthier[], bass: Luthier[], guitar: Luthier[]) {
-  const entries = [
+  const guitarEntries = guitar.map(luthierEntry);
+  const rest = [
     ...shops.map(shopEntry),
     ...violin.map(luthierEntry),
     ...bass.map(luthierEntry),
-    ...guitar.map(luthierEntry),
   ];
-  return entries.slice(0, PREVIEW);
+  const limit = Math.max(PREVIEW, guitarEntries.length);
+  return [...guitarEntries, ...rest].slice(0, limit);
 }
 
 export function CountryMakersPreview({
