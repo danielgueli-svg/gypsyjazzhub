@@ -24,22 +24,33 @@ async function ensureTable() {
   `);
 }
 
-export async function requestPasswordReset(emailRaw: string) {
+export async function requestPasswordReset(
+  emailRaw: string,
+  opts: { force?: boolean; mustExist?: boolean } = {},
+) {
   const email = emailRaw.trim().toLowerCase();
-  if (!email.includes("@") || isReservedTestEmail(email)) return { ok: true as const };
+  if (!email.includes("@") || isReservedTestEmail(email)) {
+    if (opts.mustExist) throw new Error("No hub login for that email.");
+    return { ok: true as const };
+  }
   await ensureTable();
   const sql = await getSql();
   const users = await sql.query<{ id: string; name: string }>(
     `select id, name from "user" where lower(email) = $1 limit 1`,
     [email],
   );
-  if (!users[0]) return { ok: true as const };
+  if (!users[0]) {
+    if (opts.mustExist) throw new Error("No hub login for that email.");
+    return { ok: true as const };
+  }
   const userId = String(users[0].id);
-  const recent = await sql.query<{ id: string }>(
-    `select id from hub_password_resets where email = $1 and created_at > $2 limit 1`,
-    [email, new Date(Date.now() - COOLDOWN_MS).toISOString()],
-  );
-  if (recent[0]) return { ok: true as const };
+  if (!opts.force) {
+    const recent = await sql.query<{ id: string }>(
+      `select id from hub_password_resets where email = $1 and created_at > $2 limit 1`,
+      [email, new Date(Date.now() - COOLDOWN_MS).toISOString()],
+    );
+    if (recent[0]) return { ok: true as const };
+  }
   const token = `${crypto.randomUUID()}${crypto.randomUUID()}`.replace(/-/g, "");
   const hash = await tokenHash(token);
   const now = new Date();
@@ -60,16 +71,17 @@ export async function requestPasswordReset(emailRaw: string) {
   try {
     await sendHubMail(
       email,
-      "Reset your Gypsy Jazz Hub password",
+      "Set your Gypsy Jazz Hub password",
       [
         `Hi${users[0].name ? ` ${users[0].name}` : ""},`,
         "",
-        "Someone asked to reset the password for this Gypsy Jazz Hub account.",
-        "",
-        "Open this link. It works for one hour:",
+        "Open this link to choose a password for Gypsy Jazz Hub. It works for one hour:",
         link,
         "",
-        "If you did not ask, ignore this mail. Your password stays the same.",
+        "After that you can sign in with your email and that password.",
+        "We will send a confirmation mail when the password is saved.",
+        "",
+        "If you did not ask, ignore this mail.",
         "",
         "Gypsy Jazz Hub",
         "https://www.gypsyjazzhub.com/",
@@ -79,7 +91,7 @@ export async function requestPasswordReset(emailRaw: string) {
     await sql.query(`delete from hub_password_resets where token_hash = $1`, [hash]);
     throw new Error("Could not send the reset email. Try again in a few minutes.");
   }
-  return { ok: true as const };
+  return { ok: true as const, sent: true as const };
 }
 
 export async function applyPasswordReset(tokenRaw: string, password: string) {
@@ -106,6 +118,7 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
     `select id from account where "userId" = $1 and "providerId" = $2 limit 1`,
     [userId, "credential"],
   );
+  const firstPassword = !accounts[0]?.id;
   if (accounts[0]?.id) {
     await sql.query(`update account set password = $1, "updatedAt" = $2 where id = $3`, [
       hashed,
@@ -121,5 +134,36 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
   }
   await sql.query(`delete from hub_password_resets where user_id = $1`, [userId]);
   await sql.query(`delete from session where "userId" = $1`, [userId]);
+  if (firstPassword) {
+    const who = await sql.query<{ email: string; name: string }>(
+      `select email, name from "user" where id = $1 limit 1`,
+      [userId],
+    );
+    const email = String(who[0]?.email ?? "").trim();
+    const name = String(who[0]?.name ?? "").trim();
+    if (email.includes("@")) {
+      try {
+        const { startEmailVerification } = await import("@/lib/hub-guard");
+        await startEmailVerification(userId, email);
+      } catch {
+        try {
+          await sendHubMail(
+            email,
+            "Your Gypsy Jazz Hub password is set",
+            [
+              `Hi${name ? ` ${name}` : ""},`,
+              "",
+              "Your password is saved. Sign in with your email and that password:",
+              "https://www.gypsyjazzhub.com/login",
+              "",
+              "Gypsy Jazz Hub",
+            ].join("\n"),
+          );
+        } catch {
+          /* password is saved even if mail fails */
+        }
+      }
+    }
+  }
   return { ok: true as const };
 }

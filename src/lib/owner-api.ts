@@ -775,6 +775,24 @@ export const banHubMember = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const sendOwnerPasswordReset = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((userId: string) => userId.trim())
+  .handler(async ({ context, data: userId }) => {
+    await requireOwner(context.userId);
+    if (!userId) throw new Error("Need a member.");
+    const sql = await getSql();
+    const rows = await sql.query<{ email: string }>(
+      `select email from "user" where id = $1 limit 1`,
+      [userId],
+    );
+    const email = String(rows[0]?.email ?? "").trim();
+    if (!email.includes("@")) throw new Error("That member has no email.");
+    const { requestPasswordReset } = await import("@/lib/password-reset");
+    await requestPasswordReset(email, { force: true, mustExist: true });
+    return { ok: true as const, email };
+  });
+
 export const eraseHubMember = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((userId: string) => userId.trim())

@@ -15,6 +15,7 @@ import {
   eraseHubMember,
   listHubUserDirectory,
   listHubUserStats,
+  sendOwnerPasswordReset,
   verifyHubMember,
   type HubUserFilter,
   type HubUserRow,
@@ -73,6 +74,7 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
   const [error, setError] = useState<string | null>(null);
   const [banIp, setBanIp] = useState("");
   const [note, setNote] = useState<string | null>(null);
+  const [resetting, setResetting] = useState<string | null>(null);
 
   useEffect(() => {
     let live = true;
@@ -126,6 +128,20 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     }
   }
 
+  async function sendReset(user: HubUserRow) {
+    setError(null);
+    setNote(null);
+    setResetting(user.id);
+    try {
+      await sendOwnerPasswordReset({ data: user.id });
+      setNote(`Password reset mail sent to ${user.email}. They choose a password, then get a confirmation mail.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send reset mail.");
+    } finally {
+      setResetting(null);
+    }
+  }
+
   async function erase(user: HubUserRow) {
     if (!window.confirm(`Erase ${user.name || user.email} from the hub? They will need to join again.`)) {
       return;
@@ -164,8 +180,9 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
       <h2 className="font-display text-2xl font-semibold sm:text-3xl">Users & alerts</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everyone who has joined the hub, with profile types, instruments and
-        what they subscribe to for notifications. Ban an account, or erase a bot
-        from the hub. Your own login stays.
+        what they subscribe to for notifications. Send a password reset mail so
+        they can choose a password (they then get a confirmation mail). Ban an
+        account, or erase a bot from the hub. Your own login stays.
       </p>
       <form onSubmit={(event) => void onBanIp(event)} className="mt-4 flex max-w-md flex-wrap gap-2">
         <Input
@@ -347,6 +364,15 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
                     Verify
                   </Button>
                 )}
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={resetting === user.id}
+                  onClick={() => void sendReset(user)}
+                >
+                  {resetting === user.id ? "Sending…" : "Send reset mail"}
+                </Button>
                 <Button type="button" size="sm" variant="outline" onClick={() => void ban(user, !user.banned)}>
                   {user.banned ? "Unban" : "Ban"}
                 </Button>
@@ -434,6 +460,15 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
                           Verify
                         </Button>
                       )}
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        disabled={resetting === user.id}
+                        onClick={() => void sendReset(user)}
+                      >
+                        {resetting === user.id ? "Sending…" : "Send reset mail"}
+                      </Button>
                       <Button
                         type="button"
                         size="sm"

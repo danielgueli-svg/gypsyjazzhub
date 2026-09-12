@@ -19,6 +19,7 @@ import {
   listHubActivity,
   listHubMembers,
   eraseHubMember,
+  sendOwnerPasswordReset,
   removeHubItem,
   saveOwnerDigest,
   sendOwnerDigest,
@@ -90,6 +91,7 @@ function OwnerPage() {
     cities?: VisitPlace[];
   } | null>(null);
   const [photos, setPhotos] = useState<PhotoStorage | null>(null);
+  const [resetting, setResetting] = useState<string | null>(null);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
@@ -216,6 +218,19 @@ function OwnerPage() {
       setActivity((rows) => rows.filter((row) => !(row.kind === item.kind && row.id === item.id)));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not remove.");
+    }
+  }
+
+  async function onSendReset(member: HubMember) {
+    setError(null);
+    setResetting(member.id);
+    try {
+      await sendOwnerPasswordReset({ data: member.id });
+      setDigestNote(`Password reset mail sent to ${member.email}.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send reset mail.");
+    } finally {
+      setResetting(null);
     }
   }
 
@@ -459,7 +474,8 @@ function OwnerPage() {
           <section id="desk-members" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
             <p className="mt-2 text-sm text-muted">
-              {members.length} people with a hub login. Erase bots from this list. Your own login stays.
+              {members.length} people with a hub login. Send a password reset mail from here.
+              Erase bots from this list. Your own login stays.
             </p>
             {members.length === 0 ? (
               <p className="mt-4 text-sm text-faint">No members stored yet.</p>
@@ -473,6 +489,15 @@ function OwnerPage() {
                     </span>
                     <span className="flex items-center gap-2">
                       <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={resetting === member.id}
+                        onClick={() => void onSendReset(member)}
+                      >
+                        {resetting === member.id ? "Sending…" : "Send reset mail"}
+                      </Button>
                       {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
                         <Button
                           type="button"
