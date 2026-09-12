@@ -7,11 +7,19 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
+    # Live production probe every hour (cheap: no Playwright).
+    - cron: "0 * * * *"
+    # Full local catalog + globe check once a day (Playwright).
     - cron: "0 8 * * *"
 
 jobs:
   preview:
     name: Local catalog (PGLite)
+    # Heavy job: only on push, manual, or the daily 08:00 UTC slot.
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 8 * * *')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
