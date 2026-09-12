@@ -122,6 +122,17 @@ export const VENUES: Venue[] = [
     bio: "Rijkstraatweg 37, near Nijmegen. Selected Friday gypsy jazz jams 19:30–23:30. Sigrid Booden.",
   },
   {
+    slug: "cafe-de-stadsgraaf",
+    name: "Café De Stadsgraaf",
+    city: "Enschede",
+    country: "Netherlands",
+    kind: "Café",
+    site: "https://destadsgraaf.nl/",
+    contact: "",
+    scene: "gypsy",
+    bio: "Stadsgravenstraat 47, Enschede. Last-Sunday gypsy jam — time still to follow.",
+  },
+  {
     slug: "cultuurbos-bosvreugd",
     name: "Cultuurbos Bosvreugd",
     city: "Tilburg",

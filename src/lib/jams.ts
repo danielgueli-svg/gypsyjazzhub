@@ -219,7 +219,9 @@ export function formatJamNext(jam: Jam, locale = "en") {
     parts.find((part) => part.type === type)?.value ?? "";
   const hour = get("hour").padStart(2, "0");
   const minute = get("minute").padStart(2, "0");
-  return `${get("weekday")} ${get("day")} ${get("month")} ${get("year")} · ${hour}:${minute}`;
+  const day = `${get("weekday")} ${get("day")} ${get("month")} ${get("year")}`;
+  if (!jamHours(jam)) return day;
+  return `${day} · ${hour}:${minute}`;
 }
 
 export const JAMS: Jam[] = [
@@ -1151,6 +1153,20 @@ export const JAMS: Jam[] = [
     bio: "Near Nijmegen. Gypsy jazz at Café van de Refter, Rijkstraatweg 37, Ubbergen — selected Fridays 19:30–23:30. Organised by Sigrid Booden. Confirm the Friday with Hot Club de France Nederland before you go.",
     relatedSlugs: [],
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
+  },
+  {
+    slug: "enschede-stadsgraaf-jam",
+    name: "Enschede gypsy jam",
+    city: "Enschede",
+    country: "Netherlands",
+    venue: "Café De Stadsgraaf",
+    address: "Stadsgravenstraat 47, 7511 EP Enschede",
+    hours: "",
+    when: "Last Sunday of the month",
+    nextStartsAt: "2026-09-27T12:00:00.000Z",
+    bio: "Last Sunday of the month at Café De Stadsgraaf, Stadsgravenstraat 47. A room for players and listeners in the east of the Netherlands. Time still to follow.",
+    relatedSlugs: [],
+    site: "https://destadsgraaf.nl/",
   },
   {
     slug: "pittsburgh-conjure-jam",
