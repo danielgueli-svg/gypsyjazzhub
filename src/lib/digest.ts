@@ -280,9 +280,33 @@ export async function buildDigest(): Promise<Digest> {
   return { subject, body: chunks.join("\n"), members, lines, finds, empty };
 }
 
+/**
+ * Hub mail via Resend. FormSubmit was removed: Cloudflare Workers get a bot
+ * challenge HTML page from formsubmit.co, so password-reset always failed.
+ *
+ * Needs `RESEND_API_KEY` on the Worker (secret or var). If the custom from
+ * domain is not verified yet, we retry with Resend's onboarding sender so
+ * reset / welcome mail still arrives.
+ */
 export async function sendHubMail(to: string, subject: string, body: string) {
+  const address = to.trim();
+  if (!address.includes("@")) {
+    throw new Error("Need a real email address to send mail.");
+  }
+
   const resend = readEnv("RESEND_API_KEY");
-  if (resend) {
+  if (!resend) {
+    throw new Error(
+      "Mail is not configured: set RESEND_API_KEY on the Cloudflare Worker.",
+    );
+  }
+
+  const primaryFrom =
+    readEnv("MAIL_FROM")?.trim() ||
+    "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>";
+  const fallbackFrom = "Gypsy Jazz Hub <onboarding@resend.dev>";
+
+  async function sendWithResend(from: string) {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -290,52 +314,33 @@ export async function sendHubMail(to: string, subject: string, body: string) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>",
-        to,
+        from,
+        to: [address],
         subject,
         text: body,
       }),
     });
+    const text = await response.text();
     if (!response.ok) {
-      throw new Error(`Resend: ${await response.text()}`);
+      throw new Error(`Resend ${response.status}: ${text.slice(0, 400)}`);
     }
-    return "sent with Resend";
+    return text;
   }
 
-  const response = await fetch(
-    `https://formsubmit.co/ajax/${encodeURIComponent(to)}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        _subject: subject,
-        _template: "box",
-        _captcha: "false",
-        message: body,
-      }),
-    },
-  );
-  const text = await response.text();
-  let parsed: { success?: string | boolean; message?: string } = {};
   try {
-    parsed = JSON.parse(text) as { success?: string | boolean; message?: string };
-  } catch {
-    parsed = {};
-  }
-  const ok =
-    response.ok &&
-    parsed.success !== false &&
-    parsed.success !== "false" &&
-    !/activation/i.test(parsed.message ?? text);
-  if (!ok) {
-    throw new Error(
-      (parsed.message || text).slice(0, 200) || "Could not send mail",
+    await sendWithResend(primaryFrom);
+    return "sent with Resend";
+  } catch (err) {
+    // Custom domain often not verified yet on Resend — one retry with the
+    // shared onboarding sender so reset mail still reaches members.
+    if (primaryFrom === fallbackFrom) throw err;
+    console.error(
+      "[sendHubMail] primary from failed, retrying onboarding sender:",
+      err instanceof Error ? err.message : err,
     );
+    await sendWithResend(fallbackFrom);
+    return "sent with Resend (onboarding sender)";
   }
-  return "sent — first time, confirm the FormSubmit mail in your inbox";
 }
 
 export type DigestRun = {

@@ -98,11 +98,18 @@ export async function requestPasswordReset(
   const mail = passwordMail(locale, String(users[0].name ?? ""), link);
   try {
     await sendHubMail(email, mail.subject, mail.body);
-  } catch {
+  } catch (err) {
     if (opts.force) {
       return { ok: true as const, sent: false as const, email, link };
     }
     await sql.query(`delete from hub_password_resets where token_hash = $1`, [hash]);
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("[password-reset] mail failed:", detail);
+    if (/RESEND_API_KEY|Mail is not configured/i.test(detail)) {
+      throw new Error(
+        "Reset mail cannot be sent yet — the hub mail key is missing. Ask the board, or try again later.",
+      );
+    }
     throw new Error("Could not send the reset email. Try again in a few minutes.");
   }
   return { ok: true as const, sent: true as const, email };

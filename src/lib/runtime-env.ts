@@ -6,10 +6,17 @@ export function readEnv(key: string): string | undefined {
   const fromProcess =
     typeof process !== "undefined" ? process.env[key]?.trim() : undefined;
   if (fromProcess) return fromProcess;
+  // Nitro Cloudflare sets `globalThis.__env__` per request (Worker bindings +
+  // secrets). Also accept a single-underscore alias some shims use.
   try {
-    const env = (globalThis as { __env__?: Record<string, unknown> }).__env__;
-    const value = env?.[key];
-    if (typeof value === "string" && value.trim()) return value.trim();
+    const g = globalThis as {
+      __env__?: Record<string, unknown>;
+      _env_?: Record<string, unknown>;
+    };
+    for (const bag of [g.__env__, g._env_]) {
+      const value = bag?.[key];
+      if (typeof value === "string" && value.trim()) return value.trim();
+    }
   } catch {
     /* Worker bindings may be missing at module load. */
   }
