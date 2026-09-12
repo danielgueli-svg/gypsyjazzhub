@@ -20,6 +20,7 @@ import {
   NEWS_RU,
 } from "@/lib/news-copy";
 import { csDict, huDict, plDict, roDict, srDict } from "@/lib/i18n-east";
+import { FESTIVAL_UI } from "@/lib/i18n-festivals";
 
 export const LOCALES = [
   { id: "en", native: "English", latin: "English", short: "EN", flag: "🇬🇧", iso: "gb" },
@@ -4607,7 +4608,29 @@ const ru: Dict = {
   "footer.names": "«Gypsy jazz» — самое распространённое английское название этой музыки. Многие музыканты и слушатели говорят также «джаз мануш», «Django jazz» или «hot club jazz». Мы используем те названия, по которым сообщество реально ищет и которые оно узнаёт.",
 };
 
-const DICTS: Record<LocaleId, Dict> = { en, he: en, nl, es, de, fr, it, ja, ko, zh, "zh-tw": zhTw, id, th, hu, ro, sr, cs, pl, hr, pt, ru };
+const DICTS: Record<LocaleId, Dict> = {
+  en: { ...en, ...FESTIVAL_UI.en },
+  he: { ...en, ...FESTIVAL_UI.en },
+  nl: { ...nl, ...FESTIVAL_UI.nl },
+  es: { ...es, ...FESTIVAL_UI.es },
+  de: { ...de, ...FESTIVAL_UI.de },
+  fr: { ...fr, ...FESTIVAL_UI.fr },
+  it: { ...it, ...FESTIVAL_UI.it },
+  ja: { ...ja, ...FESTIVAL_UI.ja },
+  ko: { ...ko, ...FESTIVAL_UI.ko },
+  zh: { ...zh, ...FESTIVAL_UI.zh },
+  "zh-tw": { ...zhTw, ...FESTIVAL_UI["zh-tw"] },
+  id: { ...id, ...FESTIVAL_UI.id },
+  th: { ...th, ...FESTIVAL_UI.th },
+  hu: { ...hu, ...FESTIVAL_UI.hu },
+  ro: { ...ro, ...FESTIVAL_UI.ro },
+  sr: { ...sr, ...FESTIVAL_UI.sr },
+  cs: { ...cs, ...FESTIVAL_UI.cs },
+  pl: { ...pl, ...FESTIVAL_UI.pl },
+  hr: { ...hr, ...FESTIVAL_UI.hr },
+  pt: { ...pt, ...FESTIVAL_UI.pt },
+  ru: { ...ru, ...FESTIVAL_UI.ru },
+};
 
 const STORAGE = "gjh-locale";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;

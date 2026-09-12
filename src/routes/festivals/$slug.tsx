@@ -8,6 +8,7 @@ import { SubscribeButton } from "@/components/subscribe-button";
 import { ConcertList } from "@/components/concert-row";
 import { listConcerts, listLegends, uniqueBills } from "@/lib/api";
 import { getFestival, concertBelongsToFestival, festivalTicketUrl } from "@/lib/festivals";
+import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { countrySlug } from "@/lib/geo";
 import { getHubFestival, listHubChat } from "@/lib/hub-api";
@@ -15,6 +16,7 @@ import { groupsForFestival } from "@/lib/scene";
 import { formatConcertWhen } from "@/lib/utils";
 import { pageHead } from "@/lib/seo";
 import { settle } from "@/lib/settle";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/festivals/$slug")({
   loader: async ({ params }) => {
@@ -55,14 +57,16 @@ export const Route = createFileRoute("/festivals/$slug")({
 });
 
 function FestivalPage() {
-  const { festival, related, groups, legends, chat, concerts } = Route.useLoaderData();
+  const { festival: raw, related, groups, legends, chat, concerts } = Route.useLoaderData();
+  const { t, locale } = useI18n();
+  const festival = localizeFestival(raw, locale);
   const nameOf = (slug: string) =>
     legends.find((legend) => legend.slug === slug)?.name ?? slug;
   const tickets = festivalTicketUrl(festival);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Festival</p>
+      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("festival.kicker")}</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">
         {festival.name}
       </h1>
@@ -71,30 +75,32 @@ function FestivalPage() {
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
         <Badge>{festival.when}</Badge>
-        {festival.founded ? <Badge>Since {festival.founded}</Badge> : null}
+        {festival.founded ? (
+          <Badge>{t("festival.since").replace("{year}", festival.founded)}</Badge>
+        ) : null}
       </div>
       <div className="mt-6">
         <SubscribeButton
           kind="festival"
           targetId={festival.slug}
           targetName={festival.name}
-          label="Notify me"
+          label={t("festival.notify")}
         />
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Next</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("festivals.next")}</p>
           <p className="mt-2 font-display text-xl font-semibold">
             {festival.tba ? festival.when : formatConcertWhen(festival.nextStartsAt)}
           </p>
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Where</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("festival.where")}</p>
           <p className="mt-2 font-display text-xl font-semibold">{festival.city}</p>
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Country</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("festival.country")}</p>
           <p className="mt-2 font-display text-xl font-semibold">
             <CountryLabel name={festival.country} />
           </p>
@@ -102,7 +108,7 @@ function FestivalPage() {
       </div>
 
       <article className="mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
-        <h2 className="font-display text-3xl font-semibold text-fg">About</h2>
+        <h2 className="font-display text-3xl font-semibold text-fg">{t("festival.about")}</h2>
         <p>{festival.bio}</p>
       </article>
 
@@ -112,15 +118,15 @@ function FestivalPage() {
             <Button asChild>
               <a href={festival.site} target="_blank" rel="noreferrer">
                 {festival.site.includes("djangobooks.com")
-                  ? "DjangoBooks thread"
-                  : "Official website"}
+                  ? t("festival.thread")
+                  : t("festivals.site")}
               </a>
             </Button>
           ) : null}
           {tickets ? (
             <Button asChild variant={festival.site ? "outline" : "default"}>
               <a href={tickets} target="_blank" rel="noreferrer">
-                Tickets
+                {t("festival.tickets")}
               </a>
             </Button>
           ) : null}
@@ -128,15 +134,13 @@ function FestivalPage() {
       ) : null}
 
       {concerts.length > 0 ? (
-        <ConcertList title="Concerts" concerts={concerts} compact />
+        <ConcertList title={t("nav.concerts")} concerts={concerts} compact />
       ) : null}
 
       {related.length > 0 ? (
         <section className="mt-12">
-          <h2 className="font-display text-3xl font-semibold">Artists</h2>
-          <p className="mt-2 text-sm text-muted">
-            Open a name for that musician's page.
-          </p>
+          <h2 className="font-display text-3xl font-semibold">{t("festival.artists")}</h2>
+          <p className="mt-2 text-sm text-muted">{t("festival.artistsLead")}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((legend) =>
               legend ? <LegendCard key={legend.slug} legend={legend} /> : null,
@@ -147,10 +151,8 @@ function FestivalPage() {
 
       {groups.length > 0 ? (
         <section className="mt-12">
-          <h2 className="font-display text-3xl font-semibold">Groups</h2>
-          <p className="mt-2 text-sm text-muted">
-            Bands on this gathering — open the group, or the main artist.
-          </p>
+          <h2 className="font-display text-3xl font-semibold">{t("festival.groups")}</h2>
+          <p className="mt-2 text-sm text-muted">{t("festival.groupsLead")}</p>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {groups.map((band) => (
               <div
@@ -165,7 +167,7 @@ function FestivalPage() {
                   {band.name}
                 </Link>
                 <p className="mt-2 text-sm text-muted">
-                  Main artist{" "}
+                  {t("festival.mainArtist")}{" "}
                   <ArtistNameLink
                     slug={band.members[0]}
                     name={nameOf(band.members[0])}
@@ -182,7 +184,7 @@ function FestivalPage() {
 
       <p className="mt-12 text-sm text-muted">
         <Link to="/festivals" className="text-fg hover:underline">
-          All festivals
+          {t("festival.all")}
         </Link>
         {" · "}
         <Link
@@ -190,9 +192,10 @@ function FestivalPage() {
           params={{ slug: countrySlug(festival.country) }}
           className="text-fg hover:underline"
         >
-          <CountryLabel name={festival.country} /> on the globe
+          <CountryLabel name={festival.country} /> {t("festival.onGlobe")}
         </Link>
       </p>
     </main>
   );
 }
+

@@ -55,16 +55,16 @@ function JamPage() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">
-        {jam.kind === "meetup" ? "Meetup jam" : "Gypsy jazz jam"}
+        {jam.kind === "meetup" ? t("jam.meetup") : t("jam.kicker")}
       </p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{jam.name}</h1>
       <p className="mt-3 text-muted">
         {jam.city} · <CountryLabel name={jam.country} />
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
-        <Badge>{jam.kind === "meetup" ? "Meetup jam" : jam.when}</Badge>
+        <Badge>{jam.kind === "meetup" ? t("jam.meetup") : jam.when}</Badge>
         {hours ? <Badge>{hours}</Badge> : null}
-        <Badge>{jam.kind === "meetup" ? "One night" : "Open jam"}</Badge>
+        <Badge>{jam.kind === "meetup" ? t("jam.oneNight") : t("jam.open")}</Badge>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -80,7 +80,7 @@ function JamPage() {
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Where</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.where")}</p>
           <p className="mt-2 font-display text-xl font-semibold leading-tight">{jam.venue || place}</p>
           {jam.address ? <p className="mt-2 text-sm leading-relaxed text-muted">{jam.address}</p> : null}
           {jam.city ? (
@@ -101,19 +101,19 @@ function JamPage() {
               rel="noreferrer"
               className="mt-3 inline-block text-sm hover:underline"
             >
-              Open in maps
+              {t("jam.maps")}
             </a>
           ) : null}
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">When</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.when")}</p>
           {hours ? (
             <p className="mt-2 font-display text-xl font-semibold">{hours}</p>
           ) : null}
           <p className={hours ? "mt-1 text-sm text-muted" : "mt-2 font-display text-xl font-semibold"}>
             {jam.when}
           </p>
-          <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">Next</p>
+          <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
           <p className="mt-1 text-sm text-muted">{formatJamNext(jam)}</p>
           <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />
         </div>

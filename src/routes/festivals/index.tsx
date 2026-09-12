@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Contribute } from "@/components/contribute";
 import { Button } from "@/components/ui/button";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
+import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { displayCountry, preferCountryNames } from "@/lib/geo";
 import { listHubFestivals } from "@/lib/hub-api";
@@ -40,7 +41,7 @@ function FestivalsPage() {
   const { extra } = Route.useLoaderData();
   const { t, locale } = useI18n();
   const home = localeHomeCountry(locale);
-  const all = [...FESTIVALS, ...extra];
+  const all = [...FESTIVALS, ...extra].map((festival) => localizeFestival(festival, locale));
   const featured = all.find((festival) => festival.slug === FEATURED_SLUG) ?? all[0];
   const rest = all.filter((festival) => festival.slug !== featured.slug);
   const upcoming = rest
@@ -58,7 +59,7 @@ function FestivalsPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">The circuit</p>
+      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("festivals.featured")}</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">
         {t("festivals.title")}
       </h1>
@@ -67,11 +68,11 @@ function FestivalsPage() {
       </p>
       <p className="mt-4">
         <Link to="/youtube" className="font-display text-lg font-semibold hover:underline">
-          Gypsy jazz on YouTube
+          {t("festivals.youtube")}
         </Link>
         <span className="mx-1.5 text-faint">·</span>
         <span className="text-sm text-muted">
-          Artist and group names from the Daniel Gueli Gypsy Jazz Channel
+          {t("festivals.youtubeLead")}
         </span>
       </p>
 
