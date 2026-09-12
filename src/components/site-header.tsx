@@ -142,7 +142,7 @@ export function SiteHeader() {
 
   return (
     <header ref={root} className="spruce-bar sticky top-0 z-50 border-b border-black/15">
-      <div className="header-row relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1 overflow-x-hidden px-2 sm:h-20 sm:gap-3 sm:px-6">
+      <div className="header-row relative z-[90] mx-auto flex h-14 max-w-6xl items-center gap-1 px-2 sm:h-20 sm:gap-3 sm:px-6">
         <Link
           to="/"
           aria-label="Gypsy Jazz Hub"
@@ -157,7 +157,7 @@ export function SiteHeader() {
             Gypsy Jazz Hub
           </span>
         </Link>
-        <div className="header-tools ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="header-tools ml-auto flex min-w-0 items-center justify-end gap-1 overflow-hidden sm:gap-2">
           <Link
             to="/search"
             className="hidden size-11 items-center justify-center rounded-md text-inherit hover:bg-black/10 md:inline-flex"
@@ -165,7 +165,7 @@ export function SiteHeader() {
           >
             <Search className="size-5" />
           </Link>
-          <ChromeAuth />
+          <ChromeAuth className="max-md:hidden" />
           <button
             type="button"
             className="inline-flex h-9 items-center gap-1 rounded-md bg-[#d9a24e] px-2.5 text-xs font-semibold text-[#2a1c10] hover:bg-[#e4b05a] md:hidden"
@@ -179,8 +179,8 @@ export function SiteHeader() {
             {sheetOpen ? <X className="size-4" /> : <Menu className="size-4" />}
             {t("nav.menu")}
           </button>
-          <LanguageSwitch compact prominent />
         </div>
+        <LanguageSwitch compact prominent />
       </div>
 
       {sheetOpen ? (
