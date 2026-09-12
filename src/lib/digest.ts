@@ -1,4 +1,5 @@
 import { getSql } from "@/lib/db";
+import { readEnv } from "@/lib/runtime-env";
 import { toIso } from "@/lib/utils";
 
 export type DigestLine = { kind: string; title: string; who: string };
@@ -280,8 +281,7 @@ export async function buildDigest(): Promise<Digest> {
 }
 
 export async function sendHubMail(to: string, subject: string, body: string) {
-
-  const resend = process.env.RESEND_API_KEY;
+  const resend = readEnv("RESEND_API_KEY");
   if (resend) {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",

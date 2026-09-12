@@ -1944,8 +1944,8 @@ export const startHubEmailVerification = createServerFn({ method: "POST" })
     const session = await getSessionUser();
     const email = session?.email ?? "";
     if (!email) throw new Error("Need an email on this account.");
-    const token = await startEmailVerification(context.userId, email);
-    return { token };
+    const result = await startEmailVerification(context.userId, email);
+    return result;
   });
 
 export const confirmHubEmail = createServerFn({ method: "POST" })
@@ -1955,6 +1955,24 @@ export const confirmHubEmail = createServerFn({ method: "POST" })
     const ok = await confirmEmailToken(token);
     if (!ok) throw new Error("That link is old or already used.");
     return { ok: true as const };
+  });
+
+export const loginAccountHint = createServerFn({ method: "POST" })
+  .validator((email: string) => email.trim().toLowerCase())
+  .handler(async ({ data: email }) => {
+    if (!email.includes("@")) return { hint: "generic" as const };
+    const sql = await getSql();
+    const users = await sql.query<{ id: string }>(
+      `select id from "user" where lower(email) = $1 limit 1`,
+      [email],
+    );
+    if (!users[0]) return { hint: "generic" as const };
+    const cred = await sql.query<{ id: string }>(
+      `select id from account where "userId" = $1 and "providerId" = $2 limit 1`,
+      [String(users[0].id), "credential"],
+    );
+    if (!cred[0]) return { hint: "no-password" as const };
+    return { hint: "generic" as const };
   });
 
 export const requestHubPasswordReset = createServerFn({ method: "POST" })

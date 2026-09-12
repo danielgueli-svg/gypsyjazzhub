@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { authClient, authEnabled, setBearerToken } from "@/lib/auth/client";
 import { pathAfterLogin } from "@/lib/auth/after-login";
 import { takeReturnTo } from "@/lib/auth/return-to";
-import { startHubEmailVerification } from "@/lib/hub-api";
+import { startHubEmailVerification, loginAccountHint } from "@/lib/hub-api";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -81,7 +81,10 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         } else {
           try {
             const sent = await startHubEmailVerification();
-            await navigate({ to: "/verify-email", search: { token: sent.token } });
+            await navigate({
+              to: "/verify-email",
+              search: sent.token ? { token: sent.token } : {},
+            });
             return;
           } catch {
             await goAfterLogin(true);
@@ -97,12 +100,13 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         keepToken(result);
         if (result.error) {
           const raw = result.error.message ?? "";
+          if (/PASSWORD_TOO_SHORT|too short/i.test(raw)) {
+            throw new Error(t("login.passHint"));
+          }
+          const hint = await loginAccountHint({ data: email }).catch(() => ({ hint: "generic" as const }));
+          if (hint.hint === "no-password") throw new Error(t("login.noPass"));
           throw new Error(
-            /PASSWORD_TOO_SHORT|too short/i.test(raw)
-              ? t("login.passHint")
-              : raw.includes("PASSWORD") || /invalid/i.test(raw)
-                ? t("login.badPass")
-                : raw || t("login.fail"),
+            raw.includes("PASSWORD") || /invalid/i.test(raw) ? t("login.badPass") : raw || t("login.fail"),
           );
         }
       }
