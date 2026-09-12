@@ -1944,7 +1944,7 @@ export const startHubEmailVerification = createServerFn({ method: "POST" })
     const session = await getSessionUser();
     const email = session?.email ?? "";
     if (!email) throw new Error("Need an email on this account.");
-    const result = await startEmailVerification(context.userId, email);
+    const result = await startEmailVerification(context.userId, email, true);
     return result;
   });
 

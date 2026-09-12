@@ -3,7 +3,7 @@ import { useState, type FormEvent } from "react";
 import { authClient, authEnabled, setBearerToken } from "@/lib/auth/client";
 import { pathAfterLogin } from "@/lib/auth/after-login";
 import { takeReturnTo } from "@/lib/auth/return-to";
-import { startHubEmailVerification, loginAccountHint } from "@/lib/hub-api";
+import { loginAccountHint } from "@/lib/hub-api";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -79,17 +79,8 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             throw new Error(t("login.already"));
           }
         } else {
-          try {
-            const sent = await startHubEmailVerification();
-            await navigate({
-              to: "/verify-email",
-              search: sent.token ? { token: sent.token } : {},
-            });
-            return;
-          } catch {
-            await goAfterLogin(true);
-            return;
-          }
+          await navigate({ to: "/verify-email" });
+          return;
         }
       } else {
         const result = await authClient.signIn.email({

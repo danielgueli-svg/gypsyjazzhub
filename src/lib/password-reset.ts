@@ -144,7 +144,7 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
     if (email.includes("@")) {
       try {
         const { startEmailVerification } = await import("@/lib/hub-guard");
-        await startEmailVerification(userId, email);
+        await startEmailVerification(userId, email, true);
       } catch {
         try {
           await sendHubMail(

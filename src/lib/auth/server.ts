@@ -257,6 +257,15 @@ function createAuthInstance() {
           }
           return { data: user };
         },
+        after: async (user) => {
+          if (!user.email) return;
+          try {
+            const { startEmailVerification } = await import("@/lib/hub-guard");
+            await startEmailVerification(user.id, user.email);
+          } catch {
+            /* verify-email page can send again */
+          }
+        },
       },
     },
   },

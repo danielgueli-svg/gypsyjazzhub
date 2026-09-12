@@ -27,6 +27,11 @@ function VerifyEmail() {
   const [link, setLink] = useState<string | null>(null);
 
   useEffect(() => {
+    if (token) return;
+    setStatus(t("verify.sent"));
+  }, [token, t]);
+
+  useEffect(() => {
     if (!token) return;
     void confirmHubEmail({ data: token })
       .then(() => setStatus(t("verify.ok")))

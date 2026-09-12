@@ -71,7 +71,54 @@ async function turnstileOk(token?: string) {
   }
 }
 
-export async function startEmailVerification(userId: string, email: string) {
+export async function startEmailVerification(userId: string, email: string, resend = false) {
+  await ensureGuard();
+  const sql = await getSql();
+  const address = email.trim();
+  if (!address.includes("@")) throw new Error("Need an email on this account.");
+  const existing = await sql<{ verified: number; verify_token: string }>`
+    select verified, verify_token from hub_members where user_id = ${userId} limit 1
+  `;
+  if (Number(existing[0]?.verified) === 1) {
+    return { token: "", mailed: false, already: true as const };
+  }
+  const oldToken = String(existing[0]?.verify_token ?? "").trim();
+  if (oldToken && !resend) {
+    return { token: oldToken, mailed: true, already: false as const };
+  }
+  const token = crypto.randomUUID();
+  await sql`
+    insert into hub_members (user_id, email, verified, verify_token)
+    values (${userId}, ${address}, 0, ${token})
+    on conflict (user_id) do update set email = excluded.email, verify_token = excluded.verify_token
+  `;
+  const link = `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`;
+  let mailed = false;
+  try {
+    const { sendHubMail } = await import("@/lib/digest");
+    await sendHubMail(
+      address,
+      "Confirm your Gypsy Jazz Hub email",
+      [
+        "Welcome to Gypsy Jazz Hub.",
+        "",
+        "Open this link to confirm your email:",
+        link,
+        "",
+        "After that, login is simple: the same email and the password you just chose.",
+        "https://www.gypsyjazzhub.com/login",
+        "",
+        "If you did not join, ignore this mail.",
+        "",
+        "Gypsy Jazz Hub",
+      ].join("\n"),
+    );
+    mailed = true;
+  } catch {
+    mailed = false;
+  }
+  return { token, mailed, already: false as const };
+}
   await ensureGuard();
   const sql = await getSql();
   const address = email.trim();
