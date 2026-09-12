@@ -129,7 +129,7 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     region: "",
     city: "Kuwait City",
     artistSlug: "patil-zakarian",
-    note: "Piano manouche. Arranges Django, Tchan-Tchou and Angelo Debarre for solo piano. Channel Pat_Pianooo. Sheet via music.pzakarian@yahoo.com. Soon based in Belgium.",
+    note: "Piano manouche. Arranges Django, Tchan-Tchou and Angelo Debarre for solo piano. Channel Pat_Pianooo. Sheet via music.pzakarian@yahoo.com. Also teaches in Belgium.",
   },
   {
     countrySlug: "taiwan",
@@ -160,5 +160,15 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     city: "Brussels",
     artistSlug: "renaud-dardenne",
     note: "Ensemble swing manouche at Muziekpublique, Brussels. Guitar — the Belgian manouche room next to Tcha Limberger and Fapy Lafertin.",
+  },
+  {
+    countrySlug: "belgium",
+    name: "Patil Zakarian",
+    instruments: "Piano",
+    contact: "https://about.me/patilzakarian",
+    region: "",
+    city: "",
+    artistSlug: "patil-zakarian",
+    note: "Piano manouche. Arranges Django, Tchan-Tchou and Angelo Debarre for solo piano. Channel Pat_Pianooo. Sheet via music.pzakarian@yahoo.com. Also teaches in Kuwait.",
   },
 ];

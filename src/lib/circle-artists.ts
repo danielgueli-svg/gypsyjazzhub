@@ -2191,7 +2191,7 @@ export const CIRCLE_ARTISTS = [
     origin: "Kuwait City, Kuwait / Belgium",
     instruments: "Piano",
     era: "The Circle",
-    bio: "Armenian pianist, composer and teacher — piano manouche from Kuwait City, soon based in Belgium. Zakarian arranges Django, Tchan-Tchou and Angelo Debarre for solo piano: La Gitane, Swing Gitan, La Manouche. Channel Pat_Pianooo. Trio night in Amsterdam 2025 (Tears, with Daniel Gueli’s circle).",
+    bio: "Armenian pianist, composer and teacher — piano manouche from Kuwait City, now also based in Belgium. Zakarian arranges Django, Tchan-Tchou and Angelo Debarre for solo piano: La Gitane, Swing Gitan, La Manouche. Channel Pat_Pianooo. Trio night in Amsterdam 2025 (Tears, with Daniel Gueli’s circle).",
     notable: "Piano manouche; Pat_Pianooo",
     youtube_url: "https://www.youtube.com/@Pat_Pianooo",
     instagram_url: "https://www.instagram.com/pat_pianooo/",
