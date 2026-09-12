@@ -940,7 +940,7 @@ export const VENUES: Venue[] = [
     site: "https://www.masimas.com/jamboree/",
     contact: "",
     scene: "jazz",
-    bio: "Plaça Reial 17. Barcelona jazz cellar since 1960 — Stéphane Grappelli played here. Not a weekly manouche jam. Django L’H satellite room when the festival books overflow nights. Mixes jazz; do not file Balkan/Gipsy Kings bills as manouche.",
+    bio: "Plaça Reial 17. Barcelona jazz cellar since 1960 — Stéphane Grappelli played here. Not a weekly manouche jam. Django L’H satellite room when the festival books overflow nights.",
   },
   {
     slug: "harlem-jazz-barcelona",
