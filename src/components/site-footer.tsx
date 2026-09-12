@@ -4,7 +4,6 @@ import { ChromeAuth } from "@/components/chrome-auth";
 import { ContactBoardButton } from "@/components/contact-board";
 import { HubSearch } from "@/components/hub-search";
 import { LanguageSwitch } from "@/components/language-switch";
-import { SharePage } from "@/components/share-page";
 import { useI18n } from "@/lib/i18n";
 
 const COMMUNITY = [
@@ -119,7 +118,6 @@ export function SiteFooter() {
           <LanguageSwitch compact prominent />
           <div className="flex min-w-0 items-center gap-2">
             <ContactBoardButton className="hidden h-9 bg-[#2a1c10] px-3 text-xs text-[#efe3b6] hover:opacity-90 sm:inline-flex" />
-            <SharePage compact />
           </div>
         </div>
       </div>
