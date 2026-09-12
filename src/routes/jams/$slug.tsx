@@ -9,6 +9,7 @@ import { ShareBox } from "@/components/share-page";
 import { Badge } from "@/components/ui/badge";
 import { listLegends } from "@/lib/api";
 import { getJam, jamHours, jamMapsUrl, jamPlace, formatJamNext } from "@/lib/jams";
+import { jamHoursLabel, jamWhen } from "@/lib/jam-copy";
 import { CountryLabel } from "@/components/country-label";
 import { getHubJam, listHubChat } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
@@ -47,10 +48,11 @@ export const Route = createFileRoute("/jams/$slug")({
 
 function JamPage() {
   const { jam, related, chat } = Route.useLoaderData();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const place = jamPlace(jam);
-  const hours = jamHours(jam);
+  const hours = jamHoursLabel(jamHours(jam), locale);
   const maps = jamMapsUrl(jam);
+  const when = jam.kind === "meetup" ? t("jam.meetup") : jamWhen(jam.when, locale);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
@@ -62,14 +64,14 @@ function JamPage() {
         {jam.city} · <CountryLabel name={jam.country} />
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
-        <Badge>{jam.kind === "meetup" ? t("jam.meetup") : jam.when}</Badge>
+        <Badge>{when}</Badge>
         {hours ? <Badge>{hours}</Badge> : null}
         <Badge>{jam.kind === "meetup" ? t("jam.oneNight") : t("jam.open")}</Badge>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <SaveButton kind="jam" slug={jam.slug} label="Save jam" />
-        <SubscribeButton kind="jam" targetId={jam.slug} targetName={jam.name} label="Notify me" />
+        <SaveButton kind="jam" slug={jam.slug} label={t("jam.save")} />
+        <SubscribeButton kind="jam" targetId={jam.slug} targetName={jam.name} label={t("jam.notify")} />
         <ShareBox
           compact
           url={`/jams/${jam.slug}`}
@@ -111,10 +113,10 @@ function JamPage() {
             <p className="mt-2 font-display text-xl font-semibold">{hours}</p>
           ) : null}
           <p className={hours ? "mt-1 text-sm text-muted" : "mt-2 font-display text-xl font-semibold"}>
-            {jam.when}
+            {when}
           </p>
           <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
-          <p className="mt-1 text-sm text-muted">{formatJamNext(jam)}</p>
+          <p className="mt-1 text-sm text-muted">{formatJamNext(jam, locale)}</p>
           <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />
         </div>
       </div>
@@ -140,10 +142,10 @@ function JamPage() {
             className="text-sm font-medium text-accent hover:underline"
           >
             {jam.site.includes("whatsapp")
-              ? "WhatsApp community — updates and sessions"
+              ? t("jam.whatsapp")
               : jam.site.includes("djangobooks.com")
-                ? "DjangoBooks thread"
-                : "Follow / join"}
+                ? t("jam.djangobooksThread")
+                : t("jam.follow")}
           </a>
         </p>
       ) : null}

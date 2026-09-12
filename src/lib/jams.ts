@@ -201,10 +201,11 @@ export function splitUpcomingJams(jams: Jam[], now = new Date()) {
   return { today, week, later };
 }
 
-export function formatJamNext(jam: Jam) {
+export function formatJamNext(jam: Jam, locale = "en") {
   const date = new Date(jam.nextStartsAt);
   if (Number.isNaN(date.getTime())) return jam.nextStartsAt;
-  const parts = new Intl.DateTimeFormat("en-GB", {
+  const loc = locale === "zh-tw" ? "zh-Hant" : locale === "zh" ? "zh-Hans" : locale;
+  const parts = new Intl.DateTimeFormat(loc, {
     timeZone: jamTimeZone(jam),
     weekday: "short",
     day: "numeric",

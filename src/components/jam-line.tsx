@@ -2,10 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { CountryLabel } from "@/components/country-label";
 import type { Jam } from "@/lib/jams";
 import { jamHours, jamPlace } from "@/lib/jams";
+import { jamHoursLabel, jamWhen } from "@/lib/jam-copy";
+import { useI18n } from "@/lib/i18n";
 
 export function JamLine({ jam, showCountry = true }: { jam: Jam; showCountry?: boolean }) {
-  const when = jam.kind === "meetup" ? "Meetup" : jam.when;
-  const hours = jamHours(jam);
+  const { t, locale } = useI18n();
+  const when = jam.kind === "meetup" ? t("jam.meetup") : jamWhen(jam.when, locale);
+  const hours = jamHoursLabel(jamHours(jam), locale);
   const place = jamPlace(jam);
   const forum = jam.site?.includes("djangobooks.com") ? jam.site : null;
   return (
@@ -39,7 +42,7 @@ export function JamLine({ jam, showCountry = true }: { jam: Jam; showCountry?: b
           rel="noreferrer"
           className="mt-0.5 inline-block text-xs text-faint hover:text-fg"
         >
-          From DjangoBooks
+          {t("jam.fromDjangoBooks")}
         </a>
       ) : null}
     </li>
