@@ -650,9 +650,9 @@ export const FESTIVALS: Festival[] = [
     founded: "2010",
     site: "https://www.festivaldjangolh.com/",
     tba: true,
-    bio: "Spain’s dedicated Django / jazz manouche festival, in L'Hospitalet de Llobregat on the Barcelona metro since 2010. Typical window: November. Last edition on file: 7–9 November 2025. Run with EMMCA (Escola Municipal de Música – Centre de les Arts de L’Hospitalet), the public school in Gornal that teaches jazz manouche. Albert Bello directs the festival. Do not treat a missing 2026 poster as a cancelled year — dates to be posted.",
+    bio: "Spain’s only regular festival dedicated to jazz manouche, in L'Hospitalet de Llobregat on the Barcelona metro since 2010. Director Albert Bello. Run with EMMCA (Escola Municipal de Música – Centre de les Arts de L’Hospitalet), the public school with a dedicated manouche department. Rooms: Auditori Barradas (Rambla Just Oliveras 56 · +34 93 403 29 30 · barradas@l-h.cat) and Teatre Joventut (Carrer Joventut 4 · +34 93 403 69 90 · teatrejoventut@l-h.cat). Overflow nights in Barcelona have used Jamboree, Soda Acústic, Ocaña and Byron. Last edition: 7–9 November 2025 (15th) — Amati Schmitt Quartet; Sébastien Giniaux & Joris Viquesnel; Adrien Moignard Quartet; The Django Orchestra Academy. Past guests include Biréli Lagrène, Angelo Debarre, Tchavolo Schmitt, Hono & Brady Winterstein, Robin Nolan, Fiona Mombet, Biel Ballester, Valentí Moya, Oriol Saña, Maria Pascual, La Verdine, Fanou Torracinta. Recurring November. 2026 dates not posted yet — not cancelled; watch festivaldjangolh.com.",
     nextStartsAt: "2026-11-01T18:00:00.000Z",
-    relatedSlugs: [],
+    relatedSlugs: ["amati-schmitt", "adrien-moignard", "biel-ballester"],
   },
   {
     slug: "villamajazz",

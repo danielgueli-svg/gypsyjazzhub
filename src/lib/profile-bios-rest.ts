@@ -37,7 +37,7 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
   "jason-anick":
     "Jason Anick is an American violinist and leader of Rhythm Future Quartet — Django-inspired arrangements of standards and originals. DownBeat listed him as a rising star in jazz violin. Recordings include Sleepless, Tipping Point, United, Travels, Reverence and Sanctuary. Official site: jasonanick.com.",
   "biel-ballester":
-    "Biel Ballester was born in 1974 in Mallorca. Spanish gypsy jazz guitar; he contributed music to Woody Allen’s Vicky Cristina Barcelona. Mediterranean manouche, festival stages, a Spanish chair next to the French and Dutch core.",
+    "Biel Ballester was born in 1974 in Mallorca. Spain’s main gypsy jazz guitarist — Mallorca / Barcelona. Music for Woody Allen’s Vicky Cristina Barcelona. Has played with the Rosenberg Trio, Robin Nolan, Joscho Stephan and Tim Kliphuis. Guest slots at Jazzaldia and other Spanish jazz festivals are general jazz bills, not gypsy festivals.",
   "damir-kukuruzovic":
     "Damir Kukuruzović (20 August 1975 – 12 December 2020) was born in Sisak, Croatia. He founded Damir’s Django Group, the Siscia Jazz Club, and festivals that put Croatian gypsy jazz on the map. In 2011 he was named Croatia’s best-known acoustic jazz guitarist. The name still travels with the European core.",
   "joost-zoeteman":

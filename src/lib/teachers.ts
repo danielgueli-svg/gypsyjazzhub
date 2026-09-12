@@ -171,4 +171,14 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     artistSlug: "patil-zakarian",
     note: "Piano manouche. Arranges Django, Tchan-Tchou and Angelo Debarre for solo piano. Channel Pat_Pianooo. Sheet via music.pzakarian@yahoo.com. Also teaches in Kuwait.",
   },
+  {
+    countrySlug: "spain",
+    name: "Albert Bello",
+    instruments: "Guitar",
+    contact: "https://www.festivaldjangolh.com/",
+    region: "Catalonia",
+    city: "L'Hospitalet de Llobregat",
+    artistSlug: "albert-bello",
+    note: "Director of Festival Django L’H. Jazz manouche at EMMCA — the public school department behind Spain’s Django festival. Django Orchestra.",
+  },
 ];

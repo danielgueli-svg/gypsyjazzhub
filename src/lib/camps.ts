@@ -210,7 +210,20 @@ export const CAMPS: Camp[] = [
     hostSlugs: ["tim-kliphuis", "adrien-tarraga", "eva-slongo", "jimmy-grant"],
     teacherSlugs: ["tim-kliphuis", "adrien-tarraga", "eva-slongo", "jimmy-grant"],
     kind: "camp",
-    bio: "Three days in Frigiliana (Málaga): workshops, masterclasses, combos, jams and concerts at Casa del Apero. Tim Kliphuis, Adrien Tarraga, Eva Slongo, Jimmy Grant. malaga_manouche / frigiliana.es.",
+    bio: "Three days in Frigiliana (Málaga): workshops, masterclasses, combos, jams and concerts at Casa del Apero. Tim Kliphuis, Adrien Tarraga, Eva Slongo, Jimmy Grant. Also listed: tutor concert 22 Oct 2026, Calle Lagunillas 53, Málaga. malaga_manouche / frigiliana.es.",
+  },
+  {
+    slug: "tenerife-gypsy-jazz-camp",
+    name: "Tenerife Gypsy Jazz Camp",
+    city: "Puerto de la Cruz",
+    country: "Spain",
+    when: "January (recurring)",
+    nextStartsAt: "2027-01-21T09:00:00.000Z",
+    site: "",
+    hostSlugs: ["titi-bamberger"],
+    teacherSlugs: ["titi-bamberger"],
+    kind: "camp",
+    bio: "Puerto de la Cruz, Tenerife. Last edition on file: 21–25 January 2026 at Sol y Luna Retreat Center, Camino Codobés 18, 38400 — Titi Bamberger and the Reinhardt family. Django’s birthday jam 23 January. 2026 already ran; next dates not posted.",
   },
 ];
 

@@ -250,6 +250,13 @@ const BIOS: Record<string, Record<string, string>> = {
     it: "Festival gipsy e gypsy jazz a Bolzano. 27–30 agosto 2026.",
     es: "Festival gipsy y gypsy jazz en Bolzano. 27–30 agosto 2026.",
   },
+  "festival-django-lh": {
+    fr: "Le seul festival espagnol régulier dédié au jazz manouche, à L’Hospitalet depuis 2010. Direction Albert Bello, avec l’EMMCA. Dernière édition : 7–9 novembre 2025. Dates 2026 pas encore affichées — novembre récurrent. festivaldjangolh.com",
+    de: "Spaniens einziges regelmäßiges Festival nur für Jazz Manouche, in L’Hospitalet seit 2010. Leitung Albert Bello, mit der EMMCA. Letzte Ausgabe: 7.–9. November 2025. 2026-Termine noch nicht veröffentlicht — November, wiederkehrend.",
+    nl: "Spanje’s enige vaste festival voor jazz manouche, in L’Hospitalet sinds 2010. Directeur Albert Bello, met EMMCA. Laatste editie: 7–9 november 2025. 2026-data nog niet gezet — november, terugkerend.",
+    it: "L’unico festival spagnolo regolare dedicato al jazz manouche, a L’Hospitalet dal 2010. Direzione Albert Bello, con l’EMMCA. Ultima edizione: 7–9 novembre 2025. Date 2026 non ancora pubblicate — novembre, ricorrente.",
+    es: "El único festival español regular dedicado al jazz manouche, en L’Hospitalet desde 2010. Dirección Albert Bello, con la EMMCA. Última edición: 7–9 noviembre 2025. Fechas 2026 aún no publicadas — noviembre, recurrente. festivaldjangolh.com",
+  },
   "cremona-gypsy-jazz-meeting": {
     fr: "Rencontre gypsy jazz au Cremona Exhibition Centre. 2–4 octobre 2026.",
     de: "Gypsy-Jazz-Treffen im Cremona Exhibition Centre. 2.–4. Oktober 2026.",
