@@ -6536,6 +6536,16 @@ export const CIRCLE_CONCERTS = [
     note: "Brunch 10:30. darionapoli.com",
   },
   {
+    legend_slug: "dario-napoli",
+    title: "Dario Napoli",
+    venue: "The Lazy Olive Villa — Podere Finerri",
+    city: "Asciano",
+    country: "Italy",
+    starts_at: "2026-09-22T15:00:00.000Z",
+    is_historic: false,
+    note: "Tuesday 22 September 2026, 17:00. Loc. Finerri, Asciano (SI). bandsintown.com / open.spotify.com",
+  },
+  {
     legend_slug: "alfonso-ponticelli",
     title: "Alfonso Ponticelli & Swing Gitan",
     venue: "Green Mill",

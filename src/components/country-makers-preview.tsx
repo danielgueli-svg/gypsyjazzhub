@@ -14,7 +14,7 @@ function pickPreview(shops: Shop[], violin: Luthier[], bass: Luthier[], guitar: 
     ...violin.map(luthierEntry),
     ...bass.map(luthierEntry),
   ];
-  const limit = Math.max(PREVIEW, guitarEntries.length);
+  const limit = Math.max(PREVIEW, guitarEntries.length, guitarEntries.length + Math.min(4, rest.length));
   return [...guitarEntries, ...rest].slice(0, limit);
 }
 
