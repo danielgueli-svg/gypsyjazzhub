@@ -273,6 +273,46 @@ const BIOS: Record<string, Record<string, string>> = {
     es: "Thủ Đức, Ciudad Ho Chi Minh. Taller familiar de Tôn Thất Ánh — acústicas hechas a mano, también modelos gypsy.",
     pt: "Thủ Đức, Cidade de Ho Chi Minh. Oficina familiar de Tôn Thất Ánh — acústicas feitas à mão, também modelos gypsy.",
   },
+  "rob-aylward": {
+    fr: "Aberlour, Écosse. Modele Jazz, banjos, mandolines et archtops. Robin Nolan, Garry Potter.",
+    de: "Aberlour, Schottland. Modele Jazz, Banjos, Mandolinen und Archtops.",
+    nl: "Aberlour, Schotland. Modele Jazz, banjo’s, mandolines en archtops.",
+    it: "Aberlour, Scozia. Modele Jazz, banjo, mandolini e archtop.",
+    es: "Aberlour, Escocia. Modele Jazz, banjos, mandolinas y archtops.",
+    pt: "Aberlour, Escócia. Modele Jazz, banjos, bandolins e archtops.",
+  },
+  "roy-eneas": {
+    fr: "Côte sud de l’Angleterre. Guitares gypsy jazz style Selmer 1932–1952.",
+    de: "Südküste Englands. Selmer-Gypsy-Jazz 1932–1952.",
+    nl: "Zuidkust van Engeland. Selmer gypsy jazz 1932–1952.",
+    it: "Costa sud dell’Inghilterra. Gypsy jazz Selmer 1932–1952.",
+    es: "Costa sur de Inglaterra. Gypsy jazz Selmer 1932–1952.",
+    pt: "Costa sul de Inglaterra. Gypsy jazz Selmer 1932–1952.",
+  },
+  "guitares-mazaud": {
+    fr: "France. Guitares Mazaud — atelier familial de guitares gypsy jazz.",
+    de: "Frankreich. Guitares Mazaud — Familienwerkstatt für Gypsy-Jazz-Gitarren.",
+    nl: "Frankrijk. Guitares Mazaud — familieatelier voor gypsy-jazzgitaren.",
+    it: "Francia. Guitares Mazaud — bottega di famiglia per chitarre gypsy jazz.",
+    es: "Francia. Guitares Mazaud — taller familiar de guitarras gypsy jazz.",
+    pt: "França. Guitares Mazaud — oficina familiar de guitarras gypsy jazz.",
+  },
+  "jrt-lutherie": {
+    fr: "France. JRT Lutherie — atelier de guitares gypsy jazz.",
+    de: "Frankreich. JRT Lutherie — Werkstatt für Gypsy-Jazz-Gitarren.",
+    nl: "Frankrijk. JRT Lutherie — atelier voor gypsy-jazzgitaren.",
+    it: "Francia. JRT Lutherie — bottega di chitarre gypsy jazz.",
+    es: "Francia. JRT Lutherie — taller de guitarras gypsy jazz.",
+    pt: "França. JRT Lutherie — oficina de guitarras gypsy jazz.",
+  },
+  "klaus-roeder": {
+    fr: "Hohenstein. Röder Guitars — atelier allemand de guitares gypsy jazz.",
+    de: "Hohenstein. Röder Guitars — deutsche Werkstatt für Gypsy-Jazz-Gitarren.",
+    nl: "Hohenstein. Röder Guitars — Duits atelier voor gypsy-jazzgitaren.",
+    it: "Hohenstein. Röder Guitars — bottega tedesca di chitarre gypsy jazz.",
+    es: "Hohenstein. Röder Guitars — taller alemán de guitarras gypsy jazz.",
+    pt: "Hohenstein. Röder Guitars — oficina alemã de guitarras gypsy jazz.",
+  },
 };
 
 export function makerBio(slug: string, locale: string) {
