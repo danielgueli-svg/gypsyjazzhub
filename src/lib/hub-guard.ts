@@ -1,5 +1,6 @@
 import { getRequest } from "@tanstack/react-start/server";
 import { getSql } from "@/lib/db";
+import { parseMailLocale, welcomeMail, type MailLocale } from "@/lib/welcome-mail";
 
 const RATE_PER_HOUR = 6;
 
@@ -22,6 +23,11 @@ export async function ensureGuard() {
       created_at timestamptz not null default now()
     )
   `);
+  try {
+    await sql.query(`alter table hub_members add column locale text not null default 'en'`);
+  } catch {
+    /* column already there */
+  }
   await sql.query(`
     create table if not exists hub_bans (
       id serial primary key,
@@ -71,14 +77,35 @@ async function turnstileOk(token?: string) {
   }
 }
 
+function localeFromRequest(): MailLocale {
+  try {
+    const request = getRequest();
+    if (!request) return "en";
+    const cookie = request.headers.get("cookie") ?? "";
+    const match = cookie.match(/(?:^|;\s*)gjh-locale=([^;]*)/);
+    const fromCookie = match?.[1] ? decodeURIComponent(match[1]) : "";
+    if (fromCookie) return parseMailLocale(fromCookie);
+    return parseMailLocale(request.headers.get("accept-language"));
+  } catch {
+    return "en";
+  }
+}
+
 export async function startEmailVerification(userId: string, email: string, resend = false) {
   await ensureGuard();
   const sql = await getSql();
   const address = email.trim();
   if (!address.includes("@")) throw new Error("Need an email on this account.");
-  const existing = await sql<{ verified: number; verify_token: string }>`
-    select verified, verify_token from hub_members where user_id = ${userId} limit 1
-  `;
+  let existing: { verified: number; verify_token: string; locale?: string }[] = [];
+  try {
+    existing = await sql<{ verified: number; verify_token: string; locale?: string }>`
+      select verified, verify_token, locale from hub_members where user_id = ${userId} limit 1
+    `;
+  } catch {
+    existing = await sql<{ verified: number; verify_token: string }>`
+      select verified, verify_token from hub_members where user_id = ${userId} limit 1
+    `;
+  }
   if (Number(existing[0]?.verified) === 1) {
     return { token: "", mailed: false, already: true as const };
   }
@@ -86,33 +113,33 @@ export async function startEmailVerification(userId: string, email: string, rese
   if (oldToken && !resend) {
     return { token: oldToken, mailed: true, already: false as const };
   }
+  const stored = String(existing[0]?.locale ?? "").trim();
+  const locale = stored ? parseMailLocale(stored) : localeFromRequest();
   const token = crypto.randomUUID();
-  await sql`
-    insert into hub_members (user_id, email, verified, verify_token)
-    values (${userId}, ${address}, 0, ${token})
-    on conflict (user_id) do update set email = excluded.email, verify_token = excluded.verify_token
-  `;
-  const link = `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`;
+  try {
+    await sql`
+      insert into hub_members (user_id, email, verified, verify_token, locale)
+      values (${userId}, ${address}, 0, ${token}, ${locale})
+      on conflict (user_id) do update set
+        email = excluded.email,
+        verify_token = excluded.verify_token,
+        locale = case
+          when coalesce(hub_members.locale, '') = '' then excluded.locale
+          else hub_members.locale
+        end
+    `;
+  } catch {
+    await sql`
+      insert into hub_members (user_id, email, verified, verify_token)
+      values (${userId}, ${address}, 0, ${token})
+      on conflict (user_id) do update set email = excluded.email, verify_token = excluded.verify_token
+    `;
+  }
+  const mail = welcomeMail(parseMailLocale(stored || locale), `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`);
   let mailed = false;
   try {
     const { sendHubMail } = await import("@/lib/digest");
-    await sendHubMail(
-      address,
-      "Confirm your Gypsy Jazz Hub email",
-      [
-        "Welcome to Gypsy Jazz Hub.",
-        "",
-        "Open this link to confirm your email:",
-        link,
-        "",
-        "After that, login is simple: the same email and the password you just chose.",
-        "https://www.gypsyjazzhub.com/login",
-        "",
-        "If you did not join, ignore this mail.",
-        "",
-        "Gypsy Jazz Hub",
-      ].join("\n"),
-    );
+    await sendHubMail(address, mail.subject, mail.body);
     mailed = true;
   } catch {
     mailed = false;
