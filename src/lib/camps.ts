@@ -44,6 +44,18 @@ export const CAMPS: Camp[] = [
     bio: "Dario Napoli and Benji Winterstein's three-day camp near Milan. Classes by day, jam after — guitar students sitting with the trio.",
   },
   {
+    slug: "under-the-tuscan-sun",
+    name: "Under the Tuscan Sun Gypsy Jazz Camp",
+    city: "Tuscany",
+    country: "Italy",
+    when: "11–14 June 2026",
+    nextStartsAt: "2027-06-11T08:00:00.000Z",
+    site: "https://www.darionapolicamp.com/",
+    hostSlugs: ["dario-napoli"],
+    teacherSlugs: ["dario-napoli"],
+    bio: "Dario Napoli’s gypsy jazz camp in Tuscany. 11th edition 11–14 June 2026. Next June.",
+  },
+  {
     slug: "camp-django",
     name: "Camp Django",
     city: "United States",
