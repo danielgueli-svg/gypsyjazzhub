@@ -832,6 +832,14 @@ export const eraseHubMember = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const confirmWaitingMembers = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const { releaseWaitingMembers } = await import("@/lib/hub-guard");
+    return releaseWaitingMembers();
+  });
+
 export const verifyHubMember = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((userId: string) => userId)

@@ -44,6 +44,21 @@ export async function ensureGuard() {
       created_at timestamptz not null default now()
     )
   `);
+  await sql.query(`
+    create table if not exists hub_meta (
+      k text primary key,
+      v text not null default ''
+    )
+  `);
+  try {
+    const done = await sql<{ v: string }>`select v from hub_meta where k = ${"released_waiting_20260912"} limit 1`;
+    if (!done[0]) {
+      await sql`update hub_members set verified = 1, verify_token = '' where verified = 0`;
+      await sql`insert into hub_meta (k, v) values (${"released_waiting_20260912"}, ${"1"}) on conflict (k) do nothing`;
+    }
+  } catch {
+    /* first boot */
+  }
 }
 
 export function clientIp() {
@@ -111,7 +126,7 @@ export async function startEmailVerification(userId: string, email: string, rese
   }
   const oldToken = String(existing[0]?.verify_token ?? "").trim();
   if (oldToken && !resend) {
-    return { token: oldToken, mailed: true, already: false as const };
+    return { token: oldToken, mailed: false, already: false as const };
   }
   const stored = String(existing[0]?.locale ?? "").trim();
   const locale = stored ? parseMailLocale(stored) : localeFromRequest();
@@ -144,6 +159,13 @@ export async function startEmailVerification(userId: string, email: string, rese
   } catch {
     mailed = false;
   }
+  if (!mailed) {
+    try {
+      await sql`update hub_members set verified = 1 where user_id = ${userId}`;
+    } catch {
+      /* keep token as backup */
+    }
+  }
   return { token, mailed, already: false as const };
 }
 
@@ -160,6 +182,22 @@ export async function confirmEmailToken(token: string) {
     update hub_members set verified = 1, verify_token = '' where user_id = ${rows[0].user_id}
   `;
   return true;
+}
+
+export async function releaseWaitingMembers() {
+  await ensureGuard();
+  const sql = await getSql();
+  let released = 0;
+  try {
+    const waiting = await sql<{ n: number }>`
+      select count(*)::int as n from hub_members where verified = 0 and banned = 0
+    `;
+    released = waiting[0]?.n ?? 0;
+    await sql`update hub_members set verified = 1, verify_token = '' where verified = 0 and banned = 0`;
+  } catch {
+    released = 0;
+  }
+  return { released };
 }
 
 export async function markMemberVerified(userId: string, email?: string) {

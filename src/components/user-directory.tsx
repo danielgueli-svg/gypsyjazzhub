@@ -12,6 +12,7 @@ import {
 import {
   banHubIp,
   banHubMember,
+  confirmWaitingMembers,
   eraseHubMember,
   listHubUserDirectory,
   listHubUserStats,
@@ -104,6 +105,8 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     );
   }, [stats.byCountry]);
 
+  const waiting = users.filter((user) => !user.verified).length;
+
   function patch(next: Partial<HubUserFilter>) {
     setFilter((prev) => ({ ...prev, ...next }));
   }
@@ -168,6 +171,22 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     }
   }
 
+  async function confirmWaiting() {
+    setError(null);
+    setNote(null);
+    try {
+      const result = await confirmWaitingMembers();
+      setUsers((rows) => rows.map((row) => ({ ...row, verified: row.banned ? row.verified : true })));
+      setNote(
+        result.released
+          ? `Confirmed ${result.released} member${result.released === 1 ? "" : "s"} who were waiting on the mail. They can log in now.`
+          : "Nobody was waiting on a confirmation mail.",
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not confirm waiting members.");
+    }
+  }
+
   async function onBanIp(event: FormEvent) {
     event.preventDefault();
     setError(null);
@@ -186,10 +205,21 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
       <h2 className="font-display text-2xl font-semibold sm:text-3xl">Users & alerts</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everyone who has joined the hub, with profile types, instruments and
-        what they subscribe to for notifications. Send a password reset mail so
-        they can choose a password (they then get a confirmation mail). Ban an
-        account, or erase a bot from the hub. Your own login stays.
+        what they subscribe to for notifications. People waiting on a confirmation
+        mail can be confirmed here so they are not stuck. Send a password reset
+        mail so they can choose a password. Ban an account, or erase a bot from
+        the hub. Your own login stays.
       </p>
+      {waiting ? (
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-surface px-4 py-3 shadow-border">
+          <p className="text-sm text-muted">
+            {waiting} member{waiting === 1 ? "" : "s"} still waiting on the confirmation mail.
+          </p>
+          <Button type="button" size="sm" onClick={() => void confirmWaiting()}>
+            Confirm everyone waiting
+          </Button>
+        </div>
+      ) : null}
       <form onSubmit={(event) => void onBanIp(event)} className="mt-4 flex max-w-md flex-wrap gap-2">
         <Input
           value={banIp}
