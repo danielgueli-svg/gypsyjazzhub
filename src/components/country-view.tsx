@@ -169,7 +169,6 @@ export function CountryView({
           { id: "jams", label: t("nav.jams") },
           featured ? { id: "featured", label: featured.title } : null,
           { id: "concerts", label: t("nav.concerts") },
-          { id: "archive", label: t("country.archive") },
           { id: "festivals", label: t("nav.festivals") },
           { id: "camps", label: t("nav.camps") },
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
@@ -179,6 +178,7 @@ export function CountryView({
           { id: "teachers", label: t("country.teachers") },
           { id: "players", label: t("country.currently") },
           artists.some((artist) => artist.past) ? { id: "past", label: t("country.past") } : null,
+          { id: "archive", label: t("country.archive") },
           { id: "chat", label: "Chat" },
         ].filter((item): item is { id: string; label: string } => Boolean(item))}
       />
@@ -282,41 +282,6 @@ export function CountryView({
         empty={t("country.noConcerts")}
         initial={5}
       />
-
-      <section id="archive" className="mt-12 scroll-mt-40">
-        <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("nav.archive")}</p>
-          <h2 className="mt-2 font-display text-2xl font-semibold">{t("country.archive")}</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-            {t("country.archiveLead").replace("{country}", name)}
-          </p>
-          {archiveCounts.families + archiveCounts.orchestras > 0 ? (
-            <p className="mt-2 text-sm text-muted">
-              {archiveCounts.families} {t("archive.families").toLowerCase()}
-              {" · "}
-              {archiveCounts.orchestras} {t("archive.orchestras").toLowerCase()}
-            </p>
-          ) : null}
-          <p className="mt-3">
-            <Link
-              to="/archive/$slug"
-              params={{ slug }}
-              className="text-sm font-medium text-accent hover:underline"
-            >
-              {t("country.archiveOpen")} →
-            </Link>
-          </p>
-          <p className="mt-2">
-            <a
-              href={romaniMusicCountryUrl(slug)}
-              className="text-sm text-muted hover:text-fg hover:underline"
-              rel="noreferrer"
-            >
-              {t("archive.romaniOpen")} →
-            </a>
-          </p>
-        </div>
-      </section>
 
       <div className="mt-10">
         <ShareBox
@@ -461,6 +426,41 @@ export function CountryView({
           </ul>
         </section>
       ) : null}
+
+      <section id="archive" className="mt-12 scroll-mt-40">
+        <div className="rounded-2xl bg-surface p-5 shadow-border">
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("nav.archive")}</p>
+          <h2 className="mt-2 font-display text-2xl font-semibold">{t("country.archive")}</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+            {t("country.archiveLead").replace("{country}", name)}
+          </p>
+          {archiveCounts.families + archiveCounts.orchestras > 0 ? (
+            <p className="mt-2 text-sm text-muted">
+              {archiveCounts.families} {t("archive.families").toLowerCase()}
+              {" · "}
+              {archiveCounts.orchestras} {t("archive.orchestras").toLowerCase()}
+            </p>
+          ) : null}
+          <p className="mt-3">
+            <Link
+              to="/archive/$slug"
+              params={{ slug }}
+              className="text-sm font-medium text-accent hover:underline"
+            >
+              {t("country.archiveOpen")} →
+            </Link>
+          </p>
+          <p className="mt-2">
+            <a
+              href={romaniMusicCountryUrl(slug)}
+              className="text-sm text-muted hover:text-fg hover:underline"
+              rel="noreferrer"
+            >
+              {t("archive.romaniOpen")} →
+            </a>
+          </p>
+        </div>
+      </section>
 
       <HubChat kind="country" slug={slug} initial={chat} />
     </section>
