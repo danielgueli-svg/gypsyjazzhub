@@ -130,7 +130,7 @@ export const VENUES: Venue[] = [
     site: "https://destadsgraaf.nl/",
     contact: "",
     scene: "gypsy",
-    bio: "Stadsgravenstraat 47, Enschede. Last-Sunday gypsy jam — time still to follow.",
+    bio: "Stadsgravenstraat 47, Enschede. Last-Sunday gypsy jam from 15:00.",
   },
   {
     slug: "cultuurbos-bosvreugd",
