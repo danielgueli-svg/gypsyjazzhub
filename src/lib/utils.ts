@@ -1,6 +1,28 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format } from "date-fns";
+import {
+  cs,
+  de,
+  es,
+  fr,
+  he,
+  hr,
+  hu,
+  id as idLocale,
+  it,
+  ja,
+  ko,
+  nl,
+  pl,
+  pt,
+  ro,
+  ru,
+  sr,
+  th,
+  zhCN,
+  zhTW,
+} from "date-fns/locale";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,10 +54,42 @@ export function toIso(value: unknown) {
   return String(value ?? "");
 }
 
-export function formatConcertWhen(iso: string) {
+const FNS_LOCALES: Record<string, typeof fr> = {
+  fr,
+  de,
+  nl,
+  es,
+  it,
+  pt,
+  ru,
+  ja,
+  ko,
+  zh: zhCN,
+  "zh-tw": zhTW,
+  id: idLocale,
+  th,
+  hu,
+  pl,
+  cs,
+  hr,
+  ro,
+  sr,
+  he,
+};
+
+function withLocale(iso: string, pattern: string, locale?: string) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
-  return format(date, "EEE d MMM yyyy · HH:mm");
+  const loc = locale ? FNS_LOCALES[locale] : undefined;
+  return loc ? format(date, pattern, { locale: loc }) : format(date, pattern);
+}
+
+export function formatLocalDate(iso: string, pattern: string, locale?: string) {
+  return withLocale(iso, pattern, locale);
+}
+
+export function formatConcertWhen(iso: string, locale?: string) {
+  return withLocale(iso, "EEE d MMM yyyy · HH:mm", locale);
 }
 
 export function concertShareLine(concert: {
@@ -68,10 +122,8 @@ export function concertAgendaText(
   return [heading, "", ...rows.map((concert) => `• ${concertShareLine(concert)}`)].join("\n");
 }
 
-export function formatConcertDay(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
-  return format(date, "d MMM");
+export function formatConcertDay(iso: string, locale?: string) {
+  return withLocale(iso, "d MMM", locale);
 }
 
 export function formatConcertYear(iso: string) {

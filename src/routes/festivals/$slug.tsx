@@ -92,7 +92,7 @@ function FestivalPage() {
         <div className="rounded-2xl bg-surface p-5 shadow-border">
           <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("festivals.next")}</p>
           <p className="mt-2 font-display text-xl font-semibold">
-            {festival.tba ? festival.when : formatConcertWhen(festival.nextStartsAt)}
+            {festival.tba ? festival.when : formatConcertWhen(festival.nextStartsAt, locale)}
           </p>
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">

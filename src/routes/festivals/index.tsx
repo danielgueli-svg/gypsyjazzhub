@@ -6,17 +6,17 @@ import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { displayCountry, preferCountryNames } from "@/lib/geo";
 import { listHubFestivals } from "@/lib/hub-api";
-import { formatConcertWhen } from "@/lib/utils";
-import { format } from "date-fns";
+import { formatConcertWhen, formatLocalDate } from "@/lib/utils";
 import { pageHead, SEO } from "@/lib/seo";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { settle } from "@/lib/settle";
 
-function nextShort(festival: { when: string; nextStartsAt: string; tba?: boolean }) {
+function nextShort(
+  festival: { when: string; nextStartsAt: string; tba?: boolean },
+  locale: string,
+) {
   if (festival.tba) return festival.when;
-  const date = new Date(festival.nextStartsAt);
-  if (Number.isNaN(date.getTime())) return festival.when;
-  return format(date, "EEE d MMM yyyy");
+  return formatLocalDate(festival.nextStartsAt, "EEE d MMM yyyy", locale);
 }
 
 function isUpcoming(festival: Festival) {
@@ -91,7 +91,7 @@ function FestivalsPage() {
             {featured.bio}
           </p>
           <p className="mt-4 text-xs text-faint">
-            {t("festivals.next")} · {featured.tba ? featured.when : formatConcertWhen(featured.nextStartsAt)}
+            {t("festivals.next")} · {featured.tba ? featured.when : formatConcertWhen(featured.nextStartsAt, locale)}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild>
@@ -132,7 +132,7 @@ function FestivalsPage() {
                       {festival.name}
                     </span>
                     <span className="mt-0.5 block text-sm text-muted">
-                      {nextShort(festival)}
+                      {nextShort(festival, locale)}
                       <span className="mx-1.5 text-faint">·</span>
                       {festival.city}
                       <span className="mx-1.5 text-faint">·</span>
@@ -173,7 +173,7 @@ function FestivalsPage() {
                         <span className="mx-1.5 text-faint">·</span>
                         <span className="text-sm text-muted">{festival.city}</span>
                         <span className="mx-1.5 text-faint">·</span>
-                        <span className="text-sm text-muted">{nextShort(festival)}</span>
+                        <span className="text-sm text-muted">{nextShort(festival, locale)}</span>
                       </Link>
                     </li>
                   ))}

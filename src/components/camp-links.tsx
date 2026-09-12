@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import type { Camp } from "@/lib/camps";
 import { CountryLabel } from "@/components/country-label";
+import { whenLabel } from "@/lib/festival-copy";
 import { useI18n } from "@/lib/i18n";
 
 export function CampLinks({ camps }: { camps: Camp[] }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   if (camps.length === 0) return null;
   return (
     <section className="mt-12">
@@ -18,7 +19,7 @@ export function CampLinks({ camps }: { camps: Camp[] }) {
             className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
           >
             <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-              <CountryLabel name={camp.country} short /> · {camp.when}
+              <CountryLabel name={camp.country} short /> · {whenLabel(camp.when, locale)}
             </p>
             <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
               {camp.name}

@@ -31,6 +31,7 @@ import { romaniMusicCountryUrl } from "@/lib/romani-music";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { hotClubsForCountry, type HotClub } from "@/lib/hot-clubs";
 import { isThinGypsyScene, jamHours, jamPlace } from "@/lib/jams";
+import { whenLabel } from "@/lib/festival-copy";
 import { sortVenues, venueScene, type Venue } from "@/lib/venues";
 import { useI18n } from "@/lib/i18n";
 
@@ -306,7 +307,7 @@ export function CountryView({
                 className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
               >
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-                  {festival.when}
+                  {whenLabel(festival.when, locale)}
                 </p>
                 <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
                   {festival.name}
@@ -334,7 +335,7 @@ export function CountryView({
                 className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
               >
                 <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-                  <CountryLabel name={camp.country} short /> · {camp.when}
+                  <CountryLabel name={camp.country} short /> · {whenLabel(camp.when, locale)}
                 </p>
                 <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
                   {camp.name}

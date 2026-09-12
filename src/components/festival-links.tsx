@@ -1,14 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import type { Festival } from "@/lib/festivals";
 import { CountryLabel } from "@/components/country-label";
+import { whenLabel } from "@/lib/festival-copy";
+import { useI18n } from "@/lib/i18n";
 
 export function FestivalLinks({ festivals }: { festivals: Festival[] }) {
+  const { t, locale } = useI18n();
   if (festivals.length === 0) return null;
   return (
     <section className="mt-12">
-      <h2 className="font-display text-3xl font-semibold">Festivals</h2>
+      <h2 className="font-display text-3xl font-semibold">{t("nav.festivals")}</h2>
       <p className="mt-2 text-sm text-muted">
-        Open a gathering — then the official festival site from that page.
+        {t("festival.artistsLead")}
       </p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         {festivals.map((festival) => (
@@ -19,7 +22,7 @@ export function FestivalLinks({ festivals }: { festivals: Festival[] }) {
             className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
           >
             <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-              <CountryLabel name={festival.country} /> · {festival.when}
+              <CountryLabel name={festival.country} /> · {whenLabel(festival.when, locale)}
             </p>
             <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
               {festival.name}

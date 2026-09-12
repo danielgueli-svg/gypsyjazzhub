@@ -10,6 +10,7 @@ import { listConcerts } from "@/lib/api";
 import { countrySlug, displayCountry, preferCountryNames, sameCountry } from "@/lib/geo";
 import { monthKey, monthOptions, uniqueCities, weekdayName } from "@/lib/agenda";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
+import { whenLabel } from "@/lib/festival-copy";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { jamsByCountry, type Jam } from "@/lib/jams";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
@@ -355,7 +356,9 @@ function ConcertsPage() {
 }
 
 function NightRow({ night }: { night: Night }) {
-  const bits = [night.city, night.venue].filter(Boolean);
+  const { locale } = useI18n();
+  const when = night.kind === "festival" ? whenLabel(night.venue, locale) : night.venue;
+  const bits = [night.city, when].filter(Boolean);
   const titleLink = "font-display text-lg font-semibold leading-tight hover:underline";
   const title =
     night.kind === "festival" && night.slug ? (
@@ -374,7 +377,7 @@ function NightRow({ night }: { night: Night }) {
     <article className="grid grid-cols-[4.5rem_1fr] items-center gap-4 rounded-2xl bg-surface/85 p-4 shadow-border sm:grid-cols-[5.5rem_1fr] sm:p-5">
       <div className="text-center">
         <div className="font-display text-xl font-semibold leading-none">
-          {formatConcertDay(night.startsAt)}
+          {formatConcertDay(night.startsAt, locale)}
         </div>
         <div className="mt-0.5 text-xs tracking-wide text-faint">
           {formatConcertYear(night.startsAt)}

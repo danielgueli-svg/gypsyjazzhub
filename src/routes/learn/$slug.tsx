@@ -7,6 +7,8 @@ import { listLegends } from "@/lib/api";
 import { getCamp, campKind } from "@/lib/camps";
 import { CountryLabel } from "@/components/country-label";
 import { formatConcertWhen } from "@/lib/utils";
+import { whenLabel } from "@/lib/festival-copy";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/learn/$slug")({
   loader: async ({ params }) => {
@@ -26,6 +28,7 @@ export const Route = createFileRoute("/learn/$slug")({
 
 function CampPage() {
   const { camp, hosts, teachers } = Route.useLoaderData();
+  const { t, locale } = useI18n();
   const kind = campKind(camp);
 
   return (
@@ -39,23 +42,23 @@ function CampPage() {
         {camp.city} · <CountryLabel name={camp.country} />
       </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
-        <Badge>{camp.when}</Badge>
+        <Badge>{whenLabel(camp.when, locale)}</Badge>
         <Badge>{kind === "workshop" ? "Workshop" : "Camp"}</Badge>
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Next</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
           <p className="mt-2 font-display text-xl font-semibold">
-            {formatConcertWhen(camp.nextStartsAt)}
+            {formatConcertWhen(camp.nextStartsAt, locale)}
           </p>
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Where</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.where")}</p>
           <p className="mt-2 font-display text-xl font-semibold">{camp.city}</p>
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
-          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Country</p>
+          <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("festival.country")}</p>
           <p className="mt-2 font-display text-xl font-semibold">
             <CountryLabel name={camp.country} />
           </p>

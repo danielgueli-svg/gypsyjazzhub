@@ -12,6 +12,7 @@ import { CountryClicker } from "@/components/country-clicker";
 import { CountryLabel } from "@/components/country-label";
 import { buildGlobeIndex, countrySlug, displayCountry, globeButtonNames, mixByCountry } from "@/lib/geo";
 import { useI18n } from "@/lib/i18n";
+import { whenLabel } from "@/lib/festival-copy";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
@@ -283,7 +284,7 @@ function Home() {
                   {camp.name}
                 </h3>
                 <p className="mt-0.5 truncate text-xs text-muted">
-                  {camp.city} · {camp.when}
+                  {camp.city} · {whenLabel(camp.when, locale)}
                 </p>
               </div>
             </Link>

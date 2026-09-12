@@ -10,6 +10,7 @@ import { listForumTopics } from "@/lib/forum-api";
 import { onlineSchools } from "@/lib/scene-guide";
 import { contactHref } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { whenLabel } from "@/lib/festival-copy";
 import { pageHead, SEO } from "@/lib/seo";
 import { InstrumentPicker } from "@/components/instrument-cards";
 import { LearnJump } from "@/components/learn-jump";
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/learn/")({
 
 function LearnPage() {
   const { teachers, topics } = Route.useLoaderData();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const camps = upcomingCamps();
   const schools = onlineSchools();
   const countries = useMemo(
@@ -126,7 +127,7 @@ function LearnPage() {
                     <span className="mx-1.5 text-faint">·</span>
                     <span className="text-sm text-muted">{camp.city}</span>
                     <span className="mx-1.5 text-faint">·</span>
-                    <span className="text-sm text-muted">{camp.when}</span>
+                    <span className="text-sm text-muted">{whenLabel(camp.when, locale)}</span>
                   </Link>
                 </p>
               ))}

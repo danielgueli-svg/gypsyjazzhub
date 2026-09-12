@@ -53,6 +53,7 @@ export function ConcertRow({
   concert: Concert;
   compact?: boolean;
 }) {
+  const { locale } = useI18n();
   const href = concertHref(concert);
   const bill = concert.title?.trim() || concert.artistName;
   const bits = [concert.city, concert.venue].filter(Boolean);
@@ -110,7 +111,7 @@ export function ConcertRow({
             compact ? "text-base" : "text-xl",
           )}
         >
-          {formatConcertDay(concert.startsAt)}
+          {formatConcertDay(concert.startsAt, locale)}
         </div>
         <div className="mt-0.5 text-xs tracking-wide text-faint">
           {formatConcertYear(concert.startsAt)}
