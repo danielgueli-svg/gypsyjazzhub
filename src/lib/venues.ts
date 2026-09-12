@@ -4779,6 +4779,17 @@ export const VENUES: Venue[] = [
     scene: "gypsy",
     bio: "161 Old Street EC1V 9NG. Hawksmoor church, LSO room. London Gypsy Jazz Festival has used it (Stochelo Rosenberg / Paulus Schäfer).",
   },
+  {
+    slug: "real-teatro-santa-cecilia",
+    name: "Real Teatro Santa Cecilia",
+    city: "Palermo",
+    country: "Italy",
+    kind: "Hall",
+    site: "https://www.brassgroup.it/",
+    contact: "mailto:brasspalermo@gmail.com",
+    scene: "jazz",
+    bio: "Piazza Teatro Santa Cecilia, Kalsa, 90140 Palermo. House theatre of Fondazione Orchestra Jazz Siciliana – The Brass Group — a year-round jazz house, not a gypsy jazz festival. Box office +39 091 7782300 / +39 091 7782301 · cell +39 334 7391972 · brasspalermo@gmail.com · info@thebrassgroup.it. Hours Tue–Sat 9:30–12:30. School / office Via dello Spasimo 15, +39 091 7782860. Tickets brassgroup.it and bluetickets.it. Django nights when they book a manouche act: Angelo Debarre Trio, Omaggio a Django Reinhardt, 5–8 February 2026 (typical Brass in Jazz turns Fri/Sat 19:00 and 21:30). Archive: Joscho Stephan “Djangology” with Orchestra Jazz Siciliana, 4–6 April 2025. Sicily’s dedicated gypsy raduno is the XV Raduno Mediterraneo in Petralia Sottana, not this theatre. Sicilia Jazz Festival (Palermo / Catania / Selinunte) is orchestral jazz — only its Django/Gipsy lines belong on a gypsy calendar.",
+  },
 ];
 
 export function getVenue(slug: string) {
