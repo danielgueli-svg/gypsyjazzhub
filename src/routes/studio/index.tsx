@@ -106,7 +106,7 @@ function StudioPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Studio</p>
+      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("studio.youAreIn")}</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">
         {t("nav.hubProfile")}
       </h1>
@@ -114,6 +114,11 @@ function StudioPage() {
         Signed in. Say if you are a musician or a non-musician / fan. Turn on
         invitations so jam hosts can alert you. Add a concert, a YouTube clip,
         a bio note, a festival or a jam.
+      </p>
+      <p className="mt-4">
+        <Button asChild variant="outline">
+          <Link to="/">{t("studio.backToSite")}</Link>
+        </Button>
       </p>
       {isHubOwnerEmail(user.primaryEmail) ? (
         <p className="mt-3 text-sm">

@@ -1,7 +1,6 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { authClient, authEnabled, setBearerToken } from "@/lib/auth/client";
-import { pathAfterLogin } from "@/lib/auth/after-login";
 import { takeReturnTo } from "@/lib/auth/return-to";
 import { loginAccountHint } from "@/lib/hub-api";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
@@ -41,7 +40,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
       window.location.assign(back);
       return;
     }
-    const to = firstTime ? "/add" : await pathAfterLogin();
+    const to = "/studio";
     await navigate({ to });
   }
 
@@ -79,7 +78,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             throw new Error(t("login.already"));
           }
         } else {
-          await navigate({ to: "/verify-email" });
+          await goAfterLogin(true);
           return;
         }
       } else {
@@ -110,16 +109,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
   }
 
   if (user) {
-    return (
-      <div className="space-y-3">
-        <p className="text-sm text-muted">
-          {t("login.loggedInAs")} {user.displayName ?? user.primaryEmail}.
-        </p>
-        <Button asChild>
-          <Link to="/studio">{t("nav.hubProfile")}</Link>
-        </Button>
-      </div>
-    );
+    return <Navigate to="/studio" />;
   }
   if (!authEnabled) {
     return <p className="text-sm text-muted">{t("login.disabled")}</p>;

@@ -78,8 +78,13 @@ function VerifyEmail() {
             <Link to="/login">{t("login.submitIn")}</Link>
           </Button>
         )}
+        {user ? (
+          <Button asChild>
+            <Link to="/studio">{t("nav.hubProfile")}</Link>
+          </Button>
+        ) : null}
         <Button asChild variant="outline">
-          <Link to="/add">{t("verify.add")}</Link>
+          <Link to="/">{t("studio.backToSite")}</Link>
         </Button>
       </div>
     </main>
