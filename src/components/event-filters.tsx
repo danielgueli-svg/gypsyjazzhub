@@ -1,5 +1,6 @@
 import { weekdayOptions } from "@/lib/agenda";
 import { countrySlug, displayCountry } from "@/lib/geo";
+import { useI18n } from "@/lib/i18n";
 
 export function EventFilters({
   countries,
@@ -36,37 +37,44 @@ export function EventFilters({
   months?: { value: string; label: string }[];
   typeOptions?: { value: string; label: string }[];
 }) {
+  const { t, locale } = useI18n();
+  const types = typeOptions ?? [
+    { value: "", label: t("filters.openSitIn") },
+    { value: "open", label: t("filters.openJam") },
+    { value: "sit-in", label: t("filters.sitIn") },
+    { value: "concert", label: t("filters.concert") },
+  ];
   return (
     <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {hideCountry ? null : (
-        <FilterSelect label="Country" value={country ?? ""} onChange={onCountry}>
-          <option value="">All countries</option>
+        <FilterSelect label={t("filters.country")} value={country ?? ""} onChange={onCountry}>
+          <option value="">{t("filters.allCountries")}</option>
           {countries.map((name) => (
             <option key={name} value={countrySlug(name)}>
-              {displayCountry(name)}
+              {displayCountry(name, locale)}
             </option>
           ))}
         </FilterSelect>
       )}
-      <FilterSelect label="City" value={city ?? ""} onChange={onCity}>
-        <option value="">All cities</option>
+      <FilterSelect label={t("filters.city")} value={city ?? ""} onChange={onCity}>
+        <option value="">{t("filters.allCities")}</option>
         {cities.map((name) => (
           <option key={name} value={name}>
             {name}
           </option>
         ))}
       </FilterSelect>
-      <FilterSelect label="Day" value={weekday ?? ""} onChange={onWeekday}>
-        <option value="">Any day</option>
+      <FilterSelect label={t("filters.day")} value={weekday ?? ""} onChange={onWeekday}>
+        <option value="">{t("filters.anyDay")}</option>
         {weekdayOptions().map((name) => (
           <option key={name} value={name}>
-            {name}
+            {t(`weekday.${name}`)}
           </option>
         ))}
       </FilterSelect>
       {onMonth && months ? (
-        <FilterSelect label="Month" value={month ?? ""} onChange={onMonth}>
-          <option value="">Any month</option>
+        <FilterSelect label={t("filters.month")} value={month ?? ""} onChange={onMonth}>
+          <option value="">{t("filters.anyMonth")}</option>
           {months.map((row) => (
             <option key={row.value} value={row.value}>
               {row.label}
@@ -75,13 +83,8 @@ export function EventFilters({
         </FilterSelect>
       ) : null}
       {showType && onType ? (
-        <FilterSelect label="Type" value={type ?? ""} onChange={onType}>
-          {(typeOptions ?? [
-            { value: "", label: "Open and sit-in" },
-            { value: "open", label: "Open jam" },
-            { value: "sit-in", label: "Sit-in / meetup" },
-            { value: "concert", label: "Concert" },
-          ]).map((row) => (
+        <FilterSelect label={t("filters.type")} value={type ?? ""} onChange={onType}>
+          {types.map((row) => (
             <option key={row.value || "all"} value={row.value}>
               {row.label}
             </option>
