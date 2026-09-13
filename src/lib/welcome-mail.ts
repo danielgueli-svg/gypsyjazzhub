@@ -1,3 +1,5 @@
+import { CONFIRM_BUTTON, RESET_BUTTON, wrapHubMailHtml } from "@/lib/hub-mail-html";
+
 export const MAIL_LOCALES = [
   "en",
   "nl",
@@ -397,9 +399,16 @@ function fill(lines: string[], vars: Record<string, string>) {
 
 export function welcomeMail(locale: MailLocale, link: string) {
   const copy = COPY[locale] ?? COPY.en;
+  const body = fill(copy.lines, { link });
   return {
     subject: copy.subject,
-    body: fill(copy.lines, { link }),
+    body,
+    html: wrapHubMailHtml({
+      body,
+      buttonLabel: CONFIRM_BUTTON[locale] ?? CONFIRM_BUTTON.en,
+      buttonHref: link,
+      locale,
+    }),
   };
 }
 
@@ -808,9 +817,16 @@ const RESET: Record<MailLocale, MailCopy> = {
 export function passwordMail(locale: MailLocale, name: string, link: string) {
   const copy = RESET[locale] ?? RESET.en;
   const who = name.trim() ? ` ${name.trim()}` : "";
+  const body = fill(copy.lines, { link, name: who });
   return {
     subject: copy.subject,
-    body: fill(copy.lines, { link, name: who }),
+    body,
+    html: wrapHubMailHtml({
+      body,
+      buttonLabel: RESET_BUTTON[locale] ?? RESET_BUTTON.en,
+      buttonHref: link,
+      locale,
+    }),
   };
 }
 

@@ -1,6 +1,7 @@
 import { hashPassword, isReservedTestEmail } from "@/lib/auth/email-password";
 import { getSql } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
+import { SIGNIN_BUTTON, wrapHubMailHtml } from "@/lib/hub-mail-html";
 import { parseMailLocale, passwordMail } from "@/lib/welcome-mail";
 import { getRequest } from "@tanstack/react-start/server";
 
@@ -97,7 +98,7 @@ export async function requestPasswordReset(
   }
   const mail = passwordMail(locale, String(users[0].name ?? ""), link);
   try {
-    await sendHubMail(email, mail.subject, mail.body);
+    await sendHubMail(email, mail.subject, mail.body, mail.html);
   } catch (err) {
     if (opts.force) {
       return { ok: true as const, sent: false as const, email, link };
@@ -167,32 +168,44 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
         const { startEmailVerification } = await import("@/lib/hub-guard");
         const verify = await startEmailVerification(userId, email, true);
         if (!verify.mailed && !verify.already) {
+          const saved = [
+            `Hi${name ? ` ${name}` : ""},`,
+            "",
+            "Your password is saved. Sign in with your email and that password:",
+            "https://www.gypsyjazzhub.com/login",
+            "",
+            "Gypsy Jazz Hub",
+          ].join("\n");
           await sendHubMail(
             email,
             "Your Gypsy Jazz Hub password is set",
-            [
-              `Hi${name ? ` ${name}` : ""},`,
-              "",
-              "Your password is saved. Sign in with your email and that password:",
-              "https://www.gypsyjazzhub.com/login",
-              "",
-              "Gypsy Jazz Hub",
-            ].join("\n"),
+            saved,
+            wrapHubMailHtml({
+              body: saved,
+              buttonLabel: SIGNIN_BUTTON.en,
+              buttonHref: "https://www.gypsyjazzhub.com/login",
+            }),
           );
         }
       } catch {
         try {
+          const saved = [
+            `Hi${name ? ` ${name}` : ""},`,
+            "",
+            "Your password is saved. Sign in with your email and that password:",
+            "https://www.gypsyjazzhub.com/login",
+            "",
+            "Gypsy Jazz Hub",
+          ].join("\n");
           await sendHubMail(
             email,
             "Your Gypsy Jazz Hub password is set",
-            [
-              `Hi${name ? ` ${name}` : ""},`,
-              "",
-              "Your password is saved. Sign in with your email and that password:",
-              "https://www.gypsyjazzhub.com/login",
-              "",
-              "Gypsy Jazz Hub",
-            ].join("\n"),
+            saved,
+            wrapHubMailHtml({
+              body: saved,
+              buttonLabel: SIGNIN_BUTTON.en,
+              buttonHref: "https://www.gypsyjazzhub.com/login",
+            }),
           );
         } catch {
           /* password is saved even if mail fails */

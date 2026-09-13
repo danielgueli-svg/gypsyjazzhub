@@ -162,7 +162,7 @@ export async function startEmailVerification(userId: string, email: string, rese
   let mailed = false;
   try {
     const { sendHubMail } = await import("@/lib/digest");
-    await sendHubMail(address, mail.subject, mail.body);
+    await sendHubMail(address, mail.subject, mail.body, mail.html);
     mailed = true;
   } catch (err) {
     // Keep verified = 0. Auto-verifying on mail failure hid broken Resend

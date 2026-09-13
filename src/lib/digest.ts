@@ -290,7 +290,7 @@ export async function buildDigest(): Promise<Digest> {
  * usually only delivers to the Resend account owner, so confirmation / reset
  * mail looked "sent" while members never got it.
  */
-export async function sendHubMail(to: string, subject: string, body: string) {
+export async function sendHubMail(to: string, subject: string, body: string, html?: string) {
   const address = to.trim();
   if (!address.includes("@")) {
     throw new Error("Need a real email address to send mail.");
@@ -307,6 +307,7 @@ export async function sendHubMail(to: string, subject: string, body: string) {
     readEnv("MAIL_FROM")?.trim() ||
     "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>";
 
+  const { wrapHubMailHtml } = await import("@/lib/hub-mail-html");
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -318,6 +319,7 @@ export async function sendHubMail(to: string, subject: string, body: string) {
       to: [address],
       subject,
       text: body,
+      html: html?.trim() || wrapHubMailHtml({ body }),
     }),
   });
   const text = await response.text();
