@@ -158,6 +158,8 @@ function JamPage() {
 
       <p className="mt-10 max-w-2xl text-base leading-relaxed text-muted">{jam.bio}</p>
 
+      <HubChat kind="jam" slug={jam.slug} initial={chat} />
+
       <div className="mt-10">
         <InvitePanel
           jamSlug={jam.slug}
@@ -195,8 +197,6 @@ function JamPage() {
           </div>
         </section>
       ) : null}
-
-      <HubChat kind="jam" slug={jam.slug} initial={chat} />
 
       <p className="mt-10 text-sm">
         <Link to="/jams" className="text-muted hover:text-fg">
