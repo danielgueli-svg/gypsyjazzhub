@@ -79,7 +79,7 @@ const GUITAR_LUTHIERS: Luthier[] = [
     name: "Marco La Manna",
     city: "Dovera, Cremona",
     country: "Italy",
-    site: "https://www.marcolamannaguitars.com/",
+    site: "http://www.marcolamannaguitars.com/",
     contact: "mailto:info@marcolamannaguitars.com",
     address: "Via Folla 23, Dovera (Cremona), Italy",
     phone: "+39 347 088 2722",
