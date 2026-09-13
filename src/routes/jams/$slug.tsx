@@ -17,7 +17,12 @@ import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
 import { settle } from "@/lib/settle";
 
+type Search = { edit?: boolean };
+
 export const Route = createFileRoute("/jams/$slug")({
+  validateSearch: (search: Record<string, unknown>): Search => ({
+    edit: search.edit === true || search.edit === "1" || search.edit === "true" ? true : undefined,
+  }),
   loader: async ({ params }) => {
     const catalog = getJam(params.slug);
     const hub = await settle("hub-jam", null, () => getHubJam({ data: params.slug }));
@@ -51,6 +56,7 @@ export const Route = createFileRoute("/jams/$slug")({
 
 function JamPage() {
   const { jam, related, chat } = Route.useLoaderData();
+  const { edit } = Route.useSearch();
   const { t, locale } = useI18n();
   const place = jamPlace(jam);
   const hours = jamHoursLabel(jamHours(jam), locale);
@@ -75,7 +81,7 @@ function JamPage() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <SaveButton kind="jam" slug={jam.slug} label={t("jam.save")} />
         <SubscribeButton kind="jam" targetId={jam.slug} targetName={jam.name} label={t("jam.notify")} />
-        <JamEdit jam={jam} />
+        <JamEdit jam={jam} startOpen={Boolean(edit)} />
         <ShareBox
           compact
           url={`/jams/${jam.slug}`}

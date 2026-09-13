@@ -996,7 +996,11 @@ export const updateHubJam = createServerFn({ method: "POST" })
     await ensureHub();
     const { gateContribution } = await import("@/lib/hub-guard");
     const { getJam } = await import("@/lib/jams");
-    const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
+    const gate = await gateContribution(context.userId, {
+      hp: data.hp,
+      turnstile: data.turnstile,
+      sessionTrusted: true,
+    });
     if (gate.skip) return { ok: true as const, pending: true as const };
     const slug = data.slug.trim();
     if (!slug) throw new Error("Missing jam.");

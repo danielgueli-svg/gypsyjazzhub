@@ -1,4 +1,4 @@
-import { Link, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,11 +15,11 @@ function toLocalInput(iso: string) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function JamEdit({ jam }: { jam: Jam }) {
+export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: boolean }) {
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [venue, setVenue] = useState(jam.venue);
   const [address, setAddress] = useState(jam.address);
   const [city, setCity] = useState(jam.city);
@@ -29,22 +29,14 @@ export function JamEdit({ jam }: { jam: Jam }) {
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (isPending) {
-    return <div className="h-11 w-20 animate-pulse rounded-md bg-raised" />;
-  }
-  if (!user) {
-    return (
-      <Button asChild variant="outline" size="sm">
-        <Link to="/login">{t("jam.edit")}</Link>
-      </Button>
-    );
-  }
+  if (isPending || !user) return null;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
     setStatus(null);
     try {
+      const nextIso = nextStartsAt ? new Date(nextStartsAt).toISOString() : jam.nextStartsAt;
       const result = await updateHubJam({
         data: {
           slug: jam.slug,
@@ -55,7 +47,7 @@ export function JamEdit({ jam }: { jam: Jam }) {
           address,
           hours,
           when,
-          nextStartsAt,
+          nextStartsAt: nextIso,
           bio: jam.bio,
         },
       });

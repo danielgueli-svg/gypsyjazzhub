@@ -245,13 +245,13 @@ export async function memberFlags(userId: string) {
 
 export async function gateContribution(
   userId: string,
-  input: { hp?: string; turnstile?: string } = {},
+  input: { hp?: string; turnstile?: string; sessionTrusted?: boolean } = {},
 ): Promise<ContributeGate> {
   await ensureGuard();
   if (input.hp?.trim()) {
     return { skip: true, pending: true, status: "pending" };
   }
-  if (!(await turnstileOk(input.turnstile))) {
+  if (!input.sessionTrusted && !(await turnstileOk(input.turnstile))) {
     throw new Error("Could not verify you are a person. Refresh and try again.");
   }
   const sql = await getSql();
