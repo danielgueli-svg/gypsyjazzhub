@@ -46,7 +46,9 @@ import { DJANGOBOOKS_BOARDS } from "@/lib/djangobooks";
 import { formatConcertWhen } from "@/lib/utils";
 import {
   listPendingHub,
+  listHubSubmissions,
   publishHubItem,
+  type HubSubmission,
   type PendingHubItem,
 } from "@/lib/hub-api";
 import {
@@ -79,6 +81,7 @@ function OwnerPage() {
   const [activity, setActivity] = useState<HubActivity[]>([]);
   const [finds, setFinds] = useState<DiscoveryRow[]>([]);
   const [pending, setPending] = useState<PendingHubItem[]>([]);
+  const [submissions, setSubmissions] = useState<HubSubmission[]>([]);
   const [publicActivity, setPublicActivity] = useState<ActivityItem[]>([]);
   const [ready, setReady] = useState(false);
   const [digestEmail, setDigestEmail] = useState("");
@@ -108,7 +111,7 @@ function OwnerPage() {
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
-    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos, nextAuto] = await Promise.all([
+    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos, nextAuto, nextSubs] = await Promise.all([
       listHubMembers().catch(() => []),
       listHubActivity().catch(() => []),
       listDiscoveries().catch(() => []),
@@ -121,6 +124,7 @@ function OwnerPage() {
       getVisitStats().catch(() => null),
       getPhotoStorage().catch(() => null),
       getAutoPublish().catch(() => ({ on: true })),
+      listHubSubmissions().catch(() => []),
     ]);
     setMembers(nextMembers);
     setSelected([]);
@@ -130,6 +134,7 @@ function OwnerPage() {
     setDigestOn(nextDigest.settings.enabled);
     setDigestLog(nextDigest.log);
     setPending(nextPending);
+    setSubmissions(nextSubs);
     setPublicActivity(nextPublic);
     setVisits(nextVisits);
     setPhotos(nextPhotos);
@@ -394,6 +399,7 @@ function OwnerPage() {
             ["#desk-photos", "Photos"],
             ["#desk-today", "Today"],
             ["#desk-posts", "Posts"],
+            ["#desk-submitted", "Submitted"],
             ["#desk-members", "Members"],
             ["#desk-users", "Users"],
             ["#desk-mail", "Mail"],
@@ -605,6 +611,12 @@ function OwnerPage() {
               </span>
             </label>
           </section>
+
+          <SubmissionsPanel
+            items={submissions}
+            onChange={setSubmissions}
+            onError={setError}
+          />
 
           <section id="desk-members" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
@@ -936,6 +948,90 @@ function OwnerPage() {
         </Link>
       </p>
     </main>
+  );
+}
+
+function SubmissionsPanel({
+  items,
+  onChange,
+  onError,
+}: {
+  items: HubSubmission[];
+  onChange: (rows: HubSubmission[]) => void;
+  onError: (message: string | null) => void;
+}) {
+  async function publish(item: HubSubmission) {
+    onError(null);
+    try {
+      await publishHubItem({ data: { kind: item.kind, id: item.id } });
+      onChange(
+        items.map((row) =>
+          row.kind === item.kind && row.id === item.id ? { ...row, status: "published" } : row,
+        ),
+      );
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "Could not publish.");
+    }
+  }
+
+  async function reject(item: HubSubmission) {
+    onError(null);
+    try {
+      await removeHubItem({ data: { kind: item.kind, id: item.id } });
+      onChange(items.filter((row) => !(row.kind === item.kind && row.id === item.id)));
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "Could not take down.");
+    }
+  }
+
+  const waiting = items.filter((row) => row.status === "pending").length;
+
+  return (
+    <section id="desk-submitted" className="mt-12 scroll-mt-20">
+      <h2 className="font-display text-2xl font-semibold sm:text-3xl">Submitted</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+        Everything members sent in — jams, concerts, festivals, venues, teachers,
+        luthiers, clips and notes. Live ones are already on the hub. Waiting ones
+        need a look. Take down anything that should not stay.
+      </p>
+      <p className="mt-2 text-sm text-muted">
+        {items.length} submission{items.length === 1 ? "" : "s"}
+        {waiting ? ` · ${waiting} waiting` : ""}
+      </p>
+      {items.length === 0 ? (
+        <p className="mt-4 text-sm text-faint">No member posts yet.</p>
+      ) : (
+        <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+          {items.map((item) => (
+            <li
+              key={`${item.kind}-${item.id}`}
+              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+            >
+              <div className="min-w-0">
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
+                  {item.kind} · {item.status === "pending" ? "waiting" : "live"} · {item.who}
+                </p>
+                <p className="mt-1 font-display text-lg font-semibold leading-tight">{item.title}</p>
+                <p className="mt-0.5 text-xs text-faint">
+                  {item.place ? `${item.place} · ` : ""}
+                  {formatConcertWhen(item.when)}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {item.status === "pending" ? (
+                  <Button type="button" size="sm" onClick={() => void publish(item)}>
+                    Publish
+                  </Button>
+                ) : null}
+                <Button type="button" size="sm" variant="outline" onClick={() => void reject(item)}>
+                  Take down
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 

@@ -1933,6 +1933,309 @@ export const listPendingHub = createServerFn({ method: "GET" })
     return items.sort((a, b) => b.when.localeCompare(a.when));
   });
 
+export type HubSubmission = PendingHubItem & {
+  status: "pending" | "published";
+  place: string;
+};
+
+function submissionStatus(value: string | null | undefined): "pending" | "published" {
+  return value === "pending" ? "pending" : "published";
+}
+
+function placeLine(city?: string | null, country?: string | null) {
+  return [city, country].map((part) => (part ?? "").trim()).filter(Boolean).join(", ");
+}
+
+export const listHubSubmissions = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await ensureHub();
+    const sql = await getSql();
+    const owners = await sql<{ user_id: string }>`select user_id from hub_owners`;
+    if (!owners.some((row) => row.user_id === context.userId)) {
+      throw new Error("Owner desk is only for the hub owner.");
+    }
+    const items: HubSubmission[] = [];
+    const posted = `coalesce(submitted_by, '') <> '' or coalesce(submitted_name, '') <> ''`;
+
+    try {
+      const concerts = await sql.query<{
+        id: number;
+        title: string;
+        artist_name: string;
+        city: string;
+        country: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select id, title, artist_name, city, country, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_concerts
+         where ${posted}
+         order by created_at desc limit 80`,
+      );
+      for (const row of concerts) {
+        items.push({
+          kind: "concert",
+          id: String(row.id),
+          title: `${row.artist_name} — ${row.title}`,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: placeLine(row.city, row.country),
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const jams = await sql.query<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select slug, name, city, country, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_jams
+         where ${posted}
+         order by created_at desc limit 80`,
+      );
+      for (const row of jams) {
+        items.push({
+          kind: "jam",
+          id: row.slug,
+          title: row.name,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: placeLine(row.city, row.country),
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const festivals = await sql.query<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select slug, name, city, country, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_festivals
+         where ${posted}
+         order by created_at desc limit 80`,
+      );
+      for (const row of festivals) {
+        items.push({
+          kind: "festival",
+          id: row.slug,
+          title: row.name,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: placeLine(row.city, row.country),
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const clips = await sql.query<{
+        id: number;
+        title: string;
+        artist_slug: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select id, title, artist_slug, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_clips
+         where ${posted}
+         order by created_at desc limit 40`,
+      );
+      for (const row of clips) {
+        items.push({
+          kind: "clip",
+          id: String(row.id),
+          title: `${row.artist_slug} — ${row.title || "clip"}`,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: "",
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const notes = await sql.query<{
+        id: number;
+        body: string;
+        artist_slug: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select id, body, artist_slug, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_notes
+         where ${posted}
+         order by created_at desc limit 60`,
+      );
+      for (const row of notes) {
+        const slug = row.artist_slug || "";
+        if (slug.startsWith("history-")) {
+          const parsed = parseHistoryNote(row.body, slug);
+          items.push({
+            kind: "history",
+            id: String(row.id),
+            title: `${parsed.kind} · ${parsed.house} — ${parsed.text.slice(0, 80)}`,
+            who: row.submitted_name || "member",
+            when: toIso(row.created_at),
+            status: submissionStatus(row.status),
+            place: "",
+          });
+        } else if (slug.startsWith("archive-")) {
+          const parsed = parseArchiveNote(row.body, slug);
+          items.push({
+            kind: "archive",
+            id: String(row.id),
+            title: `${parsed.name || parsed.country} — ${parsed.text.slice(0, 80)}`,
+            who: row.submitted_name || "member",
+            when: toIso(row.created_at),
+            status: submissionStatus(row.status),
+            place: "",
+          });
+        } else if (slug === "pending-artist") {
+          items.push({
+            kind: "artist",
+            id: String(row.id),
+            title: row.body.slice(0, 80),
+            who: row.submitted_name || "member",
+            when: toIso(row.created_at),
+            status: submissionStatus(row.status),
+            place: "",
+          });
+        } else {
+          items.push({
+            kind: "note",
+            id: String(row.id),
+            title: `${slug} — ${row.body.slice(0, 80)}`,
+            who: row.submitted_name || "member",
+            when: toIso(row.created_at),
+            status: submissionStatus(row.status),
+            place: "",
+          });
+        }
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const venues = await sql.query<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select slug, name, city, country, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_venues
+         where ${posted}
+         order by created_at desc limit 40`,
+      );
+      for (const row of venues) {
+        items.push({
+          kind: "venue",
+          id: row.slug,
+          title: row.name,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: placeLine(row.city, row.country),
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const luthiers = await sql.query<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        submitted_name: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select slug, name, city, country, submitted_name, coalesce(status, 'published') as status, created_at
+         from hub_luthiers
+         where ${posted}
+         order by created_at desc limit 40`,
+      );
+      for (const row of luthiers) {
+        items.push({
+          kind: "luthier",
+          id: row.slug,
+          title: row.name,
+          who: row.submitted_name || "member",
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: placeLine(row.city, row.country),
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    try {
+      const teachers = await sql.query<{
+        id: number;
+        name: string;
+        country_slug: string;
+        status: string;
+        created_at: unknown;
+      }>(
+        `select id, name, country_slug, coalesce(status, 'published') as status, created_at
+         from hub_teachers
+         where coalesce(user_id, '') <> ''
+         order by created_at desc limit 40`,
+      );
+      for (const row of teachers) {
+        items.push({
+          kind: "teacher",
+          id: String(row.id),
+          title: row.name,
+          who: row.name,
+          when: toIso(row.created_at),
+          status: submissionStatus(row.status),
+          place: row.country_slug || "",
+        });
+      }
+    } catch {
+      /* table optional */
+    }
+
+    return items.sort((a, b) => {
+      if (a.status !== b.status) return a.status === "pending" ? -1 : 1;
+      return b.when.localeCompare(a.when);
+    });
+  });
+
 export const publishHubItem = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((input: { kind: PendingHubItem["kind"]; id: string }) => input)
