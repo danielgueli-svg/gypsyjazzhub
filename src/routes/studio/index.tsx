@@ -284,7 +284,7 @@ function InvitesPanel() {
         <h2 className="font-display text-2xl font-semibold">Invites you sent</h2>
         {sent.length === 0 ? (
           <p className="mt-2 text-sm text-muted">
-            Organise a jam, then use Alert the room to invite people who are open.
+            Organise a jam, then use Alert this community to invite people who are open.
           </p>
         ) : (
           <ul className="mt-4 space-y-3">
