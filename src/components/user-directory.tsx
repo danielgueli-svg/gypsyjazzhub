@@ -204,7 +204,7 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     setNote(null);
     setEraseBusy(true);
     try {
-      const result = await eraseHubMembers({ data: selected });
+      const result = await eraseHubMembers({ data: { userIds: selected } });
       const gone = new Set(selected);
       const removed = users.filter((row) => gone.has(row.id));
       setUsers((rows) => rows.filter((row) => !gone.has(row.id)));
@@ -422,9 +422,15 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
 
       {users.length ? (
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={toggleAll}>
-            {selected.length === users.length ? "Clear selection" : "Select all shown"}
-          </Button>
+          <label className="flex items-center gap-2 text-sm text-muted">
+            <input
+              type="checkbox"
+              className="size-5 accent-fg"
+              checked={users.length > 0 && selected.length === users.length}
+              onChange={toggleAll}
+            />
+            {selected.length === users.length ? "Clear all" : "Select all shown"}
+          </label>
           <span className="text-sm text-muted">{selected.length} selected</span>
           <Button
             type="button"
@@ -436,40 +442,6 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
             {eraseBusy ? "Erasing…" : "Erase selected"}
           </Button>
         </div>
-      ) : null}
-      {selected.length ? (
-        <form
-          className="mt-4 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void sendMail();
-          }}
-        >
-          <p className="text-sm text-muted">
-            Custom mail to {selected.length} selected member{selected.length === 1 ? "" : "s"}.
-          </p>
-          <div className="space-y-1.5">
-            <Label htmlFor="dir-mail-subject">Subject</Label>
-            <Input
-              id="dir-mail-subject"
-              value={mailSubject}
-              onChange={(event) => setMailSubject(event.target.value)}
-              placeholder="Subject"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="dir-mail-body">Message</Label>
-            <Textarea
-              id="dir-mail-body"
-              value={mailBody}
-              onChange={(event) => setMailBody(event.target.value)}
-              placeholder="Write the mail…"
-            />
-          </div>
-          <Button type="submit" disabled={mailBusy || !mailSubject.trim() || !mailBody.trim()}>
-            {mailBusy ? "Sending…" : "Send mail"}
-          </Button>
-        </form>
       ) : null}
 
       <div className="mt-4 space-y-3 md:hidden">
@@ -485,9 +457,15 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
               <label className="flex items-start gap-3">
                 <input
                   type="checkbox"
-                  className="mt-1"
+                  className="mt-1 size-5 shrink-0 accent-fg"
                   checked={selected.includes(user.id)}
-                  onChange={() => toggle(user.id)}
+                  onChange={(event) => {
+                    const on = event.target.checked;
+                    setSelected((ids) =>
+                      on ? [...ids.filter((id) => id !== user.id), user.id] : ids.filter((id) => id !== user.id),
+                    );
+                  }}
+                  aria-label={`Select ${user.name || user.email}`}
                 />
                 <span className="min-w-0">
                   <p className="font-medium leading-tight break-words">{user.name}</p>
@@ -571,7 +549,13 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
           <thead className="text-faint">
             <tr>
               <th className="px-4 py-3 font-medium">
-                <span className="sr-only">Select</span>
+                <input
+                  type="checkbox"
+                  className="size-5 accent-fg"
+                  checked={users.length > 0 && selected.length === users.length}
+                  onChange={toggleAll}
+                  aria-label="Select all shown"
+                />
               </th>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Country</th>
@@ -601,8 +585,14 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
                   <td className="px-4 py-3">
                     <input
                       type="checkbox"
+                      className="size-5 accent-fg"
                       checked={selected.includes(user.id)}
-                      onChange={() => toggle(user.id)}
+                      onChange={(event) => {
+                        const on = event.target.checked;
+                        setSelected((ids) =>
+                          on ? [...ids.filter((id) => id !== user.id), user.id] : ids.filter((id) => id !== user.id),
+                        );
+                      }}
                       aria-label={`Select ${user.name || user.email}`}
                     />
                   </td>
@@ -680,6 +670,40 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
           </tbody>
         </table>
       </div>
+      {selected.length ? (
+        <form
+          className="mt-4 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void sendMail();
+          }}
+        >
+          <p className="text-sm text-muted">
+            Custom mail to {selected.length} selected member{selected.length === 1 ? "" : "s"}.
+          </p>
+          <div className="space-y-1.5">
+            <Label htmlFor="dir-mail-subject">Subject</Label>
+            <Input
+              id="dir-mail-subject"
+              value={mailSubject}
+              onChange={(event) => setMailSubject(event.target.value)}
+              placeholder="Subject"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="dir-mail-body">Message</Label>
+            <Textarea
+              id="dir-mail-body"
+              value={mailBody}
+              onChange={(event) => setMailBody(event.target.value)}
+              placeholder="Write the mail…"
+            />
+          </div>
+          <Button type="submit" disabled={mailBusy || !mailSubject.trim() || !mailBody.trim()}>
+            {mailBusy ? "Sending…" : "Send mail"}
+          </Button>
+        </form>
+      ) : null}
     </section>
   );
 }

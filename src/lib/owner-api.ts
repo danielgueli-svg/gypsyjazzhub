@@ -861,22 +861,32 @@ export const eraseHubMember = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+function asIdList(input: unknown): string[] {
+  if (Array.isArray(input)) return input.map((id) => String(id));
+  if (input && typeof input === "object") {
+    const row = input as { userIds?: unknown; ids?: unknown };
+    if (Array.isArray(row.userIds)) return row.userIds.map((id) => String(id));
+    if (Array.isArray(row.ids)) return row.ids.map((id) => String(id));
+  }
+  return [];
+}
+
 export const eraseHubMembers = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .validator((userIds: string[]) =>
-    [...new Set((userIds ?? []).map((id) => String(id).trim()).filter(Boolean))].slice(0, 80),
-  )
-  .handler(async ({ context, data: userIds }) => {
+  .validator((input: { userIds: string[] } | string[]) => ({
+    userIds: [...new Set(asIdList(input).map((id) => id.trim()).filter(Boolean))].slice(0, 80),
+  }))
+  .handler(async ({ context, data }) => {
     await requireOwner(context.userId);
-    if (!userIds.length) throw new Error("Select at least one member.");
+    if (!data.userIds.length) throw new Error("Select at least one member.");
     let erased = 0;
-    const skipped: string[] = [];
-    for (const userId of userIds) {
+    let skipped = 0;
+    for (const userId of data.userIds) {
       const result = await eraseOneMember(context.userId, userId);
       if (result.ok) erased += 1;
-      else skipped.push(result.reason);
+      else skipped += 1;
     }
-    return { ok: true as const, erased, skipped: skipped.length };
+    return { ok: true as const, erased, skipped };
   });
 
 export const sendOwnerCustomMail = createServerFn({ method: "POST" })

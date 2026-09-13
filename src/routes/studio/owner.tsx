@@ -300,7 +300,7 @@ function OwnerPage() {
     setDigestNote(null);
     setEraseBusy(true);
     try {
-      const result = await eraseHubMembers({ data: selected });
+      const result = await eraseHubMembers({ data: { userIds: selected } });
       const gone = new Set(selected);
       setMembers((rows) => rows.filter((row) => !gone.has(row.id)));
       setSelected([]);
@@ -654,12 +654,16 @@ function OwnerPage() {
             ) : (
               <>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <Button type="button" variant="outline" size="sm" onClick={toggleAllMembers}>
-                    {selected.length === members.length ? "Clear selection" : "Select all"}
-                  </Button>
-                  <span className="text-sm text-muted">
-                    {selected.length} selected
-                  </span>
+                  <label className="flex items-center gap-2 text-sm text-muted">
+                    <input
+                      type="checkbox"
+                      className="size-5 accent-fg"
+                      checked={members.length > 0 && selected.length === members.length}
+                      onChange={toggleAllMembers}
+                    />
+                    {selected.length === members.length ? "Clear all" : "Select all"}
+                  </label>
+                  <span className="text-sm text-muted">{selected.length} selected</span>
                   <Button
                     type="button"
                     variant="outline"
@@ -670,6 +674,68 @@ function OwnerPage() {
                     {eraseBusy ? "Erasing…" : "Erase selected"}
                   </Button>
                 </div>
+                <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+                  {members.map((member) => (
+                    <li key={member.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                      <div className="flex min-w-0 flex-1 items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1 size-5 shrink-0 accent-fg"
+                          checked={selected.includes(member.id)}
+                          onChange={(event) => {
+                            const on = event.target.checked;
+                            setSelected((ids) =>
+                              on ? [...ids.filter((id) => id !== member.id), member.id] : ids.filter((id) => id !== member.id),
+                            );
+                          }}
+                          aria-label={`Select ${member.name || member.email}`}
+                        />
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-2">
+                            <span className="font-medium">{member.name || "Hub member"}</span>
+                            <span className="flex items-center gap-1" title="Green: you know them. Yellow: still look.">
+                              <button
+                                type="button"
+                                aria-label="I know this person — posts go live"
+                                className={`h-3.5 w-3.5 rounded-full bg-emerald-500 ${member.trust === "green" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
+                                onClick={() => void onSetTrust(member, "green")}
+                              />
+                              <button
+                                type="button"
+                                aria-label="I do not know this person yet — I look first"
+                                className={`h-3.5 w-3.5 rounded-full bg-amber-400 ${member.trust === "yellow" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
+                                onClick={() => void onSetTrust(member, "yellow")}
+                              />
+                            </span>
+                          </span>
+                          <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
+                        </span>
+                      </div>
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={resetting === member.id}
+                          onClick={() => void onSendReset(member)}
+                        >
+                          {resetting === member.id ? "Sending…" : "Send reset mail"}
+                        </Button>
+                        {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => void onEraseMember(member)}
+                          >
+                            Erase
+                          </Button>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
                 {selected.length ? (
                   <form
                     className="mt-4 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
@@ -704,62 +770,6 @@ function OwnerPage() {
                     </Button>
                   </form>
                 ) : null}
-                <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
-                  {members.map((member) => (
-                    <li key={member.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
-                      <label className="flex min-w-0 flex-1 items-start gap-3">
-                        <input
-                          type="checkbox"
-                          className="mt-1"
-                          checked={selected.includes(member.id)}
-                          onChange={() => toggleMember(member.id)}
-                        />
-                        <span className="min-w-0">
-                          <span className="flex items-center gap-2">
-                            <span className="font-medium">{member.name || "Hub member"}</span>
-                            <span className="flex items-center gap-1" title="Green: you know them. Yellow: still look.">
-                              <button
-                                type="button"
-                                aria-label="I know this person — posts go live"
-                                className={`h-3.5 w-3.5 rounded-full bg-emerald-500 ${member.trust === "green" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
-                                onClick={() => void onSetTrust(member, "green")}
-                              />
-                              <button
-                                type="button"
-                                aria-label="I do not know this person yet — I look first"
-                                className={`h-3.5 w-3.5 rounded-full bg-amber-400 ${member.trust === "yellow" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
-                                onClick={() => void onSetTrust(member, "yellow")}
-                              />
-                            </span>
-                          </span>
-                          <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
-                        </span>
-                      </label>
-                      <span className="flex items-center gap-2">
-                        <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={resetting === member.id}
-                          onClick={() => void onSendReset(member)}
-                        >
-                          {resetting === member.id ? "Sending…" : "Send reset mail"}
-                        </Button>
-                        {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => void onEraseMember(member)}
-                          >
-                            Erase
-                          </Button>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
               </>
             )}
           </section>
@@ -1001,6 +1011,13 @@ function SubmissionsPanel({
   onChange: (rows: HubSubmission[]) => void;
   onError: (message: string | null) => void;
 }) {
+  const [picked, setPicked] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  function keyOf(item: HubSubmission) {
+    return `${item.kind}:${item.id}`;
+  }
+
   async function publish(item: HubSubmission) {
     onError(null);
     try {
@@ -1020,8 +1037,31 @@ function SubmissionsPanel({
     try {
       await removeHubItem({ data: { kind: item.kind, id: item.id } });
       onChange(items.filter((row) => !(row.kind === item.kind && row.id === item.id)));
+      setPicked((keys) => keys.filter((key) => key !== keyOf(item)));
     } catch (err) {
       onError(err instanceof Error ? err.message : "Could not take down.");
+    }
+  }
+
+  async function rejectSelected() {
+    const chosen = items.filter((item) => picked.includes(keyOf(item)));
+    if (!chosen.length) return;
+    if (!window.confirm(`Take down ${chosen.length} submission${chosen.length === 1 ? "" : "s"}?`)) {
+      return;
+    }
+    onError(null);
+    setBusy(true);
+    try {
+      for (const item of chosen) {
+        await removeHubItem({ data: { kind: item.kind, id: item.id } });
+      }
+      const gone = new Set(chosen.map(keyOf));
+      onChange(items.filter((row) => !gone.has(keyOf(row))));
+      setPicked([]);
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "Could not take down.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -1033,7 +1073,7 @@ function SubmissionsPanel({
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everything members sent in — jams, concerts, festivals, venues, teachers,
         luthiers, clips and notes. Live ones are already on the hub. Waiting ones
-        need a look. Take down anything that should not stay.
+        need a look. Tick several and take them down together.
       </p>
       <p className="mt-2 text-sm text-muted">
         {items.length} submission{items.length === 1 ? "" : "s"}
@@ -1042,35 +1082,77 @@ function SubmissionsPanel({
       {items.length === 0 ? (
         <p className="mt-4 text-sm text-faint">No member posts yet.</p>
       ) : (
-        <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
-          {items.map((item) => (
-            <li
-              key={`${item.kind}-${item.id}`}
-              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+        <>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-2 text-sm text-muted">
+              <input
+                type="checkbox"
+                className="size-5 accent-fg"
+                checked={items.length > 0 && picked.length === items.length}
+                onChange={() =>
+                  setPicked((current) =>
+                    current.length === items.length ? [] : items.map(keyOf),
+                  )
+                }
+              />
+              {picked.length === items.length ? "Clear all" : "Select all"}
+            </label>
+            <span className="text-sm text-muted">{picked.length} selected</span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={!picked.length || busy}
+              onClick={() => void rejectSelected()}
             >
-              <div className="min-w-0">
-                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-                  {item.kind} · {item.status === "pending" ? "waiting" : "live"} · {item.who}
-                </p>
-                <p className="mt-1 font-display text-lg font-semibold leading-tight">{item.title}</p>
-                <p className="mt-0.5 text-xs text-faint">
-                  {item.place ? `${item.place} · ` : ""}
-                  {formatConcertWhen(item.when)}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {item.status === "pending" ? (
-                  <Button type="button" size="sm" onClick={() => void publish(item)}>
-                    Publish
+              {busy ? "Taking down…" : "Take down selected"}
+            </Button>
+          </div>
+          <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+            {items.map((item) => (
+              <li
+                key={keyOf(item)}
+                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+              >
+                <div className="flex min-w-0 flex-1 items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1 size-5 shrink-0 accent-fg"
+                    checked={picked.includes(keyOf(item))}
+                    onChange={(event) => {
+                      const key = keyOf(item);
+                      const on = event.target.checked;
+                      setPicked((keys) =>
+                        on ? [...keys.filter((row) => row !== key), key] : keys.filter((row) => row !== key),
+                      );
+                    }}
+                    aria-label={`Select ${item.title}`}
+                  />
+                  <div className="min-w-0">
+                    <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
+                      {item.kind} · {item.status === "pending" ? "waiting" : "live"} · {item.who}
+                    </p>
+                    <p className="mt-1 font-display text-lg font-semibold leading-tight">{item.title}</p>
+                    <p className="mt-0.5 text-xs text-faint">
+                      {item.place ? `${item.place} · ` : ""}
+                      {formatConcertWhen(item.when)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {item.status === "pending" ? (
+                    <Button type="button" size="sm" onClick={() => void publish(item)}>
+                      Publish
+                    </Button>
+                  ) : null}
+                  <Button type="button" size="sm" variant="outline" onClick={() => void reject(item)}>
+                    Take down
                   </Button>
-                ) : null}
-                <Button type="button" size="sm" variant="outline" onClick={() => void reject(item)}>
-                  Take down
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </section>
   );
