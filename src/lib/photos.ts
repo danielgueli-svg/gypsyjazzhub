@@ -151,9 +151,10 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:Andreas_Oberg_1.jpg",
   },
   "dario-napoli": {
-    src: "/artists/dario-napoli.jpg",
-    credit: "Dario Napoli",
-    href: "https://darionapoli.com/bio/",
+    src: "/artists/dario-napoli-guitar.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Dario_Napoli_Djangofestivalen_2025_(204619).jpg",
+    license: "CC BY-SA 4.0",
   },
   "georges-boulanger": {
     src: "/artists/georges-boulanger.jpg",
