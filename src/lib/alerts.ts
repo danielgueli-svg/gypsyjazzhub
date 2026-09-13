@@ -962,6 +962,11 @@ async function sendForUser(
 
 export async function runAlerts(source: "cron" | "test") {
   await ensureAlertTables();
+  const { runJamRoomReminders } = await import("@/lib/jam-reminders");
+  const room = await runJamRoomReminders().catch((err) => {
+    console.error("jam room reminders failed", err);
+    return { sent: 0, skipped: 0, failed: 0, jams: 0 };
+  });
   const sql = await getSql();
   const users = await sql<{ user_id: string }>`
     select user_id from hub_alert_prefs where enabled = true
@@ -990,7 +995,7 @@ export async function runAlerts(source: "cron" | "test") {
   const sent = results.filter((row) => row.result.ok && !row.result.skipped).length;
   const skipped = results.filter((row) => row.result.skipped).length;
   const failed = results.filter((row) => !row.result.ok && !row.result.skipped).length;
-  return { sent, skipped, failed, checked: results.length };
+  return { sent, skipped, failed, checked: results.length, room };
 }
 
 export const getAlertPrefs = createServerFn({ method: "GET" })

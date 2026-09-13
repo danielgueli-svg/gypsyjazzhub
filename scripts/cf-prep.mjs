@@ -64,9 +64,34 @@ if (process.env.RESEND_API_KEY) {
 cfg.durable_objects = {
   bindings: [{ name: "HUB_DB", class_name: "HubDb" }],
 };
+cfg.triggers = {
+  ...(cfg.triggers || {}),
+  crons: [...new Set([...(cfg.triggers?.crons || []), "15 6 * * *"])],
+};
 cfg.migrations = cfg.migrations?.length
   ? cfg.migrations
   : [{ tag: "v1", new_sqlite_classes: ["HubDb"] }];
 
 writeFileSync(wranglerPath, JSON.stringify(cfg, null, 2) + "\n");
 console.log("[cf-prep] wrangler.json ready for gypsyjazzhub");
+
+if (existsSync(indexPath)) {
+  let index = readFileSync(indexPath, "utf8");
+  if (!index.includes("gjhScheduled")) {
+    index += `
+async function gjhScheduled(event, env, ctx) {
+  const secret = env.CRON_SECRET || env.DIGEST_SECRET || "";
+  const q = secret ? "?secret=" + encodeURIComponent(secret) : "";
+  const origin = "https://www.gypsyjazzhub.com";
+  ctx.waitUntil(fetch(origin + "/api/alerts" + q));
+  ctx.waitUntil(fetch(origin + "/api/digest" + q));
+}
+const __gjhDefault = typeof cloudflare_module_default !== "undefined" ? cloudflare_module_default : null;
+if (__gjhDefault && typeof __gjhDefault === "object") {
+  __gjhDefault.scheduled = gjhScheduled;
+}
+`;
+    writeFileSync(indexPath, index);
+    console.log("[cf-prep] attached daily jam-reminder scheduled handler");
+  }
+}

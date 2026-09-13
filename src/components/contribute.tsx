@@ -19,7 +19,6 @@ import {
   type ArtistOption,
 } from "@/lib/hub-api";
 import { parseLuthierCraft, type LuthierCraft } from "@/lib/luthiers";
-import { inviteToJam } from "@/lib/fans";
 import { CountryRequestForm } from "@/components/country-request";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
 import { useI18n } from "@/lib/i18n";
@@ -545,7 +544,6 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
   const [bio, setBio] = useState("");
   const [leader, setLeader] = useState("");
   const [leaderContact, setLeaderContact] = useState("");
-  const [alertOpen, setAlertOpen] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -576,29 +574,7 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
         void router.invalidate();
         return;
       }
-      if (alertOpen) {
-        try {
-          const invited = await inviteToJam({
-            data: {
-              jamSlug: result.slug,
-              jamName: name,
-              city,
-              country,
-              startsAt: nextStartsAt,
-              allOpen: true,
-            },
-          });
-          setStatus(
-            invited.sent
-              ? `Jam is on the hub. Alerted ${invited.sent} people open for invitations.`
-              : "Jam is on the hub.",
-          );
-        } catch {
-          setStatus("Jam is on the hub.");
-        }
-      } else {
-        setStatus("Jam is on the hub.");
-      }
+      setStatus("Jam is on the hub. The room gets a reminder 2 days before.");
       void router.invalidate();
       await router.navigate({ to: "/jams/$slug", params: { slug: result.slug } });
     } catch (err) {
@@ -728,15 +704,7 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
           placeholder={t("jam.leaderContactHint")}
         />
       </Field>
-      <label className="sm:col-span-2 flex min-h-11 items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={alertOpen}
-          onChange={(e) => setAlertOpen(e.target.checked)}
-          className="size-4 accent-accent"
-        />
-        {t("jam.inviteOpen")}
-      </label>
+      <p className="sm:col-span-2 text-sm leading-relaxed text-muted">{t("jam.inviteOpen")}</p>
       <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={busy}>
           {busy ? "Adding…" : kind === "meetup" ? "Announce meetup" : "Add jam"}
