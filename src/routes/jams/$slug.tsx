@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { GoingRsvp } from "@/components/going-rsvp";
 import { JamEdit } from "@/components/jam-edit";
+import { JamNights } from "@/components/jam-nights";
 import { HubChat } from "@/components/hub-chat";
 import { InvitePanel } from "@/components/invite-panel";
 import { LegendCard } from "@/components/legend-card";
@@ -9,7 +10,7 @@ import { SubscribeButton } from "@/components/subscribe-button";
 import { ShareBox } from "@/components/share-page";
 import { Badge } from "@/components/ui/badge";
 import { listLegends } from "@/lib/api";
-import { getJam, overlayJam, jamHours, jamMapsUrl, jamPlace, formatJamNext } from "@/lib/jams";
+import { getJam, overlayJam, jamHours, jamMapsUrl, jamPlace } from "@/lib/jams";
 import { jamHoursLabel, jamWhen } from "@/lib/jam-copy";
 import { CountryLabel } from "@/components/country-label";
 import { getHubJam, listHubChat } from "@/lib/hub-api";
@@ -131,8 +132,7 @@ function JamPage() {
               </a>
             </p>
           ) : null}
-          <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
-          <p className="mt-1 text-sm text-muted">{formatJamNext(jam, locale)}</p>
+          <JamNights jam={jam} />
           <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />
         </div>
         {jam.leader || jam.leaderContact ? (

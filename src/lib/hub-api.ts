@@ -396,6 +396,7 @@ function mapJam(row: {
   hours?: string;
   leader?: string;
   leader_contact?: string;
+  second_starts_at?: unknown;
 }): Jam {
   return {
     slug: row.slug,
@@ -413,6 +414,7 @@ function mapJam(row: {
     site: row.bio.match(/https?:\/\/[^\s]+/)?.[0],
     leader: row.leader ?? "",
     leaderContact: row.leader_contact ?? "",
+    secondStartsAt: row.second_starts_at ? toIso(row.second_starts_at) : "",
   };
 }
 
@@ -422,7 +424,11 @@ async function ensureJamLeaderColumns() {
   if (getDbSource() === "none") return;
   jamLeaderReady ??= (async () => {
     const sql = await getSql();
-    for (const col of ["leader text not null default ''", "leader_contact text not null default ''"]) {
+    for (const col of [
+      "leader text not null default ''",
+      "leader_contact text not null default ''",
+      "second_starts_at timestamptz",
+    ]) {
       try {
         await sql.query(`alter table hub_jams add column if not exists ${col}`);
       } catch {
@@ -595,9 +601,11 @@ export const listHubJams = createServerFn({ method: "GET" }).handler(async () =>
       hours: string;
       leader: string;
       leader_contact: string;
+      second_starts_at: unknown;
     }>`
     select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
-           coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact
+           coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
+           second_starts_at
     from hub_jams
     where coalesce(status, 'published') = 'published'
     order by next_starts_at asc
@@ -651,9 +659,11 @@ export const getHubJam = createServerFn({ method: "GET" })
       hours: string;
       leader: string;
       leader_contact: string;
+      second_starts_at: unknown;
     }>`
       select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
-             coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact
+             coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
+             second_starts_at
       from hub_jams
       where slug = ${slug} and coalesce(status, 'published') = 'published'
       limit 1
@@ -1128,6 +1138,106 @@ export const updateHubJam = createServerFn({ method: "POST" })
       ],
     );
     return { ok: true as const, slug, pending: status === "pending" };
+  });
+
+export const updateHubJamNight = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { slug: string; slot: number; startsAt: string }) => input)
+  .handler(async ({ context, data }) => {
+    await ensureHub();
+    await ensureJamLeaderColumns();
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const { getJam, overlayJam, stepJamNext } = await import("@/lib/jams");
+    const gate = await gateContribution(context.userId, {
+      sessionTrusted: true,
+    });
+    if (gate.skip) return { ok: true as const, pending: true as const };
+    const slug = data.slug.trim();
+    if (!slug) throw new Error("Missing jam.");
+    const slot = data.slot === 2 ? 2 : 1;
+    const starts = new Date(data.startsAt);
+    if (Number.isNaN(starts.getTime())) throw new Error("Pick a date.");
+    const catalog = getJam(slug);
+    const sql = await getSql();
+    const existing = await sql.query<{ slug: string }>(
+      `select slug from hub_jams where slug = $1 limit 1`,
+      [slug],
+    );
+    if (!catalog && !existing[0]) throw new Error("That jam is not on the hub.");
+    const hub = await sql<{
+      slug: string;
+      name: string;
+      city: string;
+      country: string;
+      venue: string;
+      when_text: string;
+      next_starts_at: unknown;
+      bio: string;
+      kind: string;
+      address: string;
+      hours: string;
+      leader: string;
+      leader_contact: string;
+      second_starts_at: unknown;
+    }>`
+      select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
+             coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
+             second_starts_at
+      from hub_jams where slug = ${slug} limit 1
+    `;
+    const jam = overlayJam(catalog, hub[0] ? mapJam(hub[0]) : null);
+    if (!jam) throw new Error("That jam is not on the hub.");
+    let first = jam.nextStartsAt;
+    let second = jam.secondStartsAt && Date.parse(jam.secondStartsAt) > Date.parse(first)
+      ? jam.secondStartsAt
+      : stepJamNext(jam, first);
+    const iso = starts.toISOString();
+    if (slot === 1) {
+      first = iso;
+      if (Date.parse(second) <= Date.parse(first)) second = stepJamNext({ ...jam, nextStartsAt: first }, first);
+    } else if (Date.parse(iso) <= Date.parse(first)) {
+      second = first;
+      first = iso;
+    } else {
+      second = iso;
+    }
+    const submitted = await submitterName(context.userId);
+    const kind = jam.kind === "meetup" ? "meetup" : "regular";
+    const status = catalog || existing[0] ? "published" : gate.status;
+    await sql.query(
+      `insert into hub_jams (
+        slug, name, city, country, venue, address, hours, when_text, next_starts_at, second_starts_at,
+        bio, kind, leader, leader_contact, submitted_by, submitted_name, status, updated_at, updated_by
+      ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+      on conflict (slug) do update set
+        next_starts_at = excluded.next_starts_at,
+        second_starts_at = excluded.second_starts_at,
+        status = excluded.status,
+        updated_at = excluded.updated_at,
+        updated_by = excluded.updated_by`,
+      [
+        slug,
+        jam.name,
+        jam.city,
+        jam.country,
+        jam.venue,
+        jam.address,
+        jam.hours,
+        jam.when,
+        first,
+        second,
+        jam.bio,
+        kind,
+        jam.leader ?? "",
+        jam.leaderContact ?? "",
+        context.userId,
+        submitted,
+        status,
+        new Date().toISOString(),
+        context.userId,
+      ],
+    );
+    return { ok: true as const, slug, pending: status === "pending", first, second };
   });
 
 export const listHubVenues = createServerFn({ method: "GET" }).handler(async () => {

@@ -19,6 +19,7 @@ export type Jam = {
   inviteEmail?: string;
   leader?: string;
   leaderContact?: string;
+  secondStartsAt?: string;
 };
 
 export function isStandingGypsyJam(jam: Jam) {
@@ -1396,6 +1397,7 @@ export function overlayJam(catalog: Jam | undefined, hub: Jam | null | undefined
     kind: hub.kind ?? catalog.kind,
     leader: pick(hub.leader ?? "", catalog.leader ?? ""),
     leaderContact: pick(hub.leaderContact ?? "", catalog.leaderContact ?? ""),
+    secondStartsAt: hub.secondStartsAt || catalog.secondStartsAt,
   };
 }
 
@@ -1467,6 +1469,27 @@ export function rollJamNext(jam: Jam, now = Date.now()): string {
     guard += 1;
   }
   return date.toISOString();
+}
+
+export function stepJamNext(jam: Jam, fromIso: string): string {
+  const date = new Date(fromIso);
+  if (Number.isNaN(date.getTime())) return fromIso;
+  const stepDays = isWeekly(jam.when) ? 7 : isBiweekly(jam.when) ? 14 : isMonthlyish(jam.when) ? 28 : 7;
+  date.setUTCDate(date.getUTCDate() + stepDays);
+  return date.toISOString();
+}
+
+export function upcomingJamNights(jam: Jam, now = Date.now()): [string, string] {
+  const first = rollJamNext(jam, now);
+  const stored = jam.secondStartsAt ? Date.parse(jam.secondStartsAt) : Number.NaN;
+  const firstMs = Date.parse(first);
+  const second =
+    Number.isFinite(stored) && stored > firstMs ? jam.secondStartsAt! : stepJamNext(jam, first);
+  return [first, second];
+}
+
+export function formatJamNight(jam: Jam, iso: string, locale = "en") {
+  return formatJamNext({ ...jam, nextStartsAt: iso }, locale);
 }
 
 export function catalogJams(now = Date.now()) {
