@@ -1,9 +1,34 @@
 import { ChevronDown, Globe2, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Flag } from "@/components/flag";
 import { countrySlug, displayCountry, groupByContinent } from "@/lib/geo";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+function fold(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase();
+}
+
+function countryMatches(name: string, query: string, locale: string) {
+  const needle = fold(query.trim());
+  if (!needle) return true;
+  const label = fold(displayCountry(name, locale));
+  const raw = fold(name);
+  return label.includes(needle) || raw.includes(needle);
+}
+
+function countryRank(name: string, query: string, locale: string) {
+  const needle = fold(query.trim());
+  const label = fold(displayCountry(name, locale));
+  const raw = fold(name);
+  const words = `${label} ${raw}`.split(/[^a-z0-9]+/).filter(Boolean);
+  if (label.startsWith(needle) || raw.startsWith(needle)) return 0;
+  if (words.some((word) => word.startsWith(needle))) return 1;
+  return 2;
+}
 
 export function CountryClicker({
   countries,
@@ -24,7 +49,9 @@ export function CountryClicker({
 }) {
   const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const root = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const selected = countries.find((name) => countrySlug(name) === value) ?? null;
   const groups = useMemo(() => {
     const rows = groupByContinent(countries);
@@ -32,6 +59,43 @@ export function CountryClicker({
     const rest = rows.filter((group) => group.id !== "europe");
     return [...europe, ...rest];
   }, [countries]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim();
+    const names = countries.filter((name) => countryMatches(name, q, locale));
+    names.sort((a, b) => {
+      if (q) {
+        const d = countryRank(a, q, locale) - countryRank(b, q, locale);
+        if (d) return d;
+      }
+      return displayCountry(a, locale).localeCompare(displayCountry(b, locale), locale, {
+        sensitivity: "base",
+      });
+    });
+    return names;
+  }, [countries, query, locale]);
+
+  const filteredGroups = useMemo(() => {
+    if (!query.trim()) return groups;
+    const allow = new Set(filtered);
+    return groups
+      .map((group) => ({
+        ...group,
+        countries: group.countries
+          .filter((name) => allow.has(name))
+          .sort((a, b) => filtered.indexOf(a) - filtered.indexOf(b)),
+      }))
+      .filter((group) => group.countries.length);
+  }, [groups, query, filtered]);
+
+  useEffect(() => {
+    if (!open) {
+      setQuery("");
+      return;
+    }
+    const id = window.setTimeout(() => searchRef.current?.focus(), 0);
+    return () => window.clearTimeout(id);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -53,15 +117,30 @@ export function CountryClicker({
 
   function pick(slug: string | null) {
     onChange(slug);
+    setQuery("");
     setOpen(false);
   }
 
+  function onSearchKey(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    const first = filtered[0];
+    if (first) pick(countrySlug(first));
+  }
+
+  const searchField = (
+    <input
+      ref={searchRef}
+      value={query}
+      onChange={(event) => setQuery(event.target.value)}
+      onKeyDown={onSearchKey}
+      placeholder={t("home.searchCountry")}
+      aria-label={t("home.searchCountry")}
+      className="mb-2 h-11 w-full rounded-md bg-raised px-3 text-sm text-fg placeholder:text-faint outline-none"
+    />
+  );
+
   if (layout === "list") {
-    const names = [...countries].sort((a, b) =>
-      displayCountry(a, locale).localeCompare(displayCountry(b, locale), locale, {
-        sensitivity: "base",
-      }),
-    );
     return (
       <div ref={root} className={cn("relative z-20 mt-4", className)}>
         <button
@@ -87,26 +166,31 @@ export function CountryClicker({
             role="listbox"
             className="absolute left-1/2 z-[300] mt-2 w-[min(100vw-2rem,22rem)] -translate-x-1/2 rounded-xl bg-surface p-2 text-fg shadow-border ring-1 ring-border sm:left-0 sm:translate-x-0"
           >
+            {searchField}
             <div className="max-h-72 overflow-y-auto">
-              {names.map((name) => {
-                const slug = countrySlug(name);
-                const on = value === slug;
-                return (
-                  <button
-                    key={name}
-                    type="button"
-                    role="option"
-                    aria-selected={on}
-                    onClick={() => pick(slug)}
-                    className={cn(
-                      "flex min-h-11 w-full items-center rounded-md px-3 text-left text-sm",
-                      on ? "bg-accent text-accent-fg" : "text-fg hover:bg-raised",
-                    )}
-                  >
-                    {displayCountry(name, locale)}
-                  </button>
-                );
-              })}
+              {filtered.length === 0 ? (
+                <p className="px-3 py-3 text-sm text-muted">{t("home.noCountryMatch")}</p>
+              ) : (
+                filtered.map((name) => {
+                  const slug = countrySlug(name);
+                  const on = value === slug;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      role="option"
+                      aria-selected={on}
+                      onClick={() => pick(slug)}
+                      className={cn(
+                        "flex min-h-11 w-full items-center rounded-md px-3 text-left text-sm",
+                        on ? "bg-accent text-accent-fg" : "text-fg hover:bg-raised",
+                      )}
+                    >
+                      {displayCountry(name, locale)}
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
         ) : null}
@@ -166,6 +250,7 @@ export function CountryClicker({
           role="listbox"
           className="absolute z-[300] mt-2 w-[min(100%,22rem)] rounded-xl bg-surface p-3 text-fg shadow-border ring-1 ring-border"
         >
+          {searchField}
           {allowClear ? (
           <button
             type="button"
@@ -179,7 +264,10 @@ export function CountryClicker({
           </button>
           ) : null}
           <div className="mt-3 max-h-72 space-y-3 overflow-y-auto">
-            {groups.map((group) => (
+            {filtered.length === 0 ? (
+              <p className="px-1 text-sm text-muted">{t("home.noCountryMatch")}</p>
+            ) : (
+              filteredGroups.map((group) => (
               <div key={group.id}>
                 <p className="px-1 text-xs tracking-[0.14em] text-muted uppercase">
                   {t(`home.region.${group.id}`)}
@@ -206,7 +294,8 @@ export function CountryClicker({
                   })}
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       ) : null}
