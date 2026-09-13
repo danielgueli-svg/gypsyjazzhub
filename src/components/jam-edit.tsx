@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { updateHubJam } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
@@ -28,6 +29,7 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
   const [nextStartsAt, setNextStartsAt] = useState(toLocalInput(jam.nextStartsAt));
   const [leader, setLeader] = useState(jam.leader ?? "");
   const [leaderContact, setLeaderContact] = useState(jam.leaderContact ?? "");
+  const [bio, setBio] = useState(jam.bio ?? "");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -50,7 +52,7 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
           hours,
           when,
           nextStartsAt: nextIso,
-          bio: jam.bio,
+          bio,
           leader,
           leaderContact,
         },
@@ -125,6 +127,15 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
               required
               value={nextStartsAt}
               onChange={(e) => setNextStartsAt(e.target.value)}
+            />
+          </div>
+          <div className="sm:col-span-2 space-y-1.5">
+            <Label htmlFor="jam-edit-bio">{t("jam.editBio")}</Label>
+            <Textarea
+              id="jam-edit-bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              rows={5}
             />
           </div>
           <div className="space-y-1.5">
