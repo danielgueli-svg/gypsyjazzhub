@@ -351,17 +351,14 @@ export async function maybeSendOrganiserMails() {
       detail text not null default ''
     )
   `);
-  try {
-    await sql.query(`insert into hub_oneoff_mail (id, sent_at, detail) values ($1, $2, $3)`, [
-      SIGRID_MAIL_ID,
-      new Date().toISOString(),
-      "sending",
-    ]);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    if (/unique|already exists|constraint/i.test(msg)) return;
-    console.error("[hub] organiser mail claim failed", msg);
-    throw err;
+  const existing = await sql.query<{ detail: string }>(
+    `select detail from hub_oneoff_mail where id = $1 limit 1`,
+    [SIGRID_MAIL_ID],
+  );
+  const prior = existing[0]?.detail ?? "";
+  if (/sent with Resend/i.test(prior)) {
+    console.error("[hub] organiser mail already sent");
+    return;
   }
 
   const jamUrl = "https://www.gypsyjazzhub.com/jams/ubbergen-refter-jam";
@@ -381,6 +378,22 @@ export async function maybeSendOrganiserMails() {
     "Team Gypsy Jazz Hub",
   ].join("\n");
 
+  console.error("[hub] organiser mail sending", prior || "new");
+  const now = new Date().toISOString();
+  if (existing[0]) {
+    await sql.query(`update hub_oneoff_mail set sent_at = $2, detail = $3 where id = $1`, [
+      SIGRID_MAIL_ID,
+      now,
+      "sending",
+    ]);
+  } else {
+    await sql.query(`insert into hub_oneoff_mail (id, sent_at, detail) values ($1, $2, $3)`, [
+      SIGRID_MAIL_ID,
+      now,
+      "sending",
+    ]);
+  }
+
   try {
     const { wrapHubMailHtml } = await import("@/lib/hub-mail-html");
     const { HUB_OWNER_EMAIL } = await import("@/lib/hub-owner");
@@ -398,10 +411,11 @@ export async function maybeSendOrganiserMails() {
       HUB_OWNER_EMAIL,
     );
     await sql.query(`update hub_oneoff_mail set detail = $2 where id = $1`, [SIGRID_MAIL_ID, detail]);
-    console.log("[hub] organiser mail sent", SIGRID_MAIL_ID, detail);
+    console.error("[hub] organiser mail sent", detail);
   } catch (err) {
-    await sql.query(`delete from hub_oneoff_mail where id = $1`, [SIGRID_MAIL_ID]);
-    throw err;
+    const msg = err instanceof Error ? err.message : String(err);
+    await sql.query(`update hub_oneoff_mail set detail = $2 where id = $1`, [SIGRID_MAIL_ID, `fail ${msg.slice(0, 180)}`]);
+    console.error("[hub] organiser mail failed", msg);
   }
 }
 
