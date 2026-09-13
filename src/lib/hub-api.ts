@@ -248,6 +248,12 @@ async function runEnsureHub() {
       and (venue = 'Souk' or address = 'Reims' or bio like '%Souk%')
   `);
   await sql.query(`
+    update hub_jams
+    set leader = 'Asso Gypsy Jazz à Reims — Frédéric Lefebvre, Gilles Valette',
+        leader_contact = ''
+    where slug = 'reims-souk'
+  `);
+  await sql.query(`
     alter table hub_festivals add column if not exists status text not null default 'published'
   `);
   await sql.query(`
