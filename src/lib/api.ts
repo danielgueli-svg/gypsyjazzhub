@@ -509,12 +509,9 @@ async function uniqueSlug(base: string, userId: string) {
 
 async function legendsCatalog() {
   void ensureSeed();
-  try {
-    const { materializePendingArtists } = await import("@/lib/hub-api");
-    await materializePendingArtists();
-  } catch (err) {
-    console.error("pending artists materialize failed", err);
-  }
+  void import("@/lib/hub-api")
+    .then(({ materializePendingArtists }) => materializePendingArtists())
+    .catch((err) => console.error("pending artists materialize failed", err));
   return mergeLegends(await loadLegendsFromDb());
 }
 

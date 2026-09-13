@@ -1,5 +1,17 @@
 export const CIRCLE_ARTISTS = [
   {
+    slug: "tommy-davy",
+    name: "Tommy Davy",
+    years: "Norway / United States",
+    origin: "Norway / United States",
+    instruments: "Guitar",
+    era: "The Circle",
+    bio: "Guitar. Norway / United States. This page opened from his form on the hub — a longer bio can be edited on the page.",
+    notable: "Guitar",
+    youtube_url: "",
+    sort_order: 140,
+  },
+  {
     slug: "dario-napoli",
     name: "Dario Napoli",
     years: "b. Italy",
