@@ -16,6 +16,8 @@ function isUsa(name: string) {
   const slug = countrySlug(name);
   return slug === "united-states-of-america" || slug === "united-states" || slug === "usa";
 }
+
+function countryMatches(name: string, query: string, locale: string) {
   const needle = fold(query.trim());
   if (!needle) return true;
   const label = fold(displayCountry(name, locale));
