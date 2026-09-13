@@ -28,6 +28,11 @@ export async function ensureGuard() {
   } catch {
     /* column already there */
   }
+  try {
+    await sql.query(`alter table hub_members add column trust text not null default 'yellow'`);
+  } catch {
+    /* column already there */
+  }
   await sql.query(`
     create table if not exists hub_bans (
       id serial primary key,
@@ -234,13 +239,52 @@ export async function setMemberBanned(userId: string, banned: boolean, ip = "") 
   }
 }
 
+export type MemberTrust = "green" | "yellow";
+
+export function asTrust(value: unknown): MemberTrust {
+  return String(value ?? "").trim().toLowerCase() === "green" ? "green" : "yellow";
+}
+
 export async function memberFlags(userId: string) {
   await ensureGuard();
   const sql = await getSql();
-  const rows = await sql<{ verified: number; banned: number; approved_count: number }>`
-    select verified, banned, approved_count from hub_members where user_id = ${userId} limit 1
+  try {
+    const rows = await sql<{
+      verified: number;
+      banned: number;
+      approved_count: number;
+      trust: string;
+    }>`
+      select verified, banned, approved_count, trust from hub_members where user_id = ${userId} limit 1
+    `;
+    if (!rows[0]) return null;
+    return { ...rows[0], trust: asTrust(rows[0].trust) };
+  } catch {
+    const rows = await sql<{ verified: number; banned: number; approved_count: number }>`
+      select verified, banned, approved_count from hub_members where user_id = ${userId} limit 1
+    `;
+    if (!rows[0]) return null;
+    return { ...rows[0], trust: "yellow" as const };
+  }
+}
+
+export async function setMemberTrust(userId: string, trust: MemberTrust) {
+  await ensureGuard();
+  const sql = await getSql();
+  const next = asTrust(trust);
+  await sql`
+    insert into hub_members (user_id, verified, trust)
+    values (${userId}, 1, ${next})
+    on conflict (user_id) do update set trust = excluded.trust
   `;
-  return rows[0] ?? null;
+  if (next === "green") {
+    try {
+      await bumpApproved(userId);
+    } catch {
+      /* optional */
+    }
+  }
+  return next;
 }
 
 const AUTO_PUBLISH_KEY = "auto_publish_posts";
@@ -320,7 +364,8 @@ export async function gateContribution(
   await sql`insert into hub_submits (user_id) values (${userId})`;
   const auto = await autoPublishOn();
   const soon = startsWithinADay(input.startsAt);
-  const pending = auto || soon ? false : !row || row.approved_count < 1;
+  const trusted = asTrust(row?.trust) === "green";
+  const pending = trusted || auto || soon ? false : true;
   if (!pending) {
     try {
       await bumpApproved(userId);

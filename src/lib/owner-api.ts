@@ -118,6 +118,7 @@ export type HubMember = {
   name: string;
   email: string;
   createdAt: string;
+  trust: "green" | "yellow";
 };
 
 export type HubActivity = {
@@ -196,6 +197,8 @@ export const listHubMembers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     await requireOwner(context.userId);
+    const { ensureGuard, asTrust } = await import("@/lib/hub-guard");
+    await ensureGuard();
     const sql = await getSql();
     let rows: { id: string; name: string; email: string; createdAt: unknown }[] = [];
     try {
@@ -215,7 +218,20 @@ export const listHubMembers = createServerFn({ method: "GET" })
       name: row.name,
       email: row.email,
       createdAt: toIso(row.createdAt),
+      trust: "yellow",
     }));
+    const trustBy = new Map<string, "green" | "yellow">();
+    try {
+      const flags = await sql<{ user_id: string; trust: string }>`
+        select user_id, trust from hub_members
+      `;
+      for (const row of flags) trustBy.set(row.user_id, asTrust(row.trust));
+    } catch {
+      /* trust column optional until first desk open */
+    }
+    for (const member of members) {
+      member.trust = trustBy.get(member.id) ?? (member.email.toLowerCase() === OWNER_KEEP_EMAIL ? "green" : "yellow");
+    }
     try {
       const extra = await sql<{ user_id: string; email: string; created_at: unknown }>`
         select user_id, email, created_at from hub_members
@@ -228,6 +244,7 @@ export const listHubMembers = createServerFn({ method: "GET" })
           name: (row.email || "").split("@")[0] || "Hub member",
           email: row.email || "",
           createdAt: toIso(row.created_at),
+          trust: trustBy.get(row.user_id) ?? "yellow",
         });
       }
     } catch {
@@ -240,6 +257,24 @@ export const listHubMembers = createServerFn({ method: "GET" })
       /* hide first, delete when we can */
     }
     return real;
+  });
+
+export const setHubMemberTrust = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { userId: string; trust: "green" | "yellow" }) => ({
+    userId: String(input.userId ?? "").trim(),
+    trust: input.trust === "green" ? ("green" as const) : ("yellow" as const),
+  }))
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    if (!data.userId) throw new Error("Need a member.");
+    const { setMemberTrust } = await import("@/lib/hub-guard");
+    const trust = await setMemberTrust(data.userId, data.trust);
+    if (trust === "green") {
+      const { publishPendingByUser } = await import("@/lib/hub-api");
+      await publishPendingByUser(data.userId);
+    }
+    return { ok: true as const, trust };
   });
 
 export const getVisitStats = createServerFn({ method: "GET" })

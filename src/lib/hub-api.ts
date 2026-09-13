@@ -2302,6 +2302,27 @@ export const publishHubItem = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export async function publishPendingByUser(userId: string) {
+  if (!userId) return 0;
+  const sql = await getSql();
+  const run = async (text: string, params: unknown[] = []) => {
+    try {
+      await sql.query(text, params);
+    } catch {
+      /* table optional */
+    }
+  };
+  await run(`update hub_concerts set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_jams set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_festivals set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_clips set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_notes set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_venues set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_luthiers set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
+  await run(`update hub_teachers set status = 'published' where user_id = $1 and status = 'pending'`, [userId]);
+  return 1;
+}
+
 export type ArchiveCircleNote = {
   id: number;
   country: string;

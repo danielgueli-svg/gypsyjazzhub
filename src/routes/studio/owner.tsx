@@ -21,6 +21,7 @@ import {
   saveAutoPublish,
   listHubActivity,
   listHubMembers,
+  setHubMemberTrust,
   eraseHubMember,
   eraseHubMembers,
   sendOwnerCustomMail,
@@ -360,6 +361,27 @@ function OwnerPage() {
     }
   }
 
+  async function onSetTrust(member: HubMember, trust: HubMember["trust"]) {
+    setError(null);
+    setDigestNote(null);
+    try {
+      await setHubMemberTrust({ data: { userId: member.id, trust } });
+      setMembers((rows) => rows.map((row) => (row.id === member.id ? { ...row, trust } : row)));
+      if (trust === "green") {
+        setSubmissions((rows) =>
+          rows.map((row) =>
+            row.who === member.name || row.who === member.email ? { ...row, status: "published" } : row,
+          ),
+        );
+        setDigestNote(`${member.name || member.email} is green — their posts go on the hub.`);
+      } else {
+        setDigestNote(`${member.name || member.email} is yellow — you still look at their posts when “everyone live” is off.`);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save the dot.");
+    }
+  }
+
   async function onToggleAutoPublish(on: boolean) {
     setError(null);
     setDigestNote(null);
@@ -370,7 +392,7 @@ function OwnerPage() {
       setDigestNote(
         on
           ? "Member posts go on the hub immediately. You can still take them down here."
-          : "First posts wait for you. A jam or concert in the next 24 hours still goes live.",
+          : "Yellow members wait for you. Green members and a jam or concert in the next 24 hours still go live.",
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save.");
@@ -588,8 +610,9 @@ function OwnerPage() {
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
               Right now a jam, concert, festival or other member post goes on the
               hub as soon as they send it — no wait on this desk. A night in the
-              next 24 hours always goes live. Switch this off if you want first
-              posts to wait for you again. You can still take anything down below.
+              next 24 hours always goes live. Mark people with a green or yellow
+              dot on the Members list: green = you know them, posts stay automatic
+              even if you switch this off; yellow = you still look first.
             </p>
             <label className="mt-4 flex max-w-xl items-start gap-3 rounded-2xl bg-surface px-4 py-4 shadow-border">
               <input
@@ -605,8 +628,8 @@ function OwnerPage() {
                 </span>
                 <span className="mt-1 block text-xs text-muted">
                   {autoPublish
-                    ? "On — new posts are live. You look afterwards."
-                    : "Off — first posts wait here, except a jam or concert within 24 hours."}
+                    ? "On — new posts are live. You look afterwards. Green/yellow dots still mark who you know."
+                    : "Off — yellow waits here. Green goes live. A jam or concert within 24 hours still goes live."}
                 </span>
               </span>
             </label>
@@ -621,8 +644,10 @@ function OwnerPage() {
           <section id="desk-members" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
             <p className="mt-2 text-sm text-muted">
-              {members.length} people with a hub login. Tick one or more to erase them or send a custom mail.
-              Send a password reset from a single row. Your own login stays.
+              {members.length} people with a hub login. Green dot: you know them,
+              their posts go on the hub. Yellow: you do not know them yet — you
+              still look, unless “everyone live” is on. Tick several to erase or
+              send a custom mail. Your own login stays.
             </p>
             {members.length === 0 ? (
               <p className="mt-4 text-sm text-faint">No members stored yet.</p>
@@ -690,7 +715,23 @@ function OwnerPage() {
                           onChange={() => toggleMember(member.id)}
                         />
                         <span className="min-w-0">
-                          <span className="font-medium">{member.name || "Hub member"}</span>
+                          <span className="flex items-center gap-2">
+                            <span className="font-medium">{member.name || "Hub member"}</span>
+                            <span className="flex items-center gap-1" title="Green: you know them. Yellow: still look.">
+                              <button
+                                type="button"
+                                aria-label="I know this person — posts go live"
+                                className={`h-3.5 w-3.5 rounded-full bg-emerald-500 ${member.trust === "green" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
+                                onClick={() => void onSetTrust(member, "green")}
+                              />
+                              <button
+                                type="button"
+                                aria-label="I do not know this person yet — I look first"
+                                className={`h-3.5 w-3.5 rounded-full bg-amber-400 ${member.trust === "yellow" ? "ring-2 ring-fg ring-offset-2 ring-offset-surface" : "opacity-40"}`}
+                                onClick={() => void onSetTrust(member, "yellow")}
+                              />
+                            </span>
+                          </span>
                           <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
                         </span>
                       </label>
