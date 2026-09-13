@@ -2929,7 +2929,7 @@ export const VENUES: Venue[] = [
     site: "https://www.harpa.is/en/mulinn-jazz-club",
     contact: "",
     scene: "jazz",
-    bio: "Inside Harpa, harbour view. Weekly jazz almost all year — FÍH and Jazzvakningar. Named for Jón Múli Árnason. Iceland’s main jazz club. No Gypsy Jazz jam posted — the room to start one.",
+    bio: "Inside Harpa, harbour view. Weekly jazz almost all year — FÍH and Jazzvakningar. Named for Jón Múli Árnason. Iceland’s main jazz club. Paulus Schäfer with GH Gypsy Trio, 30 September 2026, 20:00, Harpa Björtuloft.",
   },
   {
     slug: "kex-hostel-reykjavik",

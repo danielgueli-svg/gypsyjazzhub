@@ -7163,13 +7163,13 @@ export const CIRCLE_CONCERTS = [
   },
   {
     legend_slug: "paulus-schafer",
-    title: "Paulus Schäfer",
-    venue: "Mulinn Jazz Club",
-    city: "Reykjavik",
+    title: "Paulus Schäfer with GH Gypsy Trio",
+    venue: "Múlinn Jazz Club",
+    city: "Reykjavík",
     country: "Iceland",
     starts_at: "2026-09-30T20:00:00.000Z",
     is_historic: false,
-    note: "Wednesday 30 September 2026. Sinti Music.",
+    note: "Wednesday 30 September 2026, 20:00–22:00. GH Gypsy Trio (Gunnar Hilmarsson, Jóhann Guðmundsson, Leifur Gunnarsson) with Paulus Schäfer; Dan Cassidy on violin. Harpa — Björtuloft. https://tix.is/en/event/22285/gh-gypsy-trio-asamt-paulus-schafer-mulinn-jazzklubbur",
   },
   {
     legend_slug: "paulus-schafer",
