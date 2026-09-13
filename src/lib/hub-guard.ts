@@ -243,9 +243,45 @@ export async function memberFlags(userId: string) {
   return rows[0] ?? null;
 }
 
+const AUTO_PUBLISH_KEY = "auto_publish_posts";
+
+export async function autoPublishOn() {
+  await ensureGuard();
+  const sql = await getSql();
+  try {
+    const rows = await sql<{ v: string }>`select v from hub_meta where k = ${AUTO_PUBLISH_KEY} limit 1`;
+    if (!rows[0]) return true;
+    return rows[0].v !== "0";
+  } catch {
+    return true;
+  }
+}
+
+export async function setAutoPublish(on: boolean) {
+  await ensureGuard();
+  const sql = await getSql();
+  await sql`
+    insert into hub_meta (k, v) values (${AUTO_PUBLISH_KEY}, ${on ? "1" : "0"})
+    on conflict (k) do update set v = excluded.v
+  `;
+}
+
+function startsWithinADay(startsAt?: string) {
+  if (!startsAt?.trim()) return false;
+  const at = new Date(startsAt).getTime();
+  if (!Number.isFinite(at)) return false;
+  const now = Date.now();
+  return at >= now - 3 * 60 * 60 * 1000 && at <= now + 86_400_000;
+}
+
 export async function gateContribution(
   userId: string,
-  input: { hp?: string; turnstile?: string; sessionTrusted?: boolean } = {},
+  input: {
+    hp?: string;
+    turnstile?: string;
+    sessionTrusted?: boolean;
+    startsAt?: string;
+  } = {},
 ): Promise<ContributeGate> {
   await ensureGuard();
   if (input.hp?.trim()) {
@@ -282,6 +318,15 @@ export async function gateContribution(
     throw new Error("Slow down — a few posts per hour is enough.");
   }
   await sql`insert into hub_submits (user_id) values (${userId})`;
-  const pending = !row || row.approved_count < 1;
+  const auto = await autoPublishOn();
+  const soon = startsWithinADay(input.startsAt);
+  const pending = auto || soon ? false : !row || row.approved_count < 1;
+  if (!pending) {
+    try {
+      await bumpApproved(userId);
+    } catch {
+      /* count is optional */
+    }
+  }
   return { skip: false, pending, status: pending ? "pending" : "published" };
 }

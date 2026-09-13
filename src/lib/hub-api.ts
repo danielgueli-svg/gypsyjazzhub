@@ -223,7 +223,7 @@ async function runEnsureHub() {
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
-    alter table hub_jams add column if not exists updated_at timestamptz not null default ''
+    alter table hub_jams add column if not exists updated_at timestamptz not null default now()
   `);
   await sql.query(`
     alter table hub_jams add column if not exists updated_by text not null default ''
@@ -683,7 +683,11 @@ export const addHubConcert = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await ensureHub();
     const { gateContribution } = await import("@/lib/hub-guard");
-    const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
+    const gate = await gateContribution(context.userId, {
+      hp: data.hp,
+      turnstile: data.turnstile,
+      startsAt: data.startsAt,
+    });
     if (gate.skip) return { ok: true as const, pending: true as const };
     const title = data.title.trim();
     const country = data.country.trim();
@@ -905,6 +909,9 @@ export const addHistoryCircleNote = createServerFn({ method: "POST" })
       }
     }
     const name = await submitterName(context.userId);
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const gate = await gateContribution(context.userId, { sessionTrusted: true });
+    if (gate.skip) return { ok: true as const, pending: true as const };
     const body = JSON.stringify({
       kind: data.kind,
       house,
@@ -917,9 +924,9 @@ export const addHistoryCircleNote = createServerFn({ method: "POST" })
     const sql = await getSql();
     await sql`
       insert into hub_notes (artist_slug, body, submitted_by, submitted_name, status)
-      values (${historySlug(house)}, ${body}, ${context.userId}, ${name}, 'pending')
+      values (${historySlug(house)}, ${body}, ${context.userId}, ${name}, ${gate.status})
     `;
-    return { ok: true as const, pending: true as const };
+    return { ok: true as const, pending: gate.pending };
   });
 
 export const addHubFestival = createServerFn({ method: "POST" })
@@ -940,7 +947,11 @@ export const addHubFestival = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     await ensureHub();
     const { gateContribution } = await import("@/lib/hub-guard");
-    const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
+    const gate = await gateContribution(context.userId, {
+      hp: data.hp,
+      turnstile: data.turnstile,
+      startsAt: data.nextStartsAt,
+    });
     if (gate.skip) return { slug: "pending", pending: true as const };
     const name = data.name.trim();
     const country = data.country.trim();
@@ -988,7 +999,11 @@ export const addHubJam = createServerFn({ method: "POST" })
     await ensureHub();
     await ensureJamLeaderColumns();
     const { gateContribution } = await import("@/lib/hub-guard");
-    const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
+    const gate = await gateContribution(context.userId, {
+      hp: data.hp,
+      turnstile: data.turnstile,
+      startsAt: data.nextStartsAt,
+    });
     if (gate.skip) return { slug: "pending", pending: true as const };
     const name = data.name.trim();
     const country = data.country.trim();

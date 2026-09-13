@@ -249,6 +249,24 @@ export const getVisitStats = createServerFn({ method: "GET" })
     return visitStats();
   });
 
+export const getAutoPublish = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const { autoPublishOn } = await import("@/lib/hub-guard");
+    return { on: await autoPublishOn() };
+  });
+
+export const saveAutoPublish = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((on: boolean) => ({ on: on === true }))
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    const { setAutoPublish } = await import("@/lib/hub-guard");
+    await setAutoPublish(data.on);
+    return { on: data.on };
+  });
+
 export const getPhotoStorage = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {

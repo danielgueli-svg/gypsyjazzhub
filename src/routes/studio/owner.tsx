@@ -17,6 +17,8 @@ import {
   getOwnerDigest,
   getVisitStats,
   getPhotoStorage,
+  getAutoPublish,
+  saveAutoPublish,
   listHubActivity,
   listHubMembers,
   eraseHubMember,
@@ -101,10 +103,12 @@ function OwnerPage() {
   const [mailBusy, setMailBusy] = useState(false);
   const [eraseBusy, setEraseBusy] = useState(false);
   const [dirTick, setDirTick] = useState(0);
+  const [autoPublish, setAutoPublishOn] = useState(true);
+  const [autoBusy, setAutoBusy] = useState(false);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
-    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos] = await Promise.all([
+    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos, nextAuto] = await Promise.all([
       listHubMembers().catch(() => []),
       listHubActivity().catch(() => []),
       listDiscoveries().catch(() => []),
@@ -116,6 +120,7 @@ function OwnerPage() {
       listPublicActivity().catch(() => []),
       getVisitStats().catch(() => null),
       getPhotoStorage().catch(() => null),
+      getAutoPublish().catch(() => ({ on: true })),
     ]);
     setMembers(nextMembers);
     setSelected([]);
@@ -128,6 +133,7 @@ function OwnerPage() {
     setPublicActivity(nextPublic);
     setVisits(nextVisits);
     setPhotos(nextPhotos);
+    setAutoPublishOn(nextAuto.on);
   }
 
   useEffect(() => {
@@ -349,6 +355,24 @@ function OwnerPage() {
     }
   }
 
+  async function onToggleAutoPublish(on: boolean) {
+    setError(null);
+    setDigestNote(null);
+    setAutoBusy(true);
+    try {
+      await saveAutoPublish({ data: on });
+      setAutoPublishOn(on);
+      setDigestNote(
+        on
+          ? "Member posts go on the hub immediately. You can still take them down here."
+          : "First posts wait for you. A jam or concert in the next 24 hours still goes live.",
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save.");
+    } finally {
+      setAutoBusy(false);
+    }
+  }
   const dayAgo = Date.now() - 86_400_000;
   const todayMembers = members.filter((row) => new Date(row.createdAt).getTime() >= dayAgo);
   const todayActivity = activity.filter((row) => new Date(row.when).getTime() >= dayAgo);
@@ -369,6 +393,7 @@ function OwnerPage() {
             ["#desk-visits", "Visits"],
             ["#desk-photos", "Photos"],
             ["#desk-today", "Today"],
+            ["#desk-posts", "Posts"],
             ["#desk-members", "Members"],
             ["#desk-users", "Users"],
             ["#desk-mail", "Mail"],
@@ -550,6 +575,35 @@ function OwnerPage() {
                 ))}
               </ul>
             )}
+          </section>
+
+          <section id="desk-posts" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">Member posts</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              Right now a jam, concert, festival or other member post goes on the
+              hub as soon as they send it — no wait on this desk. A night in the
+              next 24 hours always goes live. Switch this off if you want first
+              posts to wait for you again. You can still take anything down below.
+            </p>
+            <label className="mt-4 flex max-w-xl items-start gap-3 rounded-2xl bg-surface px-4 py-4 shadow-border">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={autoPublish}
+                disabled={autoBusy}
+                onChange={(event) => void onToggleAutoPublish(event.target.checked)}
+              />
+              <span>
+                <span className="block text-sm font-medium">
+                  Put member posts on the hub immediately
+                </span>
+                <span className="mt-1 block text-xs text-muted">
+                  {autoPublish
+                    ? "On — new posts are live. You look afterwards."
+                    : "Off — first posts wait here, except a jam or concert within 24 hours."}
+                </span>
+              </span>
+            </label>
           </section>
 
           <section id="desk-members" className="mt-12 scroll-mt-20">
