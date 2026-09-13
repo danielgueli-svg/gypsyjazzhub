@@ -61,6 +61,13 @@ if (process.env.BETTER_AUTH_SECRET) {
 if (process.env.RESEND_API_KEY) {
   cfg.vars.RESEND_API_KEY = process.env.RESEND_API_KEY;
 }
+// Prefer build-env MAIL_FROM; otherwise keep a previous Worker value; else
+// default to the verified gypsyjazzhub.com sender.
+if (process.env.MAIL_FROM) {
+  cfg.vars.MAIL_FROM = process.env.MAIL_FROM;
+} else if (!cfg.vars.MAIL_FROM) {
+  cfg.vars.MAIL_FROM = "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>";
+}
 cfg.durable_objects = {
   bindings: [{ name: "HUB_DB", class_name: "HubDb" }],
 };

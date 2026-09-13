@@ -83,7 +83,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
         } else {
           // Auth hook already sends the welcome / confirm mail. Do not send
           // again here — a second send rotates the token and kills the first link.
-          await goAfterLogin(true);
+          await navigate({ to: "/verify-email" });
           return;
         }
       } else {

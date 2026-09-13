@@ -284,9 +284,11 @@ export async function buildDigest(): Promise<Digest> {
  * Hub mail via Resend. FormSubmit was removed: Cloudflare Workers get a bot
  * challenge HTML page from formsubmit.co, so password-reset always failed.
  *
- * Needs `RESEND_API_KEY` on the Worker (secret or var). If the custom from
- * domain is not verified yet, we retry with Resend's onboarding sender so
- * reset / welcome mail still arrives.
+ * Needs `RESEND_API_KEY` on the Worker (secret or var). Uses `MAIL_FROM` when
+ * set, otherwise `noreply@gypsyjazzhub.com` (domain must stay verified on
+ * Resend). We no longer fall back to `onboarding@resend.dev` — that sender
+ * usually only delivers to the Resend account owner, so confirmation / reset
+ * mail looked "sent" while members never got it.
  */
 export async function sendHubMail(to: string, subject: string, body: string) {
   const address = to.trim();
@@ -301,46 +303,28 @@ export async function sendHubMail(to: string, subject: string, body: string) {
     );
   }
 
-  const primaryFrom =
+  const from =
     readEnv("MAIL_FROM")?.trim() ||
     "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>";
-  const fallbackFrom = "Gypsy Jazz Hub <onboarding@resend.dev>";
 
-  async function sendWithResend(from: string) {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resend}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [address],
-        subject,
-        text: body,
-      }),
-    });
-    const text = await response.text();
-    if (!response.ok) {
-      throw new Error(`Resend ${response.status}: ${text.slice(0, 400)}`);
-    }
-    return text;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resend}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [address],
+      subject,
+      text: body,
+    }),
+  });
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Resend ${response.status}: ${text.slice(0, 400)}`);
   }
-
-  try {
-    await sendWithResend(primaryFrom);
-    return "sent with Resend";
-  } catch (err) {
-    // Custom domain often not verified yet on Resend — one retry with the
-    // shared onboarding sender so reset mail still reaches members.
-    if (primaryFrom === fallbackFrom) throw err;
-    console.error(
-      "[sendHubMail] primary from failed, retrying onboarding sender:",
-      err instanceof Error ? err.message : err,
-    );
-    await sendWithResend(fallbackFrom);
-    return "sent with Resend (onboarding sender)";
-  }
+  return "sent with Resend";
 }
 
 export type DigestRun = {

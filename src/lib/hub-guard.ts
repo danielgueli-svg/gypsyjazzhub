@@ -155,21 +155,24 @@ export async function startEmailVerification(userId: string, email: string, rese
       on conflict (user_id) do update set email = excluded.email, verify_token = excluded.verify_token
     `;
   }
-  const mail = welcomeMail(parseMailLocale(stored || locale), `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`);
+  const mail = welcomeMail(
+    parseMailLocale(stored || locale),
+    `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`,
+  );
   let mailed = false;
   try {
     const { sendHubMail } = await import("@/lib/digest");
     await sendHubMail(address, mail.subject, mail.body);
     mailed = true;
-  } catch {
+  } catch (err) {
+    // Keep verified = 0. Auto-verifying on mail failure hid broken Resend
+    // config and let members post without confirming. The verify-email page
+    // still gets the token so the member can confirm from that page if needed.
+    console.error(
+      "[startEmailVerification] confirmation mail failed:",
+      err instanceof Error ? err.message : err,
+    );
     mailed = false;
-  }
-  if (!mailed) {
-    try {
-      await sql`update hub_members set verified = 1 where user_id = ${userId}`;
-    } catch {
-      /* keep token as backup */
-    }
   }
   return { token, mailed, already: false as const };
 }

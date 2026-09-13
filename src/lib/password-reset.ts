@@ -165,7 +165,21 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
     if (email.includes("@")) {
       try {
         const { startEmailVerification } = await import("@/lib/hub-guard");
-        await startEmailVerification(userId, email, true);
+        const verify = await startEmailVerification(userId, email, true);
+        if (!verify.mailed && !verify.already) {
+          await sendHubMail(
+            email,
+            "Your Gypsy Jazz Hub password is set",
+            [
+              `Hi${name ? ` ${name}` : ""},`,
+              "",
+              "Your password is saved. Sign in with your email and that password:",
+              "https://www.gypsyjazzhub.com/login",
+              "",
+              "Gypsy Jazz Hub",
+            ].join("\n"),
+          );
+        }
       } catch {
         try {
           await sendHubMail(
