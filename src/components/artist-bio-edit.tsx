@@ -9,11 +9,11 @@ import { useI18n } from "@/lib/i18n";
 export function ArtistBioEdit({
   slug,
   bio,
-  claimed,
+  returnTo,
 }: {
   slug: string;
   bio: string;
-  claimed?: boolean;
+  returnTo?: string;
 }) {
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
@@ -22,31 +22,7 @@ export function ArtistBioEdit({
   const [value, setValue] = useState(bio);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-
-  if (claimed) return null;
-
-  const editButton = isPending ? (
-    <div className="h-9 w-16 animate-pulse rounded-md bg-raised" />
-  ) : user ? (
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      onClick={() => {
-        setOpen((v) => !v);
-        setValue(bio);
-        setStatus(null);
-      }}
-    >
-      {t("bio.edit")}
-    </Button>
-  ) : (
-    <Button asChild variant="outline" size="sm">
-      <Link to="/login" search={{ next: `/musicians/${slug}` }}>
-        {t("bio.edit")}
-      </Link>
-    </Button>
-  );
+  const next = returnTo ?? `/musicians/${slug}`;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -65,8 +41,29 @@ export function ArtistBioEdit({
   }
 
   return (
-    <div className="mt-3">
-      {editButton}
+    <div className="mt-4">
+      {isPending ? (
+        <div className="h-9 w-20 animate-pulse rounded-md bg-raised" />
+      ) : user ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            setOpen((v) => !v);
+            setValue(bio);
+            setStatus(null);
+          }}
+        >
+          {t("bio.edit")}
+        </Button>
+      ) : (
+        <Button asChild variant="outline" size="sm">
+          <Link to="/login" search={{ next }}>
+            {t("bio.edit")}
+          </Link>
+        </Button>
+      )}
       {open && user ? (
         <form onSubmit={(event) => void onSubmit(event)} className="mt-3 max-w-2xl space-y-3">
           <p className="text-sm text-muted">{t("bio.lead")}</p>

@@ -72,7 +72,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
   const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;
-  const bio = member?.bio?.trim() || hubBio || legend.bio;
+  const bio = hubBio?.bio?.trim() || member?.bio?.trim() || legend.bio;
   const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
   const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
   const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;
@@ -107,7 +107,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             ))}
           </div>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
-          <ArtistBioEdit slug={legend.slug} bio={bio} claimed={Boolean(member?.bio?.trim())} />
+          <ArtistBioEdit slug={legend.slug} bio={bio} />
           {legend.notable && !member?.bio?.trim() ? (
             <p className="mt-3 text-sm text-faint">{legend.notable}</p>
           ) : null}

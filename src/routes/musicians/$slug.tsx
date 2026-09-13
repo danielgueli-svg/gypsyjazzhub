@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArtistClips } from "@/components/artist-clips";
+import { ArtistBioEdit } from "@/components/artist-bio-edit";
 import { ArtistMusic } from "@/components/artist-music";
 import { ConcertList } from "@/components/concert-row";
 import { Nightbook } from "@/components/i-was-there";
@@ -28,7 +28,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { artistPhoto } from "@/lib/photos";
 import { basedInCountry } from "@/lib/geo";
 import { loadDirectoryArtist } from "@/lib/directory-artist";
-import { listHubClips, listHubJams, listHubNotes } from "@/lib/hub-api";
+import { listHubClips, listHubJams, listHubNotes, getHubArtistBio } from "@/lib/hub-api";
 import { upcomingJams } from "@/lib/jams";
 import { listGuestbook } from "@/lib/guestbook";
 import { listArtistReviews } from "@/lib/concert-reviews";
@@ -52,13 +52,14 @@ export const Route = createFileRoute("/musicians/$slug")({
     if (musician.memberKind === "fan") {
       throw redirect({ to: "/fans/$slug", params: { slug: musician.slug } });
     }
-    const [concerts, clips, notes, shoutouts, extraJams, reports] = await Promise.all([
+    const [concerts, clips, notes, shoutouts, extraJams, reports, hubPage] = await Promise.all([
       settle("member-concerts", [] as Concert[], () => listMusicianConcerts({ data: musician.userId })),
       settle("member-clips", [], () => listHubClips({ data: musician.slug })),
       settle("member-notes", [], () => listHubNotes({ data: musician.slug })),
       settle("member-guestbook", [], () => listGuestbook({ data: musician.slug })),
       settle("member-jams", [], () => listHubJams()),
       settle("member-reviews", [], () => listArtistReviews({ data: musician.slug })),
+      settle("member-hub-bio", null, () => getHubArtistBio({ data: musician.slug })),
     ]);
     const city = musician.city.trim().toLowerCase();
     const nearbyJams = city
@@ -67,7 +68,7 @@ export const Route = createFileRoute("/musicians/$slug")({
           .filter((jam) => jam.city.trim().toLowerCase() === city)
           .slice(0, 6)
       : [];
-    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports };
+    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio: hubPage?.bio ?? "" };
   },
   head: ({ loaderData, params }) => {
     const path = `/musicians/${params.slug}`;
@@ -113,9 +114,10 @@ function MemberMusicianPage({
     shoutouts: Awaited<ReturnType<typeof listGuestbook>>;
     nearbyJams: ReturnType<typeof upcomingJams>;
     reports: Awaited<ReturnType<typeof listArtistReviews>>;
+    hubBio: string;
   };
 }) {
-  const { musician, concerts, clips, notes, shoutouts, nearbyJams, reports } = data;
+  const { musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio } = data;
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
   const [note, setNote] = useState("");
@@ -129,6 +131,7 @@ function MemberMusicianPage({
   const photo = musician.photoUrl
     ? { src: musician.photoUrl, credit: musician.displayName }
     : catalogPhoto;
+  const bio = hubBio.trim() || musician.bio.trim();
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
@@ -187,11 +190,12 @@ function MemberMusicianPage({
         ) : null}
       </div>
 
-      {musician.bio ? (
-        <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted">{musician.bio}</p>
+      {bio ? (
+        <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
       ) : (
         <p className="mt-8 text-sm text-faint">This player has not written a bio yet.</p>
       )}
+      <ArtistBioEdit slug={musician.slug} bio={bio} />
 
       {musician.youtubeUrl ? (
         <div className="mt-10 max-w-3xl">
