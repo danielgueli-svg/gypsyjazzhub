@@ -357,8 +357,11 @@ export async function maybeSendOrganiserMails() {
       new Date().toISOString(),
       "sending",
     ]);
-  } catch {
-    return;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (/unique|already exists|constraint/i.test(msg)) return;
+    console.error("[hub] organiser mail claim failed", msg);
+    throw err;
   }
 
   const jamUrl = "https://www.gypsyjazzhub.com/jams/ubbergen-refter-jam";
@@ -395,6 +398,7 @@ export async function maybeSendOrganiserMails() {
       HUB_OWNER_EMAIL,
     );
     await sql.query(`update hub_oneoff_mail set detail = $2 where id = $1`, [SIGRID_MAIL_ID, detail]);
+    console.log("[hub] organiser mail sent", SIGRID_MAIL_ID, detail);
   } catch (err) {
     await sql.query(`delete from hub_oneoff_mail where id = $1`, [SIGRID_MAIL_ID]);
     throw err;
