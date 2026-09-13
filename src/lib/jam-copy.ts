@@ -423,6 +423,7 @@ export function jamHoursLabel(hours: string, locale: string) {
 
 export const JAM_UI: Record<string, Record<string, string>> = {
   en: {
+    "jam.byInvite": "By invitation only: {email}",
     "jam.fromDjangoBooks": "From DjangoBooks",
     "jam.save": "Save jam",
     "jam.notify": "Notify me",
@@ -431,6 +432,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks thread",
   },
   fr: {
+    "jam.byInvite": "Sur invitation uniquement : {email}",
     "jam.fromDjangoBooks": "Depuis DjangoBooks",
     "jam.save": "Enregistrer le jam",
     "jam.notify": "Me prévenir",
@@ -439,6 +441,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Fil DjangoBooks",
   },
   de: {
+    "jam.byInvite": "Nur auf Einladung: {email}",
     "jam.fromDjangoBooks": "Von DjangoBooks",
     "jam.save": "Jam speichern",
     "jam.notify": "Benachrichtige mich",
@@ -447,6 +450,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks-Thread",
   },
   nl: {
+    "jam.byInvite": "Alleen op uitnodiging: {email}",
     "jam.fromDjangoBooks": "Van DjangoBooks",
     "jam.save": "Jam bewaren",
     "jam.notify": "Houd me op de hoogte",
@@ -455,6 +459,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks-draad",
   },
   es: {
+    "jam.byInvite": "Solo con invitación: {email}",
     "jam.fromDjangoBooks": "De DjangoBooks",
     "jam.save": "Guardar jam",
     "jam.notify": "Avísame",
@@ -463,6 +468,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Hilo de DjangoBooks",
   },
   pt: {
+    "jam.byInvite": "Só por convite: {email}",
     "jam.fromDjangoBooks": "Do DjangoBooks",
     "jam.save": "Guardar jam",
     "jam.notify": "Avisar-me",
@@ -471,6 +477,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Tópico DjangoBooks",
   },
   it: {
+    "jam.byInvite": "Solo su invito: {email}",
     "jam.fromDjangoBooks": "Da DjangoBooks",
     "jam.save": "Salva jam",
     "jam.notify": "Avvisami",
@@ -479,6 +486,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Thread DjangoBooks",
   },
   ru: {
+    "jam.byInvite": "Только по приглашению: {email}",
     "jam.fromDjangoBooks": "С DjangoBooks",
     "jam.save": "Сохранить джем",
     "jam.notify": "Напомнить",
@@ -487,6 +495,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Тема DjangoBooks",
   },
   ja: {
+    "jam.byInvite": "招待制：{email}",
     "jam.fromDjangoBooks": "DjangoBooks より",
     "jam.save": "ジャムを保存",
     "jam.notify": "通知する",
@@ -495,6 +504,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooksスレッド",
   },
   ko: {
+    "jam.byInvite": "초대만: {email}",
     "jam.fromDjangoBooks": "DjangoBooks에서",
     "jam.save": "잼 저장",
     "jam.notify": "알림 받기",
@@ -503,6 +513,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks 스레드",
   },
   zh: {
+    "jam.byInvite": "仅凭邀请：{email}",
     "jam.fromDjangoBooks": "来自 DjangoBooks",
     "jam.save": "收藏即兴",
     "jam.notify": "提醒我",
@@ -511,6 +522,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks 帖子",
   },
   "zh-tw": {
+    "jam.byInvite": "僅憑邀請：{email}",
     "jam.fromDjangoBooks": "來自 DjangoBooks",
     "jam.save": "收藏即興",
     "jam.notify": "通知我",
@@ -519,6 +531,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks 討論串",
   },
   id: {
+    "jam.byInvite": "Hanya dengan undangan: {email}",
     "jam.fromDjangoBooks": "Dari DjangoBooks",
     "jam.save": "Simpan jam",
     "jam.notify": "Kabari saya",
@@ -527,6 +540,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Utas DjangoBooks",
   },
   th: {
+    "jam.byInvite": "เฉพาะผู้ได้รับเชิญ: {email}",
     "jam.fromDjangoBooks": "จาก DjangoBooks",
     "jam.save": "บันทึกแจม",
     "jam.notify": "แจ้งเตือนฉัน",
@@ -535,6 +549,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "กระทู้ DjangoBooks",
   },
   hu: {
+    "jam.byInvite": "Csak meghívásra: {email}",
     "jam.fromDjangoBooks": "DjangoBooks-ról",
     "jam.save": "Jam mentése",
     "jam.notify": "Értesíts",
@@ -543,6 +558,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks-szál",
   },
   pl: {
+    "jam.byInvite": "Tylko na zaproszenie: {email}",
     "jam.fromDjangoBooks": "Z DjangoBooks",
     "jam.save": "Zapisz jam",
     "jam.notify": "Powiadom mnie",
@@ -551,6 +567,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Wątek DjangoBooks",
   },
   cs: {
+    "jam.byInvite": "Pouze na pozvání: {email}",
     "jam.fromDjangoBooks": "Z DjangoBooks",
     "jam.save": "Uložit jam",
     "jam.notify": "Upozornit mě",
@@ -559,6 +576,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "Vlákno DjangoBooks",
   },
   hr: {
+    "jam.byInvite": "Samo na poziv: {email}",
     "jam.fromDjangoBooks": "S DjangoBooksa",
     "jam.save": "Spremi jam",
     "jam.notify": "Obavijesti me",
@@ -567,6 +585,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks nit",
   },
   sr: {
+    "jam.byInvite": "Само на позив: {email}",
     "jam.fromDjangoBooks": "Са DjangoBooks-а",
     "jam.save": "Сачувај џем",
     "jam.notify": "Обавивести ме",
@@ -575,6 +594,7 @@ export const JAM_UI: Record<string, Record<string, string>> = {
     "jam.djangobooksThread": "DjangoBooks тема",
   },
   ro: {
+    "jam.byInvite": "Doar pe invitație: {email}",
     "jam.fromDjangoBooks": "De pe DjangoBooks",
     "jam.save": "Salvează jam-ul",
     "jam.notify": "Anunță-mă",

@@ -112,6 +112,13 @@ function JamPage() {
           <p className="mt-2 font-display text-xl font-semibold leading-snug">
             {[hours, when].filter(Boolean).join(" · ")}
           </p>
+          {jam.inviteEmail ? (
+            <p className="mt-1 text-sm text-muted">
+              <a href={`mailto:${jam.inviteEmail}`} className="hover:underline">
+                {t("jam.byInvite").replace("{email}", jam.inviteEmail)}
+              </a>
+            </p>
+          ) : null}
           <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
           <p className="mt-1 text-sm text-muted">{formatJamNext(jam, locale)}</p>
           <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />

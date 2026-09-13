@@ -33,6 +33,14 @@ export function JamLine({ jam, showCountry = true }: { jam: Jam; showCountry?: b
             <span className="text-sm text-muted">{when}</span>
           </>
         ) : null}
+        {jam.inviteEmail ? (
+          <>
+            <span className="mx-1.5 text-faint">·</span>
+            <span className="text-sm text-muted">
+              {t("jam.byInvite").replace("{email}", jam.inviteEmail)}
+            </span>
+          </>
+        ) : null}
       </Link>
       {place ? <p className="text-sm text-muted">{place}</p> : null}
       {forum ? (
