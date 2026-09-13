@@ -6,9 +6,10 @@ export const CIRCLE_ARTISTS = [
     origin: "Norway / United States",
     instruments: "Guitar",
     era: "The Circle",
-    bio: "Guitar. Norway / United States. This page opened from his form on the hub — a longer bio can be edited on the page.",
-    notable: "Guitar",
-    youtube_url: "",
+    bio: "Guitarist, shopkeeper and restorer. In 2002 he began studying Gypsy music through Django Reinhardt, then traditional music from Serbia, Romania, Hungary and Russia. He has performed with Angelo Debarre, Ludovic Beier, Samson Schmitt, Raphaël Faÿs, Gismo Graf, Tcha Limberger, Lolo Meier, Florin Niculescu and Boulou Ferré, and studied in Europe with Debarre, Miroslav Tadić, Petro Ivanovitch, Ernest Bango, Frank Anastasio and Serge Camps. In 2008 he founded DjangoGuitars in Laguna Beach — a specialty shop and preservation hub. In 2012 he founded Trio Dinicu with Luanne Homzy and Frank Anastasio. He has collaborated with Altamira on a gypsy-jazz model, and works between the United States and Norway.",
+    notable: "DjangoGuitars, Laguna Beach; Trio Dinicu",
+    youtube_url: "https://www.youtube.com/watch?v=OabWsR-bcmQ",
+    website_url: "https://www.tommydavy.com",
     sort_order: 140,
   },
   {

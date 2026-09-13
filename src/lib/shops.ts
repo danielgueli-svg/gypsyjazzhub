@@ -35,7 +35,7 @@ export const SHOPS: Shop[] = [
     email: "Tommy@DjangoGuitars.com",
     site: "https://djangoguitars.com",
     hours: "By appointment only — call or write first",
-    bio: "Dedicated Gypsy jazz guitar shop on the California coast. New and vintage European instruments — Dupont, Favino, Busato and more — plus expert setups.",
+    bio: "Tommy Davy’s dedicated Gypsy jazz guitar shop on the California coast. New and vintage European instruments — Dupont, Favino, Busato and more — plus expert setups. Appointment only.",
   },
   {
     slug: "galerie-casanova",
