@@ -2069,7 +2069,7 @@ export const listPendingHub = createServerFn({ method: "GET" })
       items.push({
         kind: artistPending ? "artist" : "note",
         id: String(row.id),
-        title: artistPending ? row.body.slice(0, 80) : `${row.artist_slug} — ${row.body.slice(0, 80)}`,
+        title: artistPending ? pendingArtistTitle(row.body) : `${row.artist_slug} — ${row.body.slice(0, 80)}`,
         who: row.submitted_name,
         when: toIso(row.created_at),
       });
@@ -2114,10 +2114,135 @@ function placeLine(city?: string | null, country?: string | null) {
   return [city, country].map((part) => (part ?? "").trim()).filter(Boolean).join(", ");
 }
 
+function parsePendingArtistBody(body: string): {
+  name: string;
+  country: string;
+  instruments: string;
+  bio: string;
+} | null {
+  const raw = body.trim();
+  if (!raw.startsWith("{")) return null;
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    if (!parsed || typeof parsed !== "object") return null;
+    const bioRaw = String(parsed.bio ?? "").trim();
+    if (bioRaw.startsWith("{") && /"name"\s*:/.test(bioRaw)) {
+      return parsePendingArtistBody(bioRaw);
+    }
+    const name = String(parsed.name ?? "").trim();
+    if (!name) return null;
+    return {
+      name,
+      country: String(parsed.country ?? "").trim(),
+      instruments: String(parsed.instruments ?? "").trim(),
+      bio: bioRaw,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function pendingArtistTitle(body: string) {
+  const parsed = parsePendingArtistBody(body);
+  if (!parsed) return body.slice(0, 80);
+  return [parsed.name, parsed.country, parsed.instruments].filter(Boolean).join(" · ");
+}
+
+async function openPendingArtistPage(body: string, submittedBy: string, submittedName: string) {
+  const parsed = parsePendingArtistBody(body);
+  if (!parsed) return null;
+  const resolved = await ensureCatalogArtist({
+    name: parsed.name,
+    origin: parsed.country,
+    instruments: parsed.instruments,
+    notable: parsed.bio || "Added from a hub member form.",
+  });
+  if (!resolved) return null;
+  const sql = await getSql();
+  if (parsed.bio && resolved.kind === "legend") {
+    try {
+      await sql.query(
+        `update legends
+         set bio = $1,
+             instruments = coalesce(nullif($2, ''), instruments),
+             origin = coalesce(nullif($3, ''), origin),
+             years = coalesce(nullif($3, ''), years),
+             bio_status = $4
+         where slug = $5 and catalog_source = 'auto'`,
+        [
+          parsed.bio,
+          parsed.instruments,
+          parsed.country,
+          parsed.bio.length > 80 ? "ok" : "stub",
+          resolved.slug,
+        ],
+      );
+    } catch (err) {
+      console.error("pending artist bio update failed", err);
+    }
+  }
+  if (parsed.bio.length >= 20) {
+    try {
+      await sql.query(
+        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
+         values ($1, $2, $3, $4, $5, $6)
+         on conflict (artist_slug) do update set
+           bio = excluded.bio,
+           submitted_by = excluded.submitted_by,
+           submitted_name = excluded.submitted_name,
+           status = excluded.status,
+           updated_at = excluded.updated_at`,
+        [resolved.slug, parsed.bio, submittedBy, submittedName, "published", new Date().toISOString()],
+      );
+    } catch (err) {
+      console.error("pending artist hub bio failed", err);
+    }
+  }
+  return { ...resolved, bio: parsed.bio };
+}
+
+export async function materializePendingArtists() {
+  const sql = await getSql();
+  let rows: {
+    id: number;
+    body: string;
+    submitted_by: string;
+    submitted_name: string;
+    status: string;
+  }[] = [];
+  try {
+    rows = await sql.query(
+      `select id, body, submitted_by, submitted_name, coalesce(status, 'published') as status
+       from hub_notes
+       where artist_slug = 'pending-artist'`,
+    );
+  } catch {
+    return 0;
+  }
+  let opened = 0;
+  for (const row of rows) {
+    if (row.status === "pending") continue;
+    try {
+      const resolved = await openPendingArtistPage(row.body, row.submitted_by, row.submitted_name);
+      if (!resolved) continue;
+      await sql.query(`update hub_notes set artist_slug = $1, body = $2 where id = $3`, [
+        resolved.slug,
+        resolved.bio || `Added ${resolved.name}.`,
+        row.id,
+      ]);
+      opened += 1;
+    } catch (err) {
+      console.error("materialize pending artist failed", err);
+    }
+  }
+  return opened;
+}
+
 export const listHubSubmissions = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     await ensureHub();
+    await materializePendingArtists();
     const sql = await getSql();
     const owners = await sql<{ user_id: string }>`select user_id from hub_owners`;
     if (!owners.some((row) => row.user_id === context.userId)) {
@@ -2288,7 +2413,7 @@ export const listHubSubmissions = createServerFn({ method: "GET" })
           items.push({
             kind: "artist",
             id: String(row.id),
-            title: row.body.slice(0, 80),
+            title: pendingArtistTitle(row.body),
             who: row.submitted_name || "member",
             when: toIso(row.created_at),
             status: submissionStatus(row.status),
@@ -2448,18 +2573,16 @@ export const publishHubItem = createServerFn({ method: "POST" })
         select submitted_by, body from hub_notes where id = ${Number(data.id)} limit 1
       `;
       if (row[0]) {
-        try {
-          const parsed = JSON.parse(row[0].body) as { name?: string; country?: string; instruments?: string; bio?: string };
-          await ensureCatalogArtist({
-            name: parsed.name ?? "",
-            origin: parsed.country ?? "",
-            instruments: parsed.instruments ?? "",
-            notable: parsed.bio || "Added by the hub",
-          });
-        } catch {
-          /* body was not json */
+        const opened = await openPendingArtistPage(row[0].body, row[0].submitted_by, row[0].submitted_name ?? "");
+        if (opened) {
+          await sql.query(`update hub_notes set artist_slug = $1, body = $2, status = 'published' where id = $3`, [
+            opened.slug,
+            opened.bio || `Added ${opened.name}.`,
+            Number(data.id),
+          ]);
+        } else {
+          await sql`update hub_notes set status = 'published' where id = ${Number(data.id)}`;
         }
-        await sql`update hub_notes set status = 'published' where id = ${Number(data.id)}`;
         if (row[0].submitted_by) await bumpApproved(row[0].submitted_by);
       }
     } else {
@@ -2488,6 +2611,7 @@ export async function publishPendingByUser(userId: string) {
   await run(`update hub_venues set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
   await run(`update hub_luthiers set status = 'published' where submitted_by = $1 and status = 'pending'`, [userId]);
   await run(`update hub_teachers set status = 'published' where user_id = $1 and status = 'pending'`, [userId]);
+  await materializePendingArtists();
   return 1;
 }
 

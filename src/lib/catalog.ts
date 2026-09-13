@@ -14,15 +14,24 @@ const STUB_BIO =
   "On the gypsy jazz circuit. This page opened from a date, jam or clip on the hub — a short bio will follow when we have a sourced line.";
 
 export async function ensureCatalogColumns() {
-  if (getDbSource() === "none" || getDbSource() === "do") return;
+  if (getDbSource() === "none") return;
   const sql = await getSql();
-  await sql.query(`alter table legends add column if not exists photo_url text not null default ''`);
-  await sql.query(`alter table legends add column if not exists photo_credit text not null default ''`);
-  await sql.query(`alter table legends add column if not exists website_url text not null default ''`);
-  await sql.query(`alter table legends add column if not exists instagram_url text not null default ''`);
-  await sql.query(`alter table legends add column if not exists spotify_url text not null default ''`);
-  await sql.query(`alter table legends add column if not exists catalog_source text not null default 'seed'`);
-  await sql.query(`alter table legends add column if not exists bio_status text not null default 'ok'`);
+  for (const col of [
+    "photo_url text not null default ''",
+    "photo_credit text not null default ''",
+    "website_url text not null default ''",
+    "instagram_url text not null default ''",
+    "spotify_url text not null default ''",
+    "catalog_source text not null default 'seed'",
+    "bio_status text not null default 'ok'",
+    "samois boolean not null default false",
+  ]) {
+    try {
+      await sql.query(`alter table legends add column if not exists ${col}`);
+    } catch {
+      /* column already there */
+    }
+  }
 }
 
 function prettyName(raw: string) {
