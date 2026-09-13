@@ -43,6 +43,10 @@ export function pgToSqlite(sql: string): string {
     .replace(/\btrue\b/gi, "1")
     .replace(/\bfalse\b/gi, "0")
     .replace(/add column if not exists/gi, "add column")
+    .replace(
+      /(add column\s+\S+\s+\S+(?:\s+not\s+null)?)\s+default\s+\(datetime\('now'\)\)/gi,
+      "$1 default ''",
+    )
     .replace(/::\w+/g, "")
     .replace(/\bilike\b/gi, "like");
 }
@@ -226,7 +230,12 @@ export async function migrateDoSql(): Promise<void> {
 }
 
 export async function createDoSql(): Promise<Sql> {
-  await migrateDoSql();
+  try {
+    await migrateDoSql();
+  } catch (err) {
+    // A pending ALTER must not block login, reset mail, or other writes.
+    console.error("[hub-db] migrate failed:", err);
+  }
   return toSqlFromDo();
 }
 
@@ -261,7 +270,11 @@ class DoDriver implements Driver {
   private connection: DoConnection | undefined;
 
   async init(): Promise<void> {
-    await migrateDoSql();
+    try {
+      await migrateDoSql();
+    } catch (err) {
+      console.error("[hub-db] migrate failed:", err);
+    }
   }
   async acquireConnection(): Promise<DatabaseConnection> {
     this.connection ??= new DoConnection();

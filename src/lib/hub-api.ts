@@ -223,7 +223,7 @@ async function runEnsureHub() {
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
-    alter table hub_jams add column if not exists updated_at timestamptz not null default now()
+    alter table hub_jams add column if not exists updated_at timestamptz not null default ''
   `);
   await sql.query(`
     alter table hub_jams add column if not exists updated_by text not null default ''
