@@ -1455,12 +1455,168 @@ export function compareJamsByCadence(a: Jam, b: Jam) {
   return a.city.localeCompare(b.city) || a.name.localeCompare(b.name);
 }
 
+const WEEKDAY_INDEX: Record<string, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+};
+
+const NTH_INDEX: Record<string, number> = {
+  first: 1,
+  "1st": 1,
+  second: 2,
+  "2nd": 2,
+  third: 3,
+  "3rd": 3,
+  fourth: 4,
+  "4th": 4,
+  last: -1,
+};
+
+type MonthlyWeekdayRule = {
+  weekday: number;
+  nths: number[];
+  evenMonths: boolean;
+};
+
+function parseMonthlyWeekday(when: string): MonthlyWeekdayRule | null {
+  const weekdayMatch = when.match(
+    /\b(sundays?|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?)\b/i,
+  );
+  if (!weekdayMatch) return null;
+  const weekdayKey = weekdayMatch[1].toLowerCase().replace(/s$/, "");
+  const weekday = WEEKDAY_INDEX[weekdayKey];
+  if (weekday === undefined) return null;
+  const nths: number[] = [];
+  for (const hit of when.matchAll(/\b(first|second|third|fourth|last|1st|2nd|3rd|4th)\b/gi)) {
+    const nth = NTH_INDEX[hit[1].toLowerCase()];
+    if (nth && !nths.includes(nth)) nths.push(nth);
+  }
+  if (!nths.length) return null;
+  return { weekday, nths, evenMonths: /even months/i.test(when) };
+}
+
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+function daysInMonth(year: number, month: number) {
+  return new Date(Date.UTC(year, month, 0)).getUTCDate();
+}
+
+function nthWeekdayDay(year: number, month: number, weekday: number, nth: number) {
+  if (nth === -1) {
+    const last = daysInMonth(year, month);
+    const lastWeekday = new Date(Date.UTC(year, month - 1, last)).getUTCDay();
+    return last - ((lastWeekday - weekday + 7) % 7);
+  }
+  const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+  const day = 1 + ((weekday - firstWeekday + 7) % 7) + (nth - 1) * 7;
+  if (day > daysInMonth(year, month)) return null;
+  return day;
+}
+
+function hmInTimeZone(date: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  let hour = Number(get("hour"));
+  if (hour === 24) hour = 0;
+  return {
+    ymd: `${get("year")}-${get("month")}-${get("day")}`,
+    hour,
+    minute: Number(get("minute")),
+  };
+}
+
+function zonedLocalToUtc(ymd: string, hour: number, minute: number, timeZone: string) {
+  let utc = Date.parse(`${ymd}T${pad2(hour)}:${pad2(minute)}:00.000Z`);
+  if (!Number.isFinite(utc)) return null;
+  for (let i = 0; i < 4; i += 1) {
+    const loc = hmInTimeZone(new Date(utc), timeZone);
+    const got = Date.parse(`${loc.ymd}T${pad2(loc.hour)}:${pad2(loc.minute)}:00.000Z`);
+    const want = Date.parse(`${ymd}T${pad2(hour)}:${pad2(minute)}:00.000Z`);
+    const diff = want - got;
+    if (diff === 0) return new Date(utc);
+    utc += diff;
+  }
+  return new Date(utc);
+}
+
+function dateMatchesMonthlyRule(jam: Jam, iso: string, rule: MonthlyWeekdayRule) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return false;
+  const loc = hmInTimeZone(date, jamTimeZone(jam));
+  const [year, month, day] = loc.ymd.split("-").map(Number);
+  if (rule.evenMonths && month % 2 !== 0) return false;
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  if (weekday !== rule.weekday) return false;
+  const nth = Math.floor((day - 1) / 7) + 1;
+  const isLast = day + 7 > daysInMonth(year, month);
+  return rule.nths.includes(nth) || (isLast && rule.nths.includes(-1));
+}
+
+function nextMonthlyWeekdayIso(
+  jam: Jam,
+  rule: MonthlyWeekdayRule,
+  afterMs: number,
+  exclusive: boolean,
+) {
+  const tz = jamTimeZone(jam);
+  const origin = new Date(jam.nextStartsAt);
+  if (Number.isNaN(origin.getTime())) return jam.nextStartsAt;
+  const clock = hmInTimeZone(origin, tz);
+  const after = hmInTimeZone(new Date(afterMs), tz);
+  let year = Number(after.ymd.slice(0, 4));
+  let month = Number(after.ymd.slice(5, 7));
+  for (let i = 0; i < 36; i += 1) {
+    if (!rule.evenMonths || month % 2 === 0) {
+      const days = rule.nths
+        .map((nth) => nthWeekdayDay(year, month, rule.weekday, nth))
+        .filter((day): day is number => day != null)
+        .sort((a, b) => a - b);
+      for (const day of days) {
+        const ymd = `${year}-${pad2(month)}-${pad2(day)}`;
+        const utc = zonedLocalToUtc(ymd, clock.hour, clock.minute, tz);
+        if (!utc) continue;
+        if (exclusive ? utc.getTime() > afterMs : utc.getTime() >= afterMs) {
+          return utc.toISOString();
+        }
+      }
+    }
+    month += 1;
+    if (month > 12) {
+      month = 1;
+      year += 1;
+    }
+  }
+  return jam.nextStartsAt;
+}
+
 /** Keep the original clock; only walk the calendar forward. Do not invent new rooms. */
 export function rollJamNext(jam: Jam, now = Date.now()): string {
   const raw = jam.nextStartsAt;
   const date = new Date(raw);
-  if (Number.isNaN(date.getTime()) || date.getTime() >= now) return raw;
+  if (Number.isNaN(date.getTime())) return raw;
   if (isPostedNotRecurring(jam.when)) return raw;
+  const rule = parseMonthlyWeekday(jam.when);
+  if (rule) {
+    if (date.getTime() >= now && dateMatchesMonthlyRule(jam, raw, rule)) return raw;
+    return nextMonthlyWeekdayIso(jam, rule, now, false);
+  }
+  if (date.getTime() >= now) return raw;
   const stepDays = isWeekly(jam.when) ? 7 : isBiweekly(jam.when) ? 14 : isMonthlyish(jam.when) ? 28 : 0;
   if (!stepDays) return raw;
   let guard = 0;
@@ -1472,6 +1628,12 @@ export function rollJamNext(jam: Jam, now = Date.now()): string {
 }
 
 export function stepJamNext(jam: Jam, fromIso: string): string {
+  const rule = parseMonthlyWeekday(jam.when);
+  if (rule) {
+    const from = Date.parse(fromIso);
+    if (!Number.isFinite(from)) return fromIso;
+    return nextMonthlyWeekdayIso({ ...jam, nextStartsAt: fromIso }, rule, from, true);
+  }
   const date = new Date(fromIso);
   if (Number.isNaN(date.getTime())) return fromIso;
   const stepDays = isWeekly(jam.when) ? 7 : isBiweekly(jam.when) ? 14 : isMonthlyish(jam.when) ? 28 : 7;
@@ -1483,8 +1645,12 @@ export function upcomingJamNights(jam: Jam, now = Date.now()): [string, string] 
   const first = rollJamNext(jam, now);
   const stored = jam.secondStartsAt ? Date.parse(jam.secondStartsAt) : Number.NaN;
   const firstMs = Date.parse(first);
-  const second =
-    Number.isFinite(stored) && stored > firstMs ? jam.secondStartsAt! : stepJamNext(jam, first);
+  const rule = parseMonthlyWeekday(jam.when);
+  const secondOk =
+    Number.isFinite(stored) &&
+    stored > firstMs &&
+    (!rule || dateMatchesMonthlyRule(jam, jam.secondStartsAt!, rule));
+  const second = secondOk ? jam.secondStartsAt! : stepJamNext(jam, first);
   return [first, second];
 }
 
