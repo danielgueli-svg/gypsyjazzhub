@@ -290,7 +290,13 @@ export async function buildDigest(): Promise<Digest> {
  * usually only delivers to the Resend account owner, so confirmation / reset
  * mail looked "sent" while members never got it.
  */
-export async function sendHubMail(to: string, subject: string, body: string, html?: string) {
+export async function sendHubMail(
+  to: string,
+  subject: string,
+  body: string,
+  html?: string,
+  replyTo?: string,
+) {
   const address = to.trim();
   if (!address.includes("@")) {
     throw new Error("Need a real email address to send mail.");
@@ -308,25 +314,91 @@ export async function sendHubMail(to: string, subject: string, body: string, htm
     "Gypsy Jazz Hub <noreply@gypsyjazzhub.com>";
 
   const { wrapHubMailHtml } = await import("@/lib/hub-mail-html");
+  const payload: Record<string, unknown> = {
+    from,
+    to: [address],
+    subject,
+    text: body,
+    html: html?.trim() || wrapHubMailHtml({ body }),
+  };
+  const reply = replyTo?.trim();
+  if (reply?.includes("@")) payload.reply_to = [reply];
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${resend}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from,
-      to: [address],
-      subject,
-      text: body,
-      html: html?.trim() || wrapHubMailHtml({ body }),
-    }),
+    body: JSON.stringify(payload),
   });
   const text = await response.text();
   if (!response.ok) {
     throw new Error(`Resend ${response.status}: ${text.slice(0, 400)}`);
   }
   return "sent with Resend";
+}
+
+const SIGRID_MAIL_ID = "sigrid-ubbergen-ask-date-2026-09-13";
+
+/** One-shot organiser notes. Safe to call on every jam list. */
+export async function maybeSendOrganiserMails() {
+  const sql = await getSql();
+  await sql.query(`
+    create table if not exists hub_oneoff_mail (
+      id text primary key,
+      sent_at text not null default '',
+      detail text not null default ''
+    )
+  `);
+  try {
+    await sql.query(`insert into hub_oneoff_mail (id, sent_at, detail) values ($1, $2, $3)`, [
+      SIGRID_MAIL_ID,
+      new Date().toISOString(),
+      "sending",
+    ]);
+  } catch {
+    return;
+  }
+
+  const jamUrl = "https://www.gypsyjazzhub.com/jams/ubbergen-refter-jam";
+  const joinUrl = "https://www.gypsyjazzhub.com/join";
+  const body = [
+    "Beste Sigrid,",
+    "",
+    "We hebben de maandelijkse gypsy-jazzjam in Café van de Refter (Rijkstraatweg 37, Ubbergen) op Gypsy Jazz Hub gezet: vrijdag 19:30–23:30, met jou als session leader.",
+    "",
+    "Kun je ons laten weten wanneer de volgende sessie precies is? Dan zetten we de juiste datum op de pagina.",
+    "",
+    "Als je inlogt op gypsyjazzhub.com kun je de sessie zelf aanmaken en aanpassen — adres, tijden en de volgende datum.",
+    joinUrl,
+    jamUrl,
+    "",
+    "Met een groet,",
+    "Team Gypsy Jazz Hub",
+  ].join("\n");
+
+  try {
+    const { wrapHubMailHtml } = await import("@/lib/hub-mail-html");
+    const { HUB_OWNER_EMAIL } = await import("@/lib/hub-owner");
+    const html = wrapHubMailHtml({
+      body,
+      buttonLabel: "Open de jam-pagina",
+      buttonHref: jamUrl,
+      locale: "nl",
+    });
+    const detail = await sendHubMail(
+      "sigridvannistelrooij@icloud.com",
+      "Café van de Refter — wanneer is de volgende jam?",
+      body,
+      html,
+      HUB_OWNER_EMAIL,
+    );
+    await sql.query(`update hub_oneoff_mail set detail = $2 where id = $1`, [SIGRID_MAIL_ID, detail]);
+  } catch (err) {
+    await sql.query(`delete from hub_oneoff_mail where id = $1`, [SIGRID_MAIL_ID]);
+    throw err;
+  }
 }
 
 export type DigestRun = {

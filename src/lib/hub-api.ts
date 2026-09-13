@@ -675,6 +675,12 @@ export const listHubJams = createServerFn({ method: "GET" }).handler(async () =>
   try {
     await ensureHub();
     await ensureJamLeaderColumns();
+    try {
+      const { maybeSendOrganiserMails } = await import("@/lib/digest");
+      await maybeSendOrganiserMails();
+    } catch (err) {
+      console.error("organiser mail failed", err);
+    }
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
