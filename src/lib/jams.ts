@@ -17,6 +17,8 @@ export type Jam = {
   scene?: JamScene;
   site?: string;
   inviteEmail?: string;
+  leader?: string;
+  leaderContact?: string;
 };
 
 export function isStandingGypsyJam(jam: Jam) {
@@ -1146,6 +1148,8 @@ export const JAMS: Jam[] = [
     bio: "Manouche Den Haag — third Saturday of the month, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. With prior confirmation: evelien@box.nl.",
     relatedSlugs: [],
     inviteEmail: "evelien@box.nl",
+    leader: "Evelien Tollenaar",
+    leaderContact: "evelien@box.nl",
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
   },
   {
@@ -1377,6 +1381,8 @@ export function overlayJam(catalog: Jam | undefined, hub: Jam | null | undefined
     bio: pick(hub.bio, catalog.bio),
     site: hub.site || catalog.site,
     kind: hub.kind ?? catalog.kind,
+    leader: pick(hub.leader ?? "", catalog.leader ?? ""),
+    leaderContact: pick(hub.leaderContact ?? "", catalog.leaderContact ?? ""),
   };
 }
 

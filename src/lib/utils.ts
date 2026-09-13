@@ -162,7 +162,9 @@ export function youtubeVideoId(url: string): string | null {
 export function contactHref(value: string): string {
   const trimmed = value.trim();
   if (!trimmed) return "";
-  if (trimmed.startsWith("mailto:") || /^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^(mailto:|tel:|https?:\/\/)/i.test(trimmed)) return trimmed;
   if (trimmed.includes("@") && !trimmed.includes(" ")) return `mailto:${trimmed}`;
+  const digits = trimmed.replace(/[\s()./-]/g, "");
+  if (/^\+?\d{6,16}$/.test(digits)) return `tel:${digits}`;
   return `https://${trimmed}`;
 }

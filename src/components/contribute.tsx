@@ -543,6 +543,8 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
   const [nextStartsAt, setNextStartsAt] = useState("");
   const [kind, setKind] = useState(meetup ? "meetup" : "regular");
   const [bio, setBio] = useState("");
+  const [leader, setLeader] = useState("");
+  const [leaderContact, setLeaderContact] = useState("");
   const [alertOpen, setAlertOpen] = useState(true);
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -553,7 +555,21 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
     setStatus(null);
     try {
       const result = await addHubJam({
-        data: { name, city, country, venue, address, hours, when, nextStartsAt, bio, kind, hp: honeyValue(event) },
+        data: {
+          name,
+          city,
+          country,
+          venue,
+          address,
+          hours,
+          when,
+          nextStartsAt,
+          bio,
+          kind,
+          leader,
+          leaderContact,
+          hp: honeyValue(event),
+        },
       });
       if (result.pending) {
         setStatus(postedLine(true, "Jam is on the hub."));
@@ -696,6 +712,22 @@ function JamForm({ meetup = false }: { meetup?: boolean }) {
           />
         </Field>
       </div>
+      <Field label={t("jam.leader")} htmlFor="jam-leader">
+        <Input
+          id="jam-leader"
+          value={leader}
+          onChange={(e) => setLeader(e.target.value)}
+          placeholder={t("jam.leaderHint")}
+        />
+      </Field>
+      <Field label={t("jam.leaderContact")} htmlFor="jam-leader-contact">
+        <Input
+          id="jam-leader-contact"
+          value={leaderContact}
+          onChange={(e) => setLeaderContact(e.target.value)}
+          placeholder={t("jam.leaderContactHint")}
+        />
+      </Field>
       <label className="sm:col-span-2 flex min-h-11 items-center gap-2 text-sm">
         <input
           type="checkbox"

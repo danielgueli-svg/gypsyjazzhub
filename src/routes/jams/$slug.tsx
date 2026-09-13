@@ -16,6 +16,7 @@ import { getHubJam, listHubChat } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
 import { settle } from "@/lib/settle";
+import { contactHref } from "@/lib/utils";
 
 type Search = { edit?: boolean };
 
@@ -62,6 +63,7 @@ function JamPage() {
   const hours = jamHoursLabel(jamHours(jam), locale);
   const maps = jamMapsUrl(jam);
   const when = jam.kind === "meetup" ? t("jam.meetup") : jamWhen(jam.when, locale);
+  const leaderHref = jam.leaderContact ? contactHref(jam.leaderContact) : "";
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
@@ -133,6 +135,25 @@ function JamPage() {
           <p className="mt-1 text-sm text-muted">{formatJamNext(jam, locale)}</p>
           <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />
         </div>
+        {jam.leader || jam.leaderContact ? (
+          <div className="rounded-2xl bg-surface p-5 shadow-border">
+            <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("jam.leader")}</p>
+            {jam.leader ? (
+              <p className="mt-2 font-display text-xl font-semibold leading-tight">{jam.leader}</p>
+            ) : null}
+            {jam.leaderContact ? (
+              <p className="mt-2 text-sm text-muted">
+                {leaderHref ? (
+                  <a href={leaderHref} className="hover:underline">
+                    {jam.leaderContact}
+                  </a>
+                ) : (
+                  jam.leaderContact
+                )}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <p className="mt-10 max-w-2xl text-base leading-relaxed text-muted">{jam.bio}</p>

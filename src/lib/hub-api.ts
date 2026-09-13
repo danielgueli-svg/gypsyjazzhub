@@ -229,6 +229,12 @@ async function runEnsureHub() {
     alter table hub_jams add column if not exists updated_by text not null default ''
   `);
   await sql.query(`
+    alter table hub_jams add column if not exists leader text not null default ''
+  `);
+  await sql.query(`
+    alter table hub_jams add column if not exists leader_contact text not null default ''
+  `);
+  await sql.query(`
     alter table hub_festivals add column if not exists status text not null default 'published'
   `);
   await sql.query(`
@@ -388,6 +394,8 @@ function mapJam(row: {
   kind?: string;
   address?: string;
   hours?: string;
+  leader?: string;
+  leader_contact?: string;
 }): Jam {
   return {
     slug: row.slug,
@@ -403,7 +411,29 @@ function mapJam(row: {
     relatedSlugs: [],
     kind: row.kind === "meetup" ? "meetup" : "regular",
     site: row.bio.match(/https?:\/\/[^\s]+/)?.[0],
+    leader: row.leader ?? "",
+    leaderContact: row.leader_contact ?? "",
   };
+}
+
+let jamLeaderReady: Promise<void> | null = null;
+
+async function ensureJamLeaderColumns() {
+  if (getDbSource() === "none") return;
+  jamLeaderReady ??= (async () => {
+    const sql = await getSql();
+    for (const col of ["leader text not null default ''", "leader_contact text not null default ''"]) {
+      try {
+        await sql.query(`alter table hub_jams add column if not exists ${col}`);
+      } catch {
+        /* column already there */
+      }
+    }
+  })().catch((err) => {
+    jamLeaderReady = null;
+    throw err;
+  });
+  await jamLeaderReady;
 }
 
 export const listArtistOptions = createServerFn({ method: "GET" }).handler(async () => {
@@ -549,6 +579,7 @@ export const listHubFestivals = createServerFn({ method: "GET" }).handler(async 
 export const listHubJams = createServerFn({ method: "GET" }).handler(async () => {
   try {
     await ensureHub();
+    await ensureJamLeaderColumns();
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -562,8 +593,11 @@ export const listHubJams = createServerFn({ method: "GET" }).handler(async () =>
       kind: string;
       address: string;
       hours: string;
+      leader: string;
+      leader_contact: string;
     }>`
-    select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours
+    select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
+           coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact
     from hub_jams
     where coalesce(status, 'published') = 'published'
     order by next_starts_at asc
@@ -601,6 +635,7 @@ export const getHubJam = createServerFn({ method: "GET" })
   .handler(async ({ data: slug }) => {
     try {
     await ensureHub();
+    await ensureJamLeaderColumns();
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -614,8 +649,11 @@ export const getHubJam = createServerFn({ method: "GET" })
       kind: string;
       address: string;
       hours: string;
+      leader: string;
+      leader_contact: string;
     }>`
-      select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours
+      select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
+             coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact
       from hub_jams
       where slug = ${slug} and coalesce(status, 'published') = 'published'
       limit 1
@@ -940,12 +978,15 @@ export const addHubJam = createServerFn({ method: "POST" })
       nextStartsAt: string;
       bio: string;
       kind: string;
+      leader?: string;
+      leaderContact?: string;
       hp?: string;
       turnstile?: string;
     }) => input,
   )
   .handler(async ({ context, data }) => {
     await ensureHub();
+    await ensureJamLeaderColumns();
     const { gateContribution } = await import("@/lib/hub-guard");
     const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
     if (gate.skip) return { slug: "pending", pending: true as const };
@@ -959,15 +1000,18 @@ export const addHubJam = createServerFn({ method: "POST" })
     const sql = await getSql();
     const submitted = await submitterName(context.userId);
     const kind = data.kind === "meetup" ? "meetup" : "regular";
+    const leader = data.leader?.trim() ?? "";
+    const leaderContact = data.leaderContact?.trim() ?? "";
     await sql`
       insert into hub_jams (
         slug, name, city, country, venue, address, hours, when_text, next_starts_at, bio, kind,
-        submitted_by, submitted_name, status
+        leader, leader_contact, submitted_by, submitted_name, status
       ) values (
         ${slug}, ${name}, ${data.city.trim()}, ${country}, ${data.venue.trim()},
         ${data.address?.trim() ?? ""}, ${data.hours?.trim() ?? ""},
         ${data.when.trim() || (kind === "meetup" ? "Meetup jam" : "")},
         ${starts.toISOString()}, ${data.bio.trim()}, ${kind},
+        ${leader}, ${leaderContact},
         ${context.userId}, ${submitted}, ${gate.status}
       )
     `;
@@ -988,12 +1032,15 @@ export const updateHubJam = createServerFn({ method: "POST" })
       when: string;
       nextStartsAt: string;
       bio: string;
+      leader?: string;
+      leaderContact?: string;
       hp?: string;
       turnstile?: string;
     }) => input,
   )
   .handler(async ({ context, data }) => {
     await ensureHub();
+    await ensureJamLeaderColumns();
     const { gateContribution } = await import("@/lib/hub-guard");
     const { getJam } = await import("@/lib/jams");
     const gate = await gateContribution(context.userId, {
@@ -1022,11 +1069,13 @@ export const updateHubJam = createServerFn({ method: "POST" })
     const submitted = await submitterName(context.userId);
     const kind = catalog?.kind === "meetup" ? "meetup" : "regular";
     const status = catalog || existing[0] ? "published" : gate.status;
+    const leader = data.leader?.trim() ?? "";
+    const leaderContact = data.leaderContact?.trim() ?? "";
     await sql.query(
       `insert into hub_jams (
         slug, name, city, country, venue, address, hours, when_text, next_starts_at, bio, kind,
-        submitted_by, submitted_name, status, updated_at, updated_by
-      ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        leader, leader_contact, submitted_by, submitted_name, status, updated_at, updated_by
+      ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
       on conflict (slug) do update set
         name = excluded.name,
         city = excluded.city,
@@ -1037,6 +1086,8 @@ export const updateHubJam = createServerFn({ method: "POST" })
         when_text = excluded.when_text,
         next_starts_at = excluded.next_starts_at,
         bio = excluded.bio,
+        leader = excluded.leader,
+        leader_contact = excluded.leader_contact,
         status = excluded.status,
         updated_at = excluded.updated_at,
         updated_by = excluded.updated_by`,
@@ -1052,6 +1103,8 @@ export const updateHubJam = createServerFn({ method: "POST" })
         starts.toISOString(),
         data.bio.trim(),
         kind,
+        leader,
+        leaderContact,
         context.userId,
         submitted,
         status,

@@ -26,6 +26,8 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
   const [hours, setHours] = useState(jam.hours);
   const [when, setWhen] = useState(jam.when);
   const [nextStartsAt, setNextStartsAt] = useState(toLocalInput(jam.nextStartsAt));
+  const [leader, setLeader] = useState(jam.leader ?? "");
+  const [leaderContact, setLeaderContact] = useState(jam.leaderContact ?? "");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -49,6 +51,8 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
           when,
           nextStartsAt: nextIso,
           bio: jam.bio,
+          leader,
+          leaderContact,
         },
       });
       if (result.pending) {
@@ -121,6 +125,24 @@ export function JamEdit({ jam, startOpen = false }: { jam: Jam; startOpen?: bool
               required
               value={nextStartsAt}
               onChange={(e) => setNextStartsAt(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="jam-edit-leader">{t("jam.leader")}</Label>
+            <Input
+              id="jam-edit-leader"
+              value={leader}
+              onChange={(e) => setLeader(e.target.value)}
+              placeholder={t("jam.leaderHint")}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="jam-edit-leader-contact">{t("jam.leaderContact")}</Label>
+            <Input
+              id="jam-edit-leader-contact"
+              value={leaderContact}
+              onChange={(e) => setLeaderContact(e.target.value)}
+              placeholder={t("jam.leaderContactHint")}
             />
           </div>
           <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
