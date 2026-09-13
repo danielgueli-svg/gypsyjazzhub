@@ -235,6 +235,19 @@ async function runEnsureHub() {
     alter table hub_jams add column if not exists leader_contact text not null default ''
   `);
   await sql.query(`
+    update hub_jams
+    set venue = 'Escal',
+        address = '31 boulevard du Chemin de Fer, 51420 Witry-lès-Reims',
+        hours = '18:00–20:00',
+        when_text = 'Every Thursday',
+        next_starts_at = '2026-09-17T16:00:00.000Z',
+        leader = 'Frédéric Lefebvre, Gilles Valette',
+        leader_contact = 'accueil@escal-witry.fr',
+        bio = 'Thursday jam at Escal in Witry-lès-Reims, just outside Reims. A moment to play, not to judge — no lesson, no concert, no teacher, no audience, no pressure. Amateur musicians of every level, any acoustic instrument, from 16. Practice accompaniment or try improvising on jazz manouche standards; mistakes are part of the night. Witryats and visitors: 5€ under 16, 16€ from 16. Volunteer chairs: Frédéric Lefebvre and Gilles Valette. Un moment pour jouer, pas pour juger.'
+    where slug = 'reims-souk'
+      and (venue = 'Souk' or address = 'Reims' or bio like '%Souk%')
+  `);
+  await sql.query(`
     alter table hub_festivals add column if not exists status text not null default 'published'
   `);
   await sql.query(`
