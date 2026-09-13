@@ -803,34 +803,105 @@ export const eraseHubMember = createServerFn({ method: "POST" })
   .validator((userId: string) => userId.trim())
   .handler(async ({ context, data: userId }) => {
     await requireOwner(context.userId);
-    if (!userId) throw new Error("Need a member.");
-    if (userId === context.userId) throw new Error("You cannot erase your own login.");
-    const sql = await getSql();
-    const rows = await sql.query<{ email: string; name: string }>(
-      `select email, name from "user" where id = $1 limit 1`,
-      [userId],
-    );
-    const email = String(rows[0]?.email ?? "").toLowerCase();
-    const name = String(rows[0]?.name ?? "");
-    if (email === OWNER_KEEP_EMAIL || isFoundingMember(email, name)) {
-      throw new Error("That member stays on the hub.");
-    }
-    const run = async (text: string, params: unknown[] = []) => {
-      try {
-        await sql.query(text, params);
-      } catch {
-        /* table may not exist */
-      }
-    };
-    await run(`delete from "session" where "userId" = $1`, [userId]);
-    await run(`delete from account where "userId" = $1`, [userId]);
-    await run(`delete from hub_subscriptions where user_id = $1`, [userId]);
-    await run(`delete from hub_members where user_id = $1`, [userId]);
-    await run(`delete from hub_password_resets where user_id = $1`, [userId]);
-    await run(`delete from profiles where user_id = $1`, [userId]);
-    await run(`delete from "user" where id = $1`, [userId]);
+    const result = await eraseOneMember(context.userId, userId);
+    if (!result.ok) throw new Error(result.reason);
     return { ok: true as const };
   });
+
+export const eraseHubMembers = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((userIds: string[]) =>
+    [...new Set((userIds ?? []).map((id) => String(id).trim()).filter(Boolean))].slice(0, 80),
+  )
+  .handler(async ({ context, data: userIds }) => {
+    await requireOwner(context.userId);
+    if (!userIds.length) throw new Error("Select at least one member.");
+    let erased = 0;
+    const skipped: string[] = [];
+    for (const userId of userIds) {
+      const result = await eraseOneMember(context.userId, userId);
+      if (result.ok) erased += 1;
+      else skipped.push(result.reason);
+    }
+    return { ok: true as const, erased, skipped: skipped.length };
+  });
+
+export const sendOwnerCustomMail = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { userIds: string[]; subject: string; body: string }) => ({
+    userIds: [...new Set((input.userIds ?? []).map((id) => String(id).trim()).filter(Boolean))].slice(
+      0,
+      50,
+    ),
+    subject: String(input.subject ?? "").trim().slice(0, 200),
+    body: String(input.body ?? "").trim().slice(0, 8000),
+  }))
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    if (!data.userIds.length) throw new Error("Select at least one member.");
+    if (!data.subject) throw new Error("Write a subject.");
+    if (!data.body) throw new Error("Write the mail.");
+    const sql = await getSql();
+    const placeholders = data.userIds.map((_, i) => `$${i + 1}`).join(",");
+    const rows = await sql.query<{ id: string; email: string }>(
+      `select id, email from "user" where id in (${placeholders})`,
+      data.userIds,
+    );
+    const { sendHubMail } = await import("@/lib/digest");
+    let sent = 0;
+    let failed = 0;
+    const seen = new Set<string>();
+    const addresses: string[] = [];
+    for (const row of rows) {
+      const email = String(row.email ?? "").trim();
+      const key = email.toLowerCase();
+      if (!email.includes("@") || seen.has(key)) continue;
+      seen.add(key);
+      addresses.push(email);
+    }
+    if (!addresses.length) throw new Error("Those members have no email.");
+    for (let i = 0; i < addresses.length; i += 8) {
+      const slice = addresses.slice(i, i + 8);
+      const results = await Promise.allSettled(
+        slice.map((email) => sendHubMail(email, data.subject, data.body)),
+      );
+      for (const result of results) {
+        if (result.status === "fulfilled") sent += 1;
+        else failed += 1;
+      }
+    }
+    return { ok: true as const, sent, failed, asked: data.userIds.length };
+  });
+
+async function eraseOneMember(actorId: string, userId: string) {
+  if (!userId) return { ok: false as const, reason: "Need a member." };
+  if (userId === actorId) return { ok: false as const, reason: "You cannot erase your own login." };
+  const sql = await getSql();
+  const rows = await sql.query<{ email: string; name: string }>(
+    `select email, name from "user" where id = $1 limit 1`,
+    [userId],
+  );
+  const email = String(rows[0]?.email ?? "").toLowerCase();
+  const name = String(rows[0]?.name ?? "");
+  if (email === OWNER_KEEP_EMAIL || isFoundingMember(email, name)) {
+    return { ok: false as const, reason: "That member stays on the hub." };
+  }
+  const run = async (text: string, params: unknown[] = []) => {
+    try {
+      await sql.query(text, params);
+    } catch {
+      /* table may not exist */
+    }
+  };
+  await run(`delete from "session" where "userId" = $1`, [userId]);
+  await run(`delete from account where "userId" = $1`, [userId]);
+  await run(`delete from hub_subscriptions where user_id = $1`, [userId]);
+  await run(`delete from hub_members where user_id = $1`, [userId]);
+  await run(`delete from hub_password_resets where user_id = $1`, [userId]);
+  await run(`delete from profiles where user_id = $1`, [userId]);
+  await run(`delete from "user" where id = $1`, [userId]);
+  return { ok: true as const };
+}
 
 export const confirmWaitingMembers = createServerFn({ method: "POST" })
   .middleware([authMiddleware])

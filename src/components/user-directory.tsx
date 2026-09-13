@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { COUNTRY_OPTIONS, displayCountry } from "@/lib/geo";
 import { formatConcertWhen } from "@/lib/utils";
 import {
@@ -14,6 +16,8 @@ import {
   banHubMember,
   confirmWaitingMembers,
   eraseHubMember,
+  eraseHubMembers,
+  sendOwnerCustomMail,
   listHubUserDirectory,
   listHubUserStats,
   sendOwnerPasswordReset,
@@ -76,6 +80,11 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
   const [banIp, setBanIp] = useState("");
   const [note, setNote] = useState<string | null>(null);
   const [resetting, setResetting] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [mailSubject, setMailSubject] = useState("");
+  const [mailBody, setMailBody] = useState("");
+  const [mailBusy, setMailBusy] = useState(false);
+  const [eraseBusy, setEraseBusy] = useState(false);
 
   useEffect(() => {
     let live = true;
@@ -85,6 +94,7 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
         if (!live) return;
         setUsers(nextUsers);
         setStats(nextStats);
+        setSelected([]);
       })
       .catch((err) => {
         if (!live) return;
@@ -159,6 +169,7 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
     try {
       await eraseHubMember({ data: user.id });
       setUsers((rows) => rows.filter((row) => row.id !== user.id));
+      setSelected((ids) => ids.filter((id) => id !== user.id));
       setStats((prev) => ({
         ...prev,
         totalUsers: Math.max(0, prev.totalUsers - 1),
@@ -168,6 +179,75 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
       onErased?.(user.id);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not erase.");
+    }
+  }
+
+  function toggle(id: string) {
+    setSelected((ids) => (ids.includes(id) ? ids.filter((row) => row !== id) : [...ids, id]));
+  }
+
+  function toggleAll() {
+    const ids = users.map((row) => row.id);
+    setSelected((current) => (current.length === ids.length ? [] : ids));
+  }
+
+  async function eraseSelected() {
+    if (!selected.length) return;
+    if (
+      !window.confirm(
+        `Erase ${selected.length} member${selected.length === 1 ? "" : "s"} from the hub? They will need to join again. Your login stays.`,
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    setNote(null);
+    setEraseBusy(true);
+    try {
+      const result = await eraseHubMembers({ data: selected });
+      const gone = new Set(selected);
+      const removed = users.filter((row) => gone.has(row.id));
+      setUsers((rows) => rows.filter((row) => !gone.has(row.id)));
+      setStats((prev) => ({
+        ...prev,
+        totalUsers: Math.max(0, prev.totalUsers - result.erased),
+        musicians: Math.max(0, prev.musicians - removed.filter((row) => row.musician).length),
+        nonMusicians: Math.max(0, prev.nonMusicians - removed.filter((row) => !row.musician).length),
+      }));
+      for (const id of selected) onErased?.(id);
+      setSelected([]);
+      setNote(
+        result.erased
+          ? `Erased ${result.erased} member${result.erased === 1 ? "" : "s"}${result.skipped ? ` · ${result.skipped} kept` : ""}.`
+          : "Nobody was erased (owner and founding members stay).",
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not erase.");
+    } finally {
+      setEraseBusy(false);
+    }
+  }
+
+  async function sendMail() {
+    if (!selected.length) return;
+    setError(null);
+    setNote(null);
+    setMailBusy(true);
+    try {
+      const result = await sendOwnerCustomMail({
+        data: { userIds: selected, subject: mailSubject, body: mailBody },
+      });
+      setNote(
+        result.failed
+          ? `Sent ${result.sent} mail${result.sent === 1 ? "" : "s"} · ${result.failed} failed.`
+          : `Sent ${result.sent} mail${result.sent === 1 ? "" : "s"}.`,
+      );
+      setMailSubject("");
+      setMailBody("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send mail.");
+    } finally {
+      setMailBusy(false);
     }
   }
 
@@ -205,10 +285,10 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
       <h2 className="font-display text-2xl font-semibold sm:text-3xl">Users & alerts</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Everyone who has joined the hub, with profile types, instruments and
-        what they subscribe to for notifications. People waiting on a confirmation
-        mail can be confirmed here so they are not stuck. Send a password reset
-        mail so they can choose a password. Ban an account, or erase a bot from
-        the hub. Your own login stays.
+        what they subscribe to for notifications. Tick several to erase them or
+        send a custom mail. People waiting on a confirmation mail can be
+        confirmed here so they are not stuck. Ban an account, or erase a bot.
+        Your own login stays.
       </p>
       {waiting ? (
         <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl bg-surface px-4 py-3 shadow-border">
@@ -340,6 +420,58 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
 
       {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
 
+      {users.length ? (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={toggleAll}>
+            {selected.length === users.length ? "Clear selection" : "Select all shown"}
+          </Button>
+          <span className="text-sm text-muted">{selected.length} selected</span>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={!selected.length || eraseBusy}
+            onClick={() => void eraseSelected()}
+          >
+            {eraseBusy ? "Erasing…" : "Erase selected"}
+          </Button>
+        </div>
+      ) : null}
+      {selected.length ? (
+        <form
+          className="mt-4 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void sendMail();
+          }}
+        >
+          <p className="text-sm text-muted">
+            Custom mail to {selected.length} selected member{selected.length === 1 ? "" : "s"}.
+          </p>
+          <div className="space-y-1.5">
+            <Label htmlFor="dir-mail-subject">Subject</Label>
+            <Input
+              id="dir-mail-subject"
+              value={mailSubject}
+              onChange={(event) => setMailSubject(event.target.value)}
+              placeholder="Subject"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="dir-mail-body">Message</Label>
+            <Textarea
+              id="dir-mail-body"
+              value={mailBody}
+              onChange={(event) => setMailBody(event.target.value)}
+              placeholder="Write the mail…"
+            />
+          </div>
+          <Button type="submit" disabled={mailBusy || !mailSubject.trim() || !mailBody.trim()}>
+            {mailBusy ? "Sending…" : "Send mail"}
+          </Button>
+        </form>
+      ) : null}
+
       <div className="mt-4 space-y-3 md:hidden">
         {!ready ? (
           <p className="rounded-2xl bg-surface px-4 py-6 text-sm text-muted shadow-border">Loading…</p>
@@ -350,8 +482,18 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
         ) : (
           users.map((user) => (
             <article key={user.id} className="rounded-2xl bg-surface p-4 shadow-border">
-              <p className="font-medium leading-tight break-words">{user.name}</p>
-              <p className="mt-0.5 break-all text-xs text-muted">{user.email}</p>
+              <label className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  className="mt-1"
+                  checked={selected.includes(user.id)}
+                  onChange={() => toggle(user.id)}
+                />
+                <span className="min-w-0">
+                  <p className="font-medium leading-tight break-words">{user.name}</p>
+                  <p className="mt-0.5 break-all text-xs text-muted">{user.email}</p>
+                </span>
+              </label>
               <p className="mt-1 text-xs text-faint">{formatConcertWhen(user.createdAt)}</p>
               <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                 <div>
@@ -428,6 +570,9 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="text-faint">
             <tr>
+              <th className="px-4 py-3 font-medium">
+                <span className="sr-only">Select</span>
+              </th>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Country</th>
               <th className="px-4 py-3 font-medium">Profile type</th>
@@ -440,19 +585,27 @@ export function UserDirectory({ onErased }: { onErased?: (userId: string) => voi
           <tbody>
             {!ready ? (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-muted">
+                <td colSpan={8} className="px-4 py-6 text-muted">
                   Loading…
                 </td>
               </tr>
             ) : users.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-muted">
+                <td colSpan={8} className="px-4 py-6 text-muted">
                   No members match these filters yet.
                 </td>
               </tr>
             ) : (
               users.map((user) => (
                 <tr key={user.id} className="border-t border-border align-top">
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(user.id)}
+                      onChange={() => toggle(user.id)}
+                      aria-label={`Select ${user.name || user.email}`}
+                    />
+                  </td>
                   <td className="px-4 py-3">
                     <p className="font-medium">{user.name}</p>
                     <p className="text-xs text-muted">{user.email}</p>

@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { UserDirectory } from "@/components/user-directory";
 import { ActivityFeed } from "@/components/activity-feed";
 import { listPublicActivity, type ActivityItem } from "@/lib/activity";
@@ -19,6 +20,8 @@ import {
   listHubActivity,
   listHubMembers,
   eraseHubMember,
+  eraseHubMembers,
+  sendOwnerCustomMail,
   sendOwnerPasswordReset,
   removeHubItem,
   saveOwnerDigest,
@@ -92,6 +95,12 @@ function OwnerPage() {
   } | null>(null);
   const [photos, setPhotos] = useState<PhotoStorage | null>(null);
   const [resetting, setResetting] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [mailSubject, setMailSubject] = useState("");
+  const [mailBody, setMailBody] = useState("");
+  const [mailBusy, setMailBusy] = useState(false);
+  const [eraseBusy, setEraseBusy] = useState(false);
+  const [dirTick, setDirTick] = useState(0);
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
@@ -109,6 +118,7 @@ function OwnerPage() {
       getPhotoStorage().catch(() => null),
     ]);
     setMembers(nextMembers);
+    setSelected([]);
     setActivity(nextActivity);
     setFinds(nextFinds);
     setDigestEmail(nextDigest.settings.email);
@@ -250,8 +260,71 @@ function OwnerPage() {
     try {
       await eraseHubMember({ data: member.id });
       setMembers((rows) => rows.filter((row) => row.id !== member.id));
+      setSelected((ids) => ids.filter((id) => id !== member.id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not erase.");
+    }
+  }
+
+  function toggleMember(id: string) {
+    setSelected((ids) => (ids.includes(id) ? ids.filter((row) => row !== id) : [...ids, id]));
+  }
+
+  function toggleAllMembers() {
+    const ids = members.map((row) => row.id);
+    setSelected((current) => (current.length === ids.length ? [] : ids));
+  }
+
+  async function onEraseSelected() {
+    if (!selected.length) return;
+    if (
+      !window.confirm(
+        `Erase ${selected.length} member${selected.length === 1 ? "" : "s"} from the hub? They will need to join again. Your login stays.`,
+      )
+    ) {
+      return;
+    }
+    setError(null);
+    setDigestNote(null);
+    setEraseBusy(true);
+    try {
+      const result = await eraseHubMembers({ data: selected });
+      const gone = new Set(selected);
+      setMembers((rows) => rows.filter((row) => !gone.has(row.id)));
+      setSelected([]);
+      setDirTick((n) => n + 1);
+      setDigestNote(
+        result.erased
+          ? `Erased ${result.erased} member${result.erased === 1 ? "" : "s"}${result.skipped ? ` · ${result.skipped} kept` : ""}.`
+          : "Nobody was erased (owner and founding members stay).",
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not erase.");
+    } finally {
+      setEraseBusy(false);
+    }
+  }
+
+  async function onSendCustomMail() {
+    if (!selected.length) return;
+    setError(null);
+    setDigestNote(null);
+    setMailBusy(true);
+    try {
+      const result = await sendOwnerCustomMail({
+        data: { userIds: selected, subject: mailSubject, body: mailBody },
+      });
+      setDigestNote(
+        result.failed
+          ? `Sent ${result.sent} mail${result.sent === 1 ? "" : "s"} · ${result.failed} failed.`
+          : `Sent ${result.sent} mail${result.sent === 1 ? "" : "s"}.`,
+      );
+      setMailSubject("");
+      setMailBody("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send mail.");
+    } finally {
+      setMailBusy(false);
     }
   }
 
@@ -482,49 +555,114 @@ function OwnerPage() {
           <section id="desk-members" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Members</h2>
             <p className="mt-2 text-sm text-muted">
-              {members.length} people with a hub login. Send a password reset mail from here.
-              Erase bots from this list. Your own login stays.
+              {members.length} people with a hub login. Tick one or more to erase them or send a custom mail.
+              Send a password reset from a single row. Your own login stays.
             </p>
             {members.length === 0 ? (
               <p className="mt-4 text-sm text-faint">No members stored yet.</p>
             ) : (
-              <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
-                {members.map((member) => (
-                  <li key={member.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
-                    <span className="min-w-0">
-                      <span className="font-medium">{member.name || "Hub member"}</span>
-                      <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={resetting === member.id}
-                        onClick={() => void onSendReset(member)}
-                      >
-                        {resetting === member.id ? "Sending…" : "Send reset mail"}
-                      </Button>
-                      {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+              <>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <Button type="button" variant="outline" size="sm" onClick={toggleAllMembers}>
+                    {selected.length === members.length ? "Clear selection" : "Select all"}
+                  </Button>
+                  <span className="text-sm text-muted">
+                    {selected.length} selected
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={!selected.length || eraseBusy}
+                    onClick={() => void onEraseSelected()}
+                  >
+                    {eraseBusy ? "Erasing…" : "Erase selected"}
+                  </Button>
+                </div>
+                {selected.length ? (
+                  <form
+                    className="mt-4 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void onSendCustomMail();
+                    }}
+                  >
+                    <p className="text-sm text-muted">
+                      Custom mail to {selected.length} selected member{selected.length === 1 ? "" : "s"}.
+                    </p>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="member-mail-subject">Subject</Label>
+                      <Input
+                        id="member-mail-subject"
+                        value={mailSubject}
+                        onChange={(event) => setMailSubject(event.target.value)}
+                        placeholder="Subject"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="member-mail-body">Message</Label>
+                      <Textarea
+                        id="member-mail-body"
+                        value={mailBody}
+                        onChange={(event) => setMailBody(event.target.value)}
+                        placeholder="Write the mail…"
+                      />
+                    </div>
+                    <Button type="submit" disabled={mailBusy || !mailSubject.trim() || !mailBody.trim()}>
+                      {mailBusy ? "Sending…" : "Send mail"}
+                    </Button>
+                  </form>
+                ) : null}
+                <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+                  {members.map((member) => (
+                    <li key={member.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
+                      <label className="flex min-w-0 flex-1 items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1"
+                          checked={selected.includes(member.id)}
+                          onChange={() => toggleMember(member.id)}
+                        />
+                        <span className="min-w-0">
+                          <span className="font-medium">{member.name || "Hub member"}</span>
+                          <span className="mt-0.5 block break-all text-xs text-muted">{member.email}</span>
+                        </span>
+                      </label>
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs text-faint">{formatConcertWhen(member.createdAt)}</span>
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() => void onEraseMember(member)}
+                          disabled={resetting === member.id}
+                          onClick={() => void onSendReset(member)}
                         >
-                          Erase
+                          {resetting === member.id ? "Sending…" : "Send reset mail"}
                         </Button>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                        {member.email.toLowerCase() === "danielgueli@mac.com" ? null : (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => void onEraseMember(member)}
+                          >
+                            Erase
+                          </Button>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </section>
 
           <UserDirectory
-            onErased={(userId) => setMembers((rows) => rows.filter((row) => row.id !== userId))}
+            key={dirTick}
+            onErased={(userId) => {
+              setMembers((rows) => rows.filter((row) => row.id !== userId));
+              setSelected((ids) => ids.filter((id) => id !== userId));
+            }}
           />
 
           <section className="mt-12">
