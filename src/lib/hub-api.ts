@@ -254,6 +254,18 @@ async function runEnsureHub() {
     where slug = 'reims-souk'
   `);
   await sql.query(`
+    update hub_jams
+    set hours = '19:30–23:30',
+        when_text = 'Monthly, Friday',
+        next_starts_at = '2026-09-25T17:30:00.000Z',
+        address = 'Rijkstraatweg 37, Ubbergen',
+        kind = 'regular',
+        leader = 'Sigrid Booden',
+        leader_contact = 'sigridvannistelrooij@icloud.com',
+        bio = 'Monthly Friday jam near Nijmegen at Café van de Refter, Rijkstraatweg 37, Ubbergen, 19:30–23:30. Organised by Sigrid Booden. Sign up: sigridvannistelrooij@icloud.com.'
+    where slug = 'ubbergen-refter-jam'
+  `);
+  await sql.query(`
     alter table hub_festivals add column if not exists status text not null default 'published'
   `);
   await sql.query(`

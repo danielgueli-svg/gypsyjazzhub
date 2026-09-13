@@ -117,9 +117,9 @@ export const VENUES: Venue[] = [
     country: "Netherlands",
     kind: "Café",
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
-    contact: "",
+    contact: "sigridvannistelrooij@icloud.com",
     scene: "gypsy",
-    bio: "Rijkstraatweg 37, near Nijmegen. Selected Friday gypsy jazz jams 19:30–23:30. Sigrid Booden.",
+    bio: "Rijkstraatweg 37, near Nijmegen. Monthly Friday gypsy jazz 19:30–23:30. Organised by Sigrid Booden — sign up: sigridvannistelrooij@icloud.com.",
   },
   {
     slug: "cafe-de-stadsgraaf",
