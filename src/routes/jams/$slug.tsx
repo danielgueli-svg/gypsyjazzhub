@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { GoingRsvp } from "@/components/going-rsvp";
+import { JamEdit } from "@/components/jam-edit";
 import { HubChat } from "@/components/hub-chat";
 import { InvitePanel } from "@/components/invite-panel";
 import { LegendCard } from "@/components/legend-card";
@@ -8,7 +9,7 @@ import { SubscribeButton } from "@/components/subscribe-button";
 import { ShareBox } from "@/components/share-page";
 import { Badge } from "@/components/ui/badge";
 import { listLegends } from "@/lib/api";
-import { getJam, jamHours, jamMapsUrl, jamPlace, formatJamNext } from "@/lib/jams";
+import { getJam, overlayJam, jamHours, jamMapsUrl, jamPlace, formatJamNext } from "@/lib/jams";
 import { jamHoursLabel, jamWhen } from "@/lib/jam-copy";
 import { CountryLabel } from "@/components/country-label";
 import { getHubJam, listHubChat } from "@/lib/hub-api";
@@ -18,7 +19,9 @@ import { settle } from "@/lib/settle";
 
 export const Route = createFileRoute("/jams/$slug")({
   loader: async ({ params }) => {
-    const jam = getJam(params.slug) ?? (await getHubJam({ data: params.slug }));
+    const catalog = getJam(params.slug);
+    const hub = await settle("hub-jam", null, () => getHubJam({ data: params.slug }));
+    const jam = overlayJam(catalog, hub);
     if (!jam) throw notFound();
     const [legends, chat] = await Promise.all([
       listLegends(),
@@ -72,6 +75,7 @@ function JamPage() {
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <SaveButton kind="jam" slug={jam.slug} label={t("jam.save")} />
         <SubscribeButton kind="jam" targetId={jam.slug} targetName={jam.name} label={t("jam.notify")} />
+        <JamEdit jam={jam} />
         <ShareBox
           compact
           url={`/jams/${jam.slug}`}

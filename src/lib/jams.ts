@@ -1358,6 +1358,40 @@ export function getJam(slug: string) {
   return JAMS.find((jam) => jam.slug === slug);
 }
 
+/** Hub row wins non-empty place/time fields; catalog keeps invite, related players, site. */
+export function overlayJam(catalog: Jam | undefined, hub: Jam | null | undefined): Jam | undefined {
+  if (!catalog && !hub) return undefined;
+  if (!hub) return catalog;
+  if (!catalog) return hub;
+  const pick = (over: string, base: string) => (over.trim() ? over : base);
+  return {
+    ...catalog,
+    name: pick(hub.name, catalog.name),
+    city: pick(hub.city, catalog.city),
+    country: pick(hub.country, catalog.country),
+    venue: pick(hub.venue, catalog.venue),
+    address: pick(hub.address, catalog.address),
+    hours: pick(hub.hours, catalog.hours),
+    when: pick(hub.when, catalog.when),
+    nextStartsAt: hub.nextStartsAt || catalog.nextStartsAt,
+    bio: pick(hub.bio, catalog.bio),
+    site: hub.site || catalog.site,
+    kind: hub.kind ?? catalog.kind,
+  };
+}
+
+export function overlayJamList(catalog: Jam[], extra: Jam[], now = Date.now()): Jam[] {
+  const map = new Map<string, Jam>();
+  for (const jam of catalog) map.set(jam.slug, jam);
+  for (const jam of extra) {
+    const rolled = { ...jam, nextStartsAt: rollJamNext(jam, now) };
+    const seed = map.get(jam.slug);
+    const merged = overlayJam(seed, rolled);
+    if (merged) map.set(jam.slug, merged);
+  }
+  return [...map.values()];
+}
+
 function isPostedNotRecurring(when: string) {
   return /when posted|no regular|festival week|camp week|selected friday|check (the band|facebook|kozlov)/i.test(
     when,
@@ -1408,12 +1442,7 @@ export function upcomingJams(now = Date.now()) {
 }
 
 export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
-  const all = [...catalogJams(now)];
-  for (const jam of extra) {
-    if (!all.some((row) => row.slug === jam.slug)) {
-      all.push({ ...jam, nextStartsAt: rollJamNext(jam, now) });
-    }
-  }
+  const all = overlayJamList(catalogJams(now), extra, now);
   const present = [...new Set(all.map((jam) => jam.country))];
   const ordered = present.sort((a, b) => a.localeCompare(b));
   return ordered.map((country) => ({

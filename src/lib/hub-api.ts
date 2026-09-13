@@ -223,6 +223,12 @@ async function runEnsureHub() {
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
+    alter table hub_jams add column if not exists updated_at timestamptz not null default now()
+  `);
+  await sql.query(`
+    alter table hub_jams add column if not exists updated_by text not null default ''
+  `);
+  await sql.query(`
     alter table hub_festivals add column if not exists status text not null default 'published'
   `);
   await sql.query(`
@@ -610,7 +616,9 @@ export const getHubJam = createServerFn({ method: "GET" })
       hours: string;
     }>`
       select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours
-      from hub_jams where slug = ${slug} limit 1
+      from hub_jams
+      where slug = ${slug} and coalesce(status, 'published') = 'published'
+      limit 1
     `;
     return rows[0] ? mapJam(rows[0]) : null;
     } catch (err) {
@@ -964,6 +972,90 @@ export const addHubJam = createServerFn({ method: "POST" })
       )
     `;
     return { slug, pending: gate.pending };
+  });
+
+export const updateHubJam = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    (input: {
+      slug: string;
+      name: string;
+      city: string;
+      country: string;
+      venue: string;
+      address: string;
+      hours: string;
+      when: string;
+      nextStartsAt: string;
+      bio: string;
+      hp?: string;
+      turnstile?: string;
+    }) => input,
+  )
+  .handler(async ({ context, data }) => {
+    await ensureHub();
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const { getJam } = await import("@/lib/jams");
+    const gate = await gateContribution(context.userId, { hp: data.hp, turnstile: data.turnstile });
+    if (gate.skip) return { ok: true as const, pending: true as const };
+    const slug = data.slug.trim();
+    if (!slug) throw new Error("Missing jam.");
+    const catalog = getJam(slug);
+    const sql = await getSql();
+    const existing = await sql.query<{ slug: string }>(
+      `select slug from hub_jams where slug = $1 limit 1`,
+      [slug],
+    );
+    if (!catalog && !existing[0]) throw new Error("That jam is not on the hub.");
+    const name = data.name.trim();
+    const country = data.country.trim();
+    const venue = data.venue.trim();
+    if (!name) throw new Error("Name the jam.");
+    if (!country) throw new Error("Name the country.");
+    if (!venue) throw new Error("Name the venue.");
+    const starts = new Date(data.nextStartsAt);
+    if (Number.isNaN(starts.getTime())) throw new Error("Pick the next date.");
+    const submitted = await submitterName(context.userId);
+    const kind = catalog?.kind === "meetup" ? "meetup" : "regular";
+    const status = catalog || existing[0] ? "published" : gate.status;
+    await sql.query(
+      `insert into hub_jams (
+        slug, name, city, country, venue, address, hours, when_text, next_starts_at, bio, kind,
+        submitted_by, submitted_name, status, updated_at, updated_by
+      ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      on conflict (slug) do update set
+        name = excluded.name,
+        city = excluded.city,
+        country = excluded.country,
+        venue = excluded.venue,
+        address = excluded.address,
+        hours = excluded.hours,
+        when_text = excluded.when_text,
+        next_starts_at = excluded.next_starts_at,
+        bio = excluded.bio,
+        status = excluded.status,
+        updated_at = excluded.updated_at,
+        updated_by = excluded.updated_by`,
+      [
+        slug,
+        name,
+        data.city.trim(),
+        country,
+        venue,
+        data.address.trim(),
+        data.hours.trim(),
+        data.when.trim(),
+        starts.toISOString(),
+        data.bio.trim(),
+        kind,
+        context.userId,
+        submitted,
+        status,
+        new Date().toISOString(),
+        context.userId,
+      ],
+    );
+    return { ok: true as const, slug, pending: status === "pending" };
   });
 
 export const listHubVenues = createServerFn({ method: "GET" }).handler(async () => {

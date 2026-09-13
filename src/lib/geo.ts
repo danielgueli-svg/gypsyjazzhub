@@ -2,7 +2,7 @@ import { slugify } from "@/lib/utils";
 import { CAMPS, type Camp } from "@/lib/camps";
 import type { Concert, Legend, Profile } from "@/lib/api";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
-import { JAMS, rollJamNext, type Jam } from "@/lib/jams";
+import { JAMS, overlayJam, rollJamNext, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
 import { LUTHIERS, type Luthier } from "@/lib/luthiers";
 import { SHOPS, type Shop } from "@/lib/shops";
@@ -1062,10 +1062,13 @@ export function buildGlobeIndex(
     const row = ensure(place);
     const rolled = { ...jam, nextStartsAt: rollJamNext(jam, nowJam) };
     const past = new Date(rolled.nextStartsAt).getTime() < nowJam;
-    if (past && !catalogSlugs.has(jam.slug)) continue;
-    if (!row.jams.some((item) => item.slug === jam.slug)) {
-      row.jams.push(rolled);
+    const idx = row.jams.findIndex((item) => item.slug === jam.slug);
+    if (idx >= 0) {
+      row.jams[idx] = overlayJam(row.jams[idx], rolled) ?? rolled;
+      continue;
     }
+    if (past && !catalogSlugs.has(jam.slug)) continue;
+    row.jams.push(rolled);
   }
 
   const nowCamp = Date.now();
