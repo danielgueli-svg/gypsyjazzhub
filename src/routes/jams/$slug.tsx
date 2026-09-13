@@ -182,7 +182,9 @@ function JamPage() {
               ? t("jam.whatsapp")
               : jam.site.includes("djangobooks.com")
                 ? t("jam.djangobooksThread")
-                : t("jam.follow")}
+                : jam.site.includes("facebook.com")
+                  ? t("share.facebook")
+                  : t("jam.follow")}
           </a>
         </p>
       ) : null}

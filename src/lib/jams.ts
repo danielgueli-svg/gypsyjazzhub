@@ -330,7 +330,7 @@ export const JAMS: Jam[] = [
     nextStartsAt: "2026-09-17T16:00:00.000Z",
     bio: "Thursday jam at Escal in Witry-lès-Reims, just outside Reims, posted by Asso Gypsy Jazz à Reims. A moment to play, not to judge — no lesson, no concert, no teacher, no audience, no pressure. Amateur musicians of every level, any acoustic instrument, from 16. Practice accompaniment or try improvising on jazz manouche standards; mistakes are part of the night. Witryats and visitors: 5€ under 16, 16€ from 16. Volunteer chairs: Frédéric Lefebvre and Gilles Valette. Un moment pour jouer, pas pour juger.",
     relatedSlugs: [],
-    site: "https://www.escal-witry.fr",
+    site: "https://www.facebook.com/p/Gypsy-Jazz-%C3%A0-Reims-61572242528647/",
     leader: "Asso Gypsy Jazz à Reims — Frédéric Lefebvre, Gilles Valette",
     leaderContact: "",
   },
