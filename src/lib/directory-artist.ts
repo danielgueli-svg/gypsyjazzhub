@@ -8,7 +8,7 @@ import {
 } from "@/lib/api";
 import { campsForArtist } from "@/lib/camps";
 import { festivalsForArtist } from "@/lib/festivals";
-import { listHubClips, listHubNotes, listJoinedArtists } from "@/lib/hub-api";
+import { listHubClips, listHubNotes, listJoinedArtists, getHubArtistBio } from "@/lib/hub-api";
 import { listGuestbook, seedGuestbook } from "@/lib/guestbook";
 import { listArtistReviews } from "@/lib/concert-reviews";
 import { bookerFor } from "@/lib/bookers";
@@ -17,7 +17,7 @@ import { schoolsForArtist } from "@/lib/scene-guide";
 import { settle } from "@/lib/settle";
 
 export async function loadArtistExtras(slug: string) {
-  const [concerts, collaborators, clips, notes, joined, shoutouts, reports] = await Promise.all([
+  const [concerts, collaborators, clips, notes, joined, shoutouts, reports, hubBio] = await Promise.all([
     settle("legend-concerts", catalogConcertsFor(slug), () => listLegendConcerts({ data: slug })),
     settle("collaborators", catalogCollaborators(slug), () => listCollaborators({ data: slug })),
     settle("clips", [], () => listHubClips({ data: slug })),
@@ -25,8 +25,9 @@ export async function loadArtistExtras(slug: string) {
     settle("joined", [], () => listJoinedArtists()),
     settle("guestbook", seedGuestbook(slug), () => listGuestbook({ data: slug })),
     settle("reviews", [], () => listArtistReviews({ data: slug })),
+    settle("hub-bio", null, () => getHubArtistBio({ data: slug })),
   ]);
-  return { concerts, collaborators, clips, notes, joined, shoutouts, reports };
+  return { concerts, collaborators, clips, notes, joined, shoutouts, reports, hubBio };
 }
 
 export async function loadDirectoryArtist(slug: string) {
@@ -49,6 +50,7 @@ export async function loadDirectoryArtist(slug: string) {
     notes: extras.notes,
     shoutouts: extras.shoutouts,
     reports: extras.reports,
+    hubBio: extras.hubBio,
     bands: bandsFor(legend.slug),
     festivals: festivalsForArtist(legend.slug, legend.samois),
     camps: campsForArtist(legend.slug),

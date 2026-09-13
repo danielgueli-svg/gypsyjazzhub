@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArtistClips } from "@/components/artist-clips";
+import { ArtistBioEdit } from "@/components/artist-bio-edit";
 import { ArtistMusic } from "@/components/artist-music";
 import { BookerLinks } from "@/components/booker-links";
 import { ConcertList } from "@/components/concert-row";
@@ -56,7 +57,7 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
-  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports, camps, schools, member } =
+  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports, camps, schools, member, hubBio } =
     data;
   const { t } = useI18n();
   const { user } = useCurrentUserState();
@@ -71,7 +72,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
   const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;
-  const bio = member?.bio?.trim() || legend.bio;
+  const bio = member?.bio?.trim() || hubBio || legend.bio;
   const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
   const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
   const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;
@@ -106,6 +107,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             ))}
           </div>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
+          <ArtistBioEdit slug={legend.slug} bio={bio} claimed={Boolean(member?.bio?.trim())} />
           {legend.notable && !member?.bio?.trim() ? (
             <p className="mt-3 text-sm text-faint">{legend.notable}</p>
           ) : null}

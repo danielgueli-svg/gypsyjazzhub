@@ -241,6 +241,16 @@ async function runEnsureHub() {
     alter table hub_notes add column if not exists status text not null default 'published'
   `);
   await sql.query(`
+    create table if not exists hub_artist_bios (
+      artist_slug text primary key,
+      bio text not null,
+      submitted_by text not null,
+      submitted_name text not null default '',
+      status text not null default 'published',
+      updated_at timestamptz not null default now()
+    )
+  `);
+  await sql.query(`
     alter table hub_clips add column if not exists status text not null default 'published'
   `);
   await sql.query(`
@@ -554,6 +564,54 @@ export const listHubNotes = createServerFn({ method: "GET" })
       console.error("listHubNotes db failed", err);
       return [];
     }
+  });
+
+export const getHubArtistBio = createServerFn({ method: "GET" })
+  .validator((slug: string) => slug)
+  .handler(async ({ data: slug }) => {
+    try {
+      await ensureHub();
+      const sql = await getSql();
+      const rows = await sql<{ bio: string }>`
+        select bio from hub_artist_bios
+        where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
+        limit 1
+      `;
+      const bio = rows[0]?.bio.trim() ?? "";
+      return bio || null;
+    } catch (err) {
+      console.error("getHubArtistBio db failed", err);
+      return null;
+    }
+  });
+
+export const updateHubArtistBio = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { slug: string; bio: string }) => input)
+  .handler(async ({ context, data }) => {
+    await ensureHub();
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const gate = await gateContribution(context.userId, { sessionTrusted: true });
+    if (gate.skip) return { ok: true as const, pending: true as const };
+    const slug = data.slug.trim();
+    const bio = data.bio.trim();
+    if (!slug) throw new Error("Missing musician.");
+    if (bio.length < 20) throw new Error("Write a little more — a short paragraph is enough.");
+    if (bio.length > 4000) throw new Error("Keep the bio under a few thousand characters.");
+    const name = await submitterName(context.userId);
+    const sql = await getSql();
+    await sql.query(
+      `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
+       values ($1, $2, $3, $4, $5, $6)
+       on conflict (artist_slug) do update set
+         bio = excluded.bio,
+         submitted_by = excluded.submitted_by,
+         submitted_name = excluded.submitted_name,
+         status = excluded.status,
+         updated_at = excluded.updated_at`,
+      [slug, bio, context.userId, name, gate.status, new Date().toISOString()],
+    );
+    return { ok: true as const, pending: gate.pending };
   });
 
 export const listHubFestivals = createServerFn({ method: "GET" }).handler(async () => {
