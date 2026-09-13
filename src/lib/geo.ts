@@ -2,7 +2,7 @@ import { slugify } from "@/lib/utils";
 import { CAMPS, type Camp } from "@/lib/camps";
 import type { Concert, Legend, Profile } from "@/lib/api";
 import { FESTIVALS, type Festival } from "@/lib/festivals";
-import { JAMS, overlayJam, rollJamNext, type Jam } from "@/lib/jams";
+import { JAMS, overlayJam, rollJamNext, compareJamsByCadence, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
 import { LUTHIERS, type Luthier } from "@/lib/luthiers";
 import { SHOPS, type Shop } from "@/lib/shops";
@@ -1123,9 +1123,7 @@ export function buildGlobeIndex(
     row.concerts.sort(
       (a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime(),
     );
-    row.jams.sort(
-      (a, b) => new Date(a.nextStartsAt).getTime() - new Date(b.nextStartsAt).getTime(),
-    );
+    row.jams.sort(compareJamsByCadence);
     row.camps.sort(
       (a, b) => new Date(a.nextStartsAt).getTime() - new Date(b.nextStartsAt).getTime(),
     );

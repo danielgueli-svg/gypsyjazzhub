@@ -118,7 +118,7 @@ const CITY_TZ: Record<string, string> = {
   "den haag": "Europe/Amsterdam",
   ubbergen: "Europe/Amsterdam",
   nijmegen: "Europe/Amsterdam",
-  "tel aviv": "Asia/Jerusalem",
+  reims: "Europe/Paris",
   jerusalem: "Asia/Jerusalem",
 };
 
@@ -316,6 +316,19 @@ export const JAMS: Jam[] = [
     nextStartsAt: "2026-08-26T19:30:00.000Z",
     bio: "A weekday open jam on the Paris caveau circuit. Bring a Selmer, sit behind the pompe, learn the language the way the city still teaches it.",
     relatedSlugs: ["adrien-moignard", "rocky-gresset"],
+  },
+  {
+    slug: "reims-souk",
+    name: "Gypsy Jazz à Reims",
+    city: "Reims",
+    country: "France",
+    venue: "Souk",
+    address: "Reims",
+    hours: "",
+    when: "Every week",
+    nextStartsAt: "2026-09-14T18:00:00.000Z",
+    bio: "Weekly gypsy jazz jam at Souk in Reims. Gypsy Jazz à Reims holds the amateur circle — sit in when the pompe is open.",
+    relatedSlugs: [],
   },
   {
     slug: "amsterdam-circle-jam",
@@ -1408,7 +1421,7 @@ function isWeekly(when: string) {
   if (/every other|biweekly|1st |2nd |3rd |4th |first |last |when posted|no regular/i.test(when)) {
     return false;
   }
-  return /\b(weekly|every (monday|tuesday|wednesday|thursday|friday|saturday|sunday)|weekends|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sundays?)\b/i.test(
+  return /\b(weekly|every week|every (monday|tuesday|wednesday|thursday|friday|saturday|sunday)|weekends|mondays?|tuesdays?|wednesdays?|thursdays?|fridays?|saturdays?|sundays?)\b/i.test(
     when,
   );
 }
@@ -1419,6 +1432,25 @@ function isBiweekly(when: string) {
 
 function isMonthlyish(when: string) {
   return /monthly|1st |2nd |3rd |4th |first |last /i.test(when);
+}
+
+export function jamCadenceRank(jam: Jam) {
+  const when = jam.when ?? "";
+  if (jam.kind === "meetup") return 4;
+  if (isPostedNotRecurring(when) || /festival week/i.test(when)) return 5;
+  if (isWeekly(when)) return 0;
+  if (isBiweekly(when)) return 1;
+  if (isMonthlyish(when)) return 2;
+  return 3;
+}
+
+export function compareJamsByCadence(a: Jam, b: Jam) {
+  const rank = jamCadenceRank(a) - jamCadenceRank(b);
+  if (rank) return rank;
+  const ta = new Date(a.nextStartsAt).getTime();
+  const tb = new Date(b.nextStartsAt).getTime();
+  if (ta !== tb) return ta - tb;
+  return a.city.localeCompare(b.city) || a.name.localeCompare(b.name);
 }
 
 /** Keep the original clock; only walk the calendar forward. Do not invent new rooms. */
@@ -1455,7 +1487,7 @@ export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
     country,
     jams: all
       .filter((jam) => jam.country === country)
-      .sort((a, b) => a.city.localeCompare(b.city) || a.name.localeCompare(b.name)),
+      .sort(compareJamsByCadence),
   }));
 }
 

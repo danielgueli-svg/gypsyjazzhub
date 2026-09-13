@@ -16,7 +16,7 @@ import { whenLabel } from "@/lib/festival-copy";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
-import { catalogJams, isFrontJam, type Jam } from "@/lib/jams";
+import { catalogJams, compareJamsByCadence, isFrontJam, type Jam } from "@/lib/jams";
 import { pageHead, SEO } from "@/lib/seo";
 import { settle } from "@/lib/settle";
 
@@ -79,7 +79,9 @@ function Home() {
   }, [jams]);
   const countryJams = useMemo(() => {
     if (jamCountry) {
-      return jams.filter((jam) => countrySlug(jam.country) === jamCountry);
+      return jams
+        .filter((jam) => countrySlug(jam.country) === jamCountry)
+        .sort(compareJamsByCadence);
     }
     const mixed = mixByCountry(jams, (jam) => jam.country);
     const seen = new Set<string>();
