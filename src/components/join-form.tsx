@@ -81,12 +81,8 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             throw new Error(t("login.already"));
           }
         } else {
-          try {
-            const { startHubEmailVerification } = await import("@/lib/hub-api");
-            await startHubEmailVerification();
-          } catch {
-            /* auth hook already sends the welcome mail */
-          }
+          // Auth hook already sends the welcome / confirm mail. Do not send
+          // again here — a second send rotates the token and kills the first link.
           await goAfterLogin(true);
           return;
         }
