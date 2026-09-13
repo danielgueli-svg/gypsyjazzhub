@@ -20,7 +20,7 @@ function keepToken(result: { data?: { token?: string | null } | null }) {
 
 export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) {
   const { t } = useI18n();
-  const { user } = useCurrentUserState();
+  const { user, isPending } = useCurrentUserState();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"in" | "up">(defaultMode);
   const [name, setName] = useState("");
@@ -40,8 +40,11 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
       window.location.assign(back);
       return;
     }
-    const to = "/studio";
-    await navigate({ to });
+    if (firstTime) {
+      await navigate({ to: "/studio", search: { tab: "page" } });
+      return;
+    }
+    await navigate({ to: "/studio" });
   }
 
   async function onEmail(event: FormEvent<HTMLFormElement>) {
@@ -78,6 +81,12 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             throw new Error(t("login.already"));
           }
         } else {
+          try {
+            const { startHubEmailVerification } = await import("@/lib/hub-api");
+            await startHubEmailVerification();
+          } catch {
+            /* auth hook already sends the welcome mail */
+          }
           await goAfterLogin(true);
           return;
         }
@@ -108,6 +117,9 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
     }
   }
 
+  if (isPending) {
+    return <div className="h-48 animate-pulse rounded-xl bg-raised" aria-hidden="true" />;
+  }
   if (user) {
     return <Navigate to="/studio" />;
   }

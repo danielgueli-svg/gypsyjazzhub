@@ -80,7 +80,9 @@ function VerifyEmail() {
         )}
         {user ? (
           <Button asChild>
-            <Link to="/studio">{t("nav.hubProfile")}</Link>
+            <Link to="/studio" search={{ tab: "page" }}>
+              {t("nav.hubProfile")}
+            </Link>
           </Button>
         ) : null}
         <Button asChild variant="outline">
