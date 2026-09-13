@@ -12,7 +12,10 @@ function fold(value: string) {
     .toLowerCase();
 }
 
-function countryMatches(name: string, query: string, locale: string) {
+function isUsa(name: string) {
+  const slug = countrySlug(name);
+  return slug === "united-states-of-america" || slug === "united-states" || slug === "usa";
+}
   const needle = fold(query.trim());
   if (!needle) return true;
   const label = fold(displayCountry(name, locale));
@@ -54,7 +57,7 @@ export function CountryClicker({
   const searchRef = useRef<HTMLInputElement>(null);
   const selected = countries.find((name) => countrySlug(name) === value) ?? null;
   const groups = useMemo(() => {
-    const rows = groupByContinent(countries);
+    const rows = groupByContinent(countries.filter((name) => !isUsa(name)));
     const europe = rows.filter((group) => group.id === "europe");
     const rest = rows.filter((group) => group.id !== "europe");
     return [...europe, ...rest];
@@ -64,6 +67,10 @@ export function CountryClicker({
     const q = query.trim();
     const names = countries.filter((name) => countryMatches(name, q, locale));
     names.sort((a, b) => {
+      if (!q) {
+        if (isUsa(a) && !isUsa(b)) return -1;
+        if (!isUsa(a) && isUsa(b)) return 1;
+      }
       if (q) {
         const d = countryRank(a, q, locale) - countryRank(b, q, locale);
         if (d) return d;
@@ -267,7 +274,27 @@ export function CountryClicker({
             {filtered.length === 0 ? (
               <p className="px-1 text-sm text-muted">{t("home.noCountryMatch")}</p>
             ) : (
-              filteredGroups.map((group) => (
+              <>
+                {filtered.filter(isUsa).map((name) => {
+                  const slug = countrySlug(name);
+                  const on = value === slug;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => pick(slug)}
+                      aria-pressed={on}
+                      className={cn(
+                        "inline-flex min-h-11 items-center gap-1.5 rounded-md px-2.5 text-xs",
+                        on ? "bg-accent text-accent-fg" : "bg-raised text-muted hover:text-fg",
+                      )}
+                    >
+                      <Flag name={name} />
+                      <span>{displayCountry(name, locale)}</span>
+                    </button>
+                  );
+                })}
+                {filteredGroups.map((group) => (
               <div key={group.id}>
                 <p className="px-1 text-xs tracking-[0.14em] text-muted uppercase">
                   {t(`home.region.${group.id}`)}
@@ -294,7 +321,8 @@ export function CountryClicker({
                   })}
                 </div>
               </div>
-              ))
+                ))}
+              </>
             )}
           </div>
         </div>
