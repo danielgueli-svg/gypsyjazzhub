@@ -109,11 +109,8 @@ function JamPage() {
         </div>
         <div className="rounded-2xl bg-surface p-5 shadow-border">
           <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.when")}</p>
-          {hours ? (
-            <p className="mt-2 font-display text-xl font-semibold">{hours}</p>
-          ) : null}
-          <p className={hours ? "mt-1 text-sm text-muted" : "mt-2 font-display text-xl font-semibold"}>
-            {when}
+          <p className="mt-2 font-display text-xl font-semibold leading-snug">
+            {[hours, when].filter(Boolean).join(" · ")}
           </p>
           <p className="mt-4 text-[11px] tracking-[0.16em] text-faint uppercase">{t("page.next")}</p>
           <p className="mt-1 text-sm text-muted">{formatJamNext(jam, locale)}</p>

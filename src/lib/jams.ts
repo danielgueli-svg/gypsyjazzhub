@@ -220,7 +220,14 @@ export function formatJamNext(jam: Jam, locale = "en") {
   const hour = get("hour").padStart(2, "0");
   const minute = get("minute").padStart(2, "0");
   const day = `${get("weekday")} ${get("day")} ${get("month")} ${get("year")}`;
-  if (!jamHours(jam)) return day;
+  const hours = jamHours(jam);
+  if (!hours) return day;
+  const span = hours.match(/(\d{1,2}:\d{2})\s*[–—-]\s*(\d{1,2}:\d{2})/);
+  if (span) {
+    const start = span[1].padStart(5, "0");
+    const end = span[2].padStart(5, "0");
+    return `${day} · ${start}–${end}`;
+  }
   return `${day} · ${hour}:${minute}`;
 }
 
@@ -1105,9 +1112,9 @@ export const JAMS: Jam[] = [
     venue: "Café Langereis",
     address: "Amstel 202, Amsterdam",
     hours: "20:00–23:00",
-    when: "First Tuesday",
+    when: "First Tuesday of the month",
     nextStartsAt: "2026-09-01T18:00:00.000Z",
-    bio: "First Tuesday, 20:00–23:00. Gypsy swing jam at Café Langereis, Amstel 202 — often an opening set, then sit-in. Led by Tessa Spaaij. Listed by Hot Club de France Nederland.",
+    bio: "First Tuesday of the month, 20:00–23:00. Gypsy swing jam at Café Langereis, Amstel 202 — often an opening set, then sit-in. Led by Tessa Spaaij. Listed by Hot Club de France Nederland.",
     relatedSlugs: [],
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
   },
@@ -1133,9 +1140,9 @@ export const JAMS: Jam[] = [
     venue: "Gunst Wat ’n Kunst",
     address: "Raamweg 45, 2596 HN Den Haag",
     hours: "14:00–18:00",
-    when: "3rd Saturday",
+    when: "Third Saturday of the month",
     nextStartsAt: "2026-09-19T12:00:00.000Z",
-    bio: "Manouche Den Haag — 3rd Saturday afternoon, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. By invitation: email her first to join, evelien@box.nl. Listed by Hot Club de France Nederland.",
+    bio: "Manouche Den Haag — third Saturday of the month, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. With prior confirmation: evelien@box.nl.",
     relatedSlugs: [],
     site: "https://hcdf.nl/2025/08/09/gypsy-jazz-jam-sessies/",
   },

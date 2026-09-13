@@ -108,7 +108,7 @@ export const VENUES: Venue[] = [
     site: "https://gunstwateenkunst.nl/",
     contact: "",
     scene: "gypsy",
-    bio: "Raamweg 45. Manouche Den Haag — 3rd Saturday 14:00–18:00. By invitation: email Evelien Tollenaar first, evelien@box.nl.",
+    bio: "Raamweg 45. Manouche Den Haag — third Saturday of the month, 14:00–18:00. With prior confirmation: evelien@box.nl.",
   },
   {
     slug: "cafe-van-de-refter",
