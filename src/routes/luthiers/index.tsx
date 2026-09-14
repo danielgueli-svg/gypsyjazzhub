@@ -1,35 +1,63 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Contribute } from "@/components/contribute";
-import { LuthierList } from "@/components/luthier-list";
+import { CountryClicker } from "@/components/country-clicker";
+import { Flag } from "@/components/flag";
 import { ShopsDirectory } from "@/components/shops-directory";
-import { CountryLabel } from "@/components/country-label";
-import { countrySlug } from "@/lib/geo";
+import { countrySlug, displayCountry } from "@/lib/geo";
 import { listHubLuthiers } from "@/lib/hub-api";
-import { luthiersByCountry } from "@/lib/luthiers";
-import { pageHead, SEO } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n";
+import { luthierPageCopy } from "@/lib/luthier-copy";
+import {
+  communityLuthierOrder,
+  mergeLuthiers,
+  sortCountryLuthiers,
+  type Luthier,
+} from "@/lib/luthiers";
+import { makerBio } from "@/lib/maker-copy";
+import { luthierPhotoSrc } from "@/lib/photos";
+import { pageHead, SEO } from "@/lib/seo";
+
+type Search = { country?: string };
 
 export const Route = createFileRoute("/luthiers/")({
   head: () => pageHead(SEO.luthiers),
-  loader: async () => ({ extra: await listHubLuthiers() }),
+  validateSearch: (search: Record<string, unknown>): Search => ({
+    country: typeof search.country === "string" ? search.country : undefined,
+  }),
+  loaderDeps: ({ search }) => ({ country: search.country }),
+  loader: async ({ deps }) => {
+    const extra = await listHubLuthiers();
+    const all = mergeLuthiers(extra);
+    const countries = [...new Set(all.map((row) => row.country))].sort((a, b) =>
+      a.localeCompare(b),
+    );
+    const selected = countries.find((name) => countrySlug(name) === deps.country) ?? null;
+    const subset = selected ? all.filter((row) => row.country === selected) : all;
+    const luthiers = selected
+      ? sortCountryLuthiers(selected, subset)
+      : communityLuthierOrder(subset);
+    return { luthiers, countries, selected };
+  },
   component: LuthiersPage,
 });
 
 function LuthiersPage() {
-  const { extra } = Route.useLoaderData();
-  const groups = luthiersByCountry(extra);
-  const { t } = useI18n();
+  const { luthiers, countries, selected } = Route.useLoaderData();
+  const { t, locale } = useI18n();
+  const copy = luthierPageCopy(locale);
+  const navigate = useNavigate({ from: "/luthiers/" });
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("luthiers.kicker")}</p>
-      <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">{t("nav.luthiers")}</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-        {t("luthiers.lead")}{" "}
-        <Link to="/instruments" className="text-fg hover:underline">
-          {t("nav.instruments")}
-        </Link>
-        {" · "}
+      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{copy.kicker}</p>
+      <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">{copy.title}</h1>
+      <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted">
+        <p>{copy.what}</p>
+        <p>{copy.community}</p>
+        <p>{copy.selmer}</p>
+      </div>
+      <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted">
+        {copy.listLead}{" "}
         <Link to="/luthiers/bass" className="text-fg hover:underline">
           {t("bass.worldwide")}
         </Link>
@@ -40,23 +68,27 @@ function LuthiersPage() {
         .
       </p>
 
-      <div className="mt-10 space-y-10">
-        {groups.map((group) => (
-          <section key={group.country}>
-            <Link
-              to="/world/$slug"
-              params={{ slug: countrySlug(group.country) }}
-              className="text-[11px] tracking-[0.18em] text-faint uppercase hover:text-fg"
-            >
-              <CountryLabel name={group.country} />
-              <span className="ml-2 text-faint">({group.luthiers.length})</span>
-            </Link>
-            <div className="mt-3">
-              <LuthierList luthiers={group.luthiers} />
-            </div>
-          </section>
+      <CountryClicker
+        countries={countries}
+        value={selected ? countrySlug(selected) : null}
+        onChange={(slug) => {
+          void navigate({
+            to: "/luthiers",
+            search: { country: slug ?? undefined },
+          });
+        }}
+      />
+
+      <p className="mt-8 text-sm text-muted">
+        {luthiers.length}
+        {selected ? ` · ${displayCountry(selected, locale)}` : null}
+      </p>
+
+      <ol className="mt-6 divide-y divide-border overflow-hidden rounded-2xl bg-surface shadow-border">
+        {luthiers.map((luthier) => (
+          <LuthierIndexRow key={luthier.slug} luthier={luthier} />
         ))}
-      </div>
+      </ol>
 
       <section className="mt-16">
         <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Retail</p>
@@ -77,5 +109,60 @@ function LuthiersPage() {
 
       <Contribute heading="Add a luthier" />
     </main>
+  );
+}
+
+function LuthierIndexRow({ luthier }: { luthier: Luthier }) {
+  const { t, locale } = useI18n();
+  const photo = luthierPhotoSrc(luthier.slug);
+  const localized = makerBio(luthier.slug, locale);
+  const bio = localized || luthier.bio;
+  const craft =
+    luthier.craft === "bass"
+      ? t("luthiers.bass")
+      : luthier.craft === "violin"
+        ? t("luthiers.violin")
+        : null;
+
+  return (
+    <li className="flex gap-4 px-4 py-5 sm:px-5">
+      {photo ? (
+        <Link
+          to="/luthiers/$slug"
+          params={{ slug: luthier.slug }}
+          className="shrink-0"
+        >
+          <img
+            src={photo}
+            alt=""
+            className="size-16 rounded-xl object-cover shadow-border sm:size-20"
+          />
+        </Link>
+      ) : (
+        <span className="flex size-16 shrink-0 items-center justify-center rounded-xl bg-raised shadow-border sm:size-20">
+          <Flag name={luthier.country} className="h-5 w-8" />
+        </span>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <Link
+            to="/luthiers/$slug"
+            params={{ slug: luthier.slug }}
+            className="font-display text-xl font-semibold hover:underline"
+          >
+            {luthier.name}
+          </Link>
+          {craft ? (
+            <span className="text-[11px] tracking-[0.14em] text-faint uppercase">{craft}</span>
+          ) : null}
+        </div>
+        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted">
+          <Flag name={luthier.country} />
+          <span>{displayCountry(luthier.country, locale)}</span>
+          {luthier.city ? <span>· {luthier.city}</span> : null}
+        </p>
+        {bio ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{bio}</p> : null}
+      </div>
+    </li>
   );
 }

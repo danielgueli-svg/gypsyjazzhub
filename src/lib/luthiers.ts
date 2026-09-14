@@ -1630,8 +1630,30 @@ export function splitLuthiers(rows: Luthier[]) {
 }
 
 const LUTHIER_PIN: Record<string, string[]> = {
-  Italy: ["marco-la-manna", "bruno-bagnarelli"],
+  Italy: ["marco-la-manna", "bruno-bagnarelli", "mauro-freschi"],
+  France: ["maurice-dupont", "jean-barault", "castelluccia", "jean-pierre-favino"],
+  "United Kingdom": ["killy-nonis", "jerome-duffell", "robert-ford"],
+  Germany: ["stefan-hahl"],
+  Netherlands: ["leo-eimers"],
+  Canada: ["shelley-park"],
 };
+
+/** Featured names on the community luthiers page — mixed countries, not a factory catalogue. */
+export const COMMUNITY_LUTHIER_PIN = [
+  "marco-la-manna",
+  "maurice-dupont",
+  "killy-nonis",
+  "bruno-bagnarelli",
+  "jean-barault",
+  "jerome-duffell",
+  "mauro-freschi",
+  "robert-ford",
+  "stefan-hahl",
+  "leo-eimers",
+  "shelley-park",
+  "castelluccia",
+  "jean-pierre-favino",
+];
 
 export function sortCountryLuthiers(country: string, rows: Luthier[]) {
   const pin = LUTHIER_PIN[country] ?? [];
@@ -1675,6 +1697,45 @@ export function luthiersByCountryForCraft(craft: LuthierCraft, extra: Luthier[] 
       luthiers: group.luthiers.filter((row) => row.craft === craft),
     }))
     .filter((group) => group.luthiers.length);
+}
+
+export function mergeLuthiers(extra: Luthier[] = []) {
+  const all = [...LUTHIERS];
+  for (const row of extra) {
+    if (!all.some((item) => item.slug === row.slug)) all.push(row);
+  }
+  return all;
+}
+
+export function communityLuthierOrder(rows: Luthier[]) {
+  const pin = new Map(COMMUNITY_LUTHIER_PIN.map((slug, index) => [slug, index]));
+  const pinned = rows
+    .filter((row) => pin.has(row.slug))
+    .sort((a, b) => (pin.get(a.slug) ?? 0) - (pin.get(b.slug) ?? 0));
+  const rest = rows.filter((row) => !pin.has(row.slug));
+  const buckets = new Map<string, Luthier[]>();
+  for (const row of rest) {
+    const list = buckets.get(row.country) ?? [];
+    list.push(row);
+    buckets.set(row.country, list);
+  }
+  for (const list of buckets.values()) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  const countries = [...buckets.keys()].sort((a, b) => a.localeCompare(b));
+  const mixed: Luthier[] = [];
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const country of countries) {
+      const next = buckets.get(country)?.shift();
+      if (next) {
+        mixed.push(next);
+        grew = true;
+      }
+    }
+  }
+  return [...pinned, ...mixed];
 }
 
 export function bassLuthiersByCountry(extra: Luthier[] = []) {
