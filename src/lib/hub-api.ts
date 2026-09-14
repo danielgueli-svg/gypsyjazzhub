@@ -343,8 +343,7 @@ async function seedCatalogTeachers(sql: Awaited<ReturnType<typeof getSql>>) {
   await sql`
     delete from hub_teachers
     where country_slug = 'netherlands'
-      and name = 'Stochelo Rosenberg'
-      and user_id = ''
+      and lower(name) = 'stochelo rosenberg'
   `;
 }
 
@@ -2029,11 +2028,15 @@ function catalogTeachers(countrySlug?: string): HubTeacher[] {
 
 function mergeHubTeachers(fromDb: HubTeacher[], countrySlug?: string): HubTeacher[] {
   const catalog = catalogTeachers(countrySlug);
-  if (fromDb.length === 0) return catalog;
-  const keys = new Set(fromDb.map((row) => `${row.countrySlug}|${row.name.toLowerCase()}`));
+  const dropped = new Set(["netherlands|stochelo rosenberg"]);
+  const liveDb = fromDb.filter(
+    (row) => !dropped.has(`${row.countrySlug}|${row.name.toLowerCase()}`),
+  );
+  if (liveDb.length === 0) return catalog;
+  const keys = new Set(liveDb.map((row) => `${row.countrySlug}|${row.name.toLowerCase()}`));
   return [
     ...catalog.filter((row) => !keys.has(`${row.countrySlug}|${row.name.toLowerCase()}`)),
-    ...fromDb,
+    ...liveDb,
   ];
 }
 
