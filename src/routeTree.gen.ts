@@ -17,6 +17,7 @@ import { Route as CampsRouteImport } from './routes/camps'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
 import { Route as DjangoRouteImport } from './routes/django'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as GradinaAlhambraRouteImport } from './routes/gradina-alhambra'
 import { Route as GrappelliRouteImport } from './routes/grappelli'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as JoinRouteImport } from './routes/join'
@@ -132,6 +133,11 @@ const DjangoRoute = DjangoRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GradinaAlhambraRoute = GradinaAlhambraRouteImport.update({
+  id: '/gradina-alhambra',
+  path: '/gradina-alhambra',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GrappelliRoute = GrappelliRouteImport.update({
@@ -526,6 +532,7 @@ export interface FileRoutesByFullPath {
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -612,6 +619,7 @@ export interface FileRoutesByTo {
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -699,6 +707,7 @@ export interface FileRoutesById {
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -787,6 +796,7 @@ export interface FileRouteTypes {
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -873,6 +883,7 @@ export interface FileRouteTypes {
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -959,6 +970,7 @@ export interface FileRouteTypes {
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -1046,6 +1058,7 @@ export interface RootRouteChildren {
   DenisChangRoute: typeof DenisChangRoute
   DjangoRoute: typeof DjangoRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GradinaAlhambraRoute: typeof GradinaAlhambraRoute
   GrappelliRoute: typeof GrappelliRoute
   HistoryRoute: typeof HistoryRoute
   JoinRoute: typeof JoinRoute
@@ -1180,6 +1193,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gradina-alhambra': {
+      id: '/gradina-alhambra'
+      path: '/gradina-alhambra'
+      fullPath: '/gradina-alhambra'
+      preLoaderRoute: typeof GradinaAlhambraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grappelli': {
@@ -1726,6 +1746,7 @@ const rootRouteChildren: RootRouteChildren = {
   DenisChangRoute: DenisChangRoute,
   DjangoRoute: DjangoRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  GradinaAlhambraRoute: GradinaAlhambraRoute,
   GrappelliRoute: GrappelliRoute,
   HistoryRoute: HistoryRoute,
   JoinRoute: JoinRoute,
