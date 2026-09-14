@@ -936,6 +936,8 @@ export const updateHubConcert = createServerFn({ method: "POST" })
     hubConcertsMemo.bust();
     return { ok: true as const, pending: false };
   });
+
+export const addHubClip = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((input: { artistSlug: string; youtubeUrl: string; title: string; hp?: string; turnstile?: string }) => input)
   .handler(async ({ context, data }) => {
