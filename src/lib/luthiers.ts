@@ -14,6 +14,8 @@ export type Luthier = {
   hours: string;
   craft: LuthierCraft;
   note: string;
+  youtubeUrl?: string;
+  youtubeTitle?: string;
 };
 
 function guitar(row: Omit<Luthier, "craft" | "note"> & Partial<Pick<Luthier, "note">>): Luthier {
@@ -85,7 +87,7 @@ const GUITAR_LUTHIERS: Luthier[] = [
     phone: "+39 347 088 2722",
     email: "info@marcolamannaguitars.com",
     hours: "By appointment",
-    bio: "Marco La Manna builds in Dovera, in the Cremona country. Jazz manouche, classical and acoustic guitars — a current Italian chair for the Selmer sound.",
+    bio: "Workshop in Dovera, in Cremona — Stradivari’s town, with the woods that place is known for. Jazz manouche, classical and acoustic guitars. One of the luthiers most in demand now, from all over the world.",
   }),
   guitar({
     slug: "bruno-bagnarelli",
@@ -99,6 +101,8 @@ const GUITAR_LUTHIERS: Luthier[] = [
     email: "bbluthier@gmail.com",
     hours: "By appointment",
     bio: "Milan workshop. Bruno Bagnarelli trained at the Civica Scuola di Liuteria and builds Selmer-Maccaferri models — maintenance and new guitars for the Italian scene.",
+    youtubeUrl: "https://www.youtube.com/watch?v=ehV9uLMI1f0",
+    youtubeTitle: "Mozes Rosenberg on a Bruno Bagnarelli guitar — backstage, Daniel Gueli Gypsy Jazz Channel",
   }),
   guitar({
     slug: "michele-gattoni",
@@ -1625,6 +1629,46 @@ export function splitLuthiers(rows: Luthier[]) {
   };
 }
 
+const LUTHIER_PIN: Record<string, string[]> = {
+  Italy: ["marco-la-manna", "bruno-bagnarelli", "mauro-freschi"],
+  France: ["maurice-dupont", "jean-barault", "castelluccia", "jean-pierre-favino"],
+  "United Kingdom": ["jerome-duffell", "robert-ford", "killy-nonis"],
+  Germany: ["stefan-hahl"],
+  Netherlands: ["leo-eimers"],
+  Canada: ["shelley-park"],
+};
+
+/** Featured names on the community luthiers page — mixed countries, not a factory catalogue. */
+export const COMMUNITY_LUTHIER_PIN = [
+  "marco-la-manna",
+  "maurice-dupont",
+  "jerome-duffell",
+  "bruno-bagnarelli",
+  "jean-barault",
+  "robert-ford",
+  "mauro-freschi",
+  "killy-nonis",
+  "stefan-hahl",
+  "leo-eimers",
+  "shelley-park",
+  "castelluccia",
+  "jean-pierre-favino",
+];
+
+export function sortCountryLuthiers(country: string, rows: Luthier[]) {
+  const pin = LUTHIER_PIN[country] ?? [];
+  return [...rows].sort((a, b) => {
+    const ia = pin.indexOf(a.slug);
+    const ib = pin.indexOf(b.slug);
+    if (ia !== -1 || ib !== -1) {
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    }
+    return a.name.localeCompare(b.name);
+  });
+}
+
 export function luthiersByCountry(extra: Luthier[] = []) {
   const all = [...LUTHIERS];
   for (const row of extra) {
@@ -1639,9 +1683,10 @@ export function luthiersByCountry(extra: Luthier[] = []) {
     .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0) || a.localeCompare(b));
   return [...lead, ...rest].map((country) => ({
     country,
-    luthiers: all
-      .filter((row) => row.country === country)
-      .sort((a, b) => a.name.localeCompare(b.name)),
+    luthiers: sortCountryLuthiers(
+      country,
+      all.filter((row) => row.country === country),
+    ),
   }));
 }
 
@@ -1652,6 +1697,45 @@ export function luthiersByCountryForCraft(craft: LuthierCraft, extra: Luthier[] 
       luthiers: group.luthiers.filter((row) => row.craft === craft),
     }))
     .filter((group) => group.luthiers.length);
+}
+
+export function mergeLuthiers(extra: Luthier[] = []) {
+  const all = [...LUTHIERS];
+  for (const row of extra) {
+    if (!all.some((item) => item.slug === row.slug)) all.push(row);
+  }
+  return all;
+}
+
+export function communityLuthierOrder(rows: Luthier[]) {
+  const pin = new Map(COMMUNITY_LUTHIER_PIN.map((slug, index) => [slug, index]));
+  const pinned = rows
+    .filter((row) => pin.has(row.slug))
+    .sort((a, b) => (pin.get(a.slug) ?? 0) - (pin.get(b.slug) ?? 0));
+  const rest = rows.filter((row) => !pin.has(row.slug));
+  const buckets = new Map<string, Luthier[]>();
+  for (const row of rest) {
+    const list = buckets.get(row.country) ?? [];
+    list.push(row);
+    buckets.set(row.country, list);
+  }
+  for (const list of buckets.values()) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  const countries = [...buckets.keys()].sort((a, b) => a.localeCompare(b));
+  const mixed: Luthier[] = [];
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const country of countries) {
+      const next = buckets.get(country)?.shift();
+      if (next) {
+        mixed.push(next);
+        grew = true;
+      }
+    }
+  }
+  return [...pinned, ...mixed];
 }
 
 export function bassLuthiersByCountry(extra: Luthier[] = []) {

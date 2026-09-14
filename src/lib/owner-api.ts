@@ -926,7 +926,7 @@ export const sendOwnerCustomMail = createServerFn({ method: "POST" })
     for (let i = 0; i < addresses.length; i += 8) {
       const slice = addresses.slice(i, i + 8);
       const results = await Promise.allSettled(
-        slice.map((email) => sendHubMail(email, data.subject, data.body)),
+        slice.map((email) => sendHubMail(email, data.subject, data.body, undefined, undefined, true)),
       );
       for (const result of results) {
         if (result.status === "fulfilled") sent += 1;
@@ -995,4 +995,55 @@ export const banHubIp = createServerFn({ method: "POST" })
     const sql = await getSql();
     await sql`insert into hub_bans (user_id, ip, reason) values (${""}, ${ip}, ${"desk"})`;
     return { ok: true as const };
+  });
+
+export const listOwnerMailQueue = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await requireOwner(context.userId);
+    const { listQueuedMail } = await import("@/lib/mail-queue");
+    const [pending, recent] = await Promise.all([
+      listQueuedMail("pending"),
+      listQueuedMail("all"),
+    ]);
+    return {
+      pending,
+      recent: recent.filter((row) => row.status !== "pending").slice(0, 20),
+    };
+  });
+
+export const queueOwnerMail = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: { to: string; toName?: string; subject: string; body: string; kind?: string; reason?: string }) => ({
+    to: String(input.to ?? "").trim(),
+    toName: String(input.toName ?? "").trim(),
+    subject: String(input.subject ?? "").trim().slice(0, 200),
+    body: String(input.body ?? "").trim().slice(0, 8000),
+    kind: input.kind === "booker" || input.kind === "organiser" ? input.kind : "outreach",
+    reason: String(input.reason ?? "").trim().slice(0, 400),
+  }))
+  .handler(async ({ context, data }) => {
+    await requireOwner(context.userId);
+    const { queueHubMail } = await import("@/lib/mail-queue");
+    return queueHubMail(data);
+  });
+
+export const approveOwnerMail = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((id: number | string) => Number(id))
+  .handler(async ({ context, data: id }) => {
+    await requireOwner(context.userId);
+    if (!Number.isFinite(id) || id <= 0) throw new Error("Need a mail.");
+    const { approveQueuedMail } = await import("@/lib/mail-queue");
+    return approveQueuedMail(id);
+  });
+
+export const rejectOwnerMail = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((id: number | string) => Number(id))
+  .handler(async ({ context, data: id }) => {
+    await requireOwner(context.userId);
+    if (!Number.isFinite(id) || id <= 0) throw new Error("Need a mail.");
+    const { rejectQueuedMail } = await import("@/lib/mail-queue");
+    return rejectQueuedMail(id);
   });

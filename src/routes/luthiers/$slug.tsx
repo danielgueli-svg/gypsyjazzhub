@@ -1,12 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, Globe, Mail, MapPin, Phone } from "lucide-react";
 import { HubChat } from "@/components/hub-chat";
+import { Portrait } from "@/components/portrait";
 import { Button } from "@/components/ui/button";
+import { YouTubeEmbed } from "@/components/youtube-embed";
 import { CountryLabel } from "@/components/country-label";
 import { mapsHref, telHref } from "@/lib/contact";
 import { countrySlug } from "@/lib/geo";
 import { getHubLuthier, listHubChat } from "@/lib/hub-api";
 import { getLuthier } from "@/lib/luthiers";
+import { makerBio } from "@/lib/maker-copy";
+import { useI18n } from "@/lib/i18n";
+import { luthierPhotoSrc } from "@/lib/photos";
 import { SHOPS } from "@/lib/shops";
 
 export const Route = createFileRoute("/luthiers/$slug")({
@@ -22,38 +27,51 @@ export const Route = createFileRoute("/luthiers/$slug")({
 
 function LuthierPage() {
   const { luthier, chat } = Route.useLoaderData();
+  const { locale } = useI18n();
+  const bio = makerBio(luthier.slug, locale) || luthier.bio;
   const shop = SHOPS.find((row) => row.luthierSlug === luthier.slug);
   const call = telHref(luthier.phone);
   const map = mapsHref(luthier.address);
   const hasContact = Boolean(
     luthier.address || luthier.phone || luthier.email || luthier.site || luthier.hours,
   );
+  const photo = luthierPhotoSrc(luthier.slug);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">
-        {luthier.craft === "bass"
-          ? "Double bass luthier"
-          : luthier.craft === "violin"
-            ? "Violin luthier"
-            : "Luthier"}
-      </p>
-      <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{luthier.name}</h1>
-      <p className="mt-3 text-muted">
-        {luthier.city ? `${luthier.city} · ` : null}
-        <Link
-          to="/world/$slug"
-          params={{ slug: countrySlug(luthier.country) }}
-          className="hover:text-fg"
-        >
-          <CountryLabel name={luthier.country} />
-        </Link>
-      </p>
-
+      <div className="flex flex-wrap items-start gap-6 sm:gap-10">
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] tracking-[0.2em] text-faint uppercase">
+            {luthier.craft === "bass"
+              ? "Double bass luthier"
+              : luthier.craft === "violin"
+                ? "Violin luthier"
+                : "Luthier"}
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{luthier.name}</h1>
+          <p className="mt-3 text-muted">
+            {luthier.city ? `${luthier.city} · ` : null}
+            <Link
+              to="/world/$slug"
+              params={{ slug: countrySlug(luthier.country) }}
+              className="hover:text-fg"
+            >
+              <CountryLabel name={luthier.country} />
+            </Link>
+          </p>
+        </div>
+        {photo ? (
+          <Portrait
+            src={photo}
+            alt={`${luthier.name} in the workshop`}
+            className="h-auto w-full max-w-sm rounded-2xl object-cover shadow-border sm:w-72 lg:w-80"
+          />
+        ) : null}
+      </div>
       <article className="mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
         <h2 className="font-display text-3xl font-semibold text-fg">About</h2>
         {luthier.note ? <p className="text-fg">{luthier.note}</p> : null}
-        <p>{luthier.bio}</p>
+        <p>{bio}</p>
         {luthier.craft === "bass" ? (
           <p>
             <Link to="/luthiers/bass" className="text-fg hover:underline">
@@ -82,6 +100,19 @@ function LuthierPage() {
           </p>
         ) : null}
       </article>
+
+      {luthier.youtubeUrl ? (
+        <section className="mt-10 max-w-2xl">
+          <h2 className="font-display text-3xl font-semibold">Hear it</h2>
+          <p className="mt-3 mb-4 text-sm leading-relaxed text-muted">
+            {luthier.youtubeTitle ?? "On YouTube"}
+          </p>
+          <YouTubeEmbed
+            url={luthier.youtubeUrl}
+            title={luthier.youtubeTitle ?? luthier.name}
+          />
+        </section>
+      ) : null}
 
       {hasContact ? (
         <section className="mt-10 max-w-2xl">

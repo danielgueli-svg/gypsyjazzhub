@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SubscribeButton } from "@/components/subscribe-button";
 import { ConcertList } from "@/components/concert-row";
 import { listConcerts, listLegends, uniqueBills } from "@/lib/api";
-import { getFestival, concertBelongsToFestival, festivalTicketUrl, overlayFestival } from "@/lib/festivals";
+import { getFestival, concertBelongsToFestival, festivalTicketUrl, overlayFestival, uniqueFestivalNights } from "@/lib/festivals";
 import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { countrySlug } from "@/lib/geo";
@@ -39,7 +39,9 @@ export const Route = createFileRoute("/festivals/$slug")({
       groups: groupsForFestival(festival.relatedSlugs),
       legends,
       chat,
-      concerts: uniqueBills(upcoming.filter((concert) => concertBelongsToFestival(festival, concert))),
+      concerts: uniqueFestivalNights(
+        uniqueBills(upcoming.filter((concert) => concertBelongsToFestival(festival, concert))),
+      ),
     };
   },
   head: ({ loaderData, params }) => {

@@ -83,7 +83,7 @@ cfg.durable_objects = {
 };
 cfg.triggers = {
   ...(cfg.triggers || {}),
-  crons: [...new Set([...(cfg.triggers?.crons || []), "15 6 * * *"])],
+  crons: [...new Set([...(cfg.triggers?.crons || []), "15 6 * * *", "0 17 * * *", "0 18 * * *"])],
 };
 cfg.migrations = cfg.migrations?.length
   ? cfg.migrations
@@ -100,6 +100,15 @@ async function gjhScheduled(event, env, ctx) {
   const secret = env.CRON_SECRET || env.DIGEST_SECRET || "";
   const q = secret ? "?secret=" + encodeURIComponent(secret) : "";
   const origin = "https://www.gypsyjazzhub.com";
+  const hour = Number(new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Amsterdam",
+    hour: "numeric",
+    hour12: false,
+  }).format(new Date()));
+  if (hour === 19) {
+    ctx.waitUntil(fetch(origin + "/api/mail-queue" + q));
+    return;
+  }
   ctx.waitUntil(fetch(origin + "/api/alerts" + q));
   ctx.waitUntil(fetch(origin + "/api/digest" + q));
 }

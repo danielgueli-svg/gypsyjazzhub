@@ -4,7 +4,7 @@ import type { Concert, Legend, Profile } from "@/lib/api";
 import { FESTIVALS, overlayFestival, type Festival } from "@/lib/festivals";
 import { JAMS, overlayJam, rollJamNext, compareJamsByCadence, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
-import { LUTHIERS, type Luthier } from "@/lib/luthiers";
+import { LUTHIERS, sortCountryLuthiers, type Luthier } from "@/lib/luthiers";
 import { SHOPS, type Shop } from "@/lib/shops";
 import { BANDS, type Band } from "@/lib/scene";
 
@@ -1109,6 +1109,9 @@ export function buildGlobeIndex(
     if (!row.luthiers.some((item) => item.slug === luthier.slug)) {
       row.luthiers.push(luthier);
     }
+  }
+  for (const row of Object.values(index)) {
+    row.luthiers = sortCountryLuthiers(row.name, row.luthiers);
   }
 
   for (const shop of SHOPS) {

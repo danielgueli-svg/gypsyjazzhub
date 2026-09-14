@@ -59,5 +59,5 @@ Never use `timestamptz … default ''` — use a real timestamp constant or null
 
 ## Not production
 
-- `vercel.json` is a leftover from an older host. Cloudflare DNS + Worker custom domains handle HTTPS/www redirects. Worker cron (via `cf-prep`) hits `/api/alerts` and `/api/digest`.
+- `vercel.json` is a leftover from an older host. Cloudflare DNS + Worker custom domains handle HTTPS/www redirects. Worker cron (via `cf-prep`) hits `/api/alerts`, `/api/digest`, and `/api/mail-queue`. Weekly `/api/facebook-import` and `/api/djangobooks-import` schedules still need to live in `cf-prep` (they used to be listed only in `vercel.json` and do not run on Vercel).
 - Grok draft URLs and the `glow-shale-falcon-daisy` export are noindex drafts only.

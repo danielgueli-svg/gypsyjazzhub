@@ -128,7 +128,7 @@ export const SEO = {
   luthiers: {
     title: "Gypsy jazz luthiers",
     description:
-      "Luthiers of Selmer-style gypsy jazz guitars, double basses and violins — workshops listed by country.",
+      "A luthier is a craftsperson who builds guitars and other string instruments by hand. The gypsy jazz community’s makers — from Selmer to workshops now — listed worldwide.",
     path: "/luthiers",
   },
   bassLuthiers: {

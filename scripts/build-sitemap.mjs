@@ -72,6 +72,8 @@ const staticPaths = [
   "/grappelli",
   "/tata-mirando",
   "/denis-chang",
+  "/stichting-alhambra",
+  "/gradina-alhambra",
   "/world",
   "/add",
 ];

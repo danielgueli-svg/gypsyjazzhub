@@ -98,7 +98,7 @@ export async function requestPasswordReset(
   }
   const mail = passwordMail(locale, String(users[0].name ?? ""), link);
   try {
-    await sendHubMail(email, mail.subject, mail.body, mail.html);
+    await sendHubMail(email, mail.subject, mail.body, mail.html, undefined, true);
   } catch (err) {
     if (opts.force) {
       return { ok: true as const, sent: false as const, email, link };
@@ -185,6 +185,8 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
               buttonLabel: SIGNIN_BUTTON.en,
               buttonHref: "https://www.gypsyjazzhub.com/login",
             }),
+            undefined,
+            true,
           );
         }
       } catch {
@@ -206,6 +208,8 @@ export async function applyPasswordReset(tokenRaw: string, password: string) {
               buttonLabel: SIGNIN_BUTTON.en,
               buttonHref: "https://www.gypsyjazzhub.com/login",
             }),
+            undefined,
+            true,
           );
         } catch {
           /* password is saved even if mail fails */

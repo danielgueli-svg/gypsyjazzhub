@@ -8,13 +8,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { updateHubFestival } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
 import type { Festival } from "@/lib/festivals";
-
-function toLocalInput(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
+import { toWallClockInput, wallClockIso } from "@/lib/utils";
 
 export function FestivalEdit({ festival }: { festival: Festival }) {
   const { t } = useI18n();
@@ -23,7 +17,7 @@ export function FestivalEdit({ festival }: { festival: Festival }) {
   const [open, setOpen] = useState(false);
   const [city, setCity] = useState(festival.city);
   const [when, setWhen] = useState(festival.when);
-  const [nextStartsAt, setNextStartsAt] = useState(toLocalInput(festival.nextStartsAt));
+  const [nextStartsAt, setNextStartsAt] = useState(toWallClockInput(festival.nextStartsAt));
   const [site, setSite] = useState(festival.site);
   const [bio, setBio] = useState(festival.bio);
   const [status, setStatus] = useState<string | null>(null);
@@ -36,7 +30,7 @@ export function FestivalEdit({ festival }: { festival: Festival }) {
     setBusy(true);
     setStatus(null);
     try {
-      const nextIso = nextStartsAt ? new Date(nextStartsAt).toISOString() : festival.nextStartsAt;
+      const nextIso = nextStartsAt ? wallClockIso(nextStartsAt) : festival.nextStartsAt;
       const result = await updateHubFestival({
         data: {
           slug: festival.slug,

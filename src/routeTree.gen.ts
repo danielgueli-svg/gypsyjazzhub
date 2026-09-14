@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AddRouteImport } from './routes/add'
 import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as AlhambraRouteImport } from './routes/alhambra'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as CampsRouteImport } from './routes/camps'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
 import { Route as DjangoRouteImport } from './routes/django'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as GradinaAlhambraRouteImport } from './routes/gradina-alhambra'
 import { Route as GrappelliRouteImport } from './routes/grappelli'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as JoinRouteImport } from './routes/join'
@@ -24,6 +26,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SceneRouteImport } from './routes/scene'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as StichtingAlhambraRouteImport } from './routes/stichting-alhambra'
 import { Route as TataMirandoRouteImport } from './routes/tata-mirando'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as WelcomeRouteImport } from './routes/welcome'
@@ -32,6 +35,7 @@ import { Route as ApiAlertsRouteImport } from './routes/api/alerts'
 import { Route as ApiDigestRouteImport } from './routes/api/digest'
 import { Route as ApiDjangobooksImportRouteImport } from './routes/api/djangobooks-import'
 import { Route as ApiFacebookImportRouteImport } from './routes/api/facebook-import'
+import { Route as ApiMailQueueRouteImport } from './routes/api/mail-queue'
 import { Route as ApiRomaniMusicRouteImport } from './routes/api/romani-music'
 import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
 import { Route as ArchiveSlugRouteImport } from './routes/archive/$slug'
@@ -109,6 +113,11 @@ const AgendaRoute = AgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlhambraRoute = AlhambraRouteImport.update({
+  id: '/alhambra',
+  path: '/alhambra',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BoardRoute = BoardRouteImport.update({
   id: '/board',
   path: '/board',
@@ -132,6 +141,11 @@ const DjangoRoute = DjangoRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GradinaAlhambraRoute = GradinaAlhambraRouteImport.update({
+  id: '/gradina-alhambra',
+  path: '/gradina-alhambra',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GrappelliRoute = GrappelliRouteImport.update({
@@ -167,6 +181,11 @@ const SceneRoute = SceneRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StichtingAlhambraRoute = StichtingAlhambraRouteImport.update({
+  id: '/stichting-alhambra',
+  path: '/stichting-alhambra',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TataMirandoRoute = TataMirandoRouteImport.update({
@@ -207,6 +226,11 @@ const ApiDjangobooksImportRoute = ApiDjangobooksImportRouteImport.update({
 const ApiFacebookImportRoute = ApiFacebookImportRouteImport.update({
   id: '/api/facebook-import',
   path: '/api/facebook-import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMailQueueRoute = ApiMailQueueRouteImport.update({
+  id: '/api/mail-queue',
+  path: '/api/mail-queue',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRomaniMusicRoute = ApiRomaniMusicRouteImport.update({
@@ -521,11 +545,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -533,6 +559,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -541,6 +568,7 @@ export interface FileRoutesByFullPath {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -607,11 +635,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -619,6 +649,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -627,6 +658,7 @@ export interface FileRoutesByTo {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -694,11 +726,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/gradina-alhambra': typeof GradinaAlhambraRoute
   '/grappelli': typeof GrappelliRoute
   '/history': typeof HistoryRoute
   '/join': typeof JoinRoute
@@ -706,6 +740,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -714,6 +749,7 @@ export interface FileRoutesById {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -782,11 +818,13 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -794,6 +832,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -802,6 +841,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -868,11 +908,13 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -880,6 +922,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -888,6 +931,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -954,11 +998,13 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
+    | '/gradina-alhambra'
     | '/grappelli'
     | '/history'
     | '/join'
@@ -966,6 +1012,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -974,6 +1021,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -1041,11 +1089,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddRoute: typeof AddRoute
   AgendaRoute: typeof AgendaRoute
+  AlhambraRoute: typeof AlhambraRoute
   BoardRoute: typeof BoardRoute
   CampsRoute: typeof CampsRoute
   DenisChangRoute: typeof DenisChangRoute
   DjangoRoute: typeof DjangoRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  GradinaAlhambraRoute: typeof GradinaAlhambraRoute
   GrappelliRoute: typeof GrappelliRoute
   HistoryRoute: typeof HistoryRoute
   JoinRoute: typeof JoinRoute
@@ -1053,6 +1103,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SceneRoute: typeof SceneRoute
   SearchRoute: typeof SearchRoute
+  StichtingAlhambraRoute: typeof StichtingAlhambraRoute
   TataMirandoRoute: typeof TataMirandoRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   WelcomeRoute: typeof WelcomeRoute
@@ -1061,6 +1112,7 @@ export interface RootRouteChildren {
   ApiDigestRoute: typeof ApiDigestRoute
   ApiDjangobooksImportRoute: typeof ApiDjangobooksImportRoute
   ApiFacebookImportRoute: typeof ApiFacebookImportRoute
+  ApiMailQueueRoute: typeof ApiMailQueueRoute
   ApiRomaniMusicRoute: typeof ApiRomaniMusicRoute
   ArchiveSlugRoute: typeof ArchiveSlugRoute
   ConcertsIdRoute: typeof ConcertsIdRoute
@@ -1147,6 +1199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgendaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alhambra': {
+      id: '/alhambra'
+      path: '/alhambra'
+      fullPath: '/alhambra'
+      preLoaderRoute: typeof AlhambraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/board': {
       id: '/board'
       path: '/board'
@@ -1180,6 +1239,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gradina-alhambra': {
+      id: '/gradina-alhambra'
+      path: '/gradina-alhambra'
+      fullPath: '/gradina-alhambra'
+      preLoaderRoute: typeof GradinaAlhambraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grappelli': {
@@ -1229,6 +1295,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stichting-alhambra': {
+      id: '/stichting-alhambra'
+      path: '/stichting-alhambra'
+      fullPath: '/stichting-alhambra'
+      preLoaderRoute: typeof StichtingAlhambraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tata-mirando': {
@@ -1285,6 +1358,13 @@ declare module '@tanstack/react-router' {
       path: '/api/facebook-import'
       fullPath: '/api/facebook-import'
       preLoaderRoute: typeof ApiFacebookImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mail-queue': {
+      id: '/api/mail-queue'
+      path: '/api/mail-queue'
+      fullPath: '/api/mail-queue'
+      preLoaderRoute: typeof ApiMailQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/romani-music': {
@@ -1721,11 +1801,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddRoute: AddRoute,
   AgendaRoute: AgendaRoute,
+  AlhambraRoute: AlhambraRoute,
   BoardRoute: BoardRoute,
   CampsRoute: CampsRoute,
   DenisChangRoute: DenisChangRoute,
   DjangoRoute: DjangoRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  GradinaAlhambraRoute: GradinaAlhambraRoute,
   GrappelliRoute: GrappelliRoute,
   HistoryRoute: HistoryRoute,
   JoinRoute: JoinRoute,
@@ -1733,6 +1815,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SceneRoute: SceneRoute,
   SearchRoute: SearchRoute,
+  StichtingAlhambraRoute: StichtingAlhambraRoute,
   TataMirandoRoute: TataMirandoRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   WelcomeRoute: WelcomeRoute,
@@ -1741,6 +1824,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDigestRoute: ApiDigestRoute,
   ApiDjangobooksImportRoute: ApiDjangobooksImportRoute,
   ApiFacebookImportRoute: ApiFacebookImportRoute,
+  ApiMailQueueRoute: ApiMailQueueRoute,
   ApiRomaniMusicRoute: ApiRomaniMusicRoute,
   ArchiveSlugRoute: ArchiveSlugRoute,
   ConcertsIdRoute: ConcertsIdRoute,

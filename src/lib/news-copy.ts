@@ -13,6 +13,10 @@ function pack(
 }
 
 export const NEWS_EN = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 September, this week",
+    body: "Three days at St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith matinee, London Django Collective with Kourosh Kanani, Debi Botos. Tickets on Eventbrite. All concerts on the festival page.",
+  },
   "angelo-debarre-ulule": {
     title: "Crowdfund for Angelo Debarre",
     body: "Denis Chang passed on a message from Angelo Debarre: he is having health difficulties and is in need of help. A crowdfunding page is open on Ulule — Soutien au guitariste Angelo Debarre. The link is on this page.",
@@ -116,6 +120,10 @@ export const NEWS_EN = pack({
 });
 
 export const NEWS_NL = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 september, deze week",
+    body: "Drie dagen in St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective met Kourosh Kanani, Debi Botos. Kaarten op Eventbrite. Alle concerten op de festivalpagina.",
+  },
   "angelo-debarre-ulule": {
     title: "Crowdfunding voor Angelo Debarre",
     body: "Denis Chang gaf een bericht van Angelo Debarre door: hij heeft gezondheidsproblemen en heeft hulp nodig. Op Ulule staat een collecte — Soutien au guitariste Angelo Debarre. De link staat op deze pagina.",
@@ -211,6 +219,10 @@ export const NEWS_NL = pack({
 });
 
 export const NEWS_DE = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17.–19. September, diese Woche",
+    body: "Drei Tage in St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith nachmittags, London Django Collective mit Kourosh Kanani, Debi Botos. Tickets auf Eventbrite. Alle Konzerte auf der Festival-Seite.",
+  },
   "angelo-debarre-ulule": {
     title: "Crowdfunding für Angelo Debarre",
     body: "Denis Chang gab eine Nachricht von Angelo Debarre weiter: er hat gesundheitliche Schwierigkeiten und braucht Hilfe. Auf Ulule läuft eine Sammlung — Soutien au guitariste Angelo Debarre. Der Link steht auf dieser Seite.",
@@ -278,6 +290,10 @@ export const NEWS_DE = pack({
 });
 
 export const NEWS_FR = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 septembre, cette semaine",
+    body: "Trois jours à St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinée Giacomo Smith, London Django Collective avec Kourosh Kanani, Debi Botos. Billets sur Eventbrite. Tous les concerts sur la page du festival.",
+  },
   "angelo-debarre-ulule": {
     title: "Soutien au guitariste Angelo Debarre",
     body: "Denis Chang relaie un message d’Angelo Debarre : il traverse des difficultés de santé et a besoin d’aide. Une collecte est ouverte sur Ulule. Le lien est sur cette page.",
@@ -357,6 +373,10 @@ export const NEWS_FR = pack({
 });
 
 export const NEWS_IT = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 settembre, questa settimana",
+    body: "Tre giorni a St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinée Giacomo Smith, London Django Collective con Kourosh Kanani, Debi Botos. Biglietti su Eventbrite. Tutti i concerti sulla pagina del festival.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Questa settimana sul globo — Barcellona, Londra, Madison, Langley",
     body: "Nuova jam settimanale a Barcellona: Martes Manouche, ogni martedì al Soda Acústic, Gràcia. Oggi a Chicago la jam La Tosca da Cara Cara. Nelle settimane: Midwest Django Fest (11–12 set, Madison), DjangoFest Northwest (15–20 set, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 set, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel a Chicago, Rochester e Asheville, Dario Napoli negli USA, e i fratelli Rosenberg a Viljandi, Estonia, 9 ottobre.",
@@ -420,6 +440,10 @@ export const NEWS_IT = pack({
 });
 
 export const NEWS_ES = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 de septiembre, esta semana",
+    body: "Tres días en St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matiné de Giacomo Smith, London Django Collective con Kourosh Kanani, Debi Botos. Entradas en Eventbrite. Todos los conciertos en la página del festival.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Esta semana en el globo — Barcelona, Londres, Madison, Langley",
     body: "Nueva jam semanal en Barcelona: Martes Manouche, cada martes en Soda Acústic, Gràcia. Hoy en Chicago, la jam La Tosca en Cara Cara. Próximas semanas: Midwest Django Fest (11–12 sep, Madison), DjangoFest Northwest (15–20 sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 sep, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel en Chicago, Rochester y Asheville, Dario Napoli en EE. UU., y los hermanos Rosenberg en Viljandi, Estonia, 9 de octubre.",
@@ -483,6 +507,10 @@ export const NEWS_ES = pack({
 });
 
 export const NEWS_JA = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 今週、9月17–19日",
+    body: "イズリントン、Upper Street の St Mary's で三日間。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith のマチネ、Kourosh Kanani を迎えた London Django Collective、Debi Botos。チケットは Eventbrite。全公演はフェスティバルページ。",
+  },
   "angelo-debarre-ulule": {
     title: "アンジェロ・デバール支援のクラウドファンディング",
     body: "Denis ChangがAngelo Debarreからのメッセージを伝えた。体調が優れず支援が必要だという。Ululeでクラウドファンディングが行われている。リンクはこのページに。",
@@ -542,6 +570,10 @@ export const NEWS_JA = pack({
 });
 
 export const NEWS_KO = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 이번 주, 9월 17–19일",
+    body: "이즐링턴 Upper Street의 St Mary's에서 사흘. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith 마티네, Kourosh Kanani와 London Django Collective, Debi Botos. 티켓은 Eventbrite. 모든 공연은 페스티벌 페이지.",
+  },
   "la-pompe-live-app": {
     title: "크리스티안 반 헤메르트, La Pompe Live 출시",
     body: "네덜란드 바이올리니스트이자 선생님이 La Pompe Live를 2026년 8월에 냈습니다. 코드차트, 셋리스트, 라 폼프를 주머니에. iPhone과 Android. YouTube 초보 가이드는 8월 10일.",
@@ -597,6 +629,10 @@ export const NEWS_KO = pack({
 });
 
 export const NEWS_ZH = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 本周 9月17–19日",
+    body: "在伊斯灵顿 Upper Street 的 St Mary's 连演三天。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith 日场、London Django Collective 与 Kourosh Kanani、Debi Botos。门票在 Eventbrite。全部场次在节日页。",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert 发布 La Pompe Live",
     body: "荷兰小提琴家兼老师于 2026年8月推出 La Pompe Live：谱、歌单和 pompe 装进口袋。iPhone 与 Android。YouTube 入门教程为 8月10日。",
@@ -652,6 +688,10 @@ export const NEWS_ZH = pack({
 });
 
 export const NEWS_ZH_TW = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 本週 9月17–19日",
+    body: "在伊斯靈頓 Upper Street 的 St Mary's 連演三天。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith 日場、London Django Collective 與 Kourosh Kanani、Debi Botos。門票在 Eventbrite。全部場次在節日頁。",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert 發布 La Pompe Live",
     body: "荷蘭小提琴家兼老師於 2026年8月推出 La Pompe Live：譜、歌單和 pompe 裝進口袋。iPhone 與 Android。YouTube 入門教學為 8月10日。",
@@ -707,6 +747,10 @@ export const NEWS_ZH_TW = pack({
 });
 
 export const NEWS_ID = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 September, minggu ini",
+    body: "Tiga hari di St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective dengan Kourosh Kanani, Debi Botos. Tiket di Eventbrite. Semua konser di halaman festival.",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert merilis La Pompe Live",
     body: "Pemain biola dan guru Belanda merilis La Pompe Live pada Agustus 2026 — chord, setlist, dan la pompe di saku. iPhone dan Android. Tutorial pemula di YouTube sejak 10 Agustus.",
@@ -762,6 +806,10 @@ export const NEWS_ID = pack({
 });
 
 export const NEWS_TH = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 กันยายน สัปดาห์นี้",
+    body: "สามวันที่ St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, จิอาโคโม สมิธ ช่วงบ่าย, London Django Collective กับ Kourosh Kanani, Debi Botos. บัตรบน Eventbrite. คอนเสิร์ตทั้งหมดอยู่หน้าเทศกาล.",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert เปิดตัว La Pompe Live",
     body: "นักไวโอลินและครูชาวดัตช์ออก La Pompe Live ในเดือนสิงหาคม 2026 — คอร์ด เซ็ตลิสต์ และลาปอมป์ในกระเป๋า iPhone และ Android บทสอนมือใหม่บน YouTube ตั้งแต่วันที่ 10 สิงหาคม",
@@ -817,6 +865,10 @@ export const NEWS_TH = pack({
 });
 
 export const NEWS_HU = pack({
+  "django-in-london-2026": {
+    title: "Django In London — szeptember 17–19., ezen a héten",
+    body: "Három nap a St Mary'sben, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith matiné, London Django Collective Kourosh Kananival, Debi Botos. Jegyek az Eventbrite-on. Minden koncert a fesztiváloldalon.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Ezen a héten a földgömbön — Barcelona, London, Madison, Langley",
     body: "Új heti jam Barcelonában: Martes Manouche, minden kedden a Soda Acústicban, Gràcia. Ma Chicagóban a La Tosca jam a Cara Carában. Következő hetek: Midwest Django Fest (szept. 11–12, Madison), DjangoFest Northwest (szept. 15–20, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (szept. 17–19, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel Chicagóban, Rochesterben és Asheville-ben, Dario Napoli amerikai körútja, és a Rosenberg fivérek Viljandiban, Észtország, október 9.",
@@ -876,6 +928,10 @@ export const NEWS_HU = pack({
 });
 
 export const NEWS_PL = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 września, w tym tygodniu",
+    body: "Trzy dni w St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective z Kourosh Kanani, Debi Botos. Bilety na Eventbrite. Wszystkie koncerty na stronie festiwalu.",
+  },
   "weekly-scan-2026-08-23": {
     title: "W tym tygodniu na globie — Barcelona, Londyn, Madison, Langley",
     body: "Nowy cotygodniowy jam w Barcelonie: Martes Manouche, każdy wtorek w Soda Acústic, Gràcia. Dziś w Chicago jam La Tosca w Cara Cara. Kolejne tygodnie: Midwest Django Fest (11–12 wrz, Madison), DjangoFest Northwest (15–20 wrz, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 wrz, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel w Chicago, Rochester i Asheville, Dario Napoli w USA, bracia Rosenberg w Viljandi, Estonia, 9 października.",
@@ -935,6 +991,10 @@ export const NEWS_PL = pack({
 });
 
 export const NEWS_SR = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19. septembar, ove nedelje",
+    body: "Tri dana u St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matine Giacomo Smith, London Django Collective sa Kourosh Kanani, Debi Botos. Karte na Eventbrite. Svi koncerti na stranici festivala.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Ove nedelje na globusu — Barselona, London, Madison, Langley",
     body: "Novi nedeljni džem u Barseloni: Martes Manouche, svakog utorka u Soda Acústic, Gràcia. Danas u Čikagu La Tosca džem u Cara Cara. Naredne nedelje: Midwest Django Fest (11–12. sep, Madison), DjangoFest Northwest (15–20. sep, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19. sep, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel u Čikagu, Rochesteru i Ashevilleu, Dario Napoli u SAD, braća Rosenberg u Viljandiju, Estonija, 9. oktobar.",
@@ -994,6 +1054,10 @@ export const NEWS_SR = pack({
 });
 
 export const NEWS_HR = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17.–19. rujna, ovaj tjedan",
+    body: "Tri dana u St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matineja Giacomo Smith, London Django Collective s Kourosh Kanani, Debi Botos. Ulaznice na Eventbrite. Svi koncerti na stranici festivala.",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert objavio La Pompe Live",
     body: "Nizozemski violinist i učitelj objavio je La Pompe Live u kolovozu 2026 — sheme, setliste i pompa u džepu. iPhone i Android. Tutorial na YouTubeu od 10. kolovoza.",
@@ -1049,6 +1113,10 @@ export const NEWS_HR = pack({
 });
 
 export const NEWS_PT = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 de setembro, esta semana",
+    body: "Três dias em St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinê Giacomo Smith, London Django Collective com Kourosh Kanani, Debi Botos. Bilhetes no Eventbrite. Todos os concertos na página do festival.",
+  },
   "weekly-scan-2026-08-23": {
     title: "Esta semana no globo — Barcelona, Londres, Madison, Langley",
     body: "Novo jam semanal em Barcelona: Martes Manouche, todas as terças no Soda Acústic, Gràcia. Hoje em Chicago, o jam La Tosca no Cara Cara. Próximas semanas: Midwest Django Fest (11–12 set, Madison), DjangoFest Northwest (15–20 set, Whidbey Island — Gismo Graf, Gonzalo Bergara, Tim Kliphuis), Django In London (17–19 set, St Mary’s — Hugo Guezbar, Angelo Debarre, London Django Collective), Stéphane Wrembel em Chicago, Rochester e Asheville, Dario Napoli nos EUA, e os irmãos Rosenberg em Viljandi, Estónia, 9 de outubro.",
@@ -1112,6 +1180,10 @@ export const NEWS_PT = pack({
 });
 
 export const NEWS_RU = pack({
+  "django-in-london-2026": {
+    title: "Django In London — 17–19 сентября, на этой неделе",
+    body: "Три дня в St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, матине Giacomo Smith, London Django Collective с Kourosh Kanani, Debi Botos. Билеты на Eventbrite. Все концерты на странице фестиваля.",
+  },
   "la-pompe-live-app": {
     title: "Christiaan van Hemert выпустил La Pompe Live",
     body: "Голландский скрипач и педагог выпустил La Pompe Live в августе 2026 — сетки, сет-листы и помпа в кармане. iPhone и Android. Урок на YouTube с 10 августа.",

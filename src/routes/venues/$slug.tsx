@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { ConcertRow } from "@/components/concert-row";
 import { HubChat } from "@/components/hub-chat";
 import { JamLine } from "@/components/jam-line";
@@ -14,6 +14,14 @@ import { overlayJamList, catalogJams } from "@/lib/jams";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/venues/$slug")({
+  beforeLoad: ({ params }) => {
+    if (params.slug === "stichting-alhambra") {
+      throw redirect({ to: "/stichting-alhambra" });
+    }
+    if (params.slug === "gradina-alhambra") {
+      throw redirect({ to: "/gradina-alhambra" });
+    }
+  },
   loader: async ({ params }) => {
     const venue = getVenue(params.slug) ?? (await getHubVenue({ data: params.slug }));
     if (!venue) throw notFound();

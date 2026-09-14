@@ -125,7 +125,12 @@ export function searchCatalog(raw: string, limit = 40): SearchHit[] {
       kind: "venue",
       name: venue.name,
       country: displayCountry(venue.country),
-      href: `/venues/${venue.slug}`,
+      href:
+        venue.slug === "stichting-alhambra"
+          ? "/stichting-alhambra"
+          : venue.slug === "gradina-alhambra"
+            ? "/gradina-alhambra"
+            : `/venues/${venue.slug}`,
       blurb: `${venue.city} · ${venue.kind}`,
       score,
     });
@@ -208,7 +213,10 @@ export function searchCatalog(raw: string, limit = 40): SearchHit[] {
   }
 
   const pages: Array<Omit<SearchHit, "score"> & { score?: number }> = [
-    { kind: "page", name: "The board", country: "", href: "/board", blurb: "Looking for a player, charts, venue tips" },
+    { kind: "page", name: "Stichting Alhambra", country: "Netherlands", href: "/stichting-alhambra", blurb: "Alkmaar organisation — gypsy jazz nights only, not the classical guitar series" },
+    { kind: "page", name: "Alhambra Alkmaar", country: "Netherlands", href: "/stichting-alhambra", blurb: "Marcia Bamberg Swing Quartet, Mozes Rosenberg, Tim Kliphuis — Stichting Alhambra" },
+    { kind: "page", name: "Grădina Alhambra", country: "Romania", href: "/gradina-alhambra", blurb: "Bucharest garden — gypsy jazz nights only, not the full mixed programme" },
+    { kind: "page", name: "Alhambra Bucharest", country: "Romania", href: "/gradina-alhambra", blurb: "Django Sound Quartet / Gypsy Jazz Lăutăresc at Grădina Alhambra" },
     { kind: "page", name: "Charts and backing tracks", country: "", href: "/learn/charts", blurb: "Minor Swing, iReal Pro, La Pompe Live" },
     { kind: "page", name: "How to start a jam", country: "", href: "/learn/start-jam", blurb: "A room, a night, a host" },
     { kind: "page", name: "Musicians directory", country: "", href: "/musicians", blurb: "Search players by country and instrument" },

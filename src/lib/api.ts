@@ -7,7 +7,7 @@ import { liveConcertsSeed, resolveArtistSlug } from "@/lib/live-concerts";
 import { SAMOIS_SLUGS } from "@/lib/samois-artists";
 import { BANDS, bandForBill, collaboratorSlugs } from "@/lib/scene";
 import { settle } from "@/lib/settle";
-import { slugify, toIso } from "@/lib/utils";
+import { slugify, toIso, wallClockIso } from "@/lib/utils";
 import { syncSocialAlertFollow } from "@/lib/alerts";
 import { ensureFanTables } from "@/lib/fans";
 import { ensureCatalogColumns } from "@/lib/catalog";
@@ -1182,7 +1182,7 @@ export const addConcert = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const title = data.title.trim();
     if (!title) throw new Error("Give the concert a title.");
-    const starts = new Date(data.startsAt);
+    const starts = new Date(wallClockIso(data.startsAt));
     if (Number.isNaN(starts.getTime())) throw new Error("Pick a valid date.");
     const sql = await getSql();
     await ensureFanTables();

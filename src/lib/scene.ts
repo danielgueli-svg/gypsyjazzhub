@@ -1485,7 +1485,7 @@ export const BANDS: Band[] = [
       "florin-pana": "Accordion",
       "cristian-mirea": "Double bass",
     },
-    bio: "Bucharest manouche with lăutărească — billed Gypsy Jazz Lăutăresc. Constantin Mirea violin, Florin Pană accordion, Cristian Mirea bass. Rooms: Trattoria Monza, The Great Hill Music Club, Grădina Alhambra. Concert nights, not a weekly jam. No dates listed after March 2026; ask before you travel. Florin also leads Accordion in Jazz trio.",
+    bio: "Bucharest manouche with lăutărească — billed Gypsy Jazz Lăutăresc. Constantin Mirea violin, Florin Pană accordion, Cristian Mirea bass. Rooms: Trattoria Monza, The Great Hill Music Club, Grădina Alhambra (mixed house — hub lists only the manouche bills). Concert nights, not a weekly jam. Last confirmed Alhambra night: 26 October 2025. Ask before you travel. Florin also leads Accordion in Jazz trio.",
   },
   {
     slug: "georges-boulanger-orchestra",

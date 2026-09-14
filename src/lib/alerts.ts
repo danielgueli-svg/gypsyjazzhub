@@ -920,7 +920,7 @@ async function sendForUser(
   const mail = buildAlertMail(prefs, events, account.name);
   const sql = await getSql();
   try {
-    const detail = await sendHubMail(account.email, mail.subject, mail.body);
+    const detail = await sendHubMail(account.email, mail.subject, mail.body, undefined, undefined, true);
     await sql`
       insert into hub_alert_log (user_id, to_email, subject, body, event_count, ok, detail)
       values (${userId}, ${account.email}, ${mail.subject}, ${mail.body}, ${events.length}, ${true}, ${detail})

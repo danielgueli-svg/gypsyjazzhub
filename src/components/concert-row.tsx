@@ -2,10 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { CountryLabel } from "@/components/country-label";
 import type { Concert } from "@/lib/api";
+import { isAlhambraOrgConcert } from "@/lib/alhambra";
+import { alhambraCopy } from "@/lib/alhambra-copy";
 import { FESTIVALS, festivalForConcert, festivalTicketUrl } from "@/lib/festivals";
 import { useI18n } from "@/lib/i18n";
 import { bandForBill } from "@/lib/scene";
-import { formatConcertDay, formatConcertYear } from "@/lib/utils";
+import { formatConcertDay, formatConcertTime, formatConcertYear } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 export function listingSource(concert: Concert) {
@@ -58,6 +60,8 @@ export function ConcertRow({
   const bill = concert.title?.trim() || concert.artistName;
   const bits = [concert.city, concert.venue].filter(Boolean);
   const festival = festivalForConcert(concert);
+  const organisedByAlhambra = isAlhambraOrgConcert(concert);
+  const clock = formatConcertTime(concert.startsAt);
   const official = festival?.site ?? "";
   const tickets =
     (concert.ticketUrl.startsWith("http") &&
@@ -113,6 +117,16 @@ export function ConcertRow({
         >
           {formatConcertDay(concert.startsAt, locale)}
         </div>
+        {clock ? (
+          <div
+            className={cn(
+              "mt-0.5 font-medium tabular-nums tracking-wide",
+              compact ? "text-xs" : "text-sm",
+            )}
+          >
+            {clock}
+          </div>
+        ) : null}
         <div className="mt-0.5 text-xs tracking-wide text-faint">
           {formatConcertYear(concert.startsAt)}
         </div>
@@ -124,6 +138,13 @@ export function ConcertRow({
             {concert.country ? <CountryLabel name={concert.country} className="inline-flex" /> : null}
             {concert.country && bits.length > 0 ? " · " : null}
             {bits.join(" · ")}
+          </p>
+        ) : null}
+        {organisedByAlhambra ? (
+          <p className={cn("text-muted", compact ? "mt-0.5 text-xs" : "mt-1 text-xs")}>
+            <Link to="/stichting-alhambra" className="hover:underline hover:text-fg">
+              {alhambraCopy(locale).organisedBy}
+            </Link>
           </p>
         ) : null}
         {official || tickets || showSource ? (

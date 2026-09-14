@@ -15,7 +15,7 @@ import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { jamsByCountry, type Jam } from "@/lib/jams";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { pageHead, SEO } from "@/lib/seo";
-import { cn, concertAgendaText, formatConcertDay, formatConcertYear } from "@/lib/utils";
+import { cn, concertAgendaText, formatConcertDay, formatConcertTime, formatConcertYear } from "@/lib/utils";
 
 type Filter = "upcoming" | "historic" | "all";
 type EventKind = "concert" | "festival" | "jam";
@@ -356,6 +356,7 @@ function NightRow({ night }: { night: Night }) {
   const { locale } = useI18n();
   const when = night.kind === "festival" ? whenLabel(night.venue, locale) : night.venue;
   const bits = [night.city, when].filter(Boolean);
+  const clock = night.kind === "concert" ? formatConcertTime(night.startsAt) : "";
   const titleLink = "font-display text-lg font-semibold leading-tight hover:underline";
   const title =
     night.kind === "festival" && night.slug ? (
@@ -376,6 +377,9 @@ function NightRow({ night }: { night: Night }) {
         <div className="font-display text-xl font-semibold leading-none">
           {formatConcertDay(night.startsAt, locale)}
         </div>
+        {clock ? (
+          <div className="mt-0.5 text-sm font-medium tabular-nums tracking-wide">{clock}</div>
+        ) : null}
         <div className="mt-0.5 text-xs tracking-wide text-faint">
           {formatConcertYear(night.startsAt)}
         </div>

@@ -22,7 +22,7 @@ import { parseLuthierCraft, type LuthierCraft } from "@/lib/luthiers";
 import { CountryRequestForm } from "@/components/country-request";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
 import { useI18n } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { cn, wallClockIso } from "@/lib/utils";
 
 type Kind = "concert" | "clip" | "note" | "festival" | "jam" | "venue" | "luthier" | "artist" | "teacher" | "country";
 
@@ -217,7 +217,7 @@ function ConcertForm({ presetSlug, presetName }: { presetSlug?: string; presetNa
           venue,
           city,
           country,
-          startsAt,
+          startsAt: wallClockIso(startsAt),
           note,
           hp: honeyValue(event),
         },
@@ -467,7 +467,7 @@ function FestivalForm() {
     setStatus(null);
     try {
       const result = await addHubFestival({
-        data: { name, city, country, when, nextStartsAt, bio, site, hp: honeyValue(event) },
+        data: { name, city, country, when, nextStartsAt: wallClockIso(nextStartsAt), bio, site, hp: honeyValue(event) },
       });
       setName("");
       setBio("");

@@ -54,6 +54,43 @@ export function toIso(value: unknown) {
   return String(value ?? "");
 }
 
+/**
+ * Keep the posted clock. datetime-local `2026-10-15T18:00` in Alkmaar must stay
+ * 18:00 on the hub in every country — not shift to the viewer's timezone.
+ */
+export function wallClockIso(value: string) {
+  const raw = value.trim();
+  const match = raw.match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/);
+  if (!match) {
+    const parsed = new Date(raw);
+    return Number.isNaN(parsed.getTime()) ? raw : parsed.toISOString();
+  }
+  const sec = match[4] ?? "00";
+  return `${match[1]}T${match[2]}:${match[3]}:${sec}.000Z`;
+}
+
+export function toWallClockInput(iso: string) {
+  const match = iso.trim().match(/^(\d{4}-\d{2}-\d{2})[T ](\d{2}):(\d{2})/);
+  if (match) return `${match[1]}T${match[2]}:${match[3]}`;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+}
+
+function wallDate(iso: string) {
+  const date = new Date(wallClockIso(iso));
+  if (Number.isNaN(date.getTime())) return null;
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds(),
+  );
+}
+
 const FNS_LOCALES: Record<string, typeof fr> = {
   fr,
   de,
@@ -78,8 +115,8 @@ const FNS_LOCALES: Record<string, typeof fr> = {
 };
 
 function withLocale(iso: string, pattern: string, locale?: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return iso;
+  const date = wallDate(iso);
+  if (!date) return iso;
   const loc = locale ? FNS_LOCALES[locale] : undefined;
   return loc ? format(date, pattern, { locale: loc }) : format(date, pattern);
 }
@@ -90,6 +127,14 @@ export function formatLocalDate(iso: string, pattern: string, locale?: string) {
 
 export function formatConcertWhen(iso: string, locale?: string) {
   return withLocale(iso, "EEE d MMM yyyy · HH:mm", locale);
+}
+
+/** Posted clock at the venue. Empty when the listing is date-only (00:00). */
+export function formatConcertTime(iso: string) {
+  const date = wallDate(iso);
+  if (!date) return "";
+  if (date.getHours() === 0 && date.getMinutes() === 0) return "";
+  return format(date, "HH:mm");
 }
 
 export function concertShareLine(concert: {
@@ -127,8 +172,8 @@ export function formatConcertDay(iso: string, locale?: string) {
 }
 
 export function formatConcertYear(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
+  const date = wallDate(iso);
+  if (!date) return "";
   return format(date, "yyyy");
 }
 

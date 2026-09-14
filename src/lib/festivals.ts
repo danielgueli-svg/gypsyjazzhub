@@ -476,7 +476,7 @@ export const FESTIVALS: Festival[] = [
     founded: "2020s",
     site: "https://www.eventbrite.com/e/django-in-london-tickets-1995698734638",
     bio: "Three days at St Mary's, Upper Street, Islington. Thursday 17th: Harry Diplock Trio (19:30) and Hugo Guezbar Trio (21:00). Friday 18th: Elias Prinz & Sunny Franz Quartet (19:30) and Angelo Debarre Trio (21:00). Saturday 19th: Giacomo Smith matinee (15:00) and London Django Collective with Kourosh Kanani (21:00). Tickets on Eventbrite.",
-    nextStartsAt: "2026-09-17T18:30:00.000Z",
+    nextStartsAt: "2026-09-17T19:30:00.000Z",
     relatedSlugs: [
       "harry-diplock",
       "hugo-guezbar",
@@ -485,6 +485,7 @@ export const FESTIVALS: Festival[] = [
       "sunny-franz",
       "giacomo-smith",
       "kourosh-kanani",
+      "debi-botos",
     ],
   },
   {
@@ -989,7 +990,13 @@ export function festivalTicketUrl(festival: Festival): string {
   return "";
 }
 
-export function festivalForConcert(concert: { title: string; venue: string; city: string }) {
+export function festivalForConcert(concert: {
+  title: string;
+  venue: string;
+  city: string;
+  description?: string;
+  startsAt?: string;
+}) {
   const exact = FESTIVALS.find(
     (row) => row.name.toLowerCase() === concert.title.trim().toLowerCase(),
   );
@@ -997,15 +1004,34 @@ export function festivalForConcert(concert: { title: string; venue: string; city
   return FESTIVALS.find((row) => concertBelongsToFestival(row, concert));
 }
 
+export function uniqueFestivalNights(
+  concerts: { title: string; artistName?: string; venue: string; city: string; startsAt: string }[],
+) {
+  const map = new Map<string, (typeof concerts)[number]>();
+  const sorted = [...concerts].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  for (const concert of sorted) {
+    const bill = (concert.title || concert.artistName || "").trim().toLowerCase();
+    const key = `${bill}|${concert.startsAt.slice(0, 10)}|${concert.venue.trim().toLowerCase()}|${concert.city.trim().toLowerCase()}`;
+    map.set(key, concert);
+  }
+  return [...map.values()];
+}
+
 export function concertBelongsToFestival(
   festival: Festival,
-  concert: { title: string; venue: string; city: string },
+  concert: { title: string; venue: string; city: string; description?: string; startsAt?: string },
 ) {
-  const hay = `${concert.title} ${concert.venue} ${concert.city}`.toLowerCase();
+  const hay = `${concert.title} ${concert.venue} ${concert.city} ${concert.description ?? ""}`.toLowerCase();
   const keys = [festival.name, festival.slug.replace(/-/g, " ")];
   if (festival.slug === "victoria-django") keys.push("bc django festival", "mary winspear");
   if (festival.slug === "django-sur-lennon") keys.push("django donegal", "letterkenny");
-  return keys.some((key) => key.length > 3 && hay.includes(key.toLowerCase()));
+  if (keys.some((key) => key.length > 3 && hay.includes(key.toLowerCase()))) return true;
+  if (festival.slug === "django-in-london") {
+    const atChurch = /st mary/.test(hay) && /london/.test(`${concert.city} ${concert.venue}`.toLowerCase());
+    const day = (concert.startsAt ?? "").slice(0, 10);
+    if (atChurch && ["2026-09-17", "2026-09-18", "2026-09-19"].includes(day)) return true;
+  }
+  return false;
 }
 
 export function festivalsForArtist(slug: string, samois = false): Festival[] {

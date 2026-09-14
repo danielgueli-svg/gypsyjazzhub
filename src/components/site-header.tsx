@@ -32,6 +32,7 @@ const TOP: TopItem[] = [
       { to: "/board", key: "nav.board", hint: "nav.hint.board" },
       { to: "/musicians", key: "nav.musicians", hint: "nav.hint.musicians" },
       { to: "/groups", key: "nav.groups", hint: "nav.hint.groups" },
+      { to: "/luthiers", key: "nav.luthiers", hint: "nav.hint.luthiers" },
     ],
   },
   {
