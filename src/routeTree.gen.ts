@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AddRouteImport } from './routes/add'
 import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as AlhambraRouteImport } from './routes/alhambra'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as CampsRouteImport } from './routes/camps'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
@@ -25,6 +26,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SceneRouteImport } from './routes/scene'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as StichtingAlhambraRouteImport } from './routes/stichting-alhambra'
 import { Route as TataMirandoRouteImport } from './routes/tata-mirando'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as WelcomeRouteImport } from './routes/welcome'
@@ -110,6 +112,11 @@ const AgendaRoute = AgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlhambraRoute = AlhambraRouteImport.update({
+  id: '/alhambra',
+  path: '/alhambra',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BoardRoute = BoardRouteImport.update({
   id: '/board',
   path: '/board',
@@ -173,6 +180,11 @@ const SceneRoute = SceneRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StichtingAlhambraRoute = StichtingAlhambraRouteImport.update({
+  id: '/stichting-alhambra',
+  path: '/stichting-alhambra',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TataMirandoRoute = TataMirandoRouteImport.update({
@@ -527,6 +539,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
@@ -540,6 +553,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -614,6 +628,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
@@ -627,6 +642,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -702,6 +718,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/add': typeof AddRoute
   '/agenda': typeof AgendaRoute
+  '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
   '/denis-chang': typeof DenisChangRoute
@@ -715,6 +732,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/scene': typeof SceneRoute
   '/search': typeof SearchRoute
+  '/stichting-alhambra': typeof StichtingAlhambraRoute
   '/tata-mirando': typeof TataMirandoRoute
   '/verify-email': typeof VerifyEmailRoute
   '/welcome': typeof WelcomeRoute
@@ -791,6 +809,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
@@ -804,6 +823,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -878,6 +898,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
@@ -891,6 +912,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -965,6 +987,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add'
     | '/agenda'
+    | '/alhambra'
     | '/board'
     | '/camps'
     | '/denis-chang'
@@ -978,6 +1001,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/scene'
     | '/search'
+    | '/stichting-alhambra'
     | '/tata-mirando'
     | '/verify-email'
     | '/welcome'
@@ -1053,6 +1077,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddRoute: typeof AddRoute
   AgendaRoute: typeof AgendaRoute
+  AlhambraRoute: typeof AlhambraRoute
   BoardRoute: typeof BoardRoute
   CampsRoute: typeof CampsRoute
   DenisChangRoute: typeof DenisChangRoute
@@ -1066,6 +1091,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SceneRoute: typeof SceneRoute
   SearchRoute: typeof SearchRoute
+  StichtingAlhambraRoute: typeof StichtingAlhambraRoute
   TataMirandoRoute: typeof TataMirandoRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   WelcomeRoute: typeof WelcomeRoute
@@ -1160,6 +1186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgendaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alhambra': {
+      id: '/alhambra'
+      path: '/alhambra'
+      fullPath: '/alhambra'
+      preLoaderRoute: typeof AlhambraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/board': {
       id: '/board'
       path: '/board'
@@ -1249,6 +1282,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stichting-alhambra': {
+      id: '/stichting-alhambra'
+      path: '/stichting-alhambra'
+      fullPath: '/stichting-alhambra'
+      preLoaderRoute: typeof StichtingAlhambraRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tata-mirando': {
@@ -1741,6 +1781,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddRoute: AddRoute,
   AgendaRoute: AgendaRoute,
+  AlhambraRoute: AlhambraRoute,
   BoardRoute: BoardRoute,
   CampsRoute: CampsRoute,
   DenisChangRoute: DenisChangRoute,
@@ -1754,6 +1795,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SceneRoute: SceneRoute,
   SearchRoute: SearchRoute,
+  StichtingAlhambraRoute: StichtingAlhambraRoute,
   TataMirandoRoute: TataMirandoRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   WelcomeRoute: WelcomeRoute,

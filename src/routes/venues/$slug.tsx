@@ -15,8 +15,8 @@ import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/venues/$slug")({
   beforeLoad: ({ params }) => {
-    if (params.slug === "gradina-alhambra") {
-      throw redirect({ to: "/gradina-alhambra" });
+    if (params.slug === "stichting-alhambra") {
+      throw redirect({ to: "/stichting-alhambra" });
     }
   },
   loader: async ({ params }) => {
