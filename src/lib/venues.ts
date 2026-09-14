@@ -336,7 +336,7 @@ export const VENUES: Venue[] = [
     site: "",
     contact: "",
     scene: "gypsy",
-    bio: "Fürbringerstraße 20A, Kreuzberg. Jazz manouche jam 2nd and 4th Thursday from 20:00. Separate from A-Trane.",
+    bio: "Fürbringerstraße 20A, Kreuzberg. Jazz manouche jam 2nd and 4th Thursday from 20:00.",
   },
   {
     slug: "unterfahrt",
@@ -4018,7 +4018,7 @@ export const VENUES: Venue[] = [
     site: "https://www.jazz-cafe-alto.nl/",
     contact: "",
     scene: "jazz",
-    bio: "Korte Leidsedwarsstraat. Amsterdam’s oldest jazz café — live jazz seven nights. A room that could host a Gypsy Jazz night.",
+    bio: "Korte Leidsedwarsstraat. Amsterdam’s oldest jazz café — live jazz seven nights.",
   },
   {
     slug: "cafe-de-pels",
@@ -4028,8 +4028,8 @@ export const VENUES: Venue[] = [
     kind: "Club",
     site: "https://www.depels.nl/",
     contact: "",
-    scene: "gypsy",
-    bio: "Huidenstraat 25. Home of the Amsterdam Circle Jam — Daniel Gueli’s house session. Rosenberg-family chairs and whoever is in town.",
+    scene: "jazz",
+    bio: "Huidenstraat 25. Jordaan brown café. depels.nl.",
   },
   {
     slug: "cjc-creative-jazz-club-nectar",
