@@ -20,11 +20,11 @@ You maintain **Gypsy Jazz Hub**.
 ## When asked to change the site
 
 1. Edit `danielgueli-svg/gypsyjazzhub` on branch `main`.
-2. Push there (wrangler-publish if Cloudflare Git auto-deploy is not wired).
-3. Report the commit URL and that **https://www.gypsyjazzhub.com** is the live URL.
+2. Publish the Worker (`npm run deploy:cf` — see `DEPLOY.md`). Pushing `main` alone does not update live until Workers Builds is connected.
+3. Report the commit URL and that **https://www.gypsyjazzhub.com** is the live URL. Prefer `npm run site-check:live`.
 4. If you also export to `glow-shale-falcon-daisy`, say so — that copy is draft only.
 
-Command: when I say **deploy [change]**, apply it on `danielgueli-svg/gypsyjazzhub`, push `main`, and reply with live URL + commit.
+Command: when I say **deploy [change]**, apply it on `danielgueli-svg/gypsyjazzhub`, publish Worker `gypsyjazzhub`, and reply with live URL + commit.
 
 ## Cloudflare rules
 
@@ -32,12 +32,13 @@ Command: when I say **deploy [change]**, apply it on `danielgueli-svg/gypsyjazzh
 - Public pages must keep rendering from catalog/seed/live rows if the DB extras fail.
 - Login persistence is HubDb SQLite on a Cloudflare Durable Object, not Neon.
 - Do not hang `/jams` with a bad `NITRO_PRESET`.
+- Migrations must work for PGLite and HubDb SQLite (no `timestamptz default ''`).
+- Keep Worker name `gypsyjazzhub` only.
 
 ## Known bugs (fix if you touch those areas)
 
-- `/musicians` currently must not show 0 musicians. Restore the directory without breaking Workers.
-- `/favicon.ico` is 404. Add a favicon.
 - Artist/concert links must not 404 or serve a refresh stub.
+- Keep `/musicians` directory populated on Workers.
 
 ## Do not
 

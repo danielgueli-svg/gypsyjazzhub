@@ -6,7 +6,7 @@ Gypsy jazz community site: jams, concerts, musicians, groups, instruments, Learn
 
 - Live URL: https://www.gypsyjazzhub.com/
 - Repo: `danielgueli-svg/gypsyjazzhub` · branch `main`
-- Host: Cloudflare Workers. DNS stays on Cloudflare. Registrar is GoDaddy — do not buy GoDaddy hosting.
+- Host: Cloudflare Workers (**Worker name: `gypsyjazzhub`**). DNS stays on Cloudflare. Registrar is GoDaddy — do not buy GoDaddy hosting.
 - Canonical host is **www**. Apex `gypsyjazzhub.com` must 301 to `https://www.gypsyjazzhub.com/`. HTTP must 301 to HTTPS.
 - Sitemap: https://www.gypsyjazzhub.com/sitemap.xml
 - robots: Allow Google on `/`. Disallow only `/api/`, `/login`, `/studio`. Meta robots: `index, follow`. Canonical always `https://www.gypsyjazzhub.com/...`
@@ -16,14 +16,17 @@ Gypsy jazz community site: jams, concerts, musicians, groups, instruments, Learn
 - `glow-shale-falcon-daisy.grok.me` is a draft sandbox. It is noindex.
 - Private repo `danielgueli-svg/glow-shale-falcon-daisy` is the Grok export copy. Draft only.
 - Never attach `gypsyjazzhub.com` DNS back to grok.me / Vercel as the public host.
+- `vercel.json` is legacy. Do not assume Vercel hosts or runs crons for this site.
 
 ## Deploy command
+
+See **`DEPLOY.md`** for the full publish checklist.
 
 When asked to **deploy [change]**:
 
 1. Edit `danielgueli-svg/gypsyjazzhub` on `main`.
-2. Push `main` (and wrangler-publish if GitHub auto-deploy is not wired).
-3. Reply with the commit URL and that **https://www.gypsyjazzhub.com** is the live URL.
+2. Publish the Cloudflare Worker (`npm run deploy:cf` / `GROK_CF_WORKER=1` build + `cf-prep` + wrangler). Pushing `main` alone is **not** enough until Workers Builds is connected in the Cloudflare dashboard.
+3. Reply with the commit URL and that **https://www.gypsyjazzhub.com** is the live URL. Run `npm run site-check:live` when possible.
 4. If also exported to `glow-shale-falcon-daisy`, say so — that copy is draft only.
 
 ## Cloudflare rules
@@ -32,6 +35,9 @@ When asked to **deploy [change]**:
 - Public pages must keep rendering from catalog/seed/live rows if the DB extras fail.
 - Login persistence is HubDb SQLite on a Cloudflare Durable Object, not Neon.
 - Do not hang `/jams` with a bad `NITRO_PRESET`.
+- Migrations must be valid for **PGLite (CI/local)** and **HubDb SQLite (production)**. Never use `timestamptz … default ''`.
+- Keep only Worker `gypsyjazzhub`. Do not recreate `danielgueli-svg-gypsyjazzhub`.
+- Prefer one agent writing `main` content at a time to avoid partial-push restores.
 
 ## Known bugs (fix when touching that area)
 
