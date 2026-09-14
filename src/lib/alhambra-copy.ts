@@ -30,21 +30,21 @@ const EN: Copy = {
   siblingNote: "Not Grădina Alhambra in Bucharest — that garden hall has its own page.",
   aboutTitle: "The organisation",
   about: [
-    "Home room: Remonstrantse kerk, also called the Schuilkerkje, Fnidsen 37, Alkmaar. Larger gypsy jazz nights have been booked at Cultuurkoepel Heiloo, Kennemerstraatweg 464. Tickets and dates: stichting-alhambra.nl (the site was down when last checked) and Facebook AlhambraGuitaar. Info from their series: 06-51511995.",
-    "Marcia Bamberg Swing Quartet name Stichting Alhambra as a client. The confirmed manouche night on file is 27 April 2025 in Heiloo, with Mozes Rosenberg and Tim Kliphuis. That is not a weekly jam, and it is not a standing Hot Club house.",
+    "Home room: Remonstrantse kerk, also called the Schuilkerkje, Fnidsen 37, Alkmaar. Larger nights have also been booked at Gasfabriek Alkmaar and Theater Victorie. Tickets and dates: stichting-alhambra.nl and Facebook AlhambraGuitaar. Info from their series: 06-51511995.",
+    "This page lists only upcoming gypsy jazz / jazz manouche nights they posted. Not a weekly jam, and not a standing Hot Club house. The rest of their calendar is classical guitar.",
   ],
-  nightsTitle: "Gypsy jazz nights",
-  nightsLead: "Only Hot Club / manouche bills they posted. Ask the foundation before you travel — the rest of their calendar is classical guitar.",
+  nightsTitle: "Upcoming gypsy jazz nights",
+  nightsLead: "Only Hot Club / manouche bills still to come. Ask the foundation before you travel — the rest of their calendar is classical guitar.",
   noneUpcoming:
-    "No gypsy jazz night is posted for Stichting Alhambra after the last confirmed date. Watch stichting-alhambra.nl and their Facebook — do not assume a weekly session.",
+    "No upcoming gypsy jazz night is posted for Stichting Alhambra. Watch stichting-alhambra.nl and their Facebook — do not assume a weekly session.",
   archiveTitle: "Last confirmed night",
   houseTitle: "Find the door",
-  address: "Cultuurkoepel Heiloo, Kennemerstraatweg 464, Heiloo (gypsy jazz night 27 Apr 2025)",
-  homeRoom: "Home series: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
+  address: "Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
+  homeRoom: "Also Gasfabriek Alkmaar and Theater Victorie when they book a larger night",
   siteLabel: "stichting-alhambra.nl",
   facebookLabel: "Facebook",
-  groupTitle: "Who played the manouche bill",
-  groupLead: "Marcia Bamberg Swing Quartet with Mozes Rosenberg and Tim Kliphuis — billed Beleef de magie van Gipsy Jazz!",
+  groupTitle: "On the upcoming bills",
+  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt and Angelo Debarre.",
 };
 
 const NL: Copy = {
@@ -58,19 +58,19 @@ const NL: Copy = {
   siblingNote: "Niet Grădina Alhambra in Boekarest — die tuinzal heeft een eigen pagina.",
   aboutTitle: "De stichting",
   about: [
-    "Thuiszaal: Remonstrantse kerk, ook het Schuilkerkje, Fnidsen 37, Alkmaar. Grotere gypsy-jazzavonden zijn geboekt in de Cultuurkoepel Heiloo, Kennemerstraatweg 464. Kaarten en data: stichting-alhambra.nl (de site was offline bij de laatste check) en Facebook AlhambraGuitaar. Info uit hun serie: 06-51511995.",
-    "Het Marcia Bamberg Swing Quartet noemt Stichting Alhambra als opdrachtgever. De bevestigde manouche-avond op file is 27 april 2025 in Heiloo, met Mozes Rosenberg en Tim Kliphuis. Geen wekelijkse jam, geen vast Hot Club-huis.",
+    "Thuiszaal: Remonstrantse kerk, ook het Schuilkerkje, Fnidsen 37, Alkmaar. Grotere avonden zijn ook geboekt in de Gasfabriek Alkmaar en Theater Victorie. Kaarten en data: stichting-alhambra.nl en Facebook AlhambraGuitaar. Info uit hun serie: 06-51511995.",
+    "Deze pagina toont alleen komende gypsy-jazz- / jazz-manouche-avonden. Geen wekelijkse jam, geen vast Hot Club-huis. De rest van de agenda is klassieke gitaar.",
   ],
-  nightsTitle: "Gypsy-jazzavonden",
-  nightsLead: "Alleen Hot Club / manouche die zij zelf zetten. Vraag de stichting voor je reist — de rest van de agenda is klassieke gitaar.",
+  nightsTitle: "Komende gypsy-jazzavonden",
+  nightsLead: "Alleen Hot Club / manouche die nog moet komen. Vraag de stichting voor je reist — de rest van de agenda is klassieke gitaar.",
   noneUpcoming:
-    "Er staat geen gypsy-jazzavond meer van Stichting Alhambra na de laatst bevestigde datum. Volg stichting-alhambra.nl en hun Facebook — dit is geen wekelijkse sessie.",
+    "Er staat geen komende gypsy-jazzavond van Stichting Alhambra. Volg stichting-alhambra.nl en hun Facebook — dit is geen wekelijkse sessie.",
   archiveTitle: "Laatst bevestigde avond",
   houseTitle: "De deur",
-  address: "Cultuurkoepel Heiloo, Kennemerstraatweg 464, Heiloo (gypsy-jazzavond 27 apr 2025)",
-  homeRoom: "Thuisserie: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
-  groupTitle: "Wie de manouche-avond speelde",
-  groupLead: "Marcia Bamberg Swing Quartet met Mozes Rosenberg en Tim Kliphuis — aangekondigd als Beleef de magie van Gipsy Jazz!",
+  address: "Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
+  homeRoom: "Ook Gasfabriek Alkmaar en Theater Victorie als ze een grotere avond boeken",
+  groupTitle: "Op de komende avonden",
+  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt en Angelo Debarre.",
 };
 
 const FR: Copy = {
@@ -82,14 +82,14 @@ const FR: Copy = {
     "Tous les noms de stichting-alhambra.nl ne sont pas du gypsy jazz. Les recitals classiques (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) restent hors de ce hub.",
   siblingNote: "Ce n’est pas Grădina Alhambra à Bucarest — cette salle a sa propre page.",
   aboutTitle: "La fondation",
-  nightsTitle: "Soirs gypsy jazz",
-  nightsLead: "Uniquement les plateaux manouche / Hot Club. Demandez à la fondation avant de voyager.",
+  nightsTitle: "Prochains soirs gypsy jazz",
+  nightsLead: "Uniquement les plateaux manouche / Hot Club à venir. Demandez à la fondation avant de voyager.",
   noneUpcoming:
-    "Aucune soirée gypsy jazz n’est affichée après la dernière date confirmée. Suivez le site et Facebook — ce n’est pas une session fixe.",
+    "Aucune soirée gypsy jazz n’est affichée. Suivez le site et Facebook — ce n’est pas une session fixe.",
   archiveTitle: "Dernière soirée confirmée",
   houseTitle: "L’adresse",
-  groupTitle: "Le plateau manouche",
-  groupLead: "Marcia Bamberg Swing Quartet avec Mozes Rosenberg et Tim Kliphuis — annoncé Beleef de magie van Gipsy Jazz!",
+  groupTitle: "Sur les prochains plateaux",
+  groupLead: "Django a Paris ; Marcia Bamberg Swing Quartet ; Amati Schmitt et Angelo Debarre.",
 };
 
 const DE: Copy = {
@@ -101,14 +101,14 @@ const DE: Copy = {
     "Nicht jeder Name auf stichting-alhambra.nl ist Gypsy Jazz. Klassik-Recitals (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) bleiben von diesem Hub fern.",
   siblingNote: "Nicht Grădina Alhambra in Bukarest — dieser Gartensaal hat eine eigene Seite.",
   aboutTitle: "Die Stiftung",
-  nightsTitle: "Gypsy-Jazz-Abende",
-  nightsLead: "Nur Hot Club / Manouche. Vor der Reise bei der Stiftung nachfragen.",
+  nightsTitle: "Kommende Gypsy-Jazz-Abende",
+  nightsLead: "Nur Hot Club / Manouche, die noch kommen. Vor der Reise bei der Stiftung nachfragen.",
   noneUpcoming:
-    "Kein Gypsy-Jazz-Abend nach dem letzten bestätigten Datum. Website und Facebook folgen — keine wöchentliche Session.",
+    "Kein kommender Gypsy-Jazz-Abend. Website und Facebook folgen — keine wöchentliche Session.",
   archiveTitle: "Letzter bestätigter Abend",
   houseTitle: "Die Tür",
-  groupTitle: "Wer den Manouche-Abend spielte",
-  groupLead: "Marcia Bamberg Swing Quartet mit Mozes Rosenberg und Tim Kliphuis — angekündigt als Beleef de magie van Gipsy Jazz!",
+  groupTitle: "Auf den kommenden Abenden",
+  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt und Angelo Debarre.",
 };
 
 const ES: Copy = {
@@ -120,14 +120,14 @@ const ES: Copy = {
     "No todos los nombres de stichting-alhambra.nl son gypsy jazz. Los recitals clásicos (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) no entran en este hub.",
   siblingNote: "No es Grădina Alhambra en Bucarest — esa sala tiene su propia página.",
   aboutTitle: "La fundación",
-  nightsTitle: "Noches de gypsy jazz",
-  nightsLead: "Solo Hot Club / manouche. Pregunta a la fundación antes de viajar.",
+  nightsTitle: "Próximas noches de gypsy jazz",
+  nightsLead: "Solo Hot Club / manouche que aún está por venir. Pregunta a la fundación antes de viajar.",
   noneUpcoming:
-    "No hay noche de gypsy jazz anunciada después de la última fecha confirmada. Sigue la web y Facebook — no es una sesión fija.",
+    "No hay noche de gypsy jazz anunciada. Sigue la web y Facebook — no es una sesión fija.",
   archiveTitle: "Última noche confirmada",
   houseTitle: "La puerta",
-  groupTitle: "Quién tocó el cartel manouche",
-  groupLead: "Marcia Bamberg Swing Quartet con Mozes Rosenberg y Tim Kliphuis — anunciado como Beleef de magie van Gipsy Jazz!",
+  groupTitle: "En las próximas noches",
+  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt y Angelo Debarre.",
 };
 
 const BY_LOCALE: Record<string, Copy> = {

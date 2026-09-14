@@ -10,8 +10,6 @@ import { pageHead } from "@/lib/seo";
 
 const SITE = "https://www.stichting-alhambra.nl/";
 const FACEBOOK = "https://www.facebook.com/AlhambraGuitaar";
-const MAPS =
-  "https://www.google.com/maps/search/?api=1&query=Cultuurkoepel+Heiloo+Kennemerstraatweg+464";
 const HOME_MAPS =
   "https://www.google.com/maps/search/?api=1&query=Remonstrantse+kerk+Fnidsen+37+Alkmaar";
 
@@ -35,15 +33,18 @@ function byThisOrg(concert: Concert) {
 }
 
 function uniqueConcerts(rows: Concert[]) {
-  const seen = new Set<string>();
-  const out: Concert[] = [];
+  const seen = new Map<string, Concert>();
   for (const concert of rows) {
-    const key = `${concert.title}|${concert.startsAt}|${concert.city}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(concert);
+    const key = `${concert.startsAt}|${concert.city.trim().toLowerCase()}|${concert.venue.trim().toLowerCase()}`;
+    const prev = seen.get(key);
+    if (!prev) {
+      seen.set(key, concert);
+      continue;
+    }
+    const longer = concert.title.trim().length > prev.title.trim().length;
+    if (longer) seen.set(key, concert);
   }
-  return out;
+  return [...seen.values()];
 }
 
 export const Route = createFileRoute("/stichting-alhambra")({
@@ -70,16 +71,13 @@ export const Route = createFileRoute("/stichting-alhambra")({
     const upcoming = here
       .filter((concert) => !concert.isHistoric && new Date(concert.startsAt).getTime() >= now)
       .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
-    const archive = here
-      .filter((concert) => concert.isHistoric || new Date(concert.startsAt).getTime() < now)
-      .sort((a, b) => new Date(b.startsAt).getTime() - new Date(a.startsAt).getTime());
-    return { upcoming, archive };
+    return { upcoming };
   },
   component: AlhambraPage,
 });
 
 function AlhambraPage() {
-  const { upcoming, archive } = Route.useLoaderData();
+  const { upcoming } = Route.useLoaderData();
   const { locale } = useI18n();
   const copy = alhambraCopy(locale);
 
@@ -134,17 +132,6 @@ function AlhambraPage() {
         )}
       </section>
 
-      {archive.length > 0 ? (
-        <section className="mt-12">
-          <h2 className="font-display text-3xl font-semibold">{copy.archiveTitle}</h2>
-          <div className="mt-5 space-y-3">
-            {archive.map((concert) => (
-              <ConcertRow key={concert.id} concert={concert} />
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       <section className="mt-12 max-w-2xl">
         <h2 className="font-display text-3xl font-semibold">{copy.groupTitle}</h2>
         <p className="mt-2 text-sm text-muted">{copy.groupLead}</p>
@@ -157,12 +144,12 @@ function AlhambraPage() {
             Marcia Bamberg
           </Link>
           {" · "}
-          <Link to="/musicians/$slug" params={{ slug: "mozes-rosenberg" }} className="hover:underline">
-            Mozes Rosenberg
+          <Link to="/musicians/$slug" params={{ slug: "amati-schmitt" }} className="hover:underline">
+            Amati Schmitt
           </Link>
           {" · "}
-          <Link to="/musicians/$slug" params={{ slug: "tim-kliphuis" }} className="hover:underline">
-            Tim Kliphuis
+          <Link to="/musicians/$slug" params={{ slug: "angelo-debarre" }} className="hover:underline">
+            Angelo Debarre
           </Link>
         </p>
       </section>
@@ -180,11 +167,6 @@ function AlhambraPage() {
           <Button asChild variant="outline">
             <a href={FACEBOOK} target="_blank" rel="noreferrer">
               {copy.facebookLabel}
-            </a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href={MAPS} target="_blank" rel="noreferrer">
-              Heiloo maps
             </a>
           </Button>
           <Button asChild variant="outline">
