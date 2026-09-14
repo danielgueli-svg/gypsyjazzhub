@@ -83,7 +83,18 @@ cfg.durable_objects = {
 };
 cfg.triggers = {
   ...(cfg.triggers || {}),
-  crons: [...new Set([...(cfg.triggers?.crons || []), "15 6 * * *", "0 17 * * *", "0 18 * * *"])],
+  // Daily: alerts+digest @ 06:15 UTC; mail-queue windows @ 17:00/18:00 UTC.
+  // Weekly Mon: Facebook import @ 07:00 UTC; DjangoBooks import @ 07:20 UTC.
+  crons: [
+    ...new Set([
+      ...(cfg.triggers?.crons || []),
+      "15 6 * * *",
+      "0 7 * * 1",
+      "20 7 * * 1",
+      "0 17 * * *",
+      "0 18 * * *",
+    ]),
+  ],
 };
 cfg.migrations = cfg.migrations?.length
   ? cfg.migrations
@@ -100,12 +111,21 @@ async function gjhScheduled(event, env, ctx) {
   const secret = env.CRON_SECRET || env.DIGEST_SECRET || "";
   const q = secret ? "?secret=" + encodeURIComponent(secret) : "";
   const origin = "https://www.gypsyjazzhub.com";
+  const cron = event && event.cron ? String(event.cron) : "";
+  if (cron === "0 7 * * 1") {
+    ctx.waitUntil(fetch(origin + "/api/facebook-import" + q));
+    return;
+  }
+  if (cron === "20 7 * * 1") {
+    ctx.waitUntil(fetch(origin + "/api/djangobooks-import" + q));
+    return;
+  }
   const hour = Number(new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/Amsterdam",
     hour: "numeric",
     hour12: false,
   }).format(new Date()));
-  if (hour === 19) {
+  if (hour === 19 || cron === "0 17 * * *" || cron === "0 18 * * *") {
     ctx.waitUntil(fetch(origin + "/api/mail-queue" + q));
     return;
   }
@@ -118,6 +138,6 @@ if (__gjhDefault && typeof __gjhDefault === "object") {
 }
 `;
     writeFileSync(indexPath, index);
-    console.log("[cf-prep] attached daily jam-reminder scheduled handler");
+    console.log("[cf-prep] attached scheduled handler (digest, mail-queue, weekly imports)");
   }
 }

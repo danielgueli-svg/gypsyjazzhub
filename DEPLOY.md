@@ -8,7 +8,7 @@ Do **not** treat `*.grok.me`, Vercel, or any other Worker name as live.
 
 1. Commit lands on `main` in `danielgueli-svg/gypsyjazzhub`.
 2. Build a **Cloudflare** Worker bundle (`GROK_CF_WORKER=1`).
-3. Run `scripts/cf-prep.mjs` (sets Worker name `gypsyjazzhub`, HubDb Durable Object, auth URL, daily cron, Workers Logs).
+3. Run `scripts/cf-prep.mjs` (sets Worker name `gypsyjazzhub`, HubDb Durable Object, auth URL, crons, Workers Logs).
 4. `npx wrangler deploy` from `.output/server` (or the path Wrangler prints after the Nitro CF build).
 5. Confirm live: `npm run site-check:live`.
 
@@ -59,5 +59,9 @@ Never use `timestamptz … default ''` — use a real timestamp constant or null
 
 ## Not production
 
-- `vercel.json` is a leftover from an older host. Cloudflare DNS + Worker custom domains handle HTTPS/www redirects. Worker cron (via `cf-prep`) hits `/api/alerts`, `/api/digest`, and `/api/mail-queue`. Weekly `/api/facebook-import` and `/api/djangobooks-import` schedules still need to live in `cf-prep` (they used to be listed only in `vercel.json` and do not run on Vercel).
+- `vercel.json` is a leftover from an older host. Cloudflare DNS + Worker custom domains handle HTTPS/www redirects.
+- Worker cron (via `cf-prep`) hits:
+  - daily `/api/alerts` + `/api/digest` (`15 6 * * *` UTC)
+  - daily `/api/mail-queue` (`0 17` / `0 18` UTC)
+  - weekly Mon `/api/facebook-import` (`0 7 * * 1` UTC) and `/api/djangobooks-import` (`20 7 * * 1` UTC)
 - Grok draft URLs and the `glow-shale-falcon-daisy` export are noindex drafts only.
