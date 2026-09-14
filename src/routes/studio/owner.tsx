@@ -29,6 +29,10 @@ import {
   removeHubItem,
   saveOwnerDigest,
   sendOwnerDigest,
+  listOwnerMailQueue,
+  queueOwnerMail,
+  approveOwnerMail,
+  rejectOwnerMail,
   type HubActivity,
   type HubMember,
   type VisitDay,
@@ -59,6 +63,7 @@ import {
 } from "@/lib/country-requests";
 import { listContactMessages, markContactRead, type ContactMessage } from "@/lib/contact";
 import { enrichCatalogBios, listCatalogStubs, type CatalogStub } from "@/lib/catalog";
+import type { QueuedMail } from "@/lib/mail-queue";
 
 export const Route = createFileRoute("/studio/owner")({
   component: OwnerPage,
@@ -105,6 +110,16 @@ function OwnerPage() {
   const [mailSubject, setMailSubject] = useState("");
   const [mailBody, setMailBody] = useState("");
   const [mailBusy, setMailBusy] = useState(false);
+  const [mailQueue, setMailQueue] = useState<{ pending: QueuedMail[]; recent: QueuedMail[] }>({
+    pending: [],
+    recent: [],
+  });
+  const [queueBusy, setQueueBusy] = useState<number | "new" | null>(null);
+  const [queueTo, setQueueTo] = useState("");
+  const [queueName, setQueueName] = useState("");
+  const [queueSubject, setQueueSubject] = useState("");
+  const [queueBody, setQueueBody] = useState("");
+  const [queueKind, setQueueKind] = useState<"booker" | "organiser" | "outreach">("booker");
   const [eraseBusy, setEraseBusy] = useState(false);
   const [dirTick, setDirTick] = useState(0);
   const [autoPublish, setAutoPublishOn] = useState(true);
@@ -112,7 +127,7 @@ function OwnerPage() {
 
   async function load(isOwner: boolean) {
     if (!isOwner) return;
-    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos, nextAuto, nextSubs] = await Promise.all([
+    const [nextMembers, nextActivity, nextFinds, nextDigest, nextPending, nextPublic, nextVisits, nextPhotos, nextAuto, nextSubs, nextMail] = await Promise.all([
       listHubMembers().catch(() => []),
       listHubActivity().catch(() => []),
       listDiscoveries().catch(() => []),
@@ -126,6 +141,7 @@ function OwnerPage() {
       getPhotoStorage().catch(() => null),
       getAutoPublish().catch(() => ({ on: true })),
       listHubSubmissions().catch(() => []),
+      listOwnerMailQueue().catch(() => ({ pending: [] as QueuedMail[], recent: [] as QueuedMail[] })),
     ]);
     setMembers(nextMembers);
     setSelected([]);
@@ -136,6 +152,7 @@ function OwnerPage() {
     setDigestLog(nextDigest.log);
     setPending(nextPending);
     setSubmissions(nextSubs);
+    setMailQueue(nextMail);
     setPublicActivity(nextPublic);
     setVisits(nextVisits);
     setPhotos(nextPhotos);
@@ -340,6 +357,74 @@ function OwnerPage() {
     }
   }
 
+  async function refreshMailQueue() {
+    const next = await listOwnerMailQueue();
+    setMailQueue(next);
+  }
+
+  async function onQueueMail(event: FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setDigestNote(null);
+    setQueueBusy("new");
+    try {
+      const result = await queueOwnerMail({
+        data: {
+          to: queueTo,
+          toName: queueName,
+          subject: queueSubject,
+          body: queueBody,
+          kind: queueKind,
+          reason: "From the owner desk",
+        },
+      });
+      setDigestNote(
+        result.queued
+          ? `On the list until you give green light (${queueTo}).`
+          : `Already on the list (${queueTo}).`,
+      );
+      setQueueTo("");
+      setQueueName("");
+      setQueueSubject("");
+      setQueueBody("");
+      await refreshMailQueue();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not queue mail.");
+    } finally {
+      setQueueBusy(null);
+    }
+  }
+
+  async function onApproveMail(id: number) {
+    setError(null);
+    setDigestNote(null);
+    setQueueBusy(id);
+    try {
+      const result = await approveOwnerMail({ data: id });
+      setDigestNote(result.detail === "already sent" ? "Already sent." : "Sent. Green light.");
+      await refreshMailQueue();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send that mail.");
+    } finally {
+      setQueueBusy(null);
+    }
+  }
+
+  async function onRejectMail(id: number) {
+    setError(null);
+    setDigestNote(null);
+    setQueueBusy(id);
+    try {
+      await rejectOwnerMail({ data: id });
+      setDigestNote("Left on the desk as not sent.");
+      await refreshMailQueue();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not drop that mail.");
+    } finally {
+      setQueueBusy(null);
+    }
+  }
+
   async function onPublishFind(id: number) {
     setError(null);
     try {
@@ -424,6 +509,7 @@ function OwnerPage() {
             ["#desk-submitted", "Submitted"],
             ["#desk-members", "Members"],
             ["#desk-users", "Users"],
+            ["#desk-mail-queue", "Green light"],
             ["#desk-mail", "Mail"],
             ["#desk-scan", "Scan"],
             ["#desk-content", "Content"],
@@ -803,6 +889,134 @@ function OwnerPage() {
           />
 
           <CatalogPanel onError={setError} />
+
+          <section id="desk-mail-queue" className="mt-12 scroll-mt-20">
+            <h2 className="font-display text-2xl font-semibold sm:text-3xl">
+              Mails waiting for green light
+              {mailQueue.pending.length ? (
+                <span className="ml-2 text-lg font-normal text-muted">({mailQueue.pending.length})</span>
+              ) : null}
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              Booker mail and other non-automated mail sits here. It does not go
+              out until you press green light. Automated mail (welcome, jam
+              reminder, password reset, morning digest) still sends on its own.
+              Around 19:00 Dutch time you get a list of whatever is still waiting.
+            </p>
+            {mailQueue.pending.length === 0 ? (
+              <p className="mt-5 text-sm text-muted">None waiting.</p>
+            ) : (
+              <ul className="mt-5 max-w-2xl space-y-3">
+                {mailQueue.pending.map((mail) => (
+                  <li key={mail.id} className="rounded-2xl bg-surface p-5 shadow-border">
+                    <p className="text-xs tracking-[0.16em] text-faint uppercase">
+                      {mail.kind} · {formatConcertWhen(mail.createdAt)}
+                    </p>
+                    <p className="mt-1 font-medium">{mail.subject}</p>
+                    <p className="mt-1 text-sm text-muted">
+                      {mail.toName ? `${mail.toName} · ` : null}
+                      {mail.toEmail}
+                    </p>
+                    {mail.reason ? <p className="mt-1 text-xs text-faint">{mail.reason}</p> : null}
+                    <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted">
+                      {mail.body.length > 600 ? `${mail.body.slice(0, 600).trim()}…` : mail.body}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        disabled={queueBusy === mail.id}
+                        onClick={() => void onApproveMail(mail.id)}
+                      >
+                        {queueBusy === mail.id ? "Sending…" : "Green light"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={queueBusy === mail.id}
+                        onClick={() => void onRejectMail(mail.id)}
+                      >
+                        Don’t send
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <form
+              onSubmit={onQueueMail}
+              className="mt-6 max-w-xl space-y-3 rounded-2xl bg-surface p-5 shadow-border"
+            >
+              <p className="text-sm text-muted">Put a mail on the list — it waits for green light.</p>
+              <div className="space-y-1.5">
+                <Label htmlFor="queue-to">To</Label>
+                <Input
+                  id="queue-to"
+                  type="email"
+                  value={queueTo}
+                  onChange={(event) => setQueueTo(event.target.value)}
+                  placeholder="booker@example.com"
+                  required
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="queue-name">Name (optional)</Label>
+                <Input
+                  id="queue-name"
+                  value={queueName}
+                  onChange={(event) => setQueueName(event.target.value)}
+                  placeholder="Jos Vesters"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="queue-kind">Kind</Label>
+                <select
+                  id="queue-kind"
+                  className="flex h-10 w-full rounded-md border border-border bg-bg px-3 text-sm"
+                  value={queueKind}
+                  onChange={(event) =>
+                    setQueueKind(event.target.value as "booker" | "organiser" | "outreach")
+                  }
+                >
+                  <option value="booker">Booker</option>
+                  <option value="organiser">Organiser</option>
+                  <option value="outreach">Other outreach</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="queue-subject">Subject</Label>
+                <Input
+                  id="queue-subject"
+                  value={queueSubject}
+                  onChange={(event) => setQueueSubject(event.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="queue-body">Message</Label>
+                <Textarea
+                  id="queue-body"
+                  value={queueBody}
+                  onChange={(event) => setQueueBody(event.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" disabled={queueBusy === "new"}>
+                {queueBusy === "new" ? "Saving…" : "Put on the list"}
+              </Button>
+            </form>
+            {mailQueue.recent.length > 0 ? (
+              <ul className="mt-6 max-w-2xl space-y-2 text-sm">
+                {mailQueue.recent.map((mail) => (
+                  <li key={mail.id} className="rounded-xl bg-surface px-4 py-3 shadow-border">
+                    <p className="text-xs tracking-[0.16em] text-faint uppercase">
+                      {mail.status} · {mail.kind} · {mail.toEmail}
+                    </p>
+                    <p className="mt-1 font-medium">{mail.subject}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
 
           <section id="desk-mail" className="mt-12 scroll-mt-20">
             <h2 className="font-display text-2xl font-semibold sm:text-3xl">Daily mail</h2>

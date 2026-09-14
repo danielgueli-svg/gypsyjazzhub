@@ -296,10 +296,27 @@ export async function sendHubMail(
   body: string,
   html?: string,
   replyTo?: string,
+  force = false,
 ) {
   const address = to.trim();
   if (!address.includes("@")) {
     throw new Error("Need a real email address to send mail.");
+  }
+
+  if (!force) {
+    const { shouldQueueHubMail, queueHubMail } = await import("@/lib/mail-queue");
+    if (await shouldQueueHubMail(address)) {
+      const queued = await queueHubMail({
+        to: address,
+        subject,
+        body,
+        html,
+        replyTo,
+        kind: "booker",
+        reason: "Mail to a booker waits for green light.",
+      });
+      return queued.queued ? "queued for owner green light" : "already on the green-light list";
+    }
   }
 
   const resend = readEnv("RESEND_API_KEY");
@@ -341,7 +358,7 @@ export async function sendHubMail(
 
 const SIGRID_MAIL_ID = "sigrid-ubbergen-ask-date-2026-09-13";
 
-/** One-shot organiser notes. Safe to call on every jam list. */
+/** One-shot organiser notes. New organiser mail must go through the green-light queue. */
 export async function maybeSendOrganiserMails() {
   const sql = await getSql();
   await sql.query(`
