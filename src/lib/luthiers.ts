@@ -14,6 +14,8 @@ export type Luthier = {
   hours: string;
   craft: LuthierCraft;
   note: string;
+  youtubeUrl?: string;
+  youtubeTitle?: string;
 };
 
 function guitar(row: Omit<Luthier, "craft" | "note"> & Partial<Pick<Luthier, "note">>): Luthier {
@@ -99,6 +101,8 @@ const GUITAR_LUTHIERS: Luthier[] = [
     email: "bbluthier@gmail.com",
     hours: "By appointment",
     bio: "Milan workshop. Bruno Bagnarelli trained at the Civica Scuola di Liuteria and builds Selmer-Maccaferri models — maintenance and new guitars for the Italian scene.",
+    youtubeUrl: "https://www.youtube.com/watch?v=ehV9uLMI1f0",
+    youtubeTitle: "Mozes Rosenberg on a Bruno Bagnarelli guitar — backstage, Daniel Gueli Gypsy Jazz Channel",
   }),
   guitar({
     slug: "michele-gattoni",

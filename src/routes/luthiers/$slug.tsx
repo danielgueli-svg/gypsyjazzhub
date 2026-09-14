@@ -3,6 +3,7 @@ import { Clock, Globe, Mail, MapPin, Phone } from "lucide-react";
 import { HubChat } from "@/components/hub-chat";
 import { Portrait } from "@/components/portrait";
 import { Button } from "@/components/ui/button";
+import { YouTubeEmbed } from "@/components/youtube-embed";
 import { CountryLabel } from "@/components/country-label";
 import { mapsHref, telHref } from "@/lib/contact";
 import { countrySlug } from "@/lib/geo";
@@ -95,6 +96,19 @@ function LuthierPage() {
           </p>
         ) : null}
       </article>
+
+      {luthier.youtubeUrl ? (
+        <section className="mt-10 max-w-2xl">
+          <h2 className="font-display text-3xl font-semibold">Hear it</h2>
+          <p className="mt-3 mb-4 text-sm leading-relaxed text-muted">
+            {luthier.youtubeTitle ?? "On YouTube"}
+          </p>
+          <YouTubeEmbed
+            url={luthier.youtubeUrl}
+            title={luthier.youtubeTitle ?? luthier.name}
+          />
+        </section>
+      ) : null}
 
       {hasContact ? (
         <section className="mt-10 max-w-2xl">
