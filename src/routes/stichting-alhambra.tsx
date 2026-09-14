@@ -44,7 +44,7 @@ export const Route = createFileRoute("/stichting-alhambra")({
     pageHead({
       title: "Stichting Alhambra — guitar nights in Alkmaar",
       description:
-        "Stichting Alhambra, Alkmaar. Gypsy jazz nights on the hub, classical guitar and flamenco recitals only on this page.",
+        "Stichting Alhambra, Alkmaar. Gypsy jazz nights, then classical guitar and flamenco from their own series.",
       path: "/stichting-alhambra",
     }),
   loader: async () => {
@@ -121,31 +121,6 @@ function AlhambraPage() {
         <Badge>Organisation</Badge>
       </div>
       <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{copy.lead}</p>
-      <p className="mt-4 max-w-2xl rounded-2xl bg-surface p-5 text-sm leading-relaxed text-fg shadow-border">
-        {copy.mixNote}
-      </p>
-      <p className="mt-3 max-w-2xl text-sm text-muted">
-        {copy.siblingNote}{" "}
-        <Link to="/gradina-alhambra" className="underline underline-offset-2 hover:text-fg">
-          Grădina Alhambra
-        </Link>
-      </p>
-
-      <div className="mt-8">
-        <ShareBox
-          compact
-          url="/stichting-alhambra"
-          title="Share Stichting Alhambra"
-          text={`${copy.title}\n${copy.subtitle}`}
-        />
-      </div>
-
-      <article className="mt-12 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
-        <h2 className="font-display text-3xl font-semibold text-fg">{copy.aboutTitle}</h2>
-        {copy.about.map((p) => (
-          <p key={p.slice(0, 40)}>{p}</p>
-        ))}
-      </article>
 
       <section className="mt-12">
         <h2 className="font-display text-3xl font-semibold">{copy.nightsTitle}</h2>
@@ -173,19 +148,21 @@ function AlhambraPage() {
         )}
       </section>
 
-      <section className="mt-12 max-w-2xl">
-        <h2 className="font-display text-3xl font-semibold">{copy.groupTitle}</h2>
-        <p className="mt-2 text-sm text-muted">{copy.groupLead}</p>
-        <p className="mt-4">
-          <Link to="/musicians/$slug" params={{ slug: "amati-schmitt" }} className="hover:underline">
-            Amati Schmitt
-          </Link>
-          {" · "}
-          <Link to="/musicians/$slug" params={{ slug: "angelo-debarre" }} className="hover:underline">
-            Angelo Debarre
-          </Link>
-        </p>
-      </section>
+      <div className="mt-12">
+        <ShareBox
+          compact
+          url="/stichting-alhambra"
+          title="Share Stichting Alhambra"
+          text={`${copy.title}\n${copy.subtitle}`}
+        />
+      </div>
+
+      <article className="mt-12 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
+        <h2 className="font-display text-3xl font-semibold text-fg">{copy.aboutTitle}</h2>
+        {copy.about.map((p) => (
+          <p key={p.slice(0, 40)}>{p}</p>
+        ))}
+      </article>
 
       <section className="mt-12 max-w-2xl">
         <h2 className="font-display text-3xl font-semibold">{copy.houseTitle}</h2>
