@@ -562,16 +562,20 @@ export function hasGroupPortrait(slug: string): boolean {
 }
 
 const LUTHIER_PHOTOS = new Set([
+  "adam-berten",
   "ajl-guitars",
   "bruno-bagnarelli",
   "castelluccia",
   "jean-barault",
   "jean-pierre-favino",
+  "jerome-duffell",
+  "leo-eimers",
   "marco-la-manna",
   "maurice-dupont",
   "mauro-freschi",
   "shelley-park",
   "stefan-hahl",
+  "vit-cach",
 ]);
 
 export function luthierPhotoSrc(slug: string): string | null {

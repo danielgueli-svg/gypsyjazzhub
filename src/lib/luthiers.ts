@@ -1636,6 +1636,11 @@ const LUTHIER_PIN: Record<string, string[]> = {
   Germany: ["stefan-hahl"],
   Netherlands: ["leo-eimers"],
   Canada: ["shelley-park"],
+  Czechia: ["vit-cach"],
+  Spain: ["geronimo-mateos"],
+  Belgium: ["adam-berten"],
+  Austria: ["christoph-seewald"],
+  Japan: ["at-guitars"],
 };
 
 /** Featured names on the community luthiers page — mixed countries, not a factory catalogue. */
@@ -1651,13 +1656,18 @@ export const COMMUNITY_LUTHIER_PIN = [
   "stefan-hahl",
   "leo-eimers",
   "shelley-park",
+  "vit-cach",
   "castelluccia",
   "jean-pierre-favino",
 ];
 
 export function sortCountryLuthiers(country: string, rows: Luthier[]) {
   const pin = LUTHIER_PIN[country] ?? [];
+  const craftRank = (craft: LuthierCraft) =>
+    craft === "guitar" ? 0 : craft === "bass" ? 1 : 2;
   return [...rows].sort((a, b) => {
+    const craft = craftRank(a.craft) - craftRank(b.craft);
+    if (craft) return craft;
     const ia = pin.indexOf(a.slug);
     const ib = pin.indexOf(b.slug);
     if (ia !== -1 || ib !== -1) {
@@ -1719,8 +1729,8 @@ export function communityLuthierOrder(rows: Luthier[]) {
     list.push(row);
     buckets.set(row.country, list);
   }
-  for (const list of buckets.values()) {
-    list.sort((a, b) => a.name.localeCompare(b.name));
+  for (const [country, list] of buckets) {
+    buckets.set(country, sortCountryLuthiers(country, list));
   }
   const countries = [...buckets.keys()].sort((a, b) => a.localeCompare(b));
   const mixed: Luthier[] = [];

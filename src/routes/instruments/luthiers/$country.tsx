@@ -13,7 +13,7 @@ import {
   siteCountryNames,
 } from "@/lib/geo";
 import { listHubFestivals, listHubJams, listHubLuthiers, listHubVenues } from "@/lib/hub-api";
-import { splitLuthiers } from "@/lib/luthiers";
+import { sortCountryLuthiers, splitLuthiers } from "@/lib/luthiers";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
 
@@ -96,31 +96,31 @@ function CountryLuthiersPage() {
       </p>
       <InstrumentsSubnav />
 
+      {guitar.length ? (
+        <MakerSection
+          title={t("instruments.guitarLuthiers")}
+          lead={t("country.guitarLuthiersLead").replace("{country}", name)}
+          entries={sortCountryLuthiers(atlasName, guitar).map(luthierEntry)}
+        />
+      ) : null}
+
       <MakerSection
-        title={t("instruments.shops")}
-        lead={t("country.shopsLead").replace("{country}", name)}
-        entries={byName(shops).map(shopEntry)}
+        title={t("instruments.bassLuthiers")}
+        lead={t("bass.lead")}
+        entries={sortCountryLuthiers(atlasName, bass).map(luthierEntry)}
       />
 
       <MakerSection
         title={t("instruments.violinLuthiers")}
         lead={t("violin.lead").replaceAll("{country}", name)}
-        entries={byName(violin).map(luthierEntry)}
+        entries={sortCountryLuthiers(atlasName, violin).map(luthierEntry)}
       />
 
       <MakerSection
-        title={t("instruments.bassLuthiers")}
-        lead={t("bass.lead")}
-        entries={byName(bass).map(luthierEntry)}
+        title={t("instruments.shops")}
+        lead={t("country.shopsLead").replace("{country}", name)}
+        entries={byName(shops).map(shopEntry)}
       />
-
-      {guitar.length ? (
-        <MakerSection
-          title={t("instruments.guitarLuthiers")}
-          lead={t("country.guitarLuthiersLead").replace("{country}", name)}
-          entries={byName(guitar).map(luthierEntry)}
-        />
-      ) : null}
     </main>
   );
 }

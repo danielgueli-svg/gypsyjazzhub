@@ -37,10 +37,10 @@ export function CountryMakersPreview({
   const cta = t("country.viewAllMakers").replace("{country}", countryName);
   const preview = pickPreview(shops, violin, bass, guitar);
   const bits = [
-    shops.length ? `${shops.length} ${t("instruments.shops").toLowerCase()}` : null,
-    violin.length ? `${violin.length} ${t("instruments.violinLuthiers").toLowerCase()}` : null,
-    bass.length ? `${bass.length} ${t("instruments.bassLuthiers").toLowerCase()}` : null,
     guitar.length ? `${guitar.length} ${t("instruments.guitarLuthiers").toLowerCase()}` : null,
+    bass.length ? `${bass.length} ${t("instruments.bassLuthiers").toLowerCase()}` : null,
+    violin.length ? `${violin.length} ${t("instruments.violinLuthiers").toLowerCase()}` : null,
+    shops.length ? `${shops.length} ${t("instruments.shops").toLowerCase()}` : null,
   ].filter(Boolean);
 
   return (
