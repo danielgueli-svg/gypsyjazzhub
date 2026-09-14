@@ -5,6 +5,8 @@ import { CircleNotes } from "@/components/history-circle";
 import { HistoryDoors } from "@/components/history-doors";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { listHistoryCircleNotes, type HistoryCircleNote } from "@/lib/hub-api";
+import { historyCopy } from "@/lib/history-copy";
+import { useI18n } from "@/lib/i18n";
 import { artistItunes, artistSpotify } from "@/lib/music";
 import { artistPhoto, groupPhoto } from "@/lib/photos";
 import { ROMANI_MUSIC_SITE } from "@/lib/romani-music";
@@ -533,14 +535,6 @@ const CHAPTERS = [
   },
 ] as const;
 
-const TOC = [
-  { id: "story", label: "Story" },
-  { id: "houses", label: "Houses" },
-  { id: "photographs", label: "Photographs" },
-  { id: "on-film", label: "On film" },
-  { id: "timeline", label: "Timeline" },
-] as const;
-
 const STORY_TITLES = [
   "Origins and the long road",
   "Life in Western Europe",
@@ -825,6 +819,8 @@ function initialOpen(): Record<string, boolean> {
 
 function HistoryPage() {
   const { notes } = Route.useLoaderData();
+  const { locale, t } = useI18n();
+  const copy = historyCopy(locale);
   const [open, setOpen] = useState(initialOpen);
 
   function setKey(key: string, value: boolean) {
@@ -861,13 +857,12 @@ function HistoryPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 scroll-pt-44 px-4 py-10 sm:px-6">
-      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Lineage</p>
+      <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{copy.kicker}</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">
-        History of Gypsy Jazz and the Sinti
+        {copy.title}
       </h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-        Gypsy jazz did not begin in a studio or a conservatory. It grew out of a
-        much older tradition carried by the Sinti across Europe.
+        {copy.lead}
       </p>
       <div className="mt-8">
         <HistoryDoors />
@@ -880,11 +875,11 @@ function HistoryPage() {
         <div className="flex items-center gap-3 sm:hidden">
           <details className="group min-w-0 flex-1">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-sm [&::-webkit-details-marker]:hidden">
-              <span className="text-[11px] tracking-[0.18em] text-faint uppercase">Chapters</span>
+              <span className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.chaptersNav}</span>
               <ChevronDown className="size-5 text-faint transition-transform group-open:rotate-180" aria-hidden="true" />
             </summary>
             <ul className="mt-1 divide-y divide-border border-t border-border">
-              {TOC.map((item) => (
+              {copy.toc.map((item) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
@@ -899,18 +894,18 @@ function HistoryPage() {
           </details>
           <div className="flex shrink-0 items-center gap-x-1 text-xs">
             <button type="button" onClick={expandAll} className="min-h-11 px-1 text-muted hover:text-fg">
-              Expand
+              {copy.expand}
             </button>
             <span className="text-faint" aria-hidden="true">
               /
             </span>
             <button type="button" onClick={collapseAll} className="min-h-11 px-1 text-muted hover:text-fg">
-              Collapse
+              {copy.collapse}
             </button>
           </div>
         </div>
         <ul className="hidden flex-wrap items-center gap-x-4 gap-y-1 sm:flex">
-          {TOC.map((item, i) => (
+          {copy.toc.map((item, i) => (
             <li key={item.id} className="flex items-center gap-x-4">
               {i > 0 ? <span className="text-faint" aria-hidden="true">·</span> : null}
               <a
@@ -925,32 +920,36 @@ function HistoryPage() {
         </ul>
         <div className="hidden flex-wrap items-center gap-x-2 text-sm sm:flex">
           <button type="button" onClick={expandAll} className="min-h-11 text-muted hover:text-fg">
-            Expand all
+            {copy.expandAll}
           </button>
           <span className="text-faint" aria-hidden="true">
             /
           </span>
           <button type="button" onClick={collapseAll} className="min-h-11 text-muted hover:text-fg">
-            Collapse all
+            {copy.collapseAll}
           </button>
         </div>
       </nav>
 
       <section id="story" className="mt-14 scroll-mt-44">
-        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">The reading</p>
-        <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Story</h2>
+        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.storyKicker}</p>
+        <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{copy.storyTitle}</h2>
         <div className="mt-8 max-w-2xl space-y-10">
-          {historyStorySections().map((section) => (
+          {historyStorySections().map((section) => {
+            const loc = copy.sections[section.title];
+            const title = loc?.title ?? section.title;
+            const body = loc?.body ?? section.body;
+            return (
             <article key={section.title} id={`story-${section.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-              <h3 className="font-display text-2xl font-semibold sm:text-3xl">{section.title}</h3>
-              {section.body.map((paragraph) => (
+              <h3 className="font-display text-2xl font-semibold sm:text-3xl">{title}</h3>
+              {body.map((paragraph) => (
                 <p key={paragraph} className="mt-3 text-base leading-relaxed text-muted">
                   {paragraph}
                 </p>
               ))}
               {section.title === "Django and the birth of a style" ? (
                 <p className="mt-3 text-sm text-muted">
-                  Full life:{" "}
+                  {copy.fullLife}{" "}
                   <Link to="/django" className="text-fg hover:underline">
                     Django Reinhardt
                   </Link>
@@ -961,23 +960,27 @@ function HistoryPage() {
                 </p>
               ) : null}
             </article>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       <section id="houses" className="mt-14 scroll-mt-44">
-        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">The families</p>
-        <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">Houses</h2>
+        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.housesKicker}</p>
+        <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">{copy.housesTitle}</h2>
         <CircleNotes
           house="paris"
           notes={[]}
           chooseHouse
-          cta="Add to a house"
+          cta={copy.addToHouse}
         />
         <ul className="mt-8 space-y-2">
           {HOUSES.map((house) => {
             const key = `house:${house.id}`;
             const isOpen = Boolean(open[key]);
+            const locHouse = copy.houses[house.id];
+            const houseName = locHouse?.name ?? house.name;
+            const houseLabel = locHouse?.label ?? house.label;
             return (
               <li key={house.id} id={`house-${house.id}`} className="scroll-mt-44">
                 <Fold
@@ -987,9 +990,9 @@ function HistoryPage() {
                   summary={
                     <div className="flex min-h-12 items-center justify-between gap-3 py-5">
                       <div>
-                        <h3 className="font-display text-2xl font-semibold sm:text-3xl">{house.name}</h3>
-                        {house.label && !isOpen ? (
-                          <p className="mt-1 text-sm text-muted">{house.label}</p>
+                        <h3 className="font-display text-2xl font-semibold sm:text-3xl">{houseName}</h3>
+                        {houseLabel && !isOpen ? (
+                          <p className="mt-1 text-sm text-muted">{houseLabel}</p>
                         ) : null}
                       </div>
                       <ChevronDown
@@ -1000,14 +1003,17 @@ function HistoryPage() {
                   }
                 >
                   <div className="pb-8">
-                    {house.label ? <p className="mb-5 text-sm leading-relaxed text-muted">{house.label}</p> : null}
+                    {houseLabel ? <p className="mb-5 text-sm leading-relaxed text-muted">{houseLabel}</p> : null}
                     {house.essays.map((title) => {
                       const essay = sectionByTitle(title);
                       if (!essay) return null;
+                      const loc = copy.sections[essay.title];
+                      const heading = loc?.title ?? essay.title;
+                      const paras = loc?.body ?? essay.body;
                       return (
                         <article key={title} className="mb-8 max-w-2xl">
-                          <h4 className="font-display text-xl font-semibold">{essay.title}</h4>
-                          {essay.body.map((paragraph) => (
+                          <h4 className="font-display text-xl font-semibold">{heading}</h4>
+                          {paras.map((paragraph) => (
                             <p key={paragraph} className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
                               {paragraph}
                             </p>
@@ -1019,10 +1025,14 @@ function HistoryPage() {
                       {house.people.map((name) => {
                         const figure = figureByName(name);
                         if (!figure) return null;
+                        const shown =
+                          figure.to === "/django"
+                            ? { ...figure, body: copy.djangoBody, youtubeNote: copy.djangoYoutube }
+                            : figure;
                         return (
                           <li key={figure.name}>
                             <FigureRow
-                              figure={figure}
+                              figure={shown}
                               open={Boolean(open[`fig:${figure.name}`])}
                               onOpenChange={(next) => setKey(`fig:${figure.name}`, next)}
                             />
@@ -1033,8 +1043,8 @@ function HistoryPage() {
                     <CircleNotes
                       house={house.id}
                       notes={notesFor(house.id)}
-                      cta="Add to this house"
-                      empty="Add a name, a memory or a date."
+                      cta={copy.addToThisHouse}
+                      empty={copy.addMemory}
                     />
                   </div>
                 </Fold>
@@ -1045,14 +1055,12 @@ function HistoryPage() {
       </section>
 
       <section id="photographs" className="mt-14 scroll-mt-44">
-        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">From the archives</p>
+        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.photosKicker}</p>
         <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-          Photographs
+          {copy.photosTitle}
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-          Real scans — not generated pictures. William P. Gottlieb’s 1946
-          Aquarium session is public domain (Library of Congress). The later
-          photographs are used under the licences named on each frame.
+          {copy.photosLead}
         </p>
         <ul className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0 lg:grid-cols-7">
           {ARCHIVE.map((shot) => (
@@ -1072,21 +1080,18 @@ function HistoryPage() {
         <CircleNotes
           house="photographs"
           notes={notesFor("photographs")}
-          cta="Suggest a photograph"
+          cta={copy.suggestPhoto}
           defaultKind="Photograph"
         />
       </section>
 
       <section id="on-film" className="mt-14 scroll-mt-44">
-        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">On film, before 1960</p>
+        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.filmKicker}</p>
         <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-          Django and Grappelli
+          {copy.filmTitle}
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          Almost no camera found them. This is the old footage — the 1939 film
-          of the two together, the 1937 record, Nuages from the war, and the
-          1949 reunion in Rome. Grappelli lived long enough to be filmed later;
-          these clips stay before 1960.
+          {copy.filmLead}
         </p>
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {FILMS.map((film) => {
@@ -1105,7 +1110,7 @@ function HistoryPage() {
                     onOpenChange={(next) => setKey(key, next)}
                     summary={
                       <span className="flex min-h-11 items-center gap-2 text-sm text-muted hover:text-fg">
-                        About this clip
+                        {copy.aboutClip}
                         <ChevronDown
                           className={`size-4 text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}
                           aria-hidden="true"
@@ -1113,7 +1118,7 @@ function HistoryPage() {
                       </span>
                     }
                   >
-                    <p className="pb-1 text-sm leading-relaxed text-muted">{film.note}</p>
+                    <p className="pb-1 text-sm leading-relaxed text-muted">{copy.films[film.url] ?? film.note}</p>
                   </Fold>
                 </figcaption>
               </figure>
@@ -1123,14 +1128,17 @@ function HistoryPage() {
       </section>
 
       <section id="timeline" className="mt-14 scroll-mt-44">
-        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">The public music</p>
+        <p className="text-[11px] tracking-[0.18em] text-faint uppercase">{copy.timelineKicker}</p>
         <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-          From the bals musette to Samois
+          {copy.timelineTitle}
         </h2>
         <ol className="mt-10">
           {CHAPTERS.map((chapter) => {
             const key = `tl:${chapter.year}`;
             const isOpen = Boolean(open[key]);
+            const loc = copy.chapters[chapter.year];
+            const title = loc?.title ?? chapter.title;
+            const body = loc?.body ?? chapter.body;
             return (
               <li key={chapter.year} id={`timeline-${chapter.year.replace(/\s+/g, "-").toLowerCase()}`}>
                 <Fold
@@ -1144,7 +1152,7 @@ function HistoryPage() {
                       </p>
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="font-display text-2xl font-semibold sm:text-3xl">
-                          {chapter.title}
+                          {title}
                         </h3>
                         <ChevronDown
                           className={`mt-2 size-5 shrink-0 text-faint transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
@@ -1161,7 +1169,7 @@ function HistoryPage() {
                         <p className="mb-3 text-sm text-muted">
                           {djangoHeavy(chapter.year) ? (
                             <>
-                              Full life:{" "}
+                              {copy.fullLife}{" "}
                               <Link to="/django" className="text-fg hover:underline">
                                 Django Reinhardt
                               </Link>
@@ -1170,7 +1178,7 @@ function HistoryPage() {
                           {djangoHeavy(chapter.year) && grappelliHeavy(chapter.year) ? " · " : null}
                           {grappelliHeavy(chapter.year) ? (
                             <>
-                              {djangoHeavy(chapter.year) ? null : "Full life: "}
+                              {djangoHeavy(chapter.year) ? null : `${copy.fullLife} `}
                               <Link to="/grappelli" className="text-fg hover:underline">
                                 Stéphane Grappelli
                               </Link>
@@ -1178,7 +1186,7 @@ function HistoryPage() {
                           ) : null}
                         </p>
                       ) : null}
-                      {chapter.body.map((paragraph) => (
+                      {body.map((paragraph) => (
                         <p key={paragraph} className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
                           {paragraph}
                         </p>
@@ -1193,12 +1201,10 @@ function HistoryPage() {
       </section>
 
       <div className="mt-14 rounded-2xl bg-surface p-5 shadow-border sm:p-8">
-        <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Archive</p>
-        <h2 className="mt-2 font-display text-3xl font-semibold">The country archive</h2>
+        <p className="text-[11px] tracking-[0.16em] text-faint uppercase">{copy.archiveKicker}</p>
+        <h2 className="mt-2 font-display text-3xl font-semibold">{copy.archiveTitle}</h2>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          The essay stays here. The long lists — family houses, older orchestras, past chairs — live
-          in the archive, one country at a time. Pick a country. Signed-in members can add a name;
-          it waits on the owner desk.
+          {copy.archiveBody}
         </p>
         <p className="mt-4">
           <a href={ROMANI_MUSIC_SITE} className="text-sm font-medium text-accent hover:underline">
@@ -1208,7 +1214,7 @@ function HistoryPage() {
       </div>
 
       <p className="mt-10 max-w-2xl text-base leading-relaxed text-muted">
-        Want more history? Go to{" "}
+        {copy.moreHistory}{" "}
         <a href={ROMANI_MUSIC_SITE} className="text-fg hover:underline" rel="noreferrer">
           www.romanimusic.com
         </a>
@@ -1217,13 +1223,13 @@ function HistoryPage() {
 
       <div className="mt-14 flex flex-wrap gap-3 text-sm">
         <Link to="/musicians" className="text-muted hover:text-fg">
-          Festival artists
+          {copy.festivalArtists}
         </Link>
         <Link to="/legends" className="text-muted hover:text-fg">
-          All legends
+          {t("nav.legends")}
         </Link>
         <Link to="/concerts" className="text-muted hover:text-fg">
-          Concerts
+          {t("nav.concerts")}
         </Link>
       </div>
     </main>
