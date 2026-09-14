@@ -50,6 +50,16 @@ function readVars(path) {
 const prevVars = readVars(process.env.CF_PREV_WRANGLER);
 const cfg = JSON.parse(readFileSync(wranglerPath, "utf8"));
 cfg.name = "gypsyjazzhub";
+// Workers Logs / Query Builder — keep on so outages are debuggable.
+cfg.observability = {
+  enabled: true,
+  head_sampling_rate: 1,
+  logs: {
+    enabled: true,
+    invocation_logs: true,
+    head_sampling_rate: 1,
+  },
+};
 cfg.vars = {
   ...prevVars,
   ...(cfg.vars || {}),

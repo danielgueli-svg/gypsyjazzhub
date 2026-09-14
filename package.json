@@ -10,6 +10,8 @@
     "dev": "vite dev --host 0.0.0.0 --port 8080",
     "dev:local": "vite dev --host 127.0.0.1 --port 3000",
     "build": "npm run sitemap && vite build && node scripts/patch-ssr-exports.mjs && npm run db:migrate",
+    "build:cf": "GROK_CF_WORKER=1 npm run build && node scripts/cf-prep.mjs",
+    "deploy:cf": "npm run build:cf && npx wrangler deploy --config .output/server/wrangler.json",
     "db:migrate": "node scripts/migrate.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",

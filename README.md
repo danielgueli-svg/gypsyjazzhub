@@ -2,6 +2,8 @@
 
 Community site for Gypsy jazz / jazz manouche: jams, concerts, festivals, musicians, groups, instruments, Learn, History, News, and a spinning globe.
 
+**Live site:** https://www.gypsyjazzhub.com (Cloudflare Worker `gypsyjazzhub`)
+
 This folder is ready to open in **Cursor**.
 
 ## Open in Cursor
@@ -28,8 +30,10 @@ npm run dev:local
 | App | TanStack Start (file routes in `src/routes`) |
 | UI | React 19, Tailwind 4, Radix |
 | Data | TypeScript catalogs in `src/lib/` + SQL in `migrations/` |
-| DB | PGLite (local, no setup) or Postgres/Neon via `DATABASE_URL` |
+| DB (local) | PGLite (no setup) |
+| DB (live) | HubDb SQLite on a Cloudflare Durable Object |
 | Auth | Better Auth (`src/lib/auth/`). Email/password is on. OAuth needs broker env vars. |
+| Host | Cloudflare Workers — see `DEPLOY.md` |
 
 ## Layout
 
@@ -37,7 +41,7 @@ npm run dev:local
 src/routes/          pages (index, world, jams, concerts, musicians, history, news, learn, studio)
 src/lib/             catalogs, geo, i18n, db, auth, hub API
 src/components/      header, globe, country pages, UI
-migrations/          Postgres / PGLite schema
+migrations/          PGLite (local/CI) + HubDb-compatible schema
 public/              photos, og image, favicon
 ```
 
@@ -45,7 +49,7 @@ Owner tools: `/studio` and `/studio/owner`.
 
 ## Env
 
-Copy `.env.example`. Empty file is enough for a first local run (PGLite). For a real database and login on the public site, set `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
+Copy `.env.example`. Empty file is enough for a first local run (PGLite). Production auth secrets live on the Cloudflare Worker (not Neon).
 
 ## Scripts
 
@@ -53,13 +57,17 @@ Copy `.env.example`. Empty file is enough for a first local run (PGLite). For a 
 npm run dev          # preview on :8080
 npm run dev:local    # Cursor on :3000
 npm run build
+npm run build:cf     # Cloudflare Worker bundle + cf-prep
+npm run deploy:cf    # build:cf + wrangler deploy (needs auth)
+npm run site-check:live
 npm run typecheck
-npm run db:migrate
 ```
 
 ## Deploy
 
-`vercel.json` is included. Set `DATABASE_URL` on the host. Cron paths: `/api/digest`, `/api/alerts`, `/api/facebook-import`, `/api/djangobooks-import`.
+Production is **Cloudflare Workers**, not Vercel. Full checklist: **`DEPLOY.md`**.
+
+`vercel.json` is leftover and unused for the public site. DNS redirects and Worker crons are configured on Cloudflare (`scripts/cf-prep.mjs`).
 
 ## Facts
 

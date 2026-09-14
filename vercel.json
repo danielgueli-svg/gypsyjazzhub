@@ -1,34 +1,3 @@
 {
-  "crons": [
-    {
-      "path": "/api/digest",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/alerts",
-      "schedule": "15 6 * * *"
-    },
-    {
-      "path": "/api/facebook-import",
-      "schedule": "0 7 * * 1"
-    },
-    {
-      "path": "/api/djangobooks-import",
-      "schedule": "20 7 * * 1"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "gypsyjazzhub.com" }],
-      "destination": "https://www.gypsyjazzhub.com/",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "gypsyjazzhub.com" }],
-      "destination": "https://www.gypsyjazzhub.com/:path*",
-      "permanent": true
-    }
-  ]
+  "_comment": "Legacy unused file. Production is Cloudflare Worker gypsyjazzhub — see DEPLOY.md. DNS redirects and crons are not managed here."
 }
