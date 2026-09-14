@@ -19,24 +19,24 @@ type Copy = {
 };
 
 const EN: Copy = {
-  kicker: "Bucharest house",
+  kicker: "Bucharest venue",
   title: "Grădina Alhambra",
   subtitle: "Historic garden, 1916 — gypsy jazz nights only on this hub.",
-  lead: "Grădina Alhambra is a restaurant and garden hall on Strada Constantin Mille 13. Django Sound Quartet have played Gypsy Jazz Lăutăresc here. It is not a weekly jam, and it is not a Hot Club house.",
+  lead: "Grădina Alhambra is a restaurant and garden hall on Strada Constantin Mille 13. Django Sound Quartet have played Gypsy Jazz Lăutăresc here. It is not a weekly jam, and it is not a Hot Club venue.",
   mixNote:
     "Their own calendar mixes cabaret, tribute nights and parties. This page lists only gypsy jazz / jazz manouche bills — not the rest of the programme.",
   siblingNote: "Not the Dutch concert series Stichting Alhambra in Alkmaar — that organisation has its own page.",
   aboutTitle: "The house",
   about: [
-    "The garden opened in 1916 as a summer theatre. After a long closure it reopened as an eat-drink-dance room in the old building. Reservations: rezervari@gradinaalhambra.ro / +40 726 581 985.",
+    "The garden opened in 1916 as a summer theatre. After a long closure it reopened as an eat-drink-dance venue in the old building. Reservations: rezervari@gradinaalhambra.ro / +40 726 581 985.",
     "Bucharest’s working manouche stand is Django Sound Quartet — Constantin Mirea violin, Florin Pană accordion, Cristian Mirea bass. They also play Trattoria Monza and The Great Hill. Dates are posted with the band, not as a standing night here.",
   ],
   nightsTitle: "Gypsy jazz nights",
   nightsLead: "Only Hot Club / manouche / lăutăresc bills. Ask the quartet before you travel.",
   noneUpcoming:
-    "No gypsy jazz night is posted for this house after the last confirmed date. Watch the quartet and gradinaalhambra.ro — do not assume a weekly session.",
+    "No gypsy jazz night is posted for this venue after the last confirmed date. Watch the quartet and gradinaalhambra.ro — do not assume a weekly session.",
   archiveTitle: "Last confirmed night",
-  houseTitle: "Find the door",
+  houseTitle: "Address",
   address: "Strada Constantin Mille 13, 030167 Bucharest, Romania",
   siteLabel: "gradinaalhambra.ro",
   groupTitle: "Who played the manouche bill",
@@ -45,7 +45,7 @@ const EN: Copy = {
 
 const NL: Copy = {
   ...EN,
-  kicker: "Huis in Boekarest",
+  kicker: "Zaal in Boekarest",
   subtitle: "Historische tuin, 1916 — op deze hub alleen gypsy-jazzavonden.",
   lead: "Grădina Alhambra is een restaurant en tuinzal op Strada Constantin Mille 13. Django Sound Quartet speelde hier Gypsy Jazz Lăutăresc. Geen wekelijkse jam, geen vast Hot Club-huis.",
   mixNote:

@@ -532,14 +532,14 @@ export const HISTORY_GAP_STORY: Record<string, Record<string, HistoryBlock>> = {
     "What to call it": {
       title: "Hoe je het noemt",
       body: [
-        "De families wachtten niet op een criticus die de muziek een naam gaf. Op platen ging het later gypsy jazz heten, of jazz manouche. Gypsy is het woord van buiten. Sinti, in de Duitstalige landen, en Manouche, in Frankrijk, zijn de woorden die veel families voor zichzelf gebruiken. Dit huis is geen Balkanbrass, geen flamenco, geen Hongaars restaurantorkest, ook als die kleuren door dezelfde handen gaan. Het is Sinti- en Manouche-muziek, in de jaren dertig gebouwd op ouder familiespel, en nog steeds bewoond.",
+        "De families wachtten niet op een criticus die de muziek een naam gaf. Op platen ging het later gypsy jazz heten, of jazz manouche. Gypsy is het woord van buiten. Sinti, in de Duitstalige landen, en Manouche, in Frankrijk, zijn de woorden die veel families voor zichzelf gebruiken. Deze muziek is geen Balkanbrass, geen flamenco, geen Hongaars restaurantorkest — ook als die kleuren door dezelfde handen gaan. Het is Sinti- en Manouche-muziek, in de jaren dertig gebouwd op ouder familiespel, en nog steeds levend.",
       ],
     },
     "The guitar and the pompe": {
       title: "De gitaar en de pompe",
       body: [
         "De stijl heeft een lichaam dat je vast kunt houden. Begin jaren dertig tekende Mario Maccaferri een stalen-snarengitaar voor de Selmer-winkel in Parijs: een cutaway, een binnenresonator, eerst een brede D-klankopening, later een kleinere ovaal. Maccaferri verliet de firma in 1933. Selmer hield het ovaal-model. Django speelde het. De gitaar was luid genoeg voor een danszaal zonder pickup. Spelers van deze muziek zoeken die vorm nog, of een eerlijke kopie.",
-        "De rechterhand van de ritmegitaar is la pompe. Een downstroke die landt als een bassdrum, een lichte vangst als een snare, geen drummer nodig. Niemand leert het van een bladzijde. Je kijkt naar een oom tot de zaal vastzit, dan kunnen viool en leadgitaar de grond verlaten.",
+        "De rechterhand van de ritmegitaar is la pompe. Een downstroke die landt als een bassdrum, een lichte vangst als een snare, geen drummer nodig. Niemand leert het van een bladzijde. Je kijkt naar een oom tot de groove vastzit, dan kunnen viool en leadgitaar los.",
       ],
     },
     "The war against the Sinti": {
@@ -583,14 +583,14 @@ export const HISTORY_GAP_STORY: Record<string, Record<string, HistoryBlock>> = {
     "What to call it": {
       title: "Comment l’appeler",
       body: [
-        "Les familles n’ont pas attendu un critique pour nommer la musique. Les disques ont dit plus tard gypsy jazz, ou jazz manouche. Gypsy est le mot du dehors. Sinti, dans les pays germanophones, et Manouche, en France, sont les mots que beaucoup de familles emploient pour elles-mêmes. Cette maison n’est pas le brass des Balkans, ni le flamenco, ni l’orchestre de restaurant hongrois, même quand ces couleurs passent par les mêmes mains. C’est une musique sinté et manouche, bâtie dans les années 1930 sur un jeu de famille plus ancien, et encore habitée.",
+        "Les familles n’ont pas attendu un critique pour nommer la musique. Les disques ont dit plus tard gypsy jazz, ou jazz manouche. Gypsy est le mot du dehors. Sinti, dans les pays germanophones, et Manouche, en France, sont les mots que beaucoup de familles emploient pour elles-mêmes. Cette musique n’est pas le brass des Balkans, ni le flamenco, ni l’orchestre de restaurant hongrois — même quand ces couleurs passent par les mêmes mains. C’est une musique sinté et manouche, bâtie dans les années 1930 sur un jeu de famille plus ancien, et encore vivante.",
       ],
     },
     "The guitar and the pompe": {
       title: "La guitare et la pompe",
       body: [
         "Le style a un corps qu’on peut tenir. Au début des années 1930 Mario Maccaferri dessine une guitare à cordes acier pour Selmer à Paris : un cutaway, un résonateur interne, d’abord une large ouïe en D, plus tard un ovale plus petit. Maccaferri quitte la maison en 1933. Selmer garde le modèle à ouïe ovale. Django le joue. La guitare porte assez fort pour une salle de danse sans micro. Les joueurs de cette musique cherchent encore cette forme, ou une copie honnête.",
-        "La main droite de la guitare rythme, c’est la pompe. Un downstroke qui tombe comme une grosse caisse, une reprise légère comme une caisse claire, pas besoin de batteur. Personne ne l’apprend sur une page. On regarde un oncle jusqu’à ce que la salle se verrouille, alors le violon et la guitare solo peuvent quitter le sol.",
+        "La main droite de la guitare rythme, c’est la pompe. Un downstroke qui tombe comme une grosse caisse, une reprise légère comme une caisse claire, pas besoin de batteur. Personne ne l’apprend sur une page. On regarde un oncle jusqu’à ce que le groove se verrouille, alors le violon et la guitare solo peuvent décoller.",
       ],
     },
     "The war against the Sinti": {

@@ -526,7 +526,7 @@ export const NEWS: NewsItem[] = [
   {
     slug: "africa-manouche-2026",
     date: "2026-09-03",
-    title: "Africa — Gypsy Jazz is rare; South Africa holds the chairs",
+    title: "Gypsy jazz is rare in Africa. South Africa is where most of it lives.",
     body: "Dedicated Gypsy Jazz open jams are essentially nonexistent across Africa. The style stays niche and European. South Africa has the only standing scene: Hot Club d’Afrique in Johannesburg (all-acoustic, founded 2008), Hot Club of Cape Town, Tarabu in the Winelands, and Manouche in Cape Town — performance groups for venues, festivals and hire, not open jams. Morocco has seen occasional Django homage concerts (Royal Symphony Orchestra Jazz Band, Casablanca and Rabat, 2024). Egypt, Senegal, Nigeria, Kenya, Ghana and Ethiopia have no posted Manouche jam. General jazz jams in Cape Town, Johannesburg, Cairo and Dakar are not Hot Club nights.",
     kind: "scene",
     artistSlugs: [],

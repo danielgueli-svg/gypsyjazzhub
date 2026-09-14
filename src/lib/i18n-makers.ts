@@ -2,7 +2,7 @@
 export const MAKERS_UI: Record<string, Record<string, string>> = {
   en: {
     "country.makers": "Luthiers & shops",
-    "country.makersLead": "Workshops and shops in {country} — guitar, violin, double bass.",
+    "country.makersLead": "Luthiers and shops in {country} — guitar, violin, double bass.",
     "country.viewAllMakers": "View all luthiers & shops in {country}",
     "country.makersMore": "More entries will be added as the database grows.",
     "instruments.shops": "Gypsy jazz guitar shops",

@@ -95,7 +95,7 @@ const EN: HistoryChrome = {
     "The Claridge and the Club": {
       title: "The Claridge and the Club",
       body: [
-        "In the summer of 1934 Django and Grappelli were already in Louis Vola’s band at the Hôtel Claridge on the Champs-Élysées. After the paid set they kept playing in a side room. Pierre Nourry and Charles Delaunay, from the Hot Club de France — a listeners’ society around Hugues Panassié — heard it and pushed them to become a group. The first sides that winter sometimes went out as “Delaunay’s Jazz.” The musicians made the music. The Club gave it a door and, later, the Swing label that carried the records.",
+        "In the summer of 1934 Django and Grappelli were already in Louis Vola’s band at the Hôtel Claridge on the Champs-Élysées. After the paid set they kept playing in a side room. Pierre Nourry and Charles Delaunay, from the Hot Club de France — a listeners’ society around Hugues Panassié — heard it and pushed them to become a group. The first sides that winter sometimes went out as “Delaunay’s Jazz.” The musicians made the music. The Club gave it a name, a stage, and later the Swing label that carried the records.",
       ],
     },
     "After Django — a living tradition": {

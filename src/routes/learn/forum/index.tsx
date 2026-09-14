@@ -42,8 +42,8 @@ function ForumPage() {
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Learn</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Forum</h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-        Ask about pompe, camps, charts, where to sit in. Anyone can read.
-        To start a topic or reply, join the hub.
+        Ask about pompe, camps, charts, or where to sit in on a jam. Anyone can read.
+        Join the hub to start a topic or reply.
       </p>
 
       <ul className="mt-10 divide-y divide-border rounded-2xl bg-surface shadow-border">

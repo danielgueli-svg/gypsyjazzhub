@@ -137,7 +137,7 @@ export function applyEeJamScan(jams: Jam[]): Jam[] {
       };
     }
     if (jam.slug === "manuska-jam-club") {
-      return { ...jam, when: "Weekly — room posted", nextStartsAt: "2026-09-16T17:00:00.000Z" };
+      return { ...jam, when: "Weekly — venue posted", nextStartsAt: "2026-09-16T17:00:00.000Z" };
     }
     if (jam.slug === "gypsy-jazz-club-belgrade") {
       return { ...jam, nextStartsAt: "2026-09-16T20:00:00.000Z" };

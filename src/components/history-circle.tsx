@@ -87,8 +87,8 @@ export function CircleNotes({
 
   return (
     <div className="mt-6">
-      <p className="text-[11px] tracking-[0.18em] text-faint uppercase">From the circle</p>
-      <p className="mt-1 text-xs text-faint">Logged in. Every change waits on the owner desk.</p>
+      <p className="text-[11px] tracking-[0.18em] text-faint uppercase">From the community</p>
+      <p className="mt-1 text-xs text-faint">Logged in. Edits wait for approval.</p>
       {notes.length === 0 ? (
         empty ? <p className="mt-2 text-sm text-muted">{empty}</p> : null
       ) : (

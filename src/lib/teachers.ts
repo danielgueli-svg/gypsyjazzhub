@@ -59,7 +59,7 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     region: "Nordrhein-Westfalen",
     city: "Mönchengladbach",
     artistSlug: "joscho-stephan",
-    note: "Joscho Stephan Gypsy Guitar Academy — technique, repertoire and the German concert-school take on Django’s guitar. Online worldwide.",
+    note: "Joscho Stephan Gypsy Guitar Academy — technique, repertoire, and a concert-ready take on Django’s guitar. Online worldwide.",
   },
   {
     countrySlug: "netherlands",
@@ -69,7 +69,7 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     region: "Noord-Brabant",
     city: "Helmond",
     artistSlug: "stochelo-rosenberg",
-    note: "Rosenberg Academy — the Rosenberg family’s school. Stochelo and the Dutch Sinti chair, taught so amateurs anywhere can work the pompe and the lead language.",
+    note: "Rosenberg Academy — the Rosenberg family’s school. Stochelo and the Dutch Sinti tradition, taught so amateurs anywhere can work the pompe and the lead lines.",
   },
   {
     countrySlug: "portugal",

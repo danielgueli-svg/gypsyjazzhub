@@ -68,7 +68,7 @@ const SECTIONS = [
   {
     title: "What to call it",
     body: [
-      "The families did not wait for a critic to name the music. Records later said gypsy jazz, or jazz manouche. Gypsy is the outside word. Sinti, in the German-speaking lands, and Manouche, in France, are the words many of the families use for themselves. This house is not Balkan brass, not flamenco, not the Hungarian restaurant orchestra, even when those colours pass through the same hands. It is a Sinti and Manouche music, built in the 1930s on older family playing, and still lived in.",
+      "The families did not wait for a critic to name the music. Records later said gypsy jazz, or jazz manouche. Gypsy is the outside word. Sinti, in the German-speaking lands, and Manouche, in France, are the words many of the families use for themselves. This music is not Balkan brass, not flamenco, not the Hungarian restaurant orchestra — even when those colours pass through the same hands. It is Sinti and Manouche music, built in the 1930s on older family playing, and still alive.",
     ],
   },
   {
@@ -80,14 +80,14 @@ const SECTIONS = [
   {
     title: "The Claridge and the Club",
     body: [
-      "In the summer of 1934 Django and Grappelli were already in Louis Vola’s band at the Hôtel Claridge on the Champs-Élysées. After the paid set they kept playing in a side room. Pierre Nourry and Charles Delaunay, from the Hot Club de France — a listeners’ society around Hugues Panassié — heard it and pushed them to become a group. The first sides that winter sometimes went out as “Delaunay’s Jazz.” The musicians made the music. The Club gave it a door and, later, the Swing label that carried the records.",
+      "In the summer of 1934 Django and Grappelli were already in Louis Vola’s band at the Hôtel Claridge on the Champs-Élysées. After the paid set they kept playing in a side room. Pierre Nourry and Charles Delaunay, from the Hot Club de France — a listeners’ society around Hugues Panassié — heard it and pushed them to become a group. The first sides that winter sometimes went out as “Delaunay’s Jazz.” The musicians made the music. The Club gave it a name, a stage, and later the Swing label that carried the records.",
     ],
   },
   {
     title: "The guitar and the pompe",
     body: [
       "The style has a body you can hold. In the early 1930s Mario Maccaferri drew a steel-string guitar for the Selmer shop in Paris: a cutaway, an internal resonator, first a wide D-shaped soundhole, later a smaller oval. Maccaferri left the firm in 1933. Selmer kept the oval-hole model. Django played it. The guitar was loud enough for a dance room with no pickup. Players of this music still look for that shape, or an honest copy of it.",
-      "The rhythm guitar’s right hand is la pompe. A down-stroke that lands like a bass drum, a light catch like a snare, no drummer required. Nobody learns it from a page. You watch an uncle until the room locks, then the violin and the lead guitar can leave the ground.",
+      "The rhythm guitar’s right hand is la pompe. A down-stroke that lands like a bass drum, a light catch like a snare, no drummer required. Nobody learns it from a page. You watch an uncle until the groove locks, then the violin and the lead guitar can take off.",
     ],
   },
   {

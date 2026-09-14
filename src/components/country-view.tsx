@@ -146,11 +146,11 @@ export function CountryView({
         {" · "}
         {venues.length} venue{venues.length === 1 ? "" : "s"}
         {" · "}
-        {guitarLuthiers.length} luthier{guitarLuthiers.length === 1 ? "" : "s"}
+        {guitarLuthiers.length} guitar luthier{guitarLuthiers.length === 1 ? "" : "s"}
         {" · "}
-        {bassLuthiers.length} bass workshop{bassLuthiers.length === 1 ? "" : "s"}
+        {bassLuthiers.length} bass luthier{bassLuthiers.length === 1 ? "" : "s"}
         {" · "}
-        {violinLuthiers.length} violin workshop{violinLuthiers.length === 1 ? "" : "s"}
+        {violinLuthiers.length} violin luthier{violinLuthiers.length === 1 ? "" : "s"}
         {" · "}
         {shops.length} shop{shops.length === 1 ? "" : "s"}
       </p>

@@ -30,9 +30,11 @@ function JoinPage() {
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
         {t("join.lead1")}
       </p>
-      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-        {t("join.lead2")}
-      </p>
+      {t("join.lead2") ? (
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+          {t("join.lead2")}
+        </p>
+      ) : null}
 
       <div className="mt-12 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <ol className="space-y-6">

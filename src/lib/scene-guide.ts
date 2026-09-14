@@ -24,7 +24,7 @@ export const SCHOOLS: School[] = [
     place: "Japan — online worldwide",
     url: "https://www.dc-musicschool.com/",
     relatedSlugs: ["denis-chang"],
-    bio: "Denis Chang’s school. Lessons, transcriptions and a YouTube library that has become the first room many amateurs walk into. He lives in Japan; the school is online.",
+    bio: "Denis Chang’s school. Lessons, transcriptions and a YouTube library — often the first place amateurs start. He lives in Japan; the school is online.",
     online: true,
   },
   {
@@ -32,7 +32,7 @@ export const SCHOOLS: School[] = [
     place: "Germany — online worldwide",
     url: "https://gypsyguitaracademy.com/",
     relatedSlugs: ["joscho-stephan"],
-    bio: "Joscho Stephan's academy — technique, repertoire and the German concert-school take on Django's guitar.",
+    bio: "Joscho Stephan's academy — technique, repertoire, and a concert-ready take on Django’s guitar.",
     online: true,
   },
   {
@@ -90,7 +90,7 @@ export const SCHOOLS: School[] = [
     place: "Netherlands — online worldwide",
     url: "https://rosenbergacademy.com/",
     relatedSlugs: ["stochelo-rosenberg", "mozes-rosenberg"],
-    bio: "The Rosenberg family's school. Stochelo and the Dutch Sinti chair, taught so amateurs anywhere can work the pompe and the lead language.",
+    bio: "The Rosenberg family's school. Stochelo and the Dutch Sinti tradition, taught so amateurs anywhere can work the pompe and the lead lines.",
     online: true,
   },
   {
