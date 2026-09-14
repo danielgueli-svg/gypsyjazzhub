@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ConcertNightPanel } from "@/components/i-was-there";
+import { ConcertEdit } from "@/components/concert-edit";
 import { GoingRsvp } from "@/components/going-rsvp";
 import { CountryLabel } from "@/components/country-label";
 import { listingSource } from "@/components/concert-row";
@@ -139,6 +139,9 @@ function ConcertNightPage() {
       ) : null}
 
       <GoingRsvp kind="concert" targetId={concert.id} returnTo={`/concerts/${concert.id}`} />
+      <div className="mt-4">
+        <ConcertEdit concert={concert} />
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         <SubscribeButton

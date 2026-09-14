@@ -16,7 +16,7 @@ import { whenLabel } from "@/lib/festival-copy";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { listHubCountries } from "@/lib/country-requests";
 import { latestNews } from "@/lib/music";
-import { catalogJams, compareJamsByCadence, isFrontJam, type Jam } from "@/lib/jams";
+import { catalogJams, compareJamsByCadence, isFrontJam, overlayJamList, type Jam } from "@/lib/jams";
 import { pageHead, SEO } from "@/lib/seo";
 import { settle } from "@/lib/settle";
 
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
     return {
       concerts: upcoming.slice(0, 5),
       camps: upcomingCamps().slice(0, 5),
-      jams: catalogJams().filter(isFrontJam),
+      jams: overlayJamList(catalogJams(), hubJams).filter(isFrontJam),
       news: latestNews(20)
         .filter((item) => item.kind !== "album")
         .slice(0, 5),

@@ -394,6 +394,7 @@ function memoRows<T>(ttlMs: number) {
 
 const hubJamsMemo = memoRows<Jam>(20_000);
 const hubFestivalsMemo = memoRows<Festival>(20_000);
+const hubConcertsMemo = memoRows<Concert>(20_000);
 
 function mapHubConcert(row: {
   id: number;
@@ -539,22 +540,26 @@ export const listHubConcerts = createServerFn({ method: "GET" })
   .validator((slug?: string) => slug ?? "")
   .handler(async ({ data: slug }) => {
     try {
-    await ensureHub();
-    const sql = await getSql();
-    const rows = slug
-      ? await sql<Parameters<typeof mapHubConcert>[0]>`
-          select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
-          from hub_concerts
-          where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
-          order by starts_at asc
-        `
-      : await sql<Parameters<typeof mapHubConcert>[0]>`
-          select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
-          from hub_concerts
-          where coalesce(status, 'published') = 'published'
-          order by starts_at asc
-        `;
-    return rows.map(mapHubConcert);
+      const load = async () => {
+        await ensureHub();
+        const sql = await getSql();
+        const rows = slug
+          ? await sql<Parameters<typeof mapHubConcert>[0]>`
+              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
+              from hub_concerts
+              where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
+              order by starts_at asc
+            `
+          : await sql<Parameters<typeof mapHubConcert>[0]>`
+              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
+              from hub_concerts
+              where coalesce(status, 'published') = 'published'
+              order by starts_at asc
+            `;
+        return rows.map(mapHubConcert);
+      };
+      if (!slug) return await hubConcertsMemo(load);
+      return await load();
     } catch (err) {
       console.error("listHubConcerts db failed", err);
       return [];
@@ -857,10 +862,80 @@ export const addHubConcert = createServerFn({ method: "POST" })
         ${context.userId}, ${name}, ${gate.status}
       )
     `;
+    hubConcertsMemo.bust();
     return { ok: true as const, pending: gate.pending };
   });
 
-export const addHubClip = createServerFn({ method: "POST" })
+export const updateHubConcert = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    (input: {
+      id: string;
+      artistSlug: string;
+      artistName: string;
+      title: string;
+      venue: string;
+      city: string;
+      country: string;
+      startsAt: string;
+      note: string;
+    }) => input,
+  )
+  .handler(async ({ context, data }) => {
+    await ensureHub();
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const gate = await gateContribution(context.userId, { sessionTrusted: true });
+    if (gate.skip) return { ok: true as const, pending: true as const };
+    const title = data.title.trim();
+    const country = data.country.trim();
+    const artistSlug = data.artistSlug.trim();
+    if (!title) throw new Error("Give the concert a title.");
+    if (!country) throw new Error("Name the country.");
+    if (!artistSlug) throw new Error("Pick an artist.");
+    const starts = new Date(data.startsAt);
+    if (Number.isNaN(starts.getTime())) throw new Error("Pick a valid date.");
+    const sql = await getSql();
+    const submitted = await submitterName(context.userId);
+    const hubId = data.id.startsWith("h-") ? Number(data.id.slice(2)) : Number.NaN;
+    if (Number.isFinite(hubId)) {
+      await sql.query(
+        `update hub_concerts
+         set title = $1, venue = $2, city = $3, country = $4, starts_at = $5, note = $6
+         where id = $7`,
+        [title, data.venue.trim(), data.city.trim(), country, starts.toISOString(), data.note.trim(), hubId],
+      );
+    } else {
+      const resolved = await ensureCatalogArtist({
+        slug: artistSlug,
+        name: data.artistName.trim() || artistSlug,
+        origin: country,
+        notable: "From a concert on the hub",
+      });
+      if (!resolved) throw new Error("Pick an artist.");
+      await sql.query(
+        `insert into hub_concerts (
+          artist_slug, artist_name, artist_kind, title, venue, city, country,
+          starts_at, note, submitted_by, submitted_name, status
+        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+        [
+          resolved.slug,
+          resolved.name,
+          resolved.kind,
+          title,
+          data.venue.trim(),
+          data.city.trim(),
+          country,
+          starts.toISOString(),
+          data.note.trim(),
+          context.userId,
+          submitted,
+          "published",
+        ],
+      );
+    }
+    hubConcertsMemo.bust();
+    return { ok: true as const, pending: false };
+  });
   .middleware([authMiddleware])
   .validator((input: { artistSlug: string; youtubeUrl: string; title: string; hp?: string; turnstile?: string }) => input)
   .handler(async ({ context, data }) => {

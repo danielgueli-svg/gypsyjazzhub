@@ -483,8 +483,8 @@ function mergeConcertLists(lists: Concert[][]): Concert[] {
   const by = new Map<string, Concert>();
   for (const list of lists) {
     for (const row of list) {
-      const key = `${new Date(row.startsAt).getTime()}|${row.title.trim().toLowerCase()}|${row.venue.trim().toLowerCase()}|${row.artistSlug}`;
-      if (!by.has(key)) by.set(key, row);
+      const key = `${new Date(row.startsAt).getTime()}|${row.artistSlug}|${row.title.trim().toLowerCase()}`;
+      by.set(key, row);
     }
   }
   return [...by.values()].sort(
@@ -789,10 +789,8 @@ export const listConcerts = createServerFn({ method: "POST" })
     };
 
     const [{ community, legendRows }, hub] = await Promise.all([
-      settle(
-        "concerts-db",
-        { community: [] as CommunityRow[], legendRows: [] as LegendConcertRow[] },
-        async () => {
+      (async () => {
+        try {
           const sql = await getSql();
           const community = await sql<CommunityRow>`
       select c.id, c.title, c.venue, c.city, c.country, c.starts_at, c.description, c.ticket_url,
@@ -809,27 +807,20 @@ export const listConcerts = createServerFn({ method: "POST" })
       order by lc.starts_at asc
     `;
           return { community, legendRows };
-        },
-      ),
-      settle("concerts-hub", [] as Concert[], () => listHubConcerts({ data: "" })),
+        } catch (err) {
+          console.error("[hub] concerts-db", err);
+          return { community: [] as CommunityRow[], legendRows: [] as LegendConcertRow[] };
+        }
+      })(),
+      listHubConcerts({ data: "" }).catch((err) => {
+        console.error("[hub] concerts-hub", err);
+        return [] as Concert[];
+      }),
     ]);
 
     const now = Date.now();
     const mapped: Concert[] = [
-      ...community.map((row) => ({
-        id: `c-${row.id}`,
-        kind: "community" as const,
-        title: row.title,
-        venue: row.venue,
-        city: row.city,
-        country: row.country,
-        startsAt: toIso(row.starts_at),
-        description: row.description,
-        ticketUrl: row.ticket_url,
-        isHistoric: false,
-        artistName: row.display_name,
-        artistSlug: row.slug,
-      })),
+      ...live,
       ...legendRows.map((row) => ({
         id: `l-${row.id}`,
         kind: "legend" as const,
@@ -844,8 +835,21 @@ export const listConcerts = createServerFn({ method: "POST" })
         artistName: row.name || row.title,
         artistSlug: row.slug || resolveArtistSlug(row.title),
       })),
+      ...community.map((row) => ({
+        id: `c-${row.id}`,
+        kind: "community" as const,
+        title: row.title,
+        venue: row.venue,
+        city: row.city,
+        country: row.country,
+        startsAt: toIso(row.starts_at),
+        description: row.description,
+        ticketUrl: row.ticket_url,
+        isHistoric: false,
+        artistName: row.display_name,
+        artistSlug: row.slug,
+      })),
       ...hub,
-      ...live,
     ];
 
     return uniqueBills(
@@ -918,12 +922,12 @@ export const listLegendConcerts = createServerFn({ method: "GET" })
     }
     let hub: Concert[] = [];
     try {
-      hub = await settle("hub concerts", [] as Concert[], () => listHubConcerts({ data: slug }));
+      hub = await listHubConcerts({ data: slug });
     } catch (err) {
       console.error("hub concerts failed", err);
     }
     const live = liveConcertsSeed().filter((concert) => concert.artistSlug === slug);
-    return mergeConcertLists([seeded, fromDb, hub, live]);
+    return mergeConcertLists([seeded, fromDb, live, hub]);
     } catch (err) {
       console.error("listLegendConcerts failed", err);
       return catalogConcertsFor(slug);
