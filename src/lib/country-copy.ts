@@ -17,3 +17,20 @@ export const COUNTRY_NOTES: Record<string, string> = {
   Romania:
     "Bucharest’s living Django chair is Django Sound Quartet — manouche with lăutărească, nights at Trattoria Monza and The Great Hill when they post them. The older Romanian violin the Mirando family still name is Georges Boulanger (Gheorghe Pantazi, 1893–1958, Tulcea): gypsy colour with Viennese light music, The Great Gypsy Violinist sides 1934–1939. Historic records, not a current jam.",
 };
+
+export const COUNTRY_LAST_JAM: Record<string, string> = {
+  Israel:
+    "Last table session on file: Ala Rampa, 12 Aug 2026. When they post the next night, it belongs here.",
+};
+
+export type CountryFeatured = {
+  kicker: string;
+  title: string;
+  body: string;
+  youtubeUrl?: string;
+  videoTitle?: string;
+  site?: string;
+  siteLabel?: string;
+  pageHref?: string;
+  pageLabel?: string;
+};
