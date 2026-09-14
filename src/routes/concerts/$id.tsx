@@ -131,7 +131,7 @@ function ConcertNightPage() {
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">Concert</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">{bill}</h1>
-      <p className="mt-3 text-lg text-muted">{formatConcertWhen(concert.startsAt)}</p>
+      <p className="mt-3 text-lg text-muted">{formatConcertWhen(concert.startsAt, locale)}</p>
       {concert.country || bits.length > 0 ? (
         <p className="mt-2 text-sm text-muted">
           {concert.country ? <CountryLabel name={concert.country} className="inline-flex" /> : null}

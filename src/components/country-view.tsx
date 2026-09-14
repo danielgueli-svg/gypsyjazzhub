@@ -35,6 +35,7 @@ import { isThinGypsyScene, jamHours, jamPlace } from "@/lib/jams";
 import { whenLabel } from "@/lib/festival-copy";
 import { sortVenues, venueScene, type Venue } from "@/lib/venues";
 import { useI18n } from "@/lib/i18n";
+import { formatConcertTime } from "@/lib/utils";
 
 function shortDate(iso: string) {
   const d = new Date(iso);
@@ -63,9 +64,11 @@ function agendaText(countryName: string, country: GlobeCountry | null, pageUrl: 
     lines.push("Concerts");
     for (const concert of concerts.slice(0, 8)) {
       const when = shortDate(concert.startsAt);
+      const clock = formatConcertTime(concert.startsAt);
       const billed = concert.title || concert.artistName;
       const where = [concert.venue, concert.city].filter(Boolean).join(", ");
-      lines.push(`• ${when ? `${when} — ` : ""}${billed}${where ? `, ${where}` : ""}`);
+      const stamp = [when, clock].filter(Boolean).join(" ");
+      lines.push(`• ${stamp ? `${stamp} — ` : ""}${billed}${where ? `, ${where}` : ""}`);
     }
     lines.push("");
   }

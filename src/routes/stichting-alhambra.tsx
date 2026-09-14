@@ -15,7 +15,7 @@ import { alhambraCopy } from "@/lib/alhambra-copy";
 import { listConcerts, uniqueBills, type Concert } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
-import { formatConcertDay, formatConcertYear } from "@/lib/utils";
+import { formatConcertDay, formatConcertTime, formatConcertYear } from "@/lib/utils";
 
 const HOME_MAPS =
   "https://www.google.com/maps/search/?api=1&query=Remonstrantse+kerk+Fnidsen+37+Alkmaar";
@@ -64,6 +64,7 @@ export const Route = createFileRoute("/stichting-alhambra")({
 function OtherNightRow({ night }: { night: AlhambraOtherNight }) {
   const { locale } = useI18n();
   const copy = alhambraCopy(locale);
+  const clock = formatConcertTime(night.startsAt);
   const kind = night.kind === "flamenco" ? copy.kindFlamenco : copy.kindClassical;
   return (
     <article className="grid grid-cols-[4.5rem_1fr] items-center gap-4 rounded-2xl bg-surface/85 p-4 shadow-border sm:grid-cols-[5.5rem_1fr] sm:p-5">
@@ -71,6 +72,9 @@ function OtherNightRow({ night }: { night: AlhambraOtherNight }) {
         <div className="font-display text-xl font-semibold leading-none">
           {formatConcertDay(night.startsAt, locale)}
         </div>
+        {clock ? (
+          <div className="mt-0.5 text-sm font-medium tabular-nums tracking-wide">{clock}</div>
+        ) : null}
         <div className="mt-0.5 text-xs tracking-wide text-faint">{formatConcertYear(night.startsAt)}</div>
       </div>
       <div className="min-w-0">

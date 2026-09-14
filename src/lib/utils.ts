@@ -129,6 +129,14 @@ export function formatConcertWhen(iso: string, locale?: string) {
   return withLocale(iso, "EEE d MMM yyyy · HH:mm", locale);
 }
 
+/** Posted clock at the venue. Empty when the listing is date-only (00:00). */
+export function formatConcertTime(iso: string) {
+  const date = wallDate(iso);
+  if (!date) return "";
+  if (date.getHours() === 0 && date.getMinutes() === 0) return "";
+  return format(date, "HH:mm");
+}
+
 export function concertShareLine(concert: {
   title?: string;
   artistName: string;

@@ -61,8 +61,11 @@ test("posted 15:00 in March stays 15:00, not Amsterdam 16:00", () => {
   assert.equal(viewerLocal(stored, "Europe/Amsterdam"), "16:00");
 });
 
-test("same clock in Tokyo and New York", () => {
+test("listing clock is the venue clock, not the viewer timezone", () => {
   const stored = wallClockIso("2026-10-15T18:00");
-  assert.match(formatWhen(stored, "Asia/Tokyo"), /18:00/);
-  assert.match(formatWhen(stored, "America/New_York"), /18:00/);
+  const tokyo = viewerLocal(stored, "Asia/Tokyo");
+  const ny = viewerLocal(stored, "America/New_York");
+  assert.equal(tokyo, "03:00");
+  assert.equal(ny, "14:00");
+  assert.match(formatWhen(stored), /18:00/);
 });
