@@ -1016,6 +1016,8 @@ export function uniqueFestivalNights(
   }
   return [...map.values()];
 }
+
+export function concertBelongsToFestival(
   festival: Festival,
   concert: { title: string; venue: string; city: string; description?: string; startsAt?: string },
 ) {
