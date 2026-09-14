@@ -10,6 +10,12 @@ type Copy = {
   nightsTitle: string;
   nightsLead: string;
   noneUpcoming: string;
+  otherTitle: string;
+  otherLead: string;
+  kindClassical: string;
+  kindFlamenco: string;
+  ticketsOnSite: string;
+  organisedBy: string;
   archiveTitle: string;
   houseTitle: string;
   address: string;
@@ -23,111 +29,133 @@ type Copy = {
 const EN: Copy = {
   kicker: "Dutch organisation",
   title: "Stichting Alhambra",
-  subtitle: "Alkmaar concert series — gypsy jazz nights only on this hub.",
-  lead: "Stichting Alhambra is a Dutch concert organisation based in Alkmaar. For more than twenty years they have booked guitar nights, mostly in the Remonstrantse kerk (Schuilkerkje) on Fnidsen. Their own site is a mixed classical-guitar series. This page lists only the gypsy jazz / jazz manouche bills.",
+  subtitle: "Alkmaar guitar series — different rooms, one organiser.",
+  lead: "Stichting Alhambra is a cultural foundation in Alkmaar. Since 12 February 1991 they have booked guitar nights — first in theatre De Vigilantie, later in the Remonstrantse kerk (Schuilkerkje) on Fnidsen, and now also at Gasfabriek Alkmaar and Theater Victorie when the bill needs a larger room. Chair: Hans de Weerd.",
   mixNote:
-    "Not every name on stichting-alhambra.nl is gypsy jazz. Recitals such as Sebastian Swiedrych (Dowland, Scarlatti, Villa-Lobos, Rodrigo) stay off this hub. Only Hot Club / manouche nights are listed.",
+    "They post about six nights a year: four classical guitar or flamenco recitals, and two gypsy jazz / jazz manouche bills. Only the manouche nights go on the hub calendar. The rest stay on this page so they are not mixed into country and home listings.",
   siblingNote: "Not Grădina Alhambra in Bucharest — that garden hall has its own page.",
   aboutTitle: "The organisation",
   about: [
-    "Home room: Remonstrantse kerk, also called the Schuilkerkje, Fnidsen 37, Alkmaar. Larger nights have also been booked at Gasfabriek Alkmaar and Theater Victorie. Tickets and dates: stichting-alhambra.nl and Facebook AlhambraGuitaar. Info from their series: 06-51511995.",
-    "This page lists only upcoming gypsy jazz / jazz manouche nights they posted. Not a weekly jam, and not a standing Hot Club house. The rest of their calendar is classical guitar.",
+    "From their own site: they work for live guitar at a high level, in a small room, for both long-time listeners and people new to the instrument. After De Vigilantie closed they paused, then returned in 2017 with culinary concerts at D’Moriaan in Warmenhuizen. That house closed in 2019. The series started again in 2023, and they added Django’s gipsy jazz to the programme.",
+    "Home room: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Larger gypsy jazz nights: Gasfabriek Alkmaar and Theater Victorie. Tickets: stichtingalhambra.nl. Series phone: 06-51511995.",
   ],
-  nightsTitle: "Upcoming gypsy jazz nights",
-  nightsLead: "Only Hot Club / manouche bills still to come. Ask the foundation before you travel — the rest of their calendar is classical guitar.",
-  noneUpcoming:
-    "No upcoming gypsy jazz night is posted for Stichting Alhambra. Watch stichting-alhambra.nl and their Facebook — do not assume a weekly session.",
+  nightsTitle: "Gypsy jazz nights",
+  nightsLead: "The Hot Club / manouche bills they posted. These also appear on the hub concerts page, always marked as organised by Stichting Alhambra — they use more than one room.",
+  noneUpcoming: "No upcoming gypsy jazz night is posted. Watch stichtingalhambra.nl — this is not a weekly session.",
+  otherTitle: "Other concerts on their series",
+  otherLead:
+    "Classical guitar and flamenco from their site. These names stay off the hub calendar — they are not gypsy jazz.",
+  kindClassical: "Classical guitar",
+  kindFlamenco: "Flamenco",
+  ticketsOnSite: "Tickets on their site",
+  organisedBy: "Organised by Stichting Alhambra",
   archiveTitle: "Last confirmed night",
   houseTitle: "Find the door",
   address: "Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
   homeRoom: "Also Gasfabriek Alkmaar and Theater Victorie when they book a larger night",
-  siteLabel: "stichting-alhambra.nl",
+  siteLabel: "stichtingalhambra.nl",
   facebookLabel: "Facebook",
-  groupTitle: "On the upcoming bills",
-  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt and Angelo Debarre.",
+  groupTitle: "On the gypsy jazz bills",
+  groupLead: "Django a Paris; Amati Schmitt and Angelo Debarre.",
 };
 
 const NL: Copy = {
   ...EN,
   kicker: "Nederlandse stichting",
   title: "Stichting Alhambra",
-  subtitle: "Alkmaarse concertserie — op deze hub alleen gypsy-jazzavonden.",
-  lead: "Stichting Alhambra is een Nederlandse concertorganisatie in Alkmaar. Al meer dan twintig jaar boeken ze gitaaravonden, meestal in de Remonstrantse kerk (het Schuilkerkje) aan het Fnidsen. Hun eigen site is een gemengde klassieke-gitaarserie. Deze pagina toont alleen gypsy jazz / jazz manouche.",
+  subtitle: "Alkmaarse gitaarserie — verschillende zalen, één organisator.",
+  lead: "Stichting Alhambra is een culturele stichting in Alkmaar. Sinds 12 februari 1991 organiseren ze gitaaravonden — eerst in theater De Vigilantie, later in de Remonstrantse kerk (het Schuilkerkje) aan het Fnidsen, en nu ook in de Gasfabriek Alkmaar en Theater Victorie als de avond een grotere zaal nodig heeft. Voorzitter: Hans de Weerd.",
   mixNote:
-    "Niet elke naam op stichting-alhambra.nl is gypsy jazz. Recitals zoals Sebastian Swiedrych (Dowland, Scarlatti, Villa-Lobos, Rodrigo) blijven van deze hub af. Alleen Hot Club- / manouche-avonden staan hier.",
+    "Ze zetten zo’n zes avonden per seizoen: vier klassieke-gitaar- of flamencorecitals, en twee gypsy-jazz- / jazz-manouche-avonden. Alleen de manouche-avonden staan in de hub-agenda. De rest blijft op deze pagina, zodat ze niet tussen de landen- en voorpagina belanden.",
   siblingNote: "Niet Grădina Alhambra in Boekarest — die tuinzal heeft een eigen pagina.",
   aboutTitle: "De stichting",
   about: [
-    "Thuiszaal: Remonstrantse kerk, ook het Schuilkerkje, Fnidsen 37, Alkmaar. Grotere avonden zijn ook geboekt in de Gasfabriek Alkmaar en Theater Victorie. Kaarten en data: stichting-alhambra.nl en Facebook AlhambraGuitaar. Info uit hun serie: 06-51511995.",
-    "Deze pagina toont alleen komende gypsy-jazz- / jazz-manouche-avonden. Geen wekelijkse jam, geen vast Hot Club-huis. De rest van de agenda is klassieke gitaar.",
+    "Van hun eigen site: ze werken voor live gitaar op hoog niveau, in een kleine zaal, voor vaste luisteraars én nieuwkomers. Na de sluiting van De Vigilantie was er een pauze, daarna culinaire concerten bij D’Moriaan in Warmenhuizen tot 2019. In 2023 is de serie hervat, en namen ze de gipsy jazz van Django Reinhardt op in de programmering.",
+    "Thuiszaal: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Grotere gypsy-jazzavonden: Gasfabriek Alkmaar en Theater Victorie. Kaarten: stichtingalhambra.nl. Serie: 06-51511995.",
   ],
-  nightsTitle: "Komende gypsy-jazzavonden",
-  nightsLead: "Alleen Hot Club / manouche die nog moet komen. Vraag de stichting voor je reist — de rest van de agenda is klassieke gitaar.",
-  noneUpcoming:
-    "Er staat geen komende gypsy-jazzavond van Stichting Alhambra. Volg stichting-alhambra.nl en hun Facebook — dit is geen wekelijkse sessie.",
-  archiveTitle: "Laatst bevestigde avond",
+  nightsTitle: "Gypsy-jazzavonden",
+  nightsLead:
+    "De Hot Club- / manouche-avonden die zij zetten. Die staan ook in de hub-agenda, altijd met georganiseerd door Stichting Alhambra — ze spelen in verschillende zalen.",
+  noneUpcoming: "Er staat geen komende gypsy-jazzavond. Volg stichtingalhambra.nl — dit is geen wekelijkse sessie.",
+  otherTitle: "Overige concerten in hun serie",
+  otherLead: "Klassieke gitaar en flamenco van hun site. Deze namen blijven van de hub-agenda af — het is geen gypsy jazz.",
+  kindClassical: "Klassieke gitaar",
+  kindFlamenco: "Flamenco",
+  ticketsOnSite: "Kaarten op hun site",
+  organisedBy: "Georganiseerd door Stichting Alhambra",
   houseTitle: "De deur",
-  address: "Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar",
   homeRoom: "Ook Gasfabriek Alkmaar en Theater Victorie als ze een grotere avond boeken",
-  groupTitle: "Op de komende avonden",
-  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt en Angelo Debarre.",
+  groupTitle: "Op de gypsy-jazzavonden",
+  groupLead: "Django a Paris; Amati Schmitt en Angelo Debarre.",
 };
 
 const FR: Copy = {
   ...EN,
   kicker: "Fondation néerlandaise",
-  subtitle: "Série de concerts à Alkmaar — sur ce hub, uniquement les soirs gypsy jazz.",
-  lead: "Stichting Alhambra est une organisation de concerts basée à Alkmaar. Depuis plus de vingt ans elle programme des soirées guitare, surtout à l’église rémonstrante (Schuilkerkje) sur Fnidsen. Leur site mélange surtout la guitare classique. Cette page ne liste que le jazz manouche.",
+  subtitle: "Série de guitare à Alkmaar — plusieurs salles, un organisateur.",
+  lead: "Stichting Alhambra est une fondation culturelle à Alkmaar. Depuis le 12 février 1991 elle programme des soirées guitare — d’abord au théâtre De Vigilantie, puis à l’église rémonstrante (Schuilkerkje) sur Fnidsen, et aussi à la Gasfabriek et au Theater Victorie quand la salle doit être plus grande. Président : Hans de Weerd.",
   mixNote:
-    "Tous les noms de stichting-alhambra.nl ne sont pas du gypsy jazz. Les recitals classiques (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) restent hors de ce hub.",
+    "Environ six soirs par saison : quatre recitals de guitare classique ou flamenco, et deux soirs gypsy jazz / jazz manouche. Seuls les soirs manouche vont sur le calendrier du hub.",
   siblingNote: "Ce n’est pas Grădina Alhambra à Bucarest — cette salle a sa propre page.",
   aboutTitle: "La fondation",
-  nightsTitle: "Prochains soirs gypsy jazz",
-  nightsLead: "Uniquement les plateaux manouche / Hot Club à venir. Demandez à la fondation avant de voyager.",
-  noneUpcoming:
-    "Aucune soirée gypsy jazz n’est affichée. Suivez le site et Facebook — ce n’est pas une session fixe.",
-  archiveTitle: "Dernière soirée confirmée",
+  nightsTitle: "Soirs gypsy jazz",
+  nightsLead: "Les plateaux Hot Club / manouche. Ils portent aussi la mention organisé par Stichting Alhambra — plusieurs salles.",
+  noneUpcoming: "Aucune soirée gypsy jazz n’est affichée. Suivez stichtingalhambra.nl.",
+  otherTitle: "Autres concerts de leur série",
+  otherLead: "Guitare classique et flamenco. Ces noms restent hors du calendrier du hub.",
+  kindClassical: "Guitare classique",
+  kindFlamenco: "Flamenco",
+  ticketsOnSite: "Billets sur leur site",
+  organisedBy: "Organisé par Stichting Alhambra",
   houseTitle: "L’adresse",
-  groupTitle: "Sur les prochains plateaux",
-  groupLead: "Django a Paris ; Marcia Bamberg Swing Quartet ; Amati Schmitt et Angelo Debarre.",
+  groupTitle: "Sur les soirs gypsy jazz",
+  groupLead: "Django a Paris ; Amati Schmitt et Angelo Debarre.",
 };
 
 const DE: Copy = {
   ...EN,
   kicker: "Niederländische Stiftung",
-  subtitle: "Alkmaarer Konzertreihe — hier nur Gypsy-Jazz-Abende.",
-  lead: "Stichting Alhambra ist eine niederländische Konzertorganisation in Alkmaar. Seit über zwanzig Jahren bucht sie Gitarrenabende, meist in der Remonstrantse kerk (Schuilkerkje) am Fnidsen. Die eigene Website ist eine gemischte Klassik-Gitarrenserie. Diese Seite zeigt nur Gypsy Jazz / Jazz Manouche.",
+  subtitle: "Alkmaarer Gitarrenreihe — verschiedene Säle, ein Veranstalter.",
+  lead: "Stichting Alhambra ist eine Kulturstiftung in Alkmaar. Seit dem 12. Februar 1991 bucht sie Gitarrenabende — zuerst im Theater De Vigilantie, später in der Remonstrantse kerk (Schuilkerkje) am Fnidsen, und bei größeren Abenden in der Gasfabriek und im Theater Victorie. Vorsitz: Hans de Weerd.",
   mixNote:
-    "Nicht jeder Name auf stichting-alhambra.nl ist Gypsy Jazz. Klassik-Recitals (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) bleiben von diesem Hub fern.",
+    "Etwa sechs Abende pro Saison: vier Klassik- oder Flamenco-Recitals und zwei Gypsy-Jazz- / Manouche-Abende. Nur die Manouche-Abende stehen im Hub-Kalender.",
   siblingNote: "Nicht Grădina Alhambra in Bukarest — dieser Gartensaal hat eine eigene Seite.",
   aboutTitle: "Die Stiftung",
-  nightsTitle: "Kommende Gypsy-Jazz-Abende",
-  nightsLead: "Nur Hot Club / Manouche, die noch kommen. Vor der Reise bei der Stiftung nachfragen.",
-  noneUpcoming:
-    "Kein kommender Gypsy-Jazz-Abend. Website und Facebook folgen — keine wöchentliche Session.",
-  archiveTitle: "Letzter bestätigter Abend",
+  nightsTitle: "Gypsy-Jazz-Abende",
+  nightsLead: "Die Hot-Club- / Manouche-Abende. Immer mit organisiert von Stichting Alhambra — sie nutzen mehrere Säle.",
+  noneUpcoming: "Kein kommender Gypsy-Jazz-Abend. stichtingalhambra.nl folgen.",
+  otherTitle: "Weitere Konzerte ihrer Reihe",
+  otherLead: "Klassische Gitarre und Flamenco. Diese Namen bleiben vom Hub-Kalender fern.",
+  kindClassical: "Klassische Gitarre",
+  kindFlamenco: "Flamenco",
+  ticketsOnSite: "Karten auf ihrer Website",
+  organisedBy: "Organisiert von Stichting Alhambra",
   houseTitle: "Die Tür",
-  groupTitle: "Auf den kommenden Abenden",
-  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt und Angelo Debarre.",
+  groupTitle: "Auf den Gypsy-Jazz-Abenden",
+  groupLead: "Django a Paris; Amati Schmitt und Angelo Debarre.",
 };
 
 const ES: Copy = {
   ...EN,
   kicker: "Organización neerlandesa",
-  subtitle: "Serie de conciertos en Alkmaar — en este hub solo noches de gypsy jazz.",
-  lead: "Stichting Alhambra es una organización de conciertos en Alkmaar. Lleva más de veinte años programando noches de guitarra, sobre todo en la iglesia remonstrante (Schuilkerkje) de Fnidsen. Su web es una serie mixta de guitarra clásica. Esta página lista solo gypsy jazz / jazz manouche.",
+  subtitle: "Serie de guitarra en Alkmaar — varias salas, un organizador.",
+  lead: "Stichting Alhambra es una fundación cultural en Alkmaar. Desde el 12 de febrero de 1991 programa noches de guitarra — primero en el teatro De Vigilantie, luego en la iglesia remonstrante (Schuilkerkje) de Fnidsen, y en Gasfabriek y Theater Victorie cuando hace falta una sala mayor. Presidente: Hans de Weerd.",
   mixNote:
-    "No todos los nombres de stichting-alhambra.nl son gypsy jazz. Los recitals clásicos (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) no entran en este hub.",
+    "Unas seis noches por temporada: cuatro recitales de guitarra clásica o flamenco, y dos de gypsy jazz / jazz manouche. Solo las noches manouche entran en el calendario del hub.",
   siblingNote: "No es Grădina Alhambra en Bucarest — esa sala tiene su propia página.",
   aboutTitle: "La fundación",
-  nightsTitle: "Próximas noches de gypsy jazz",
-  nightsLead: "Solo Hot Club / manouche que aún está por venir. Pregunta a la fundación antes de viajar.",
-  noneUpcoming:
-    "No hay noche de gypsy jazz anunciada. Sigue la web y Facebook — no es una sesión fija.",
-  archiveTitle: "Última noche confirmada",
+  nightsTitle: "Noches de gypsy jazz",
+  nightsLead: "Los carteles Hot Club / manouche. También llevan organizado por Stichting Alhambra — usan varias salas.",
+  noneUpcoming: "No hay noche de gypsy jazz anunciada. Sigue stichtingalhambra.nl.",
+  otherTitle: "Otros conciertos de su serie",
+  otherLead: "Guitarra clásica y flamenco. Estos nombres no entran en el calendario del hub.",
+  kindClassical: "Guitarra clásica",
+  kindFlamenco: "Flamenco",
+  ticketsOnSite: "Entradas en su web",
+  organisedBy: "Organizado por Stichting Alhambra",
   houseTitle: "La puerta",
-  groupTitle: "En las próximas noches",
-  groupLead: "Django a Paris; Marcia Bamberg Swing Quartet; Amati Schmitt y Angelo Debarre.",
+  groupTitle: "En las noches de gypsy jazz",
+  groupLead: "Django a Paris; Amati Schmitt y Angelo Debarre.",
 };
 
 const BY_LOCALE: Record<string, Copy> = {

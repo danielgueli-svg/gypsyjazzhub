@@ -7,6 +7,8 @@ import { ShareBox } from "@/components/share-page";
 import { Button } from "@/components/ui/button";
 import { SubscribeButton } from "@/components/subscribe-button";
 import { getConcert, listConcerts } from "@/lib/api";
+import { isAlhambraOrgConcert } from "@/lib/alhambra";
+import { alhambraCopy } from "@/lib/alhambra-copy";
 import { listConcertReviews } from "@/lib/concert-reviews";
 import { festivalForConcert, festivalTicketUrl } from "@/lib/festivals";
 import { pageHead } from "@/lib/seo";
@@ -106,7 +108,7 @@ function ArtistTextLink({ slug, kind, name }: { slug: string; kind: "legend" | "
 
 function ConcertNightPage() {
   const { concert, reviews, agenda } = Route.useLoaderData();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const bill = concert.title?.trim() || concert.artistName;
   const band = bandForBill(concert.title);
   const festival = festivalForConcert(concert);
@@ -135,6 +137,14 @@ function ConcertNightPage() {
           {concert.country ? <CountryLabel name={concert.country} className="inline-flex" /> : null}
           {concert.country && bits.length > 0 ? " · " : null}
           {bits.join(" · ")}
+        </p>
+      ) : null}
+
+      {isAlhambraOrgConcert(concert) ? (
+        <p className="mt-2 text-sm text-muted">
+          <Link to="/stichting-alhambra" className="hover:underline hover:text-fg">
+            {alhambraCopy(locale).organisedBy}
+          </Link>
         </p>
       ) : null}
 

@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { CountryLabel } from "@/components/country-label";
 import type { Concert } from "@/lib/api";
+import { isAlhambraOrgConcert } from "@/lib/alhambra";
+import { alhambraCopy } from "@/lib/alhambra-copy";
 import { FESTIVALS, festivalForConcert, festivalTicketUrl } from "@/lib/festivals";
 import { useI18n } from "@/lib/i18n";
 import { bandForBill } from "@/lib/scene";
@@ -58,6 +60,7 @@ export function ConcertRow({
   const bill = concert.title?.trim() || concert.artistName;
   const bits = [concert.city, concert.venue].filter(Boolean);
   const festival = festivalForConcert(concert);
+  const organisedByAlhambra = isAlhambraOrgConcert(concert);
   const official = festival?.site ?? "";
   const tickets =
     (concert.ticketUrl.startsWith("http") &&
@@ -124,6 +127,13 @@ export function ConcertRow({
             {concert.country ? <CountryLabel name={concert.country} className="inline-flex" /> : null}
             {concert.country && bits.length > 0 ? " · " : null}
             {bits.join(" · ")}
+          </p>
+        ) : null}
+        {organisedByAlhambra ? (
+          <p className={cn("text-muted", compact ? "mt-0.5 text-xs" : "mt-1 text-xs")}>
+            <Link to="/stichting-alhambra" className="hover:underline hover:text-fg">
+              {alhambraCopy(locale).organisedBy}
+            </Link>
           </p>
         ) : null}
         {official || tickets || showSource ? (
