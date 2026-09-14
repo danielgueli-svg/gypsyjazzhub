@@ -388,6 +388,16 @@ export const ALBUMS: Album[] = [
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "elias-prinz-autumn-2026",
+    date: "2026-09-14",
+    title: "Elias Prinz announces autumn dates",
+    body: "The Munich guitarist posted his public concerts for autumn 2026. 18 September: Django In London with Sunny Franz. Then Germany — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 October), Ofterschwang and Ingolstadt. Dates on his page.",
+    kind: "scene",
+    artistSlugs: ["elias-prinz", "sunny-franz"],
+    href: "/musicians/elias-prinz",
+    hrefLabel: "Dates",
+  },
+  {
     slug: "django-in-london-2026",
     date: "2026-09-14",
     title: "Django In London — 17–19 September, this week",
@@ -685,12 +695,12 @@ export function latestAlbums(limit = 8) {
 }
 
 const PINNED_NEWS = [
+  "elias-prinz-autumn-2026",
   "django-in-london-2026",
   "angelo-debarre-ulule",
   "la-pompe-live-app",
   "moignard-miroirs-sunset",
   "midwest-django-fest-2026",
-  "djangofest-northwest-2026",
 ];
 
 export function latestNews(limit = 6) {

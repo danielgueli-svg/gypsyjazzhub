@@ -13,6 +13,11 @@ function pack(
 }
 
 export const NEWS_EN = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz announces autumn dates",
+    body: "The Munich guitarist posted his public concerts for autumn 2026. 18 September: Django In London with Sunny Franz. Then Germany — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 October), Ofterschwang and Ingolstadt. Dates on his page.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 September, this week",
     body: "Three days at St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith matinee, London Django Collective with Kourosh Kanani, Debi Botos. Tickets on Eventbrite. All concerts on the festival page.",
@@ -120,6 +125,11 @@ export const NEWS_EN = pack({
 });
 
 export const NEWS_NL = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz zet herfstdates online",
+    body: "De Münchense gitarist zette zijn publieke concerten voor najaar 2026 online. 18 september: Django In London met Sunny Franz. Daarna Duitsland — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 oktober), Ofterschwang en Ingolstadt. Data op zijn pagina.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 september, deze week",
     body: "Drie dagen in St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective met Kourosh Kanani, Debi Botos. Kaarten op Eventbrite. Alle concerten op de festivalpagina.",
@@ -219,6 +229,11 @@ export const NEWS_NL = pack({
 });
 
 export const NEWS_DE = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz kündigt Herbsttermine an",
+    body: "Der Münchner Gitarrist hat seine öffentlichen Konzerte für den Herbst 2026 gepostet. 18. September: Django In London mit Sunny Franz. Dann Deutschland — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14.–16. Oktober), Ofterschwang und Ingolstadt. Termine auf seiner Seite.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17.–19. September, diese Woche",
     body: "Drei Tage in St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith nachmittags, London Django Collective mit Kourosh Kanani, Debi Botos. Tickets auf Eventbrite. Alle Konzerte auf der Festival-Seite.",
@@ -290,6 +305,11 @@ export const NEWS_DE = pack({
 });
 
 export const NEWS_FR = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz annonce ses dates d’automne",
+    body: "Le guitariste munichois a publié ses concerts publics pour l’automne 2026. 18 septembre : Django In London avec Sunny Franz. Puis l’Allemagne — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 octobre), Ofterschwang et Ingolstadt. Les dates sont sur sa page.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 septembre, cette semaine",
     body: "Trois jours à St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinée Giacomo Smith, London Django Collective avec Kourosh Kanani, Debi Botos. Billets sur Eventbrite. Tous les concerts sur la page du festival.",
@@ -373,6 +393,11 @@ export const NEWS_FR = pack({
 });
 
 export const NEWS_IT = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz annuncia le date d’autunno",
+    body: "Il chitarrista di Monaco ha pubblicato i concerti pubblici per l’autunno 2026. 18 settembre: Django In London con Sunny Franz. Poi la Germania — Kiel, Hanau, Worms, Monaco (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 ottobre), Ofterschwang e Ingolstadt. Le date sono sulla sua pagina.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 settembre, questa settimana",
     body: "Tre giorni a St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinée Giacomo Smith, London Django Collective con Kourosh Kanani, Debi Botos. Biglietti su Eventbrite. Tutti i concerti sulla pagina del festival.",
@@ -440,6 +465,11 @@ export const NEWS_IT = pack({
 });
 
 export const NEWS_ES = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz anuncia fechas de otoño",
+    body: "El guitarrista de Múnich publicó sus conciertos públicos para el otoño 2026. 18 de septiembre: Django In London con Sunny Franz. Luego Alemania — Kiel, Hanau, Worms, Múnich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 de octubre), Ofterschwang e Ingolstadt. Fechas en su página.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 de septiembre, esta semana",
     body: "Tres días en St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matiné de Giacomo Smith, London Django Collective con Kourosh Kanani, Debi Botos. Entradas en Eventbrite. Todos los conciertos en la página del festival.",
@@ -507,6 +537,11 @@ export const NEWS_ES = pack({
 });
 
 export const NEWS_JA = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz が秋の公演を発表",
+    body: "ミュンヘンのギタリストが2026年秋の公開公演を出した。9月18日：Sunny Franz と Django In London。その後ドイツ — Kiel、Hanau、Worms、Munich（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（ソロ、10月14–16日）、Ofterschwang、Ingolstadt。日程は本人のページ。",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 今週、9月17–19日",
     body: "イズリントン、Upper Street の St Mary's で三日間。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith のマチネ、Kourosh Kanani を迎えた London Django Collective、Debi Botos。チケットは Eventbrite。全公演はフェスティバルページ。",
@@ -570,6 +605,11 @@ export const NEWS_JA = pack({
 });
 
 export const NEWS_KO = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz, 가을 공연 발표",
+    body: "뮌헨 기타리스트가 2026년 가을 공개 공연을 올렸다. 9월 18일: Sunny Franz와 Django In London. 이어 독일 — Kiel, Hanau, Worms, Munich(Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau(솔로, 10월 14–16일), Ofterschwang, Ingolstadt. 일정은 그의 페이지.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 이번 주, 9월 17–19일",
     body: "이즐링턴 Upper Street의 St Mary's에서 사흘. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith 마티네, Kourosh Kanani와 London Django Collective, Debi Botos. 티켓은 Eventbrite. 모든 공연은 페스티벌 페이지.",
@@ -629,6 +669,11 @@ export const NEWS_KO = pack({
 });
 
 export const NEWS_ZH = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz 公布秋季演出",
+    body: "这位慕尼黑吉他手公布了 2026 年秋季公开演出。9 月 18 日：与 Sunny Franz 在 Django In London。随后德国 — Kiel、Hanau、Worms、慕尼黑（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（独奏，10 月 14–16 日）、Ofterschwang 和 Ingolstadt。日期在他的页面。",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 本周 9月17–19日",
     body: "在伊斯灵顿 Upper Street 的 St Mary's 连演三天。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith 日场、London Django Collective 与 Kourosh Kanani、Debi Botos。门票在 Eventbrite。全部场次在节日页。",
@@ -688,6 +733,11 @@ export const NEWS_ZH = pack({
 });
 
 export const NEWS_ZH_TW = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz 公布秋季演出",
+    body: "這位慕尼黑吉他手公布了 2026 年秋季公開演出。9 月 18 日：與 Sunny Franz 在 Django In London。隨後德國 — Kiel、Hanau、Worms、慕尼黑（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（獨奏，10 月 14–16 日）、Ofterschwang 和 Ingolstadt。日期在他的頁面。",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 本週 9月17–19日",
     body: "在伊斯靈頓 Upper Street 的 St Mary's 連演三天。Harry Diplock Trio、Hugo Guezbar Trio、Elias Prinz & Sunny Franz、Angelo Debarre Trio、Giacomo Smith 日場、London Django Collective 與 Kourosh Kanani、Debi Botos。門票在 Eventbrite。全部場次在節日頁。",
@@ -747,6 +797,11 @@ export const NEWS_ZH_TW = pack({
 });
 
 export const NEWS_ID = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz umumkan tanggal musim gugur",
+    body: "Gitaris Munich memasang konser publik musim gugur 2026. 18 September: Django In London bersama Sunny Franz. Lalu Jerman — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 Oktober), Ofterschwang dan Ingolstadt. Tanggal di halamannya.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 September, minggu ini",
     body: "Tiga hari di St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective dengan Kourosh Kanani, Debi Botos. Tiket di Eventbrite. Semua konser di halaman festival.",
@@ -806,6 +861,11 @@ export const NEWS_ID = pack({
 });
 
 export const NEWS_TH = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz ประกาศรอบฤดูใบไม้ร่วง",
+    body: "มือกีตาร์จากมิวนิกโพสต์คอนเสิร์ตสาธารณะฤดูใบไม้ร่วง 2026. 18 ก.ย.: Django In London กับ Sunny Franz. แล้วเยอรมนี — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (โซโล่ 14–16 ต.ค.), Ofterschwang และ Ingolstadt. วันที่อยู่ที่หน้าของเขา.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 กันยายน สัปดาห์นี้",
     body: "สามวันที่ St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, จิอาโคโม สมิธ ช่วงบ่าย, London Django Collective กับ Kourosh Kanani, Debi Botos. บัตรบน Eventbrite. คอนเสิร์ตทั้งหมดอยู่หน้าเทศกาล.",
@@ -865,6 +925,11 @@ export const NEWS_TH = pack({
 });
 
 export const NEWS_HU = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz őszi dátumokat jelentett",
+    body: "A müncheni gitáros kitette a 2026 őszi nyilvános koncertjeit. Szeptember 18.: Django In London Sunny Franzcal. Aztán Németország — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (szóló, október 14–16.), Ofterschwang és Ingolstadt. A dátumok az oldalán.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — szeptember 17–19., ezen a héten",
     body: "Három nap a St Mary'sben, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith matiné, London Django Collective Kourosh Kananival, Debi Botos. Jegyek az Eventbrite-on. Minden koncert a fesztiváloldalon.",
@@ -928,6 +993,11 @@ export const NEWS_HU = pack({
 });
 
 export const NEWS_PL = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz ogłasza daty jesienne",
+    body: "Gitarzysta z Monachium podał publiczne koncerty na jesień 2026. 18 września: Django In London z Sunny Franz. Potem Niemcy — Kiel, Hanau, Worms, Monachium (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 października), Ofterschwang i Ingolstadt. Daty na jego stronie.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 września, w tym tygodniu",
     body: "Trzy dni w St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinee Giacomo Smith, London Django Collective z Kourosh Kanani, Debi Botos. Bilety na Eventbrite. Wszystkie koncerty na stronie festiwalu.",
@@ -991,6 +1061,11 @@ export const NEWS_PL = pack({
 });
 
 export const NEWS_SR = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz objavljuje jesenje datume",
+    body: "Gitarista iz Minhena objavio je javne koncerte za jesen 2026. 18. septembar: Django In London sa Sunny Franz. Zatim Nemačka — Kiel, Hanau, Worms, Minhen (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16. oktobar), Ofterschwang i Ingolstadt. Datumi na njegovoj stranici.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19. septembar, ove nedelje",
     body: "Tri dana u St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matine Giacomo Smith, London Django Collective sa Kourosh Kanani, Debi Botos. Karte na Eventbrite. Svi koncerti na stranici festivala.",
@@ -1054,6 +1129,11 @@ export const NEWS_SR = pack({
 });
 
 export const NEWS_HR = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz objavljuje jesenske datume",
+    body: "Gitarist iz Münchna objavio je javne koncerte za jesen 2026. 18. rujna: Django In London sa Sunny Franz. Zatim Njemačka — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16. listopada), Ofterschwang i Ingolstadt. Datumi na njegovoj stranici.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17.–19. rujna, ovaj tjedan",
     body: "Tri dana u St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matineja Giacomo Smith, London Django Collective s Kourosh Kanani, Debi Botos. Ulaznice na Eventbrite. Svi koncerti na stranici festivala.",
@@ -1113,6 +1193,11 @@ export const NEWS_HR = pack({
 });
 
 export const NEWS_PT = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz anuncia datas de outono",
+    body: "O guitarrista de Munique publicou os concertos públicos para o outono de 2026. 18 de setembro: Django In London com Sunny Franz. Depois a Alemanha — Kiel, Hanau, Worms, Munique (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 de outubro), Ofterschwang e Ingolstadt. Datas na página dele.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 de setembro, esta semana",
     body: "Três dias em St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, matinê Giacomo Smith, London Django Collective com Kourosh Kanani, Debi Botos. Bilhetes no Eventbrite. Todos os concertos na página do festival.",
@@ -1180,6 +1265,11 @@ export const NEWS_PT = pack({
 });
 
 export const NEWS_RU = pack({
+  "elias-prinz-autumn-2026": {
+    title: "Elias Prinz объявил осенние даты",
+    body: "Гитарист из Мюнхена выложил открытые концерты на осень 2026. 18 сентября: Django In London с Sunny Franz. Затем Германия — Kiel, Hanau, Worms, Мюнхен (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (соло, 14–16 октября), Ofterschwang и Ingolstadt. Даты на его странице.",
+  },
+
   "django-in-london-2026": {
     title: "Django In London — 17–19 сентября, на этой неделе",
     body: "Три дня в St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, матине Giacomo Smith, London Django Collective с Kourosh Kanani, Debi Botos. Билеты на Eventbrite. Все концерты на странице фестиваля.",

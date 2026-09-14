@@ -1617,7 +1617,7 @@ export const BANDS: Band[] = [
       "elias-prinz": "Solo guitar",
       "sunny-franz": "Guitar",
     },
-    bio: "German Sinti jazz duo. Prinz (Kurt Maas and BMW Young Artist awards) and Franz — Munich rooms and Django In London, 18 September 2026.",
+    bio: "German Sinti jazz duo. Prinz (Kurt Maas and BMW Young Artist awards) and Franz. Django In London, 18 September 2026, then Silbersaal Munich on 24 October.",
   },
   {
     slug: "swing-gitan",
