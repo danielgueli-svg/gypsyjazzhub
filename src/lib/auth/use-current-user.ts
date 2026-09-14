@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { authClient, authEnabled } from "./client";
 
 /** Normalized user shape used across the app, auth on or off. */
@@ -67,6 +67,10 @@ function useHydrated() {
  *
  * `authEnabled` is a module-level constant fixed at load, so the guarded hook
  * call keeps a stable hook order across every render of a given component.
+ *
+ * The mapped `user` object is memoized. Effects that list `[user]` must not
+ * see a new object every render — that used to hammer Durable Object SQL
+ * from InvitePanel / HubChat on jam pages.
  */
 export function useCurrentUserState(): CurrentUserState {
   if (!authEnabled) return { user: DEV_USER, isPending: false };
@@ -74,22 +78,22 @@ export function useCurrentUserState(): CurrentUserState {
   const { data, isPending } = authClient.useSession();
   // eslint-disable-next-line react-hooks/rules-of-hooks -- same: constant for the app's lifetime
   const hydrated = useHydrated();
+  const raw = data?.user;
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- same: constant for the app's lifetime
+  const mapped = useMemo<AppUser | null>(() => {
+    if (!raw) return null;
+    return {
+      id: raw.id,
+      displayName: raw.name ?? null,
+      primaryEmail: raw.email ?? null,
+      profileImageUrl: raw.image ?? null,
+      isDevFallback: false,
+    };
+  }, [raw?.id, raw?.name, raw?.email, raw?.image]);
   if (!hydrated) {
     return { user: null, isPending: true };
   }
-  const user = data?.user;
-  return {
-    user: user
-      ? {
-          id: user.id,
-          displayName: user.name ?? null,
-          primaryEmail: user.email ?? null,
-          profileImageUrl: user.image ?? null,
-          isDevFallback: false,
-        }
-      : null,
-    isPending,
-  };
+  return { user: mapped, isPending };
 }
 
 /**

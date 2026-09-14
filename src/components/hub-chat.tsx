@@ -60,7 +60,7 @@ export function HubChat({
     void getMyChatName()
       .then(setChatName)
       .catch(() => setChatName(user.displayName ?? ""));
-  }, [user]);
+  }, [user?.id, user?.displayName]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();

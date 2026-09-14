@@ -31,7 +31,7 @@ export function InvitePanel({
     void listOpenInvitees({ data: { country } })
       .then(setPeople)
       .catch(() => setPeople([]));
-  }, [user, country]);
+  }, [user?.id, country]);
 
   if (isPending || !user) return null;
 

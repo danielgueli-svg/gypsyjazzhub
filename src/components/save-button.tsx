@@ -29,7 +29,7 @@ export function SaveButton({
       .then(setSaved)
       .catch(() => setSaved(false))
       .finally(() => setReady(true));
-  }, [user, kind, slug]);
+  }, [user?.id, kind, slug]);
 
   if (isPending || !ready) {
     return <div className="h-11 w-28 animate-pulse rounded-md bg-raised" />;

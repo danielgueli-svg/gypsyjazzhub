@@ -34,7 +34,7 @@ export function SubscribeButton({
       .then(setOn)
       .catch(() => setOn(false))
       .finally(() => setReady(true));
-  }, [user, kind, targetId]);
+  }, [user?.id, kind, targetId]);
 
   if (isPending || !ready) {
     return <div className="h-11 w-36 animate-pulse rounded-md bg-raised" />;

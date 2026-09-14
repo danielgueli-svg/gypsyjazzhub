@@ -66,6 +66,7 @@
   <url><loc>https://www.gypsyjazzhub.com/archive/nepal</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/archive/netherlands</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/archive/new-zealand</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/archive/north-macedonia</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/archive/norway</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/archive/panama</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/archive/paraguay</loc></url>
@@ -103,6 +104,9 @@
   <url><loc>https://www.gypsyjazzhub.com/concerts</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/concerts/s-bireli-lagrene-1980-06-01T18:00:00.000Z</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1934-12-02T20:00:00.000Z</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1936-01-29T19:00:00.000Z</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1936-01-31T19:00:00.000Z</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1936-02-02T19:00:00.000Z</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1946-11-04T20:00:00.000Z</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/concerts/s-django-reinhardt-1953-04-20T18:00:00.000Z</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/concerts/s-stephane-grappelli-1935-03-14T14:00:00.000Z</loc></url>
@@ -225,10 +229,12 @@
   <url><loc>https://www.gypsyjazzhub.com/festivals/asheville-djangofest</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/biggar-django-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/birdland-django-festival</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/bolzano-gipsy-jazz-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/camp-django</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/charm-city-django</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/chicago-gypsy-jazz-fest</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/copenhagen-django</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/cremona-gypsy-jazz-meeting</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/django-a-gogo</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/django-amsterdam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/django-feszt-budapest</loc></url>
@@ -267,15 +273,19 @@
   <url><loc>https://www.gypsyjazzhub.com/festivals/london-gypsy-jazz-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/melbourne-hot-djams</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/midwest-gypsy-swing-fest</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/montisola-manouche-off-road</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/ncpa-international-jazz-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/ozmanouche</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/pennabilli-django-festival</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/raduno-jazz-manouche-procida</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/raduno-mediterraneo</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/reykjavik-jazz-festival</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/roma-django-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/setouchi-django-street</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/shrewsbury-django-fest</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/taipei-gypsy-jazz-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/taipei-jazz-festival</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/festivals/toscana-django-festival</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/tsaritsyno-gypsy-jazz</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/victoria-django</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/festivals/viljandi-guitar-festival</loc></url>
@@ -351,6 +361,7 @@
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/nepal</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/netherlands</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/new-zealand</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/north-macedonia</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/norway</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/panama</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/instruments/luthiers/paraguay</loc></url>
@@ -417,6 +428,7 @@
   <url><loc>https://www.gypsyjazzhub.com/jams/djangofest-nw-jams</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/dublin-django-djam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/dublin-tenters-walters</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/jams/enschede-stadsgraaf-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/exeter-gypsy-jazz-sessions</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/goro-goro-sanur-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/gypsy-jazz-club-belgrade</loc></url>
@@ -436,6 +448,7 @@
   <url><loc>https://www.gypsyjazzhub.com/jams/manuska-jam-club</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/melbourne-hot-djams</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/midwest-swing-jam</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/jams/milan-gipsy-lambrate</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/milan-manouche-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/missoula-old-post-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/montreal-hot-club-jam</loc></url>
@@ -451,7 +464,9 @@
   <url><loc>https://www.gypsyjazzhub.com/jams/petersburg-jfc-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/piano-man-delhi-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/pittsburgh-conjure-jam</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/jams/poznan-gypski-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/prague-manouche-jam</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/jams/reims-souk</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/samois-berceau</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/shanghai-cottons-gypsy-jam</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/jams/south-africa-manouche</loc></url>
@@ -479,9 +494,11 @@
   <url><loc>https://www.gypsyjazzhub.com/musicians/adrien-tarraga</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/al-di-meola</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alba-obert</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/musicians/albert-bello</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alec-frith</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alessandro-ricci</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alex-morissette</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/musicians/alex-wirtz</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alexander-sobocinski</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alexey-baev</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/alfonso-ponticelli</loc></url>
@@ -561,6 +578,7 @@
   <url><loc>https://www.gypsyjazzhub.com/musicians/dario-napoli</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/dave-mooney</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/david-lange</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/musicians/david-regueiro</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/debi-botos</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/dejan-krsmanovic</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/diego-baliardo</loc></url>
@@ -901,6 +919,7 @@
   <url><loc>https://www.gypsyjazzhub.com/musicians/tomas-bobrowicky</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/tomislav-vujnovic</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/tommaso-papini</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/musicians/tommy-davy</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/tonino-baliardo</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/tonino-de-sensi</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/musicians/tonte-andras</loc></url>
@@ -1035,6 +1054,7 @@
   <url><loc>https://www.gypsyjazzhub.com/world/nepal</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/world/netherlands</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/world/new-zealand</loc></url>
+  <url><loc>https://www.gypsyjazzhub.com/world/north-macedonia</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/world/norway</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/world/panama</loc></url>
   <url><loc>https://www.gypsyjazzhub.com/world/paraguay</loc></url>

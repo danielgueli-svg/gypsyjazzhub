@@ -30,7 +30,7 @@ export function FollowCountry({ country }: { country: string }) {
         setFrequency(res.frequency);
       })
       .catch(() => setFollowing(false));
-  }, [user, country]);
+  }, [user?.id, country]);
 
   if (!country) return null;
   if (!mounted || isPending) {

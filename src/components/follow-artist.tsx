@@ -65,7 +65,7 @@ export function FollowArtist({ artist }: { artist: Omit<AlertFollow, "frequency"
         setFrequency(res.frequency ?? "every");
       })
       .catch(() => setFollowing(false));
-  }, [user, artist.artistSlug]);
+  }, [user?.id, artist.artistSlug]);
 
   if (!mounted || isPending) {
     return (

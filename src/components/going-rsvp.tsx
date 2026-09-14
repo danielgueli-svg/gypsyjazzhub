@@ -80,7 +80,7 @@ export function GoingRsvp({
       })
       .catch(() => undefined)
       .finally(() => setBusy(false));
-  }, [user, isPending, ready, kind, targetId, nightStamp, mine, canGo]);
+  }, [user?.id, isPending, ready, kind, targetId, nightStamp, mine, canGo]);
 
   const count = people.length;
 
