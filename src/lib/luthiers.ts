@@ -85,7 +85,7 @@ const GUITAR_LUTHIERS: Luthier[] = [
     phone: "+39 347 088 2722",
     email: "info@marcolamannaguitars.com",
     hours: "By appointment",
-    bio: "Marco La Manna builds in Dovera, in the Cremona country. Jazz manouche, classical and acoustic guitars — a current Italian chair for the Selmer sound.",
+    bio: "Workshop in Dovera, in Cremona — Stradivari’s town, with the woods that place is known for. Jazz manouche, classical and acoustic guitars. One of the luthiers most in demand now, from all over the world.",
   }),
   guitar({
     slug: "bruno-bagnarelli",
