@@ -220,6 +220,9 @@ async function runEnsureHub() {
     alter table hub_concerts add column if not exists status text not null default 'published'
   `);
   await sql.query(`
+    alter table hub_concerts add column if not exists source_id text not null default ''
+  `);
+  await sql.query(`
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
@@ -407,6 +410,7 @@ function mapHubConcert(row: {
   artist_name: string;
   artist_slug: string;
   artist_kind: string;
+  source_id?: string;
 }): Concert {
   const facebookUrl =
     row.note.match(/https?:\/\/[^\s]*facebook\.com[^\s]*/i)?.[0] ??
@@ -425,6 +429,7 @@ function mapHubConcert(row: {
     isHistoric: new Date(toIso(row.starts_at)).getTime() < Date.now(),
     artistName: row.artist_name,
     artistSlug: row.artist_slug,
+    sourceId: row.source_id ?? "",
   };
 }
 
@@ -545,13 +550,15 @@ export const listHubConcerts = createServerFn({ method: "GET" })
         const sql = await getSql();
         const rows = slug
           ? await sql<Parameters<typeof mapHubConcert>[0]>`
-              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
+              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
+                     coalesce(source_id, '') as source_id
               from hub_concerts
               where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
               order by starts_at asc
             `
           : await sql<Parameters<typeof mapHubConcert>[0]>`
-              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind
+              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
+                     coalesce(source_id, '') as source_id
               from hub_concerts
               where coalesce(status, 'published') = 'published'
               order by starts_at asc
@@ -915,8 +922,8 @@ export const updateHubConcert = createServerFn({ method: "POST" })
       await sql.query(
         `insert into hub_concerts (
           artist_slug, artist_name, artist_kind, title, venue, city, country,
-          starts_at, note, submitted_by, submitted_name, status
-        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+          starts_at, note, submitted_by, submitted_name, status, source_id
+        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
         [
           resolved.slug,
           resolved.name,
@@ -930,6 +937,7 @@ export const updateHubConcert = createServerFn({ method: "POST" })
           context.userId,
           submitted,
           "published",
+          data.id,
         ],
       );
     }

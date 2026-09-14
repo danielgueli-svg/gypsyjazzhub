@@ -81,6 +81,7 @@ export type Concert = {
   isHistoric: boolean;
   artistName: string;
   artistSlug: string;
+  sourceId?: string;
 };
 
 export function uniqueBills(concerts: Concert[]): Concert[] {
@@ -116,6 +117,58 @@ function collapseSlot(list: Concert[]): Concert[] {
     }
   }
   return [...byTitle.values()];
+}
+
+function isConcertOverlay(base: Concert, hub: Concert) {
+  if (hub.sourceId && hub.sourceId === base.id) return true;
+  if (base.artistSlug !== hub.artistSlug) return false;
+  const dt = Math.abs(Date.parse(base.startsAt) - Date.parse(hub.startsAt));
+  if (!Number.isFinite(dt)) return false;
+  const sameTitle = base.title.trim().toLowerCase() === hub.title.trim().toLowerCase();
+  const sameCity = base.city.trim().toLowerCase() === hub.city.trim().toLowerCase();
+  if (sameTitle && dt < 14 * 86_400_000) return true;
+  if (sameCity && dt < 36 * 3_600_000) return true;
+  return false;
+}
+
+function mergeConcertOverlay(base: Concert, hub: Concert): Concert {
+  const pick = (over: string, fallback: string) => (over.trim() ? over : fallback);
+  return {
+    ...base,
+    id: hub.id,
+    sourceId: hub.sourceId || base.id,
+    title: pick(hub.title, base.title),
+    venue: pick(hub.venue, base.venue),
+    city: pick(hub.city, base.city),
+    country: pick(hub.country, base.country),
+    startsAt: hub.startsAt || base.startsAt,
+    description: pick(hub.description, base.description),
+    ticketUrl: hub.ticketUrl || base.ticketUrl,
+    isHistoric: hub.isHistoric,
+    artistName: pick(hub.artistName, base.artistName),
+    artistSlug: pick(hub.artistSlug, base.artistSlug),
+  };
+}
+
+/** Hub correction wins the catalog gig so lists, country pages and home stay in sync. */
+export function overlayConcertList(rows: Concert[]): Concert[] {
+  const hub = rows.filter((row) => row.id.startsWith("h-"));
+  const rest = rows.filter((row) => !row.id.startsWith("h-"));
+  const used = new Set<string>();
+  const out: Concert[] = [];
+  for (const concert of rest) {
+    const hit = hub.find((row) => !used.has(row.id) && isConcertOverlay(concert, row));
+    if (hit) {
+      used.add(hit.id);
+      out.push(mergeConcertOverlay(concert, hit));
+    } else {
+      out.push(concert);
+    }
+  }
+  for (const row of hub) {
+    if (!used.has(row.id)) out.push(row);
+  }
+  return out;
 }
 
 export type MessageRow = {
@@ -853,7 +906,7 @@ export const listConcerts = createServerFn({ method: "POST" })
     ];
 
     return uniqueBills(
-      mergeConcertLists([mapped])
+      overlayConcertList(mergeConcertLists([mapped]))
         .filter((concert) => {
           const t = new Date(concert.startsAt).getTime();
           if (filter === "upcoming") return !concert.isHistoric && t >= now;
@@ -927,7 +980,7 @@ export const listLegendConcerts = createServerFn({ method: "GET" })
       console.error("hub concerts failed", err);
     }
     const live = liveConcertsSeed().filter((concert) => concert.artistSlug === slug);
-    return mergeConcertLists([seeded, fromDb, live, hub]);
+    return overlayConcertList(mergeConcertLists([seeded, fromDb, live, hub]));
     } catch (err) {
       console.error("listLegendConcerts failed", err);
       return catalogConcertsFor(slug);
@@ -939,20 +992,37 @@ export async function loadConcert(id: string): Promise<Concert | null> {
   if (!raw) return null;
   const seeded = liveConcertsSeed();
   const seedHit = seeded.find((row) => row.id === raw) ?? null;
-  if (seedHit) return seedHit;
+
+  async function withHub(base: Concert | null) {
+    let hub: Concert[] = [];
+    try {
+      hub = await listHubConcerts({ data: "" });
+    } catch (err) {
+      console.error("loadConcert hub failed", err);
+    }
+    if (!base) return hub.find((row) => row.id === raw) ?? null;
+    const overlaid = overlayConcertList([base, ...hub]);
+    return (
+      overlaid.find((row) => row.id === raw || row.sourceId === raw || row.id === base.id) ??
+      overlaid.find((row) => row.id.startsWith("h-") && isConcertOverlay(base, row)) ??
+      base
+    );
+  }
+
+  if (seedHit) return withHub(seedHit);
 
   if (raw.startsWith("s-")) {
     for (const concert of LEGEND_CONCERTS) {
       const name =
         LEGENDS.find((legend) => legend.slug === concert.legend_slug)?.name ?? concert.legend_slug;
       const mapped = mapSeedConcert(concert, name);
-      if (mapped.id === raw) return mapped;
+      if (mapped.id === raw) return withHub(mapped);
     }
     const byStamp = seeded.find((row) => {
       const seedId = `s-${row.artistSlug}-${row.startsAt}`;
       return seedId === raw || raw.endsWith(row.startsAt);
     });
-    if (byStamp) return byStamp;
+    if (byStamp) return withHub(byStamp);
   }
 
   const match = /^(l|c|h)-(\d+)$/.exec(raw);
@@ -962,6 +1032,9 @@ export async function loadConcert(id: string): Promise<Concert | null> {
     await ensureSeed();
     const sql = await getSql();
     const num = Number(match[2]);
+    if (match[1] === "h") {
+      return withHub(null);
+    }
     if (match[1] === "l") {
       const rows = await sql<{
         id: number;
@@ -983,8 +1056,8 @@ export async function loadConcert(id: string): Promise<Concert | null> {
       limit 1
     `;
       const row = rows[0];
-      if (!row) return seedHit;
-      return {
+      if (!row) return withHub(seedHit);
+      return withHub({
         id: `l-${row.id}`,
         kind: "legend",
         title: row.title,
@@ -997,7 +1070,7 @@ export async function loadConcert(id: string): Promise<Concert | null> {
         isHistoric: Boolean(row.is_historic),
         artistName: row.name,
         artistSlug: row.slug,
-      };
+      });
     }
     if (match[1] === "c") {
       const rows = await sql<{
@@ -1020,8 +1093,8 @@ export async function loadConcert(id: string): Promise<Concert | null> {
       limit 1
     `;
       const row = rows[0];
-      if (!row) return seedHit;
-      return {
+      if (!row) return withHub(seedHit);
+      return withHub({
         id: `c-${row.id}`,
         kind: "community",
         title: row.title,
@@ -1034,10 +1107,9 @@ export async function loadConcert(id: string): Promise<Concert | null> {
         isHistoric: false,
         artistName: row.display_name,
         artistSlug: row.slug,
-      };
+      });
     }
-    const hub = await listHubConcerts({ data: "" });
-    return hub.find((row) => row.id === raw) ?? seedHit;
+    return withHub(seedHit);
   } catch (err) {
     console.error("loadConcert db failed", err);
     return seedHit;
@@ -1075,7 +1147,7 @@ export const listMusicianConcerts = createServerFn({ method: "GET" })
       order by c.starts_at asc
     `;
     const hub = profile[0] ? await listHubConcerts({ data: profile[0].slug }) : [];
-    return [
+    return overlayConcertList([
       ...rows.map((row) => ({
         id: `c-${row.id}`,
         kind: "community" as const,
@@ -1091,7 +1163,7 @@ export const listMusicianConcerts = createServerFn({ method: "GET" })
         artistSlug: row.slug,
       })),
       ...hub,
-    ] satisfies Concert[];
+    ]);
   });
 
 export const addConcert = createServerFn({ method: "POST" })
