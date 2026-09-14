@@ -18,6 +18,9 @@ export const Route = createFileRoute("/venues/$slug")({
     if (params.slug === "stichting-alhambra") {
       throw redirect({ to: "/stichting-alhambra" });
     }
+    if (params.slug === "gradina-alhambra") {
+      throw redirect({ to: "/gradina-alhambra" });
+    }
   },
   loader: async ({ params }) => {
     const venue = getVenue(params.slug) ?? (await getHubVenue({ data: params.slug }));

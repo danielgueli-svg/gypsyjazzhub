@@ -4,6 +4,7 @@ type Copy = {
   subtitle: string;
   lead: string;
   mixNote: string;
+  siblingNote: string;
   aboutTitle: string;
   about: string[];
   nightsTitle: string;
@@ -26,6 +27,7 @@ const EN: Copy = {
   lead: "Stichting Alhambra is a Dutch concert organisation based in Alkmaar. For more than twenty years they have booked guitar nights, mostly in the Remonstrantse kerk (Schuilkerkje) on Fnidsen. Their own site is a mixed classical-guitar series. This page lists only the gypsy jazz / jazz manouche bills.",
   mixNote:
     "Not every name on stichting-alhambra.nl is gypsy jazz. Recitals such as Sebastian Swiedrych (Dowland, Scarlatti, Villa-Lobos, Rodrigo) stay off this hub. Only Hot Club / manouche nights are listed.",
+  siblingNote: "Not Grădina Alhambra in Bucharest — that garden hall has its own page.",
   aboutTitle: "The organisation",
   about: [
     "Home room: Remonstrantse kerk, also called the Schuilkerkje, Fnidsen 37, Alkmaar. Larger gypsy jazz nights have been booked at Cultuurkoepel Heiloo, Kennemerstraatweg 464. Tickets and dates: stichting-alhambra.nl (the site was down when last checked) and Facebook AlhambraGuitaar. Info from their series: 06-51511995.",
@@ -53,6 +55,7 @@ const NL: Copy = {
   lead: "Stichting Alhambra is een Nederlandse concertorganisatie in Alkmaar. Al meer dan twintig jaar boeken ze gitaaravonden, meestal in de Remonstrantse kerk (het Schuilkerkje) aan het Fnidsen. Hun eigen site is een gemengde klassieke-gitaarserie. Deze pagina toont alleen gypsy jazz / jazz manouche.",
   mixNote:
     "Niet elke naam op stichting-alhambra.nl is gypsy jazz. Recitals zoals Sebastian Swiedrych (Dowland, Scarlatti, Villa-Lobos, Rodrigo) blijven van deze hub af. Alleen Hot Club- / manouche-avonden staan hier.",
+  siblingNote: "Niet Grădina Alhambra in Boekarest — die tuinzal heeft een eigen pagina.",
   aboutTitle: "De stichting",
   about: [
     "Thuiszaal: Remonstrantse kerk, ook het Schuilkerkje, Fnidsen 37, Alkmaar. Grotere gypsy-jazzavonden zijn geboekt in de Cultuurkoepel Heiloo, Kennemerstraatweg 464. Kaarten en data: stichting-alhambra.nl (de site was offline bij de laatste check) en Facebook AlhambraGuitaar. Info uit hun serie: 06-51511995.",
@@ -77,6 +80,7 @@ const FR: Copy = {
   lead: "Stichting Alhambra est une organisation de concerts basée à Alkmaar. Depuis plus de vingt ans elle programme des soirées guitare, surtout à l’église rémonstrante (Schuilkerkje) sur Fnidsen. Leur site mélange surtout la guitare classique. Cette page ne liste que le jazz manouche.",
   mixNote:
     "Tous les noms de stichting-alhambra.nl ne sont pas du gypsy jazz. Les recitals classiques (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) restent hors de ce hub.",
+  siblingNote: "Ce n’est pas Grădina Alhambra à Bucarest — cette salle a sa propre page.",
   aboutTitle: "La fondation",
   nightsTitle: "Soirs gypsy jazz",
   nightsLead: "Uniquement les plateaux manouche / Hot Club. Demandez à la fondation avant de voyager.",
@@ -95,6 +99,7 @@ const DE: Copy = {
   lead: "Stichting Alhambra ist eine niederländische Konzertorganisation in Alkmaar. Seit über zwanzig Jahren bucht sie Gitarrenabende, meist in der Remonstrantse kerk (Schuilkerkje) am Fnidsen. Die eigene Website ist eine gemischte Klassik-Gitarrenserie. Diese Seite zeigt nur Gypsy Jazz / Jazz Manouche.",
   mixNote:
     "Nicht jeder Name auf stichting-alhambra.nl ist Gypsy Jazz. Klassik-Recitals (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) bleiben von diesem Hub fern.",
+  siblingNote: "Nicht Grădina Alhambra in Bukarest — dieser Gartensaal hat eine eigene Seite.",
   aboutTitle: "Die Stiftung",
   nightsTitle: "Gypsy-Jazz-Abende",
   nightsLead: "Nur Hot Club / Manouche. Vor der Reise bei der Stiftung nachfragen.",
@@ -113,6 +118,7 @@ const ES: Copy = {
   lead: "Stichting Alhambra es una organización de conciertos en Alkmaar. Lleva más de veinte años programando noches de guitarra, sobre todo en la iglesia remonstrante (Schuilkerkje) de Fnidsen. Su web es una serie mixta de guitarra clásica. Esta página lista solo gypsy jazz / jazz manouche.",
   mixNote:
     "No todos los nombres de stichting-alhambra.nl son gypsy jazz. Los recitals clásicos (Sebastian Swiedrych, Dowland, Scarlatti, Villa-Lobos, Rodrigo) no entran en este hub.",
+  siblingNote: "No es Grădina Alhambra en Bucarest — esa sala tiene su propia página.",
   aboutTitle: "La fundación",
   nightsTitle: "Noches de gypsy jazz",
   nightsLead: "Solo Hot Club / manouche. Pregunta a la fundación antes de viajar.",

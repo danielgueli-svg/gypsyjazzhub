@@ -97,6 +97,12 @@ function AlhambraPage() {
       <p className="mt-4 max-w-2xl rounded-2xl bg-surface p-5 text-sm leading-relaxed text-fg shadow-border">
         {copy.mixNote}
       </p>
+      <p className="mt-3 max-w-2xl text-sm text-muted">
+        {copy.siblingNote}{" "}
+        <Link to="/gradina-alhambra" className="underline underline-offset-2 hover:text-fg">
+          Grădina Alhambra
+        </Link>
+      </p>
 
       <div className="mt-8">
         <ShareBox
