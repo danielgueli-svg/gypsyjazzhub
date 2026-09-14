@@ -1,5 +1,8 @@
 /** Never let a failed or slow extra take down a public page. */
-const EXTRA_MS = 450;
+/** Never let a failed extra take down a public page. Hub overlays need a
+ * real wait — 450ms dropped jam edits on /jams while the jam page itself
+ * could still show the correction. */
+const EXTRA_MS = 3500;
 
 export async function settle<T>(
   label: string,

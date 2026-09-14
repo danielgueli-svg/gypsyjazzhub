@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { FestivalEdit } from "@/components/festival-edit";
 import { ArtistNameLink } from "@/components/artist-name-link";
 import { HubChat } from "@/components/hub-chat";
 import { LegendCard } from "@/components/legend-card";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SubscribeButton } from "@/components/subscribe-button";
 import { ConcertList } from "@/components/concert-row";
 import { listConcerts, listLegends, uniqueBills } from "@/lib/api";
-import { getFestival, concertBelongsToFestival, festivalTicketUrl } from "@/lib/festivals";
+import { getFestival, concertBelongsToFestival, festivalTicketUrl, overlayFestival } from "@/lib/festivals";
 import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { countrySlug } from "@/lib/geo";
@@ -20,7 +21,9 @@ import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/festivals/$slug")({
   loader: async ({ params }) => {
-    const festival = getFestival(params.slug) ?? (await getHubFestival({ data: params.slug }));
+    const catalog = getFestival(params.slug);
+    const hub = await settle("hub-fest", null, () => getHubFestival({ data: params.slug }));
+    const festival = overlayFestival(catalog, hub);
     if (!festival) throw notFound();
     const [legends, chat, upcoming] = await Promise.all([
       listLegends(),
@@ -79,13 +82,14 @@ function FestivalPage() {
           <Badge>{t("festival.since").replace("{year}", festival.founded)}</Badge>
         ) : null}
       </div>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <SubscribeButton
           kind="festival"
           targetId={festival.slug}
           targetName={festival.name}
           label={t("festival.notify")}
         />
+        <FestivalEdit festival={raw} />
       </div>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-3">

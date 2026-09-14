@@ -675,12 +675,6 @@ export const listHubJams = createServerFn({ method: "GET" }).handler(async () =>
   try {
     await ensureHub();
     await ensureJamLeaderColumns();
-    try {
-      const { maybeSendOrganiserMails } = await import("@/lib/digest");
-      await maybeSendOrganiserMails();
-    } catch (err) {
-      console.error("organiser mail failed", err);
-    }
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -1078,6 +1072,74 @@ export const addHubFestival = createServerFn({ method: "POST" })
       )
     `;
     return { slug, pending: gate.pending };
+  });
+
+export const updateHubFestival = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(
+    (input: {
+      slug: string;
+      name: string;
+      city: string;
+      country: string;
+      when: string;
+      nextStartsAt: string;
+      bio: string;
+      site: string;
+    }) => input,
+  )
+  .handler(async ({ context, data }) => {
+    await ensureHub();
+    const { gateContribution } = await import("@/lib/hub-guard");
+    const { getFestival } = await import("@/lib/festivals");
+    const gate = await gateContribution(context.userId, { sessionTrusted: true });
+    if (gate.skip) return { ok: true as const, pending: true as const };
+    const slug = data.slug.trim();
+    if (!slug) throw new Error("Missing festival.");
+    const catalog = getFestival(slug);
+    const sql = await getSql();
+    const existing = await sql.query<{ slug: string }>(
+      `select slug from hub_festivals where slug = $1 limit 1`,
+      [slug],
+    );
+    if (!catalog && !existing[0]) throw new Error("That festival is not on the hub.");
+    const name = data.name.trim();
+    const country = data.country.trim();
+    if (!name) throw new Error("Name the festival.");
+    if (!country) throw new Error("Name the country.");
+    const starts = new Date(data.nextStartsAt);
+    if (Number.isNaN(starts.getTime())) throw new Error("Pick the next date.");
+    const submitted = await submitterName(context.userId);
+    const status = catalog || existing[0] ? "published" : gate.status;
+    await sql.query(
+      `insert into hub_festivals (
+        slug, name, city, country, when_text, next_starts_at, bio, site,
+        submitted_by, submitted_name, status
+      ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      on conflict (slug) do update set
+        name = excluded.name,
+        city = excluded.city,
+        country = excluded.country,
+        when_text = excluded.when_text,
+        next_starts_at = excluded.next_starts_at,
+        bio = excluded.bio,
+        site = excluded.site,
+        status = excluded.status`,
+      [
+        slug,
+        name,
+        data.city.trim(),
+        country,
+        data.when.trim(),
+        starts.toISOString(),
+        data.bio.trim(),
+        data.site.trim(),
+        context.userId,
+        submitted,
+        status,
+      ],
+    );
+    return { ok: true as const, slug, pending: status === "pending" };
   });
 
 export const addHubJam = createServerFn({ method: "POST" })

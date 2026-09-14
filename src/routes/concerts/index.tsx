@@ -9,7 +9,7 @@ import { CountryLabel } from "@/components/country-label";
 import { listConcerts } from "@/lib/api";
 import { countrySlug, displayCountry, preferCountryNames, sameCountry } from "@/lib/geo";
 import { monthKey, monthOptions, uniqueCities, weekdayName } from "@/lib/agenda";
-import { FESTIVALS, type Festival } from "@/lib/festivals";
+import { FESTIVALS, overlayFestivalList, type Festival } from "@/lib/festivals";
 import { whenLabel } from "@/lib/festival-copy";
 import { listHubFestivals, listHubJams } from "@/lib/hub-api";
 import { jamsByCountry, type Jam } from "@/lib/jams";
@@ -92,9 +92,7 @@ export const Route = createFileRoute("/concerts/")({
       const hay = `${concert.title} ${concert.artistName} ${concert.city} ${concert.country} ${concert.venue}`.toLowerCase();
       return hay.includes(q);
     });
-    const festivals = [...FESTIVALS, ...extraFestivals].filter(
-      (row, index, all) => all.findIndex((item) => item.slug === row.slug) === index,
-    );
+    const festivals = overlayFestivalList(FESTIVALS, extraFestivals);
     const jams = jamsByCountry(extraJams).flatMap((group) => group.jams);
 
     let nights: Night[] = [];

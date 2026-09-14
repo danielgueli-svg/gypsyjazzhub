@@ -1,7 +1,7 @@
 import { slugify } from "@/lib/utils";
 import { CAMPS, type Camp } from "@/lib/camps";
 import type { Concert, Legend, Profile } from "@/lib/api";
-import { FESTIVALS, type Festival } from "@/lib/festivals";
+import { FESTIVALS, overlayFestival, type Festival } from "@/lib/festivals";
 import { JAMS, overlayJam, rollJamNext, compareJamsByCadence, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
 import { LUTHIERS, type Luthier } from "@/lib/luthiers";
@@ -1045,13 +1045,24 @@ export function buildGlobeIndex(
     ensure(place).concerts.push(concert);
   }
 
-  for (const festival of [...FESTIVALS, ...extraFestivals]) {
+  for (const festival of FESTIVALS) {
     const place = primaryCountry(festival.country);
     if (!place) continue;
     const row = ensure(place);
     if (!row.festivals.some((item) => item.slug === festival.slug)) {
       row.festivals.push(festival);
     }
+  }
+  for (const festival of extraFestivals) {
+    const place = primaryCountry(festival.country);
+    if (!place) continue;
+    const row = ensure(place);
+    const idx = row.festivals.findIndex((item) => item.slug === festival.slug);
+    if (idx >= 0) {
+      row.festivals[idx] = overlayFestival(row.festivals[idx], festival) ?? festival;
+      continue;
+    }
+    row.festivals.push(festival);
   }
 
   const nowJam = Date.now();

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Contribute } from "@/components/contribute";
 import { Button } from "@/components/ui/button";
-import { FESTIVALS, type Festival } from "@/lib/festivals";
+import { FESTIVALS, overlayFestivalList, type Festival } from "@/lib/festivals";
 import { localizeFestival } from "@/lib/festival-copy";
 import { CountryLabel } from "@/components/country-label";
 import { displayCountry, preferCountryNames } from "@/lib/geo";
@@ -31,8 +31,7 @@ export const Route = createFileRoute("/festivals/")({
   head: () => pageHead(SEO.festivals),
   loader: async () => {
     const extra = await settle("hub-festivals", [], () => listHubFestivals());
-    const known = new Set(FESTIVALS.map((festival) => festival.slug));
-    return { extra: extra.filter((festival) => !known.has(festival.slug)) };
+    return { extra };
   },
   component: FestivalsPage,
 });
@@ -41,7 +40,7 @@ function FestivalsPage() {
   const { extra } = Route.useLoaderData();
   const { t, locale } = useI18n();
   const home = localeHomeCountry(locale);
-  const all = [...FESTIVALS, ...extra].map((festival) => localizeFestival(festival, locale));
+  const all = overlayFestivalList(FESTIVALS, extra).map((festival) => localizeFestival(festival, locale));
   const featured = all.find((festival) => festival.slug === FEATURED_SLUG) ?? all[0];
   const rest = all.filter((festival) => festival.slug !== featured.slug);
   const upcoming = rest

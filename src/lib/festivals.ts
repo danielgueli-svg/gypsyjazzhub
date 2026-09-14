@@ -924,6 +924,37 @@ export function getFestival(slug: string): Festival | undefined {
   return FESTIVALS.find((festival) => festival.slug === slug);
 }
 
+/** Hub row wins non-empty fields so a logged-in correction shows on lists. */
+export function overlayFestival(
+  catalog: Festival | undefined,
+  hub: Festival | null | undefined,
+): Festival | undefined {
+  if (!catalog && !hub) return undefined;
+  if (!hub) return catalog;
+  if (!catalog) return hub;
+  const pick = (over: string, base: string) => (over.trim() ? over : base);
+  return {
+    ...catalog,
+    name: pick(hub.name, catalog.name),
+    city: pick(hub.city, catalog.city),
+    country: pick(hub.country, catalog.country),
+    when: pick(hub.when, catalog.when),
+    site: pick(hub.site, catalog.site),
+    bio: pick(hub.bio, catalog.bio),
+    nextStartsAt: hub.nextStartsAt || catalog.nextStartsAt,
+  };
+}
+
+export function overlayFestivalList(catalog: Festival[], extra: Festival[]): Festival[] {
+  const map = new Map<string, Festival>();
+  for (const festival of catalog) map.set(festival.slug, festival);
+  for (const festival of extra) {
+    const merged = overlayFestival(map.get(festival.slug), festival);
+    if (merged) map.set(festival.slug, merged);
+  }
+  return [...map.values()];
+}
+
 export function festivalNextLabel(festival: Festival) {
   if (festival.tba) return festival.when;
   return festival.nextStartsAt;
