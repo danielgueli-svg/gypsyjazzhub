@@ -1672,6 +1672,18 @@ export const CIRCLE_ARTISTS = [
     sort_order: 214,
   },
   {
+    slug: "alex-wirtz",
+    name: "Alex Wirtz",
+    years: "Poland",
+    origin: "Poznań, Poland",
+    instruments: "Guitar",
+    era: "The Circle",
+    bio: "Poznań guitar. Admin of GYPSKI JAZZ, the Polish Django Reinhardt association. Plays in Śródka with chairs including Marek Piątek and Baro Bromberger. Dates land in the GYPSKI JAZZ Facebook group.",
+    notable: "GYPSKI JAZZ",
+    youtube_url: "https://www.youtube.com/watch?v=BItdju_xtxM",
+    sort_order: 2145,
+  },
+  {
     slug: "milos-bihary",
     name: "Miloš Biháry",
     years: "Slovakia",

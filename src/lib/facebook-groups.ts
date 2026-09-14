@@ -128,6 +128,12 @@ export const FACEBOOK_GROUPS: FacebookGroup[] = [
     country: "Czechia",
   },
   {
+    slug: "gypski-jazz",
+    name: "GYPSKI JAZZ — stowarzyszenie miłośników Django Reinhardta w Polsce",
+    url: "https://www.facebook.com/groups/376813655852264/",
+    country: "Poland",
+  },
+  {
     slug: "australian-gypsy-jazz",
     name: "Australian Gypsy Jazz",
     url: "https://www.facebook.com/groups/ozmanouche/",

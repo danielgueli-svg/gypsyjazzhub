@@ -121,6 +121,8 @@ const CITY_TZ: Record<string, string> = {
   nijmegen: "Europe/Amsterdam",
   reims: "Europe/Paris",
   jerusalem: "Asia/Jerusalem",
+  poznan: "Europe/Warsaw",
+  "poznań": "Europe/Warsaw",
 };
 
 const COUNTRY_TZ: Record<string, string> = {
@@ -639,6 +641,21 @@ export const JAMS: Jam[] = [
     bio: "Czech manouche is not a fixed weekly night. Dates go up in Jazz Manouche Czech Republic on Facebook. Recent rooms: Scarface Café (Legerova 36, Vinohrady), Pracovna in Žižkov, Alva. Django Always (Kája and Tschavolo Vlasák) hold the Prague chairs. Ask in the group before you pack a guitar.",
     relatedSlugs: ["kaja-vlasak", "tschavolo-vlasak"],
     site: "https://www.facebook.com/groups/467446336607200/",
+  },
+  {
+    slug: "poznan-gypski-jam",
+    name: "GYPSKI JAZZ Poznań",
+    city: "Poznań",
+    country: "Poland",
+    venue: "Śródka — Tam Gdzie Zawsze / rooms posted",
+    address: "Cybińska 13, Śródka, Poznań — next room in GYPSKI JAZZ",
+    hours: "evening — see GYPSKI JAZZ",
+    when: "Posted per date",
+    nextStartsAt: "2026-09-15T17:00:00.000Z",
+    bio: "Poznań Django circle around Alex Wirtz and GYPSKI JAZZ, the Polish Django Reinhardt association. Sessions in Śródka — Tam Gdzie Zawsze (Cybińska 13) has held Tuesday nights; recent chairs with Marek Piątek and Baro Bromberger. Dates go up in GYPSKI JAZZ on Facebook, not a fixed weekly. Ask in the group before you pack a guitar.",
+    relatedSlugs: ["alex-wirtz", "marek-piatek"],
+    leader: "Alex Wirtz",
+    site: "https://www.facebook.com/groups/376813655852264/",
   },
   {
     slug: "swing-medical-bar-de-fondo",
