@@ -52,6 +52,7 @@ function LuthiersPage() {
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{copy.kicker}</p>
       <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">{copy.title}</h1>
       <div className="mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-muted">
+        <p>{copy.what}</p>
         <p>{copy.lead}</p>
         <p>{copy.craft}</p>
         <p>{copy.invite}</p>
