@@ -1,7 +1,7 @@
 const RETURN_KEY = "gjh-return-to";
 const RSVP_KEY = "gjh-pending-rsvp";
 
-export type PendingRsvp = { kind: "jam" | "concert"; targetId: string };
+export type PendingRsvp = { kind: "jam" | "concert"; targetId: string; night?: string };
 
 function safePath(raw: string) {
   const path = raw.trim();
@@ -29,11 +29,15 @@ export function peekReturnTo(): string | null {
   return raw ? safePath(raw) : null;
 }
 
-export function setPendingRsvp(kind: "jam" | "concert", targetId: string) {
+export function setPendingRsvp(kind: "jam" | "concert", targetId: string, night?: string) {
   if (typeof sessionStorage === "undefined") return;
   const id = targetId.trim();
   if (!id) return;
-  sessionStorage.setItem(RSVP_KEY, JSON.stringify({ kind, targetId: id } satisfies PendingRsvp));
+  const stamp = (night ?? "").trim();
+  sessionStorage.setItem(
+    RSVP_KEY,
+    JSON.stringify({ kind, targetId: id, night: stamp || undefined } satisfies PendingRsvp),
+  );
 }
 
 export function peekPendingRsvp(): PendingRsvp | null {
@@ -43,7 +47,11 @@ export function peekPendingRsvp(): PendingRsvp | null {
   try {
     const parsed = JSON.parse(raw) as PendingRsvp;
     if ((parsed.kind === "jam" || parsed.kind === "concert") && parsed.targetId?.trim()) {
-      return { kind: parsed.kind, targetId: parsed.targetId.trim() };
+      return {
+        kind: parsed.kind,
+        targetId: parsed.targetId.trim(),
+        night: parsed.night?.trim() || undefined,
+      };
     }
   } catch {
     /* ignore */

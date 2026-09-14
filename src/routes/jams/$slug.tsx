@@ -6,7 +6,6 @@ import { HubChat } from "@/components/hub-chat";
 import { InvitePanel } from "@/components/invite-panel";
 import { LegendCard } from "@/components/legend-card";
 import { SaveButton } from "@/components/save-button";
-import { SubscribeButton } from "@/components/subscribe-button";
 import { ShareBox } from "@/components/share-page";
 import { Badge } from "@/components/ui/badge";
 import { listLegends } from "@/lib/api";
@@ -83,7 +82,6 @@ function JamPage() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <SaveButton kind="jam" slug={jam.slug} label={t("jam.save")} />
-        <SubscribeButton kind="jam" targetId={jam.slug} targetName={jam.name} label={t("jam.notify")} />
         <JamEdit jam={jam} startOpen={Boolean(edit)} />
         <ShareBox
           compact
@@ -133,7 +131,7 @@ function JamPage() {
             </p>
           ) : null}
           <JamNights jam={jam} />
-          <GoingRsvp kind="jam" targetId={jam.slug} returnTo={`/jams/${jam.slug}`} />
+          <GoingRsvp kind="jam" targetId={jam.slug} night={jam.nextStartsAt} jamName={jam.name} returnTo={`/jams/${jam.slug}`} />
         </div>
         {jam.leader || jam.leaderContact ? (
           <div className="rounded-2xl bg-surface p-5 shadow-border">

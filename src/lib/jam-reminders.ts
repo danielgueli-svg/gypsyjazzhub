@@ -1,12 +1,11 @@
 import { getSql } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
 import { overlayJamList, catalogJams, isFrontJam, jamHours, jamPlace, formatJamNext, type Jam } from "@/lib/jams";
+import { inTwoDayWindow, nightKey } from "@/lib/jam-going";
+import { purgePastJamGoing } from "@/lib/rsvp";
 import { toIso } from "@/lib/utils";
 
 const HUB = "https://www.gypsyjazzhub.com";
-const TWO_DAYS_MS = 2 * 86_400_000;
-const WINDOW_BEFORE = TWO_DAYS_MS + 12 * 3_600_000; // 60h
-const WINDOW_AFTER = TWO_DAYS_MS - 12 * 3_600_000; // 36h
 
 async function ensureReminderTables() {
   const sql = await getSql();
@@ -19,17 +18,6 @@ async function ensureReminderTables() {
       primary key (jam_slug, night)
     )
   `);
-}
-
-function nightKey(iso: string) {
-  return iso.slice(0, 10);
-}
-
-function inTwoDayWindow(iso: string, now: number) {
-  const start = Date.parse(iso);
-  if (!Number.isFinite(start)) return false;
-  const delta = start - now;
-  return delta >= WINDOW_AFTER && delta <= WINDOW_BEFORE;
 }
 
 async function hubJams(): Promise<Jam[]> {
@@ -92,11 +80,15 @@ async function jamNotes(slug: string) {
 async function roomEmails(jam: Jam) {
   const sql = await getSql();
   const ids = new Set<string>();
+  const night = nightKey(jam.nextStartsAt);
   try {
-    const rsvp = await sql<{ user_id: string }>`
-      select user_id from hub_rsvps where kind = 'jam' and target_id = ${jam.slug}
-    `;
-    for (const row of rsvp) ids.add(row.user_id);
+    await purgePastJamGoing(jam.slug, jam.nextStartsAt);
+    if (night) {
+      const going = await sql<{ user_id: string }>`
+        select user_id from hub_jam_going where jam_slug = ${jam.slug} and night = ${night}
+      `;
+      for (const row of going) ids.add(row.user_id);
+    }
   } catch {
     /* table may not exist */
   }
@@ -105,19 +97,6 @@ async function roomEmails(jam: Jam) {
       select user_id from hub_subscriptions where kind = 'jam' and target_id = ${jam.slug}
     `;
     for (const row of subs) ids.add(row.user_id);
-  } catch {
-    /* */
-  }
-  try {
-    const country = jam.country.trim();
-    if (country) {
-      const open = await sql<{ user_id: string }>`
-        select user_id from profiles
-        where open_for_invites = true and country ilike ${country}
-        limit 80
-      `;
-      for (const row of open) ids.add(row.user_id);
-    }
   } catch {
     /* */
   }
@@ -161,7 +140,7 @@ function buildMail(jam: Jam, notes: { name: string; body: string }[]) {
   }
   lines.push(href);
   lines.push("");
-  lines.push("You get this because you said you're going, tapped Notify me, or are open for invitations.");
+  lines.push("You get this because you said you're going to this session, or you asked for a reminder two days before.");
   lines.push("Made by Daniel Gueli");
   return {
     subject: `Reminder: ${jam.name} in 2 days — ${jam.city || jam.country}`,
@@ -171,9 +150,14 @@ function buildMail(jam: Jam, notes: { name: string; body: string }[]) {
 
 export async function runJamRoomReminders(now = Date.now()) {
   await ensureReminderTables();
+  try {
+    await purgePastJamGoing();
+  } catch {
+    /* going table may not exist yet */
+  }
   const extra = await hubJams();
   const jams = overlayJamList(catalogJams(now), extra, now).filter(
-    (jam) => isFrontJam(jam) && inTwoDayWindow(jam.nextStartsAt, now),
+    (jam) => isFrontJam(jam) && Boolean(nightKey(jam.nextStartsAt)) && inTwoDayWindow(jam.nextStartsAt, now),
   );
   const sql = await getSql();
   let sent = 0;
