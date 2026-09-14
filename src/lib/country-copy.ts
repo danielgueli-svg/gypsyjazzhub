@@ -34,3 +34,50 @@ export type CountryFeatured = {
   pageHref?: string;
   pageLabel?: string;
 };
+
+/** Featured clip + house note at the top of a country page. Facts only. */
+export const COUNTRY_FEATURED: Record<string, CountryFeatured> = {
+  France: {
+    kicker: "Paris",
+    title: "Paris Guitar Connection",
+    body: "A Paris podcast: six guitarists, two sofas, and a long sit about the guitar. Lives and tutorials after each episode — not a weekly public jam. The house is YouTube @ParisGuitarConnection. The six: Aurélien Robert, Guillaume Muschalle, François Thouvenot, Ghali Hadefi, Nicolas Lestoquoy, Yoann Kempst. Ghali’s pompe shorts are the ones players send each other. The episode on this page is Gypsy Jazz with a Gypsy, with Steven Reinhardt from Saint-Ouen. If you want to jam in Paris after you watch, La Chope des Puces still runs weekends on rue des Rosiers.",
+    youtubeUrl: "https://www.youtube.com/watch?v=4cK5mZdbNqM",
+    videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection",
+    site: "https://www.youtube.com/@ParisGuitarConnection",
+    siteLabel: "youtube.com/@ParisGuitarConnection",
+  },
+  Norway: {
+    kicker: "Oslo",
+    title: "Djangofestivalen",
+    body: "January in Oslo since 1980. Cosmopolite, Torshov. Jon Larsen hosts; Hot Club de Norvège is the house band. Last edition 22–24 January 2026. Next: 21–23 January 2027. Line-up not posted yet. A smaller one-day Djangofest sat at Vespa og Humla on 29 August 2026 — not the same festival.",
+    site: "https://cosmopolite.no/",
+    siteLabel: "cosmopolite.no",
+    pageHref: "/festivals/djangofestivalen-oslo",
+    pageLabel: "Djangofestivalen Oslo",
+  },
+  Finland: {
+    kicker: "Finland",
+    title: "Olli Soikkeli — Comeback tour",
+    body: "Nurmes guitar, New York now. Comeback fall tour 2026: Air Force Big Band in Jyväskylä (9 Sep), Kuopio (10) and Tampere-talo (11), then the trio through Loimaa, Helsinki, Vantaa, Kotka, Flame Jazz Cruise (4 Oct) and Raisio (5 Oct, free). Official site ollisoikkeli.com. No weekly Finnish jam on file.",
+    site: "https://www.ollisoikkeli.com/",
+    siteLabel: "ollisoikkeli.com",
+    pageHref: "/musicians/olli-soikkeli",
+    pageLabel: "Olli Soikkeli",
+  },
+};
+
+const FEATURED_COPY: Record<string, Record<string, Partial<CountryFeatured>>> = {
+  fr: { France: { kicker: "Paris", title: "Paris Guitar Connection", body: "Un podcast parisien : six guitaristes, deux canapés, et une longue conversation sur la guitare. Lives et tutos après chaque épisode — ce n’est pas un jam public hebdomadaire. La maison, c’est YouTube @ParisGuitarConnection.", videoTitle: "Gypsy Jazz with a Gypsy : Steven Reinhardt — Paris Guitar Connection" } },
+  nl: { France: { kicker: "Parijs", title: "Paris Guitar Connection", body: "Een Parijse podcast: zes gitaristen, twee banken, en een lang gesprek over de gitaar. Lives en tutos na elke aflevering — geen wekelijkse open jam.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
+  de: { France: { kicker: "Paris", title: "Paris Guitar Connection", body: "Ein Pariser Podcast: sechs Gitarristen, zwei Sofas, und ein langes Gespräch über die Gitarre. Lives und Tutorials nach jeder Folge — kein wöchentlicher öffentlicher Jam.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
+  es: { France: { kicker: "París", title: "Paris Guitar Connection", body: "Un podcast parisino: seis guitarristas, dos sofás y una larga conversación sobre la guitarra. Directos y tutoriales después de cada episodio — no es un jam público semanal.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
+  it: { France: { kicker: "Parigi", title: "Paris Guitar Connection", body: "Un podcast parigino: sei chitarristi, due divani e una lunga chiacchierata sulla chitarra. Live e tutorial dopo ogni puntata — non è un jam pubblico settimanale.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
+  pt: { France: { kicker: "Paris", title: "Paris Guitar Connection", body: "Um podcast parisiense: seis guitarristas, dois sofás e uma longa conversa sobre a guitarra. Lives e tutoriais depois de cada episódio — não é um jam público semanal.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
+};
+
+export function countryFeatured(country: string, locale: string): CountryFeatured | null {
+  const base = COUNTRY_FEATURED[country];
+  if (!base) return null;
+  const loc = FEATURED_COPY[locale]?.[country];
+  return loc ? { ...base, ...loc } : base;
+}
