@@ -43,7 +43,10 @@ export function isBookerAddress(email: string) {
 }
 
 export async function shouldQueueHubMail(email: string) {
-  return isBookerAddress(email);
+  const address = email.trim().toLowerCase();
+  if (!address.includes("@")) return false;
+  if (OWNER_INBOX.has(address)) return false;
+  return true;
 }
 
 async function ensureMailQueue() {

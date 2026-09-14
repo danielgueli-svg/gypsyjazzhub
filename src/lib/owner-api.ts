@@ -926,7 +926,7 @@ export const sendOwnerCustomMail = createServerFn({ method: "POST" })
     for (let i = 0; i < addresses.length; i += 8) {
       const slice = addresses.slice(i, i + 8);
       const results = await Promise.allSettled(
-        slice.map((email) => sendHubMail(email, data.subject, data.body)),
+        slice.map((email) => sendHubMail(email, data.subject, data.body, undefined, undefined, true)),
       );
       for (const result of results) {
         if (result.status === "fulfilled") sent += 1;

@@ -35,6 +35,7 @@ import { Route as ApiAlertsRouteImport } from './routes/api/alerts'
 import { Route as ApiDigestRouteImport } from './routes/api/digest'
 import { Route as ApiDjangobooksImportRouteImport } from './routes/api/djangobooks-import'
 import { Route as ApiFacebookImportRouteImport } from './routes/api/facebook-import'
+import { Route as ApiMailQueueRouteImport } from './routes/api/mail-queue'
 import { Route as ApiRomaniMusicRouteImport } from './routes/api/romani-music'
 import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
 import { Route as ArchiveSlugRouteImport } from './routes/archive/$slug'
@@ -225,6 +226,11 @@ const ApiDjangobooksImportRoute = ApiDjangobooksImportRouteImport.update({
 const ApiFacebookImportRoute = ApiFacebookImportRouteImport.update({
   id: '/api/facebook-import',
   path: '/api/facebook-import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMailQueueRoute = ApiMailQueueRouteImport.update({
+  id: '/api/mail-queue',
+  path: '/api/mail-queue',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRomaniMusicRoute = ApiRomaniMusicRouteImport.update({
@@ -562,6 +568,7 @@ export interface FileRoutesByFullPath {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -651,6 +658,7 @@ export interface FileRoutesByTo {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -741,6 +749,7 @@ export interface FileRoutesById {
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
+  '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
   '/concerts/$id': typeof ConcertsIdRoute
@@ -832,6 +841,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -921,6 +931,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -1010,6 +1021,7 @@ export interface FileRouteTypes {
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
+    | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
     | '/concerts/$id'
@@ -1100,6 +1112,7 @@ export interface RootRouteChildren {
   ApiDigestRoute: typeof ApiDigestRoute
   ApiDjangobooksImportRoute: typeof ApiDjangobooksImportRoute
   ApiFacebookImportRoute: typeof ApiFacebookImportRoute
+  ApiMailQueueRoute: typeof ApiMailQueueRoute
   ApiRomaniMusicRoute: typeof ApiRomaniMusicRoute
   ArchiveSlugRoute: typeof ArchiveSlugRoute
   ConcertsIdRoute: typeof ConcertsIdRoute
@@ -1345,6 +1358,13 @@ declare module '@tanstack/react-router' {
       path: '/api/facebook-import'
       fullPath: '/api/facebook-import'
       preLoaderRoute: typeof ApiFacebookImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mail-queue': {
+      id: '/api/mail-queue'
+      path: '/api/mail-queue'
+      fullPath: '/api/mail-queue'
+      preLoaderRoute: typeof ApiMailQueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/romani-music': {
@@ -1804,6 +1824,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDigestRoute: ApiDigestRoute,
   ApiDjangobooksImportRoute: ApiDjangobooksImportRoute,
   ApiFacebookImportRoute: ApiFacebookImportRoute,
+  ApiMailQueueRoute: ApiMailQueueRoute,
   ApiRomaniMusicRoute: ApiRomaniMusicRoute,
   ArchiveSlugRoute: ArchiveSlugRoute,
   ConcertsIdRoute: ConcertsIdRoute,

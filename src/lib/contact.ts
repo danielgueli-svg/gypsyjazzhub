@@ -116,6 +116,7 @@ export const submitContact = createServerFn({ method: "POST" })
         body,
         undefined,
         email,
+        true,
       );
 
       await sql.query(

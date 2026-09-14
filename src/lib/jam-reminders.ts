@@ -186,7 +186,7 @@ export async function runJamRoomReminders(now = Date.now()) {
     let okCount = 0;
     for (const person of people) {
       try {
-        await sendHubMail(person.email, mail.subject, mail.body);
+        await sendHubMail(person.email, mail.subject, mail.body, undefined, undefined, true);
         okCount += 1;
         sent += 1;
       } catch {

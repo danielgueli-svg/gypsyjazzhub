@@ -304,7 +304,7 @@ export async function sendHubMail(
   }
 
   if (!force) {
-    const { shouldQueueHubMail, queueHubMail } = await import("@/lib/mail-queue");
+    const { shouldQueueHubMail, queueHubMail, isBookerAddress } = await import("@/lib/mail-queue");
     if (await shouldQueueHubMail(address)) {
       const queued = await queueHubMail({
         to: address,
@@ -312,8 +312,8 @@ export async function sendHubMail(
         body,
         html,
         replyTo,
-        kind: "booker",
-        reason: "Mail to a booker waits for green light.",
+        kind: isBookerAddress(address) ? "booker" : "outreach",
+        reason: "Not automated — waits for green light.",
       });
       return queued.queued ? "queued for owner green light" : "already on the green-light list";
     }
@@ -373,7 +373,7 @@ export async function maybeSendOrganiserMails() {
     [SIGRID_MAIL_ID],
   );
   const prior = existing[0]?.detail ?? "";
-  if (/sent with Resend/i.test(prior)) {
+  if (/sent with Resend|queued for owner/i.test(prior)) {
     console.error("[hub] organiser mail already sent");
     return;
   }
@@ -420,13 +420,18 @@ export async function maybeSendOrganiserMails() {
       buttonHref: jamUrl,
       locale: "nl",
     });
-    const detail = await sendHubMail(
-      "sigridvannistelrooij@icloud.com",
-      "Café van de Refter — wanneer is de volgende jam?",
+    const { queueHubMail } = await import("@/lib/mail-queue");
+    const queued = await queueHubMail({
+      to: "sigridvannistelrooij@icloud.com",
+      toName: "Sigrid Booden",
+      subject: "Café van de Refter — wanneer is de volgende jam?",
       body,
       html,
-      HUB_OWNER_EMAIL,
-    );
+      replyTo: HUB_OWNER_EMAIL,
+      kind: "organiser",
+      reason: "Organiser question — waits for green light.",
+    });
+    const detail = queued.queued ? "queued for owner green light" : "already on the green-light list";
     await sql.query(`update hub_oneoff_mail set detail = $2 where id = $1`, [SIGRID_MAIL_ID, detail]);
     console.error("[hub] organiser mail sent", detail);
   } catch (err) {
@@ -467,7 +472,7 @@ export async function runDigest(source: "cron" | "test"): Promise<DigestRun> {
   }
 
   try {
-    const detail = await sendHubMail(settings.email, digest.subject, digest.body);
+    const detail = await sendHubMail(settings.email, digest.subject, digest.body, undefined, undefined, true);
     await sql`
       insert into hub_digest_log (to_email, subject, body, ok, detail)
       values (${settings.email}, ${digest.subject}, ${digest.body}, ${true}, ${detail})

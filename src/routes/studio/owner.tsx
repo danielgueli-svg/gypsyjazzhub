@@ -898,10 +898,11 @@ function OwnerPage() {
               ) : null}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-              Booker mail and other non-automated mail sits here. It does not go
-              out until you press green light. Automated mail (welcome, jam
-              reminder, password reset, morning digest) still sends on its own.
-              Around 19:00 Dutch time you get a list of whatever is still waiting.
+              Any mail drafted to one person on the hub — a question, a booker,
+              an organiser — waits here until you press green light. Welcome
+              mail, password reset, jam reminders and the morning digest still
+              send on their own; you do not see those. Around 19:00 Dutch time
+              you get one mail with whatever is still waiting.
             </p>
             {mailQueue.pending.length === 0 ? (
               <p className="mt-5 text-sm text-muted">None waiting.</p>

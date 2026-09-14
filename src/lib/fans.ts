@@ -494,6 +494,9 @@ export const inviteToJam = createServerFn({ method: "POST" })
             email,
             `Jam invitation: ${jamName}`,
             `Hello${account[0]?.name ? ` ${account[0].name}` : ""},\n\n${body}\n\nYou turned on Open for invitations on Gypsy Jazz Hub.\nMade by Daniel Gueli`,
+            undefined,
+            undefined,
+            true,
           );
         }
         sent += 1;
