@@ -1004,7 +1004,18 @@ export function festivalForConcert(concert: {
   return FESTIVALS.find((row) => concertBelongsToFestival(row, concert));
 }
 
-export function concertBelongsToFestival(
+export function uniqueFestivalNights(
+  concerts: { title: string; artistName?: string; venue: string; city: string; startsAt: string }[],
+) {
+  const map = new Map<string, (typeof concerts)[number]>();
+  const sorted = [...concerts].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  for (const concert of sorted) {
+    const bill = (concert.title || concert.artistName || "").trim().toLowerCase();
+    const key = `${bill}|${concert.startsAt.slice(0, 10)}|${concert.venue.trim().toLowerCase()}|${concert.city.trim().toLowerCase()}`;
+    map.set(key, concert);
+  }
+  return [...map.values()];
+}
   festival: Festival,
   concert: { title: string; venue: string; city: string; description?: string; startsAt?: string },
 ) {
