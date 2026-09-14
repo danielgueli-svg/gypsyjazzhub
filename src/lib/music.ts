@@ -388,6 +388,25 @@ export const ALBUMS: Album[] = [
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "django-in-london-2026",
+    date: "2026-09-14",
+    title: "Django In London — 17–19 September, this week",
+    body: "Three days at St Mary's, Upper Street, Islington. Harry Diplock Trio, Hugo Guezbar Trio, Elias Prinz & Sunny Franz, Angelo Debarre Trio, Giacomo Smith matinee, London Django Collective with Kourosh Kanani, Debi Botos. Tickets on Eventbrite. All concerts on the festival page.",
+    kind: "scene",
+    artistSlugs: [
+      "angelo-debarre",
+      "hugo-guezbar",
+      "harry-diplock",
+      "elias-prinz",
+      "kourosh-kanani",
+      "debi-botos",
+      "giacomo-smith",
+    ],
+    href: "/festivals/django-in-london",
+    hrefLabel: "news.openFestival",
+    image: "/news/django-in-london-2026.jpg",
+  },
+  {
     slug: "angelo-debarre-ulule",
     date: "2026-09-10",
     title: "Crowdfund for Angelo Debarre",
@@ -666,6 +685,7 @@ export function latestAlbums(limit = 8) {
 }
 
 const PINNED_NEWS = [
+  "django-in-london-2026",
   "angelo-debarre-ulule",
   "la-pompe-live-app",
   "moignard-miroirs-sunset",
