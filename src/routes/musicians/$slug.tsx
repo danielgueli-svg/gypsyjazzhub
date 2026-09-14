@@ -29,7 +29,7 @@ import { artistPhoto } from "@/lib/photos";
 import { basedInCountry } from "@/lib/geo";
 import { loadDirectoryArtist } from "@/lib/directory-artist";
 import { listHubClips, listHubJams, listHubNotes, getHubArtistBio } from "@/lib/hub-api";
-import { upcomingJams } from "@/lib/jams";
+import { overlayJamList, catalogJams } from "@/lib/jams";
 import { listGuestbook } from "@/lib/guestbook";
 import { listArtistReviews } from "@/lib/concert-reviews";
 import { contactHref, concertShareLine, formatInstrumentList } from "@/lib/utils";
@@ -57,14 +57,13 @@ export const Route = createFileRoute("/musicians/$slug")({
       settle("member-clips", [], () => listHubClips({ data: musician.slug })),
       settle("member-notes", [], () => listHubNotes({ data: musician.slug })),
       settle("member-guestbook", [], () => listGuestbook({ data: musician.slug })),
-      settle("member-jams", [], () => listHubJams()),
+      listHubJams(),
       settle("member-reviews", [], () => listArtistReviews({ data: musician.slug })),
       settle("member-hub-bio", null, () => getHubArtistBio({ data: musician.slug })),
     ]);
     const city = musician.city.trim().toLowerCase();
     const nearbyJams = city
-      ? [...upcomingJams(), ...extraJams]
-          .filter((jam, i, all) => all.findIndex((row) => row.slug === jam.slug) === i)
+      ? overlayJamList(catalogJams(), extraJams)
           .filter((jam) => jam.city.trim().toLowerCase() === city)
           .slice(0, 6)
       : [];

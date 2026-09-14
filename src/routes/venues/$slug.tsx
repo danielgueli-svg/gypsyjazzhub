@@ -10,7 +10,7 @@ import { CountryLabel } from "@/components/country-label";
 import { countrySlug } from "@/lib/geo";
 import { getHubVenue, listHubChat, listHubJams } from "@/lib/hub-api";
 import { getVenue, venueScene } from "@/lib/venues";
-import { upcomingJams } from "@/lib/jams";
+import { overlayJamList, catalogJams } from "@/lib/jams";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/venues/$slug")({
@@ -30,8 +30,7 @@ export const Route = createFileRoute("/venues/$slug")({
     );
     const city = venue.city.trim().toLowerCase();
     const cityJams = city
-      ? [...upcomingJams(), ...extraJams]
-          .filter((jam, i, all) => all.findIndex((row) => row.slug === jam.slug) === i)
+      ? overlayJamList(catalogJams(), extraJams)
           .filter((jam) => jam.city.trim().toLowerCase() === city)
           .slice(0, 8)
       : [];

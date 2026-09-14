@@ -1,7 +1,4 @@
-/** Never let a failed or slow extra take down a public page. */
-/** Never let a failed extra take down a public page. Hub overlays need a
- * real wait — 450ms dropped jam edits on /jams while the jam page itself
- * could still show the correction. */
+/** Optional extras (chat, guestbook) may fail; jam/festival overlays must not. */
 const EXTRA_MS = 3500;
 
 export async function settle<T>(

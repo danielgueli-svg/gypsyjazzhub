@@ -27,8 +27,8 @@ export const Route = createFileRoute("/")({
       listConcerts({ data: { filter: "upcoming" } }),
       listLegends(),
       listMusicians({ data: {} }),
-      settle("hub-festivals", [], () => listHubFestivals()),
-      settle("hub-jams", [], () => listHubJams()),
+      listHubFestivals(),
+      listHubJams(),
       settle("hub-countries", [], () => listHubCountries()),
     ]);
     const upcoming = concerts.filter(

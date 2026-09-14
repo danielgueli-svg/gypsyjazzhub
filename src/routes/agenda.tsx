@@ -12,7 +12,7 @@ import {
   uniqueCountries,
 } from "@/lib/agenda";
 import { listHubJams } from "@/lib/hub-api";
-import { upcomingJams } from "@/lib/jams";
+import { overlayJamList, catalogJams } from "@/lib/jams";
 import { cn } from "@/lib/utils";
 
 type Search = {
@@ -36,9 +36,7 @@ export const Route = createFileRoute("/agenda")({
       listConcerts({ data: { filter: "upcoming" } }),
       listHubJams(),
     ]);
-    const jams = [...upcomingJams(), ...extraJams].filter(
-      (jam, i, all) => all.findIndex((row) => row.slug === jam.slug) === i,
-    );
+    const jams = overlayJamList(catalogJams(), extraJams);
     return { concerts, jams };
   },
   component: AgendaPage,

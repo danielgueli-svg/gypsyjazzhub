@@ -27,7 +27,7 @@ export const Route = createFileRoute("/jams/$slug")({
   }),
   loader: async ({ params }) => {
     const catalog = getJam(params.slug);
-    const hub = await settle("hub-jam", null, () => getHubJam({ data: params.slug }));
+    const hub = await getHubJam({ data: params.slug });
     const jam = overlayJam(catalog, hub);
     if (!jam) throw notFound();
     const [legends, chat] = await Promise.all([

@@ -367,6 +367,34 @@ async function uniqueSlug(
   return `${slug}-${Date.now()}`;
 }
 
+function memoRows<T>(ttlMs: number) {
+  let at = 0;
+  let rows: T[] | null = null;
+  let inflight: Promise<T[]> | null = null;
+  const run = (async (load: () => Promise<T[]>) => {
+    if (rows && Date.now() - at < ttlMs) return rows;
+    if (inflight) return inflight;
+    inflight = load()
+      .then((next) => {
+        rows = next;
+        at = Date.now();
+        return next;
+      })
+      .finally(() => {
+        inflight = null;
+      });
+    return inflight;
+  }) as ((load: () => Promise<T[]>) => Promise<T[]>) & { bust: () => void };
+  run.bust = () => {
+    at = 0;
+    rows = null;
+  };
+  return run;
+}
+
+const hubJamsMemo = memoRows<Jam>(20_000);
+const hubFestivalsMemo = memoRows<Festival>(20_000);
+
 function mapHubConcert(row: {
   id: number;
   title: string;
@@ -647,24 +675,26 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
 
 export const listHubFestivals = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    await ensureHub();
-    const sql = await getSql();
-    const rows = await sql<{
-      slug: string;
-      name: string;
-      city: string;
-      country: string;
-      when_text: string;
-      next_starts_at: unknown;
-      bio: string;
-      site: string;
-    }>`
-    select slug, name, city, country, when_text, next_starts_at, bio, site
-    from hub_festivals
-    where coalesce(status, 'published') = 'published'
-    order by next_starts_at asc
-  `;
-    return rows.map(mapFestival);
+    return await hubFestivalsMemo(async () => {
+      await ensureHub();
+      const sql = await getSql();
+      const rows = await sql<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        when_text: string;
+        next_starts_at: unknown;
+        bio: string;
+        site: string;
+      }>`
+        select slug, name, city, country, when_text, next_starts_at, bio, site
+        from hub_festivals
+        where coalesce(status, 'published') = 'published'
+        order by next_starts_at asc
+      `;
+      return rows.map(mapFestival);
+    });
   } catch (err) {
     console.error("list hub festivals failed", err);
     return [];
@@ -673,33 +703,35 @@ export const listHubFestivals = createServerFn({ method: "GET" }).handler(async 
 
 export const listHubJams = createServerFn({ method: "GET" }).handler(async () => {
   try {
-    await ensureHub();
-    await ensureJamLeaderColumns();
-    const sql = await getSql();
-    const rows = await sql<{
-      slug: string;
-      name: string;
-      city: string;
-      country: string;
-      venue: string;
-      when_text: string;
-      next_starts_at: unknown;
-      bio: string;
-      kind: string;
-      address: string;
-      hours: string;
-      leader: string;
-      leader_contact: string;
-      second_starts_at: unknown;
-    }>`
-    select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
-           coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
-           second_starts_at
-    from hub_jams
-    where coalesce(status, 'published') = 'published'
-    order by next_starts_at asc
-  `;
-    return rows.map(mapJam);
+    return await hubJamsMemo(async () => {
+      await ensureHub();
+      await ensureJamLeaderColumns();
+      const sql = await getSql();
+      const rows = await sql<{
+        slug: string;
+        name: string;
+        city: string;
+        country: string;
+        venue: string;
+        when_text: string;
+        next_starts_at: unknown;
+        bio: string;
+        kind: string;
+        address: string;
+        hours: string;
+        leader: string;
+        leader_contact: string;
+        second_starts_at: unknown;
+      }>`
+        select slug, name, city, country, venue, when_text, next_starts_at, bio, kind, address, hours,
+               coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
+               second_starts_at
+        from hub_jams
+        where coalesce(status, 'published') = 'published'
+        order by next_starts_at asc
+      `;
+      return rows.map(mapJam);
+    });
   } catch (err) {
     console.error("list hub jams failed", err);
     return [];
@@ -1071,10 +1103,9 @@ export const addHubFestival = createServerFn({ method: "POST" })
         ${context.userId}, ${submitted}, ${gate.status}
       )
     `;
+    hubFestivalsMemo.bust();
     return { slug, pending: gate.pending };
   });
-
-export const updateHubFestival = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1139,10 +1170,9 @@ export const updateHubFestival = createServerFn({ method: "POST" })
         status,
       ],
     );
+    hubFestivalsMemo.bust();
     return { ok: true as const, slug, pending: status === "pending" };
   });
-
-export const addHubJam = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1197,10 +1227,9 @@ export const addHubJam = createServerFn({ method: "POST" })
         ${context.userId}, ${submitted}, ${gate.status}
       )
     `;
+    hubJamsMemo.bust();
     return { slug, pending: gate.pending };
   });
-
-export const updateHubJam = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1294,10 +1323,9 @@ export const updateHubJam = createServerFn({ method: "POST" })
         context.userId,
       ],
     );
+    hubJamsMemo.bust();
     return { ok: true as const, slug, pending: status === "pending" };
   });
-
-export const updateHubJamNight = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((input: { slug: string; slot: number; startsAt: string }) => input)
   .handler(async ({ context, data }) => {
@@ -1394,6 +1422,7 @@ export const updateHubJamNight = createServerFn({ method: "POST" })
         context.userId,
       ],
     );
+    hubJamsMemo.bust();
     return { ok: true as const, slug, pending: status === "pending", first, second };
   });
 

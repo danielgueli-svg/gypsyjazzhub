@@ -22,7 +22,7 @@ import { useI18n } from "@/lib/i18n";
 export const Route = createFileRoute("/festivals/$slug")({
   loader: async ({ params }) => {
     const catalog = getFestival(params.slug);
-    const hub = await settle("hub-fest", null, () => getHubFestival({ data: params.slug }));
+    const hub = await getHubFestival({ data: params.slug });
     const festival = overlayFestival(catalog, hub);
     if (!festival) throw notFound();
     const [legends, chat, upcoming] = await Promise.all([

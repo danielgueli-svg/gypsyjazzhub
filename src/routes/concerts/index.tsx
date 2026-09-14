@@ -16,7 +16,6 @@ import { jamsByCountry, type Jam } from "@/lib/jams";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
 import { pageHead, SEO } from "@/lib/seo";
 import { cn, concertAgendaText, formatConcertDay, formatConcertYear } from "@/lib/utils";
-import { settle } from "@/lib/settle";
 
 type Filter = "upcoming" | "historic" | "all";
 type EventKind = "concert" | "festival" | "jam";
@@ -76,8 +75,8 @@ export const Route = createFileRoute("/concerts/")({
     const kind = deps.type;
     const [catalog, extraFestivals, extraJams] = await Promise.all([
       listConcerts({ data: { filter: "all" } }),
-      settle("hub-festivals", [], () => listHubFestivals()),
-      settle("hub-jams", [], () => listHubJams()),
+      listHubFestivals(),
+      listHubJams(),
     ]);
     const now = Date.now();
     const q = deps.q?.trim().toLowerCase() ?? "";

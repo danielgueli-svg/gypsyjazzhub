@@ -9,7 +9,6 @@ import { listHubFestivals } from "@/lib/hub-api";
 import { formatConcertWhen, formatLocalDate } from "@/lib/utils";
 import { pageHead, SEO } from "@/lib/seo";
 import { localeHomeCountry, useI18n } from "@/lib/i18n";
-import { settle } from "@/lib/settle";
 
 function nextShort(
   festival: { when: string; nextStartsAt: string; tba?: boolean },
@@ -30,7 +29,7 @@ const FEATURED_SLUG = "festival-django-reinhardt";
 export const Route = createFileRoute("/festivals/")({
   head: () => pageHead(SEO.festivals),
   loader: async () => {
-    const extra = await settle("hub-festivals", [], () => listHubFestivals());
+    const extra = await listHubFestivals();
     return { extra };
   },
   component: FestivalsPage,
