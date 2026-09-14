@@ -118,7 +118,7 @@ async function checkOnce() {
 
   const jams = await fetchText("/jams");
   if (jams.status !== 200) fail(`jams ${jams.status}`);
-  const jamCountries = ["Netherlands", "France", "Germany", "United States", "Belgium"].filter((c) =>
+  const jamCountries = ["Netherlands", "France", "Germany", "United States", "Italy"].filter((c) =>
     jams.text.includes(c),
   );
   if (jamCountries.length < MIN_JAM_COUNTRIES) {
