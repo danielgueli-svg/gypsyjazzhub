@@ -21,7 +21,6 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
       - name: Start preview
         run: |
           rm -rf node_modules/.vite
