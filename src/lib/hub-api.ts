@@ -1106,6 +1106,8 @@ export const addHubFestival = createServerFn({ method: "POST" })
     hubFestivalsMemo.bust();
     return { slug, pending: gate.pending };
   });
+
+export const updateHubFestival = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1173,6 +1175,8 @@ export const addHubFestival = createServerFn({ method: "POST" })
     hubFestivalsMemo.bust();
     return { ok: true as const, slug, pending: status === "pending" };
   });
+
+export const addHubJam = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1230,6 +1234,8 @@ export const addHubFestival = createServerFn({ method: "POST" })
     hubJamsMemo.bust();
     return { slug, pending: gate.pending };
   });
+
+export const updateHubJam = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(
     (input: {
@@ -1326,6 +1332,8 @@ export const addHubFestival = createServerFn({ method: "POST" })
     hubJamsMemo.bust();
     return { ok: true as const, slug, pending: status === "pending" };
   });
+
+export const updateHubJamNight = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator((input: { slug: string; slot: number; startsAt: string }) => input)
   .handler(async ({ context, data }) => {
