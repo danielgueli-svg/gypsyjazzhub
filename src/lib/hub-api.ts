@@ -340,6 +340,12 @@ async function seedCatalogTeachers(sql: Awaited<ReturnType<typeof getSql>>) {
       `;
     }
   }
+  await sql`
+    delete from hub_teachers
+    where country_slug = 'netherlands'
+      and name = 'Stochelo Rosenberg'
+      and user_id = ''
+  `;
 }
 
 async function submitterName(userId: string) {

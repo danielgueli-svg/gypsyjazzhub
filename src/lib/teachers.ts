@@ -62,16 +62,6 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     note: "Joscho Stephan Gypsy Guitar Academy — technique, repertoire, and a concert-ready take on Django’s guitar. Online worldwide.",
   },
   {
-    countrySlug: "netherlands",
-    name: "Stochelo Rosenberg",
-    instruments: "Guitar",
-    contact: "https://rosenbergacademy.com/",
-    region: "Noord-Brabant",
-    city: "Helmond",
-    artistSlug: "stochelo-rosenberg",
-    note: "Rosenberg Academy — the Rosenberg family’s school. Stochelo and the Dutch Sinti tradition, taught so amateurs anywhere can work the pompe and the lead lines.",
-  },
-  {
     countrySlug: "portugal",
     name: "Nuno Marinho",
     instruments: "Guitar",
