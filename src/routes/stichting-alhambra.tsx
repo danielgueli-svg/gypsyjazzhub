@@ -17,15 +17,20 @@ const HOME_MAPS =
 
 function isGypsyJazzBill(concert: Concert) {
   const hay = `${concert.title} ${concert.description} ${concert.artistName}`.toLowerCase();
-  return /django|manouche|gypsy jazz|gipsy jazz|gipsyjazz|hot club|sinti|bamberg|rosenberg|kliphuis/.test(
+  return /django|manouche|gypsy jazz|gipsy jazz|gipsyjazz|hot club|sinti|bamberg|rosenberg|kliphuis|schmitt/.test(
     hay,
   );
 }
 
 function byThisOrg(concert: Concert) {
-  const hay = `${concert.title} ${concert.description} ${concert.venue} ${concert.city}`.toLowerCase();
+  const hay = `${concert.title} ${concert.description} ${concert.venue} ${concert.city} ${concert.ticketUrl}`.toLowerCase();
   if (/gradina|bucharest|bucure/.test(hay)) return false;
-  if (/stichting alhambra/.test(hay)) return true;
+  if (/stichting[\s-]?alhambra|stichtingalhambra/.test(hay)) return true;
+  const venue = concert.venue.toLowerCase();
+  const alkmaarHouse =
+    concert.city.trim().toLowerCase() === "alkmaar" &&
+    /gasfabriek|schuilkerk|victorie|vuctorie|remonstrant|fnidsen/.test(venue);
+  if (alkmaarHouse) return true;
   return /cultuurkoepel heiloo/.test(hay) && isGypsyJazzBill(concert);
 }
 

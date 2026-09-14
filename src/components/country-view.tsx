@@ -39,7 +39,11 @@ import { useI18n } from "@/lib/i18n";
 function shortDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(d);
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(d);
 }
 
 function agendaText(countryName: string, country: GlobeCountry | null, pageUrl: string) {

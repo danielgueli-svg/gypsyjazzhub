@@ -8,13 +8,7 @@ import type { Concert } from "@/lib/api";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { updateHubConcert } from "@/lib/hub-api";
 import { useI18n } from "@/lib/i18n";
-
-function toLocalInput(iso: string) {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
+import { toWallClockInput, wallClockIso } from "@/lib/utils";
 
 export function ConcertEdit({ concert }: { concert: Concert }) {
   const { t } = useI18n();
@@ -25,7 +19,7 @@ export function ConcertEdit({ concert }: { concert: Concert }) {
   const [venue, setVenue] = useState(concert.venue);
   const [city, setCity] = useState(concert.city);
   const [country, setCountry] = useState(concert.country);
-  const [startsAt, setStartsAt] = useState(toLocalInput(concert.startsAt));
+  const [startsAt, setStartsAt] = useState(toWallClockInput(concert.startsAt));
   const [note, setNote] = useState(concert.description ?? concert.ticketUrl ?? "");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -37,7 +31,7 @@ export function ConcertEdit({ concert }: { concert: Concert }) {
     setBusy(true);
     setStatus(null);
     try {
-      const nextIso = startsAt ? new Date(startsAt).toISOString() : concert.startsAt;
+      const nextIso = startsAt ? wallClockIso(startsAt) : concert.startsAt;
       const result = await updateHubConcert({
         data: {
           id: concert.id,

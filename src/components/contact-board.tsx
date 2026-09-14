@@ -75,7 +75,11 @@ function ContactBoardDialog({ onClose }: { onClose: () => void }) {
       });
       setSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("footer.contactError"));
+      const raw = err instanceof Error ? err.message : "";
+      const broken = /syntaxerror|unexpected token|failed to fetch|networkerror|load failed/i.test(
+        `${err} ${raw}`,
+      );
+      setError(broken || !raw ? t("footer.contactError") : raw);
     } finally {
       setBusy(false);
     }

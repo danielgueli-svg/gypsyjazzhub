@@ -71,23 +71,25 @@ export const submitContact = createServerFn({ method: "POST" })
     }) => input,
   )
   .handler(async ({ data }) => {
-    if (data.company?.trim()) return { ok: true as const };
-    await ensureContact();
-    const name = clean(data.name ?? "", 80);
-    const email = clean(data.email ?? "", 120).toLowerCase();
-    const subject = clean(data.subject ?? "", 140);
-    const message = (data.message ?? "").trim().slice(0, 4000);
-    if (name.length < 2) throw new Error("Please add your name.");
-    if (!validEmail(email)) throw new Error("Please add a working email.");
-    if (subject.length < 2) throw new Error("Please add a subject.");
-    if (message.length < 8) throw new Error("Please write a short message.");
+    try {
+      if (data.company?.trim()) return { ok: true as const };
+      await ensureContact();
+      const name = clean(data.name ?? "", 80);
+      const email = clean(data.email ?? "", 120).toLowerCase();
+      const subject = clean(data.subject ?? "", 140);
+      const message = (data.message ?? "").trim().slice(0, 4000);
+      if (name.length < 2) throw new Error("Please add your name.");
+      if (!validEmail(email)) throw new Error("Please add a working email.");
+      if (subject.length < 2) throw new Error("Please add a subject.");
+      if (message.length < 8) throw new Error("Please write a short message.");
 
     const sql = await getSql();
+    const since = new Date(Date.now() - 2 * 60 * 1000).toISOString();
     const recent = await sql<{ n: number }>`
-      select count(*)::int as n from hub_contact
-      where email = ${email} and created_at > now() - interval '2 minutes'
+      select count(*) as n from hub_contact
+      where email = ${email} and created_at > ${since}
     `;
-    if ((recent[0]?.n ?? 0) > 0) {
+    if (Number(recent[0]?.n ?? 0) > 0) {
       throw new Error("Please wait a moment before sending another note.");
     }
 
@@ -96,6 +98,13 @@ export const submitContact = createServerFn({ method: "POST" })
       values (${name}, ${email}, ${subject}, ${message})
     `;
     return { ok: true as const };
+    } catch (err) {
+      if (err instanceof Error && /please |working email|short message|wait a moment/i.test(err.message)) {
+        throw err;
+      }
+      console.error("submitContact failed", err);
+      throw new Error("Could not send. Try again in a moment.");
+    }
   });
 
 export const listContactMessages = createServerFn({ method: "GET" })

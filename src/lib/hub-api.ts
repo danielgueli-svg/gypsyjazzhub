@@ -9,7 +9,7 @@ import type { Luthier } from "@/lib/luthiers";
 import { parseLuthierCraft } from "@/lib/luthiers";
 import { countrySlug, resolveCountry } from "@/lib/geo";
 import { ensureFanTables } from "@/lib/fans";
-import { slugify, toIso, youtubeVideoId } from "@/lib/utils";
+import { slugify, toIso, wallClockIso, youtubeVideoId } from "@/lib/utils";
 import { CATALOG_TEACHERS } from "@/lib/teachers";
 import { ensureCatalogArtist } from "@/lib/catalog";
 import { namedPhotoUrl } from "@/lib/profile-photos";
@@ -838,7 +838,7 @@ export const addHubConcert = createServerFn({ method: "POST" })
     if (!title) throw new Error("Give the concert a title.");
     if (!country) throw new Error("Name the country.");
     if (!artistSlug) throw new Error("Pick an artist.");
-    const starts = new Date(data.startsAt);
+    const starts = new Date(wallClockIso(data.startsAt));
     if (Number.isNaN(starts.getTime())) throw new Error("Pick a valid date.");
     const sql = await getSql();
     const dup = await sql<{ id: number }>`
@@ -899,7 +899,7 @@ export const updateHubConcert = createServerFn({ method: "POST" })
     if (!title) throw new Error("Give the concert a title.");
     if (!country) throw new Error("Name the country.");
     if (!artistSlug) throw new Error("Pick an artist.");
-    const starts = new Date(data.startsAt);
+    const starts = new Date(wallClockIso(data.startsAt));
     if (Number.isNaN(starts.getTime())) throw new Error("Pick a valid date.");
     const sql = await getSql();
     const submitted = await submitterName(context.userId);
@@ -1173,7 +1173,7 @@ export const addHubFestival = createServerFn({ method: "POST" })
     const country = data.country.trim();
     if (!name) throw new Error("Name the festival.");
     if (!country) throw new Error("Name the country.");
-    const starts = new Date(data.nextStartsAt);
+    const starts = new Date(wallClockIso(data.nextStartsAt));
     if (Number.isNaN(starts.getTime())) throw new Error("Pick the next date.");
     const slug = await uniqueSlug("hub_festivals", name);
     const sql = await getSql();
@@ -1225,7 +1225,7 @@ export const updateHubFestival = createServerFn({ method: "POST" })
     const country = data.country.trim();
     if (!name) throw new Error("Name the festival.");
     if (!country) throw new Error("Name the country.");
-    const starts = new Date(data.nextStartsAt);
+    const starts = new Date(wallClockIso(data.nextStartsAt));
     if (Number.isNaN(starts.getTime())) throw new Error("Pick the next date.");
     const submitted = await submitterName(context.userId);
     const status = catalog || existing[0] ? "published" : gate.status;
