@@ -1,5 +1,6 @@
 import type { Concert } from "@/lib/api";
 import { LEGEND_CONCERTS, LEGENDS } from "@/lib/seed-data";
+import { EE_SCAN_CONCERTS, archivePastEeConcert } from "@/lib/ee-scan-2026-09-14";
 
 function fold(value: string) {
   return value
@@ -32,7 +33,6 @@ function artistNames(): NameSlug[] {
   return rows;
 }
 
-/** Longest-name-wins substring match against LEGENDS. Empty if not confident. */
 export function resolveArtistSlug(title: string, extra = ""): string {
   const hay = fold(`${title} ${extra}`.trim());
   if (!hay) return "";
@@ -45,7 +45,8 @@ export function resolveArtistSlug(title: string, extra = ""): string {
 }
 
 export function liveConcertsSeed(): Concert[] {
-  return LEGEND_CONCERTS.filter((concert) => !concert.is_historic).map((concert, index) => {
+  const rows = [...LEGEND_CONCERTS, ...EE_SCAN_CONCERTS].map(archivePastEeConcert);
+  return rows.filter((concert) => !concert.is_historic).map((concert, index) => {
     const artistSlug =
       concert.legend_slug || resolveArtistSlug(concert.title) || "";
     const artistName =
