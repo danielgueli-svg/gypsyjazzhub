@@ -1625,6 +1625,24 @@ export function splitLuthiers(rows: Luthier[]) {
   };
 }
 
+const LUTHIER_PIN: Record<string, string[]> = {
+  Italy: ["marco-la-manna", "bruno-bagnarelli"],
+};
+
+export function sortCountryLuthiers(country: string, rows: Luthier[]) {
+  const pin = LUTHIER_PIN[country] ?? [];
+  return [...rows].sort((a, b) => {
+    const ia = pin.indexOf(a.slug);
+    const ib = pin.indexOf(b.slug);
+    if (ia !== -1 || ib !== -1) {
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    }
+    return a.name.localeCompare(b.name);
+  });
+}
+
 export function luthiersByCountry(extra: Luthier[] = []) {
   const all = [...LUTHIERS];
   for (const row of extra) {
@@ -1639,9 +1657,10 @@ export function luthiersByCountry(extra: Luthier[] = []) {
     .sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0) || a.localeCompare(b));
   return [...lead, ...rest].map((country) => ({
     country,
-    luthiers: all
-      .filter((row) => row.country === country)
-      .sort((a, b) => a.name.localeCompare(b.name)),
+    luthiers: sortCountryLuthiers(
+      country,
+      all.filter((row) => row.country === country),
+    ),
   }));
 }
 
