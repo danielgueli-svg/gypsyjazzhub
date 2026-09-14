@@ -1,6 +1,46 @@
 /** Short luthier / shop captions on country lists. Missing locale falls back to a craft line. */
 
 const BIOS: Record<string, Record<string, string>> = {
+  "marco-la-manna": {
+    fr: "Atelier à Dovera, à Crémone — la ville de Stradivari, avec les bois de cet endroit. Guitares jazz manouche, classiques et acoustiques. Parmi les luthiers les plus demandés aujourd’hui, du monde entier.",
+    de: "Werkstatt in Dovera, in Cremona — der Stadt Stradivaris, mit den Hölzern, für die der Ort bekannt ist. Jazz-Manouche-, klassische und Akustikgitarren. Einer der gefragtesten Gitarrenbauer jetzt, aus aller Welt.",
+    nl: "Atelier in Dovera, in Cremona — de stad van Stradivari, met het hout waar die streek om bekendstaat. Jazz manouche, klassieke en akoestische gitaren. Een van de meest gevraagde luthiers nu, van over de hele wereld.",
+    it: "Bottega a Dovera, a Cremona — la città di Stradivari, con i legni di quel posto. Chitarre jazz manouche, classiche e acustiche. Uno dei liutai più richiesti adesso, da tutto il mondo.",
+    es: "Taller en Dovera, en Cremona — la ciudad de Stradivari, con las maderas de ese lugar. Guitarras jazz manouche, clásicas y acústicas. Uno de los luthiers más pedidos ahora, de todo el mundo.",
+    pt: "Oficina em Dovera, em Cremona — a cidade de Stradivari, com as madeiras desse sítio. Guitarras jazz manouche, clássicas e acústicas. Um dos luthiers mais pedidos agora, de todo o mundo.",
+  },
+  "bruno-bagnarelli": {
+    fr: "Atelier à Milan. Bruno Bagnarelli formé à la Civica Scuola di Liuteria. Modèles Selmer-Maccaferri — entretien et guitares neuves pour la scène italienne.",
+    de: "Werkstatt in Mailand. Bruno Bagnarelli an der Civica Scuola di Liuteria ausgebildet. Selmer-Maccaferri-Modelle — Wartung und neue Gitarren für die italienische Szene.",
+    nl: "Atelier in Milaan. Bruno Bagnarelli opgeleid aan de Civica Scuola di Liuteria. Selmer-Maccaferri-modellen — onderhoud en nieuwe gitaren voor de Italiaanse scene.",
+    it: "Bottega a Milano. Bruno Bagnarelli formato alla Civica Scuola di Liuteria. Modelli Selmer-Maccaferri — manutenzione e chitarre nuove per la scena italiana.",
+    es: "Taller en Milán. Bruno Bagnarelli formado en la Civica Scuola di Liuteria. Modelos Selmer-Maccaferri — mantenimiento y guitarras nuevas para la escena italiana.",
+    pt: "Oficina em Milão. Bruno Bagnarelli formado na Civica Scuola di Liuteria. Modelos Selmer-Maccaferri — manutenção e guitarras novas para a cena italiana.",
+  },
+  "jerome-duffell": {
+    fr: "Cardigan, ouest du Pays de Galles. Guitares gypsy jazz Selmer-Maccaferri faites à la main — aussi steel-string et classique. Cours d’un mois dans l’atelier (quatre personnes max).",
+    de: "Cardigan, Westwales. Handgebaute Selmer-Maccaferri-Gypsy-Jazz-Gitarren — auch Steel-String und klassisch. Einmonatige Kurse in der Werkstatt (höchstens vier Leute).",
+    nl: "Cardigan, West-Wales. Handgemaakte Selmer-Maccaferri gypsy-jazzgitaren — ook steel-string en klassiek. Cursus van een maand in het atelier (max vier mensen).",
+    it: "Cardigan, Galles ovest. Chitarre gypsy jazz Selmer-Maccaferri fatte a mano — anche steel-string e classiche. Corsi di un mese in bottega (massimo quattro persone).",
+    es: "Cardigan, oeste de Gales. Guitarras gypsy jazz Selmer-Maccaferri hechas a mano — también steel-string y clásica. Cursos de un mes en el taller (máximo cuatro personas).",
+    pt: "Cardigan, oeste de Gales. Guitarras gypsy jazz Selmer-Maccaferri feitas à mão — também steel-string e clássica. Cursos de um mês na oficina (máximo quatro pessoas).",
+  },
+  "robert-ford": {
+    fr: "Little Clacton, Essex. Guitariste-luthier — guitares gypsy jazz style Selmer. Régulier sous la tente luthiers de Django In The Bay. Site, email et téléphone non publiés.",
+    de: "Little Clacton, Essex. Gitarrist-Gitarrenbauer — Selmer-Gypsy-Jazz-Gitarren. Stammgast im Luthier-Zelt von Django In The Bay. Website, E-Mail und Telefon nicht veröffentlicht.",
+    nl: "Little Clacton, Essex. Gitarist-luthier — Selmer-stijl gypsy-jazzgitaren. Vaste gast in de luthier-tent van Django In The Bay. Website, email en telefoon niet gepubliceerd.",
+    it: "Little Clacton, Essex. Chitarrista-liutaio — chitarre gypsy jazz stile Selmer. Fisso nel tendone liutai di Django In The Bay. Sito, email e telefono non pubblicati.",
+    es: "Little Clacton, Essex. Guitarrista-luthier — guitarras gypsy jazz estilo Selmer. Fijo en la carpa de luthiers de Django In The Bay. Web, email y teléfono no publicados.",
+    pt: "Little Clacton, Essex. Guitarrista-luthier — guitarras gypsy jazz estilo Selmer. Regular na tenda de luthiers do Django In The Bay. Site, email e telefone não publicados.",
+  },
+  "killy-nonis": {
+    fr: "Canterbury / Bekesbourne. Répliques Selmer, Busato et Favino — aussi cordiers et médiators. Expose à Samois. Régulier sous la tente luthiers de Django In The Bay.",
+    de: "Canterbury / Bekesbourne. Selmer-, Busato- und Favino-Repliken — auch Saitenhalter und Plektren. Stellt in Samois aus. Stammgast im Luthier-Zelt von Django In The Bay.",
+    nl: "Canterbury / Bekesbourne. Selmer-, Busato- en Favino-replica’s — ook staartstukken en plectrums. Staat op Samois. Vaste gast in de luthier-tent van Django In The Bay.",
+    it: "Canterbury / Bekesbourne. Repliche Selmer, Busato e Favino — anche cordiere e plettri. Espone a Samois. Fisso nel tendone liutai di Django In The Bay.",
+    es: "Canterbury / Bekesbourne. Réplicas Selmer, Busato y Favino — también cordales y púas. Expone en Samois. Fijo en la carpa de luthiers de Django In The Bay.",
+    pt: "Canterbury / Bekesbourne. Réplicas Selmer, Busato e Favino — também cordais e palhetas. Expõe em Samois. Regular na tenda de luthiers do Django In The Bay.",
+  },
   "mauro-freschi": {
     fr: "Spresiano. Archtop et guitares manouche Selmer-Maccaferri depuis 2003. Gismo Graf a joué ses instruments.",
     de: "Spresiano. Archtop- und Selmer-Maccaferri-Manouche-Gitarren seit 2003. Gismo Graf spielte seine Instrumente.",

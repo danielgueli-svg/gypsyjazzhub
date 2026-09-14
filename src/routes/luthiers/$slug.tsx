@@ -9,6 +9,8 @@ import { mapsHref, telHref } from "@/lib/contact";
 import { countrySlug } from "@/lib/geo";
 import { getHubLuthier, listHubChat } from "@/lib/hub-api";
 import { getLuthier } from "@/lib/luthiers";
+import { makerBio } from "@/lib/maker-copy";
+import { useI18n } from "@/lib/i18n";
 import { luthierPhotoSrc } from "@/lib/photos";
 import { SHOPS } from "@/lib/shops";
 
@@ -25,6 +27,8 @@ export const Route = createFileRoute("/luthiers/$slug")({
 
 function LuthierPage() {
   const { luthier, chat } = Route.useLoaderData();
+  const { locale } = useI18n();
+  const bio = makerBio(luthier.slug, locale) || luthier.bio;
   const shop = SHOPS.find((row) => row.luthierSlug === luthier.slug);
   const call = telHref(luthier.phone);
   const map = mapsHref(luthier.address);
@@ -67,7 +71,7 @@ function LuthierPage() {
       <article className="mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
         <h2 className="font-display text-3xl font-semibold text-fg">About</h2>
         {luthier.note ? <p className="text-fg">{luthier.note}</p> : null}
-        <p>{luthier.bio}</p>
+        <p>{bio}</p>
         {luthier.craft === "bass" ? (
           <p>
             <Link to="/luthiers/bass" className="text-fg hover:underline">

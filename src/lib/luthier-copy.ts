@@ -1,190 +1,190 @@
 export type LuthierPageCopy = {
   kicker: string;
   title: string;
-  what: string;
-  community: string;
-  selmer: string;
+  lead: string;
+  craft: string;
+  invite: string;
   listLead: string;
 };
 
 const EN: LuthierPageCopy = {
   kicker: "Community",
   title: "Luthiers",
-  what: "A luthier is a craftsperson who builds and repairs string instruments by hand — guitars, violins, double basses. Not a factory line. The workshop is the room.",
-  community: "In this music the luthier sits inside the community, not next to it. Players know their maker. They go back to the same chair for a neck, a setup, a new guitar. The best instruments on the circuit come from those rooms — not off a factory rack.",
-  selmer: "It starts with Selmer. Mario Maccaferri drew the guitar; Django Reinhardt made it the voice of this music. That personal bond — one maker, one player, one instrument — is still how the scene works.",
-  listLead: "Every luthier indexed on the hub. Open a name for the workshop, the address, and the story. Pick a country to filter.",
+  lead: "The instrument makers behind the manouche scene. Workshops that build Selmer-Maccaferri style guitars and other gypsy jazz instruments — from one-person rooms to the names everyone on the circuit knows. Double bass luthiers, violin makers and the rest of the chairs belong here too.",
+  craft: "What a luthier makes is more than an instrument. It is craft: choosing the wood, bending the top, hunting the right voice. Each guitar is a conversation between maker and wood.",
+  invite: "Most luthiers are open to contact. Write or call — they like it when players think with them. An idea about a model, a wood, a change? Bring it in. That is the work.",
+  listLead: "Names below, with website, email and phone. Open a page for photos, models and wait times.",
 };
 
 const NL: LuthierPageCopy = {
   kicker: "Community",
   title: "Luthiers",
-  what: "Een luthier is iemand die op ambachtelijke wijze snaarinstrumenten bouwt en herstelt — gitaren, violen, contrabassen. Geen fabriek. Het atelier is de kamer.",
-  community: "In deze muziek zit de luthier in de gemeenschap, niet ernaast. Muzikanten kennen hun bouwer. Ze gaan terug voor een hals, een setup, een nieuwe gitaar. De beste instrumenten op het circuit komen uit die kamers — niet van de fabriekslijn.",
-  selmer: "Het begint bij Selmer. Mario Maccaferri tekende de gitaar; Django Reinhardt maakte er de stem van deze muziek van. Die persoonlijke band — één bouwer, één speler, één instrument — is nog steeds hoe de scene werkt.",
-  listLead: "Alle luthiers die op de hub staan. Open een naam voor het atelier, het adres en het verhaal. Kies een land om te filteren.",
+  lead: "De instrumentbouwers achter de manouche-scene. Hier vind je de ateliers die Selmer-Maccaferri-stijl gitaren en andere gypsy jazz-instrumenten maken — van kleine eenmanswerkplaatsen tot bekende namen in de scene. Ook contrabasbouwers, vioolbouwers en makers van andere instrumenten horen hier thuis.",
+  craft: "Wat een luthier maakt, is meer dan een instrument. Het is ambacht: hout kiezen, de toplaag buigen, de juiste klank zoeken. Elke gitaar is een gesprek tussen bouwer en hout.",
+  invite: "De meeste luthiers staan open voor contact. Schroom niet om ze te mailen of te bellen — ze vinden het juist fijn als spelers meedenken. Heb je een idee over een model, een houtsoort of een aanpassing? Breng het in. Dat is waar ze voor staan.",
+  listLead: "Hieronder de namen, met website, email en telefoon. Klik door naar hun eigen pagina voor foto’s, modellen en wachttijden.",
 };
 
 const FR: LuthierPageCopy = {
   kicker: "Communauté",
   title: "Luthiers",
-  what: "Un luthier est un artisan qui construit et répare les instruments à cordes à la main — guitares, violons, contrebasses. Pas une chaîne d’usine. L’atelier est la pièce.",
-  community: "Dans cette musique le luthier est dans la communauté, pas à côté. Les musiciens connaissent leur facteur. Ils y retournent pour un manche, un réglage, une guitare neuve. Les meilleurs instruments du circuit viennent de ces pièces — pas d’une usine.",
-  selmer: "Ça commence chez Selmer. Mario Maccaferri a dessiné la guitare ; Django Reinhardt en a fait la voix de cette musique. Ce lien personnel — un facteur, un joueur, un instrument — est encore la façon dont la scène marche.",
-  listLead: "Tous les luthiers indexés sur le hub. Ouvrez un nom pour l’atelier, l’adresse et l’histoire. Choisissez un pays pour filtrer.",
+  lead: "Les facteurs d’instruments de la scène manouche. Les ateliers qui construisent des guitares style Selmer-Maccaferri et d’autres instruments gypsy jazz — de la pièce d’une personne aux noms que tout le circuit connaît. Luthiers contrebasse, facteurs de violon et le reste des pupitres sont ici aussi.",
+  craft: "Ce qu’un luthier fait est plus qu’un instrument. C’est le métier : choisir le bois, cintrer la table, chercher la voix juste. Chaque guitare est une conversation entre le facteur et le bois.",
+  invite: "La plupart des luthiers sont ouverts au contact. Écrivez, appelez — ils aiment que les musiciens pensent avec eux. Une idée de modèle, de bois, de modification ? Apportez-la. C’est le travail.",
+  listLead: "Les noms ci-dessous, avec site, email et téléphone. Ouvrez une page pour les photos, les modèles et les délais.",
 };
 
 const DE: LuthierPageCopy = {
   kicker: "Community",
   title: "Gitarrenbauer",
-  what: "Ein Luthier ist ein Handwerker, der Streich- und Zupfinstrumente von Hand baut und repariert — Gitarren, Geigen, Kontrabässe. Keine Fabrik. Die Werkstatt ist der Raum.",
-  community: "In dieser Musik sitzt der Gitarrenbauer in der Community, nicht daneben. Spieler kennen ihren Bauer. Sie kommen zurück für einen Hals, ein Setup, eine neue Gitarre. Die besten Instrumente auf dem Circuit kommen aus diesen Räumen — nicht vom Fließband.",
-  selmer: "Es beginnt bei Selmer. Mario Maccaferri zeichnete die Gitarre; Django Reinhardt machte sie zur Stimme dieser Musik. Diese persönliche Bindung — ein Bauer, ein Spieler, ein Instrument — ist noch immer, wie die Szene funktioniert.",
-  listLead: "Alle Gitarrenbauer, die der Hub kennt. Einen Namen öffnen für Werkstatt, Adresse und Geschichte. Land wählen zum Filtern.",
+  lead: "Die Instrumentenbauer hinter der Manouche-Szene. Werkstätten, die Gitarren im Selmer-Maccaferri-Stil und andere Gypsy-Jazz-Instrumente bauen — von Ein-Personen-Räumen bis zu den Namen, die der Circuit kennt. Kontrabassbauer, Geigenbauer und die anderen Stimmen gehören auch hierher.",
+  craft: "Was ein Luthier macht, ist mehr als ein Instrument. Es ist Handwerk: Holz wählen, die Decke biegen, die richtige Stimme suchen. Jede Gitarre ist ein Gespräch zwischen Bauer und Holz.",
+  invite: "Die meisten Gitarrenbauer sind offen für Kontakt. Schreiben oder anrufen — sie mögen es, wenn Spieler mitdenken. Eine Idee zu einem Modell, einem Holz, einer Änderung? Bringt sie mit. Das ist die Arbeit.",
+  listLead: "Die Namen unten, mit Website, E-Mail und Telefon. Eine Seite öffnen für Fotos, Modelle und Wartezeiten.",
 };
 
 const IT: LuthierPageCopy = {
   kicker: "Comunità",
   title: "Liutai",
-  what: "Un liutaio è un artigiano che costruisce e ripara strumenti a corda a mano — chitarre, violini, contrabbassi. Non una catena di fabbrica. La bottega è la stanza.",
-  community: "In questa musica il liutaio sta dentro la comunità, non accanto. I musicisti conoscono il loro costruttore. Tornano per un manico, un setup, una chitarra nuova. I migliori strumenti del circuito escono da quelle stanze — non da una fabbrica.",
-  selmer: "Inizia da Selmer. Mario Maccaferri disegnò la chitarra; Django Reinhardt ne fece la voce di questa musica. Quel legame personale — un costruttore, un suonatore, uno strumento — è ancora il modo in cui la scena funziona.",
-  listLead: "Tutti i liutai indicizzati sull’hub. Apri un nome per la bottega, l’indirizzo e la storia. Scegli un paese per filtrare.",
+  lead: "I costruttori dietro la scena manouche. Le botteghe che fanno chitarre in stile Selmer-Maccaferri e altri strumenti gypsy jazz — da stanze di una persona ai nomi che il circuito conosce. Liutai di contrabbasso, di violino e gli altri pupitri stanno qui anche.",
+  craft: "Quello che fa un liutaio è più di uno strumento. È mestiere: scegliere il legno, piegare la tavola, cercare la voce giusta. Ogni chitarra è una conversazione tra costruttore e legno.",
+  invite: "La maggior parte dei liutai è aperta al contatto. Scrivete, chiamate — gli piace quando i musicisti pensano con loro. Un’idea su un modello, un legno, una modifica? Portatela. È il lavoro.",
+  listLead: "I nomi qui sotto, con sito, email e telefono. Aprite una pagina per foto, modelli e tempi di attesa.",
 };
 
 const ES: LuthierPageCopy = {
   kicker: "Comunidad",
   title: "Luthiers",
-  what: "Un luthier es un artesano que construye y repara instrumentos de cuerda a mano — guitarras, violines, contrabajos. No una fábrica. El taller es la sala.",
-  community: "En esta música el luthier está dentro de la comunidad, no al lado. Los músicos conocen a su constructor. Vuelven por un mástil, un setup, una guitarra nueva. Los mejores instrumentos del circuito salen de esas salas — no de una cadena de montaje.",
-  selmer: "Empieza en Selmer. Mario Maccaferri dibujó la guitarra; Django Reinhardt la hizo la voz de esta música. Ese vínculo personal — un constructor, un músico, un instrumento — sigue siendo cómo funciona la escena.",
-  listLead: "Todos los luthiers indexados en el hub. Abre un nombre para el taller, la dirección y la historia. Elige un país para filtrar.",
+  lead: "Los constructores detrás de la escena manouche. Talleres que hacen guitarras estilo Selmer-Maccaferri y otros instrumentos gypsy jazz — desde salas de una persona hasta los nombres que el circuito conoce. Luthiers de contrabajo, de violín y el resto de sillas también están aquí.",
+  craft: "Lo que hace un luthier es más que un instrumento. Es oficio: elegir la madera, curvar la tapa, buscar la voz justa. Cada guitarra es una conversación entre constructor y madera.",
+  invite: "La mayoría de los luthiers están abiertos al contacto. Escribir o llamar — les gusta que los músicos piensen con ellos. ¿Una idea de modelo, de madera, de cambio? Traedla. Ese es el trabajo.",
+  listLead: "Los nombres abajo, con web, email y teléfono. Abrid una página para fotos, modelos y tiempos de espera.",
 };
 
 const PT: LuthierPageCopy = {
   kicker: "Comunidade",
   title: "Luthiers",
-  what: "Um luthier é um artesão que constrói e repara instrumentos de corda à mão — guitarras, violinos, contrabaixos. Não uma fábrica. A oficina é a sala.",
-  community: "Nesta música o luthier está dentro da comunidade, não ao lado. Os músicos conhecem o seu construtor. Voltam para um braço, um setup, uma guitarra nova. Os melhores instrumentos do circuito saem dessas salas — não de uma linha de fábrica.",
-  selmer: "Começa na Selmer. Mario Maccaferri desenhou a guitarra; Django Reinhardt fez dela a voz desta música. Esse laço pessoal — um construtor, um músico, um instrumento — ainda é como a cena funciona.",
-  listLead: "Todos os luthiers no hub. Abre um nome para a oficina, a morada e a história. Escolhe um país para filtrar.",
+  lead: "Os construtores por trás da cena manouche. Oficinas que fazem guitarras estilo Selmer-Maccaferri e outros instrumentos gypsy jazz — de salas de uma pessoa aos nomes que o circuito conhece. Luthiers de contrabaixo, de violino e as outras cadeiras também estão aqui.",
+  craft: "O que um luthier faz é mais do que um instrumento. É ofício: escolher a madeira, curvar o tampo, procurar a voz certa. Cada guitarra é uma conversa entre construtor e madeira.",
+  invite: "A maior parte dos luthiers está aberta ao contacto. Escrevam ou liguem — gostam quando os músicos pensam com eles. Uma ideia de modelo, de madeira, de alteração? Tragam. É o trabalho.",
+  listLead: "Os nomes abaixo, com site, email e telefone. Abram uma página para fotos, modelos e tempos de espera.",
 };
 
 const HU: LuthierPageCopy = {
   kicker: "Közösség",
   title: "Gitárkészítők",
-  what: "A luthier kézzel épít és javít húros hangszereket — gitár, hegedű, nagybőgő. Nem gyár. A műhely a szoba.",
-  community: "Ebben a zenében a készítő a közösségben ül, nem mellette. A zenészek ismerik a mesterüket. Visszamennek nyakért, beállításért, új gitárért. A körút legjobb hangszerei ezekből a szobákból jönnek.",
-  selmer: "Selmerrel kezdődik. Mario Maccaferri rajzolta a gitárt; Django Reinhardt tette a zene hangjává. Ez a személyes kötés — egy készítő, egy játékos, egy hangszer — még mindig így működik a színtér.",
-  listLead: "Minden luthier a hubon. Nyiss egy nevet a műhelyhez. Szűrés ország szerint.",
+  lead: "A manouche-színtér hangszerkészítői. Műhelyek, amelyek Selmer-Maccaferri stílusú gitárokat és más gypsy jazz hangszereket építenek — egyfős szobáktól a körút ismert neveiig. Nagybőgő- és hegedűkészítők is ide tartoznak.",
+  craft: "Amit a luthier csinál, több mint hangszer. Mesterség: fát választani, a tetőt hajlítani, a hangot keresni. Minden gitár beszélgetés készítő és fa között.",
+  invite: "A legtöbb készítő nyitott a kapcsolatra. Írjatok, hívjatok — szeretik, ha a zenészek velük gondolkodnak. Ötlet modellre, fára, változtatásra? Hozzátok. Ez a munka.",
+  listLead: "A nevek lent, weblappal, emaillel, telefonnal. Nyissatok oldalt fotókhoz, modellekhez, várakozási időhöz.",
 };
 
 const RO: LuthierPageCopy = {
   kicker: "Comunitate",
   title: "Lutieri",
-  what: "Un lutier construiește și repară instrumente cu coarde de mână — chitare, viori, contrabasuri. Nu o fabrică. Atelierul e camera.",
-  community: "În muzica asta lutierul stă în comunitate, nu lângă. Muzicienii își cunosc constructorul. Se întorc pentru un gât, un setup, o chitară nouă. Cele mai bune instrumente de pe circuit ies din acele camere.",
-  selmer: "Începe la Selmer. Mario Maccaferri a desenat chitara; Django Reinhardt a făcut-o vocea muzicii. Legătura personală — un constructor, un cântăreț, un instrument — e încă felul în care merge scena.",
-  listLead: "Toți lutierii de pe hub. Deschide un nume pentru atelier. Filtrează după țară.",
+  lead: "Constructorii din spatele scenei manouche. Ateliere care fac chitare stil Selmer-Maccaferri și alte instrumente gypsy jazz — de la camere cu un om până la numele pe care le cunoaște circuitul. Lutieri de contrabas, de vioară și restul pupitrelor sunt și ei aici.",
+  craft: "Ce face un lutier e mai mult decât un instrument. E meserie: alegi lemnul, îndoi fața, cauți vocea potrivită. Fiecare chitară e o conversație între constructor și lemn.",
+  invite: "Cei mai mulți lutieri sunt deschiși la contact. Scrieți, sunați — le place când muzicienii gândesc cu ei. O idee de model, de lemn, de schimbare? Aduceți-o. Asta e munca.",
+  listLead: "Numele mai jos, cu site, email și telefon. Deschideți o pagină pentru poze, modele și timpi de așteptare.",
 };
 
 const PL: LuthierPageCopy = {
   kicker: "Społeczność",
   title: "Lutnicy",
-  what: "Lutnik to rzemieślnik, który ręcznie buduje i naprawia instrumenty strunowe — gitary, skrzypce, kontrabasy. Nie fabryka. Warsztat to pokój.",
-  community: "W tej muzyce lutnik siedzi w społeczności, nie obok. Muzycy znają swojego mistrza. Wracają po gryf, setup, nową gitarę. Najlepsze instrumenty na cirkuicie wychodzą z tych pokoi.",
-  selmer: "Zaczyna się od Selmera. Mario Maccaferri narysował gitarę; Django Reinhardt uczynił z niej głos tej muzyki. Ta osobista więź — jeden mistrz, jeden gracz, jeden instrument — wciąż tak działa scena.",
-  listLead: "Wszyscy lutnicy na hubie. Otwórz imię, by zobaczyć warsztat. Filtruj według kraju.",
+  lead: "Budowniczowie instrumentów sceny manouche. Warsztaty, które robią gitary w stylu Selmer-Maccaferri i inne instrumenty gypsy jazz — od jednoosobowych pokoi po nazwiska, które zna obwód. Lutnicy kontrabasu, skrzypiec i reszta pulpitów też tu są.",
+  craft: "To, co robi lutnik, to więcej niż instrument. To rzemiosło: wybrać drewno, wygiąć płytę, szukać właściwego głosu. Każda gitara to rozmowa między mistrzem a drewnem.",
+  invite: "Większość lutników jest otwarta na kontakt. Piszcie, dzwońcie — lubią, gdy muzycy myślą z nimi. Pomysł na model, drewno, zmianę? Przynieście. To jest praca.",
+  listLead: "Nazwiska poniżej, ze stroną, emailem i telefonem. Otwórzcie stronę po zdjęcia, modele i czasy oczekiwania.",
 };
 
 const CS: LuthierPageCopy = {
   kicker: "Komunita",
   title: "Nástrojaři",
-  what: "Luthier ručně staví a opravuje strunné nástroje — kytary, housle, kontrabasy. Ne továrna. Dílná je pokoj.",
-  community: "V téhle hudbě sedí stavitel v komunitě, ne vedle ní. Hráči znají svého mistra. Vracejí se pro krk, setup, novou kytaru. Nejlepší nástroje na okruhu vycházejí z těch pokojů.",
-  selmer: "Začíná to u Selmeru. Mario Maccaferri nakreslil kytaru; Django Reinhardt z ní udělal hlas téhle hudby. Ten osobní vztah — jeden stavitel, jeden hráč, jeden nástroj — pořád tak scéna funguje.",
-  listLead: "Všichni nástrojaři na hubu. Otevři jméno pro dílnu. Filtruj podle země.",
+  lead: "Stavitelé nástrojů manouche scény. Dílny, které staví kytary ve stylu Selmer-Maccaferri a další gypsy jazz nástroje — od jednomístných pokojů po jména, která okruh zná. Stavitelé kontrabasu, houslí a ostatní pulty sem patří taky.",
+  craft: "Co luthier dělá, je víc než nástroj. Je to řemeslo: vybrat dřevo, ohnout desku, hledat správný hlas. Každá kytara je rozhovor mezi stavitelem a dřevem.",
+  invite: "Většina stavitelů je otevřená kontaktu. Pište, volejte — mají rádi, když hráči myslí s nimi. Nápad na model, dřevo, úpravu? Přineste ho. To je práce.",
+  listLead: "Jména níže, s webem, emailem a telefonem. Otevřete stránku pro fotky, modely a čekací doby.",
 };
 
 const SR: LuthierPageCopy = {
   kicker: "Zajednica",
   title: "Graditelji",
-  what: "Luthier ručno gradi i popravlja žičane instrumente — gitare, violine, kontrabase. Nije fabrika. Radionica je soba.",
-  community: "U ovoj muzici graditelj sedi u zajednici, ne pored nje. Muzičari znaju svog majstora. Vraćaju se zbog vrata, setupa, nove gitare. Najbolji instrumenti na krugu izlaze iz tih soba.",
-  selmer: "Počinje kod Selmera. Mario Maccaferri nacrtao je gitaru; Django Reinhardt od nje napravio glas ove muzike. Ta lična veza — jedan majstor, jedan svirač, jedan instrument — još uvek je način na koji scena radi.",
-  listLead: "Svi lutijeri na hubu. Otvori ime za radionicu. Filtriraj po zemlji.",
+  lead: "Graditelji instrumenata manouche scene. Radionice koje prave gitare u stilu Selmer-Maccaferri i druge gypsy jazz instrumente — od soba jednog čoveka do imena koja krug poznaje. Graditelji kontrabasa, violine i ostale stolice su ovde takođe.",
+  craft: "Ono što luthier radi je više od instrumenta. Zanat: izabrati drvo, saviti ploču, tražiti pravi glas. Svaka gitara je razgovor između majstora i drveta.",
+  invite: "Većina majstora je otvorena za kontakt. Pišite, zovite — vole kad svirači misle sa njima. Ideja o modelu, drvetu, izmeni? Donestite. To je posao.",
+  listLead: "Imena ispod, sa sajtom, emailom i telefonom. Otvorite stranicu za fotografije, modele i vreme čekanja.",
 };
 
 const HR: LuthierPageCopy = {
   kicker: "Zajednica",
   title: "Graditelji",
-  what: "Luthier ručno gradi i popravlja žičane instrumente — gitare, violine, kontrabase. Nije tvornica. Radionica je soba.",
-  community: "U ovoj glazbi graditelj sjedi u zajednici, ne pored nje. Glazbenici znaju svog majstora. Vraćaju se zbog vrata, setupa, nove gitare. Najbolji instrumenti na krugu izlaze iz tih soba.",
-  selmer: "Počinje kod Selmera. Mario Maccaferri nacrtao je gitaru; Django Reinhardt od nje napravio glas ove glazbe. Ta osobna veza — jedan majstor, jedan svirač, jedan instrument — još uvijek je način na koji scena radi.",
-  listLead: "Svi lutijeri na hubu. Otvori ime za radionicu. Filtriraj po zemlji.",
+  lead: "Graditelji instrumenata manouche scene. Radionice koje rade gitare u stilu Selmer-Maccaferri i druge gypsy jazz instrumente — od soba jedne osobe do imena koja krug poznaje. Graditelji kontrabasa, violine i ostala sjedala su ovdje također.",
+  craft: "Ono što luthier radi je više od instrumenta. Zanat: odabrati drvo, saviti ploču, tražiti pravi glas. Svaka gitara je razgovor između majstora i drveta.",
+  invite: "Većina majstora je otvorena za kontakt. Pišite, zovite — vole kad glazbenici misle s njima. Ideja o modelu, drvetu, izmjeni? Donestite. To je posao.",
+  listLead: "Imena ispod, sa stranicom, emailom i telefonom. Otvorite stranicu za fotografije, modele i vrijeme čekanja.",
 };
 
 const RU: LuthierPageCopy = {
   kicker: "Сообщество",
   title: "Мастера",
-  what: "Лютье — мастер, который вручную строит и чинит струнные инструменты: гитары, скрипки, контрабасы. Не завод. Мастерская — это комната.",
-  community: "В этой музыке мастер сидит внутри сообщества, не рядом. Музыканты знают своего строителя. Возвращаются за грифом, настройкой, новой гитарой. Лучшие инструменты на круге выходят из этих комнат.",
-  selmer: "Всё начинается с Selmer. Марио Маккафери нарисовал гитару; Джанго Рейнхардт сделал её голосом этой музыки. Эта личная связь — один мастер, один игрок, один инструмент — всё ещё так работает сцена.",
-  listLead: "Все мастера на хабе. Открой имя, чтобы увидеть мастерскую. Фильтр по стране.",
+  lead: "Мастера инструментов мануш-сцены. Мастерские, которые делают гитары в стиле Selmer-Maccaferri и другие инструменты gypsy jazz — от комнат на одного до имён, которые знает круг. Мастера контрабаса, скрипки и остальные пульты тоже здесь.",
+  craft: "То, что делает лютье, больше чем инструмент. Это ремесло: выбрать дерево, выгнуть деку, искать нужный голос. Каждая гитара — разговор между мастером и деревом.",
+  invite: "Большинство мастеров открыты к контакту. Пишите, звоните — им нравится, когда музыканты думают вместе с ними. Идея модели, дерева, изменения? Приносите. Это работа.",
+  listLead: "Имена ниже — сайт, почта, телефон. Откройте страницу для фото, моделей и сроков ожидания.",
 };
 
 const JA: LuthierPageCopy = {
   kicker: "コミュニティ",
   title: "ルシアー",
-  what: "ルシアーは弦楽器を手で作り、修理する職人です。ギター、ヴァイオリン、コントラバス。工場ではありません。工房が部屋です。",
-  community: "この音楽ではルシアーはコミュニティの中にいます。奏者は自分の作り手を知っています。ネック、セットアップ、新しいギターのために戻ります。回路の最良の楽器は工場ではなく、その部屋から来ます。",
-  selmer: "セルマーから始まります。マリオ・マッカフェリがギターを描き、ジャンゴ・ラインハルトがこの音楽の声にしました。一人の作り手、一人の奏者、一本の楽器という結びつきは、今もこのシーンのやり方です。",
-  listLead: "ハブに載っているすべてのルシアー。名前を開いて工房を見る。国で絞る。",
+  lead: "マヌーシュ・シーンの楽器職人。Selmer-Maccaferri スタイルのギターと、そのほかのジプシージャズ楽器を作る工房です。一人の部屋から、サーキットが知る名前まで。コントラバス、ヴァイオリン、ほかの椅子もここに入ります。",
+  craft: "ルシアーが作るものは楽器以上です。職人仕事です。木を選び、表板を曲げ、声を探す。一挺のギターは作り手と木の会話です。",
+  invite: "ほとんどのルシアーは連絡を歓迎します。書いて、電話して。奏者が一緒に考えるのを好みます。モデル、木材、変更の案があれば、持ってきてください。それが仕事です。",
+  listLead: "下に名前、サイト、メール、電話。写真、モデル、待ち時間は各ページで。",
 };
 
 const KO: LuthierPageCopy = {
   kicker: "커뮤니티",
   title: "루티에",
-  what: "루티에는 현악기를 손으로 만들고 고치는 장인입니다. 기타, 바이올린, 더블베이스. 공장이 아닙니다. 공방이 방입니다.",
-  community: "이 음악에서 루티에는 커뮤니티 안에 있습니다. 연주자는 자신의 제작자를 압니다. 넥, 세팅, 새 기타를 위해 돌아갑니다. 서킷의 가장 좋은 악기는 공장 라인이 아니라 그 방에서 나옵니다.",
-  selmer: "셀머에서 시작합니다. 마리오 마카페리가 기타를 그렸고, 장고 라인하르트가 이 음악의 목소리로 만들었습니다. 한 명의 제작자, 한 명의 연주자, 한 대의 악기 — 그 개인적 유대가 지금도 신의 방식입니다.",
-  listLead: "허브에 오른 모든 루티에. 이름을 열어 공방을 봅니다. 나라로 거릅니다.",
+  lead: "마누슈 신의 악기 제작자들. Selmer-Maccaferri 스타일 기타와 다른 집시 재즈 악기를 만드는 공방입니다. 한 사람 방에서 서킷이 아는 이름까지. 더블베이스, 바이올린, 나머지 자리도 여기 있습니다.",
+  craft: "루티에가 만드는 것은 악기 이상입니다. 장인 일: 나무를 고르고, 앞판을 굽히고, 목소리를 찾습니다. 기타 한 대는 제작자와 나무의 대화입니다.",
+  invite: "대부분의 루티에는 연락을 반깁니다. 메일, 전화 — 연주자가 함께 생각하는 걸 좋아합니다. 모델, 나무, 변경 아이디어가 있으면 가져오세요. 그게 일입니다.",
+  listLead: "아래 이름, 사이트, 이메일, 전화. 사진, 모델, 대기 시간은 각 페이지에서.",
 };
 
 const ZH: LuthierPageCopy = {
   kicker: "社区",
   title: "制琴师",
-  what: "制琴师是亲手制作和修理弦乐器的工匠——吉他、小提琴、低音提琴。不是工厂。工坊就是那间屋子。",
-  community: "在这门音乐里，制琴师坐在社区里面，而不是旁边。乐手认识自己的制琴人。他们会回来修琴颈、调琴、做一把新琴。巡回里最好的乐器来自这些屋子，不是流水线。",
-  selmer: "从 Selmer 开始。马里奥·马卡费里画出这把吉他；姜戈·莱恩哈特让它成为这门音乐的声音。那种私人纽带——一个制琴人、一个演奏者、一把琴——仍是这个圈子的做法。",
-  listLead: "枢纽上收录的所有制琴师。点开名字看工坊。按国家筛选。",
+  lead: "马努什圈子背后的乐器工匠。做 Selmer-Maccaferri 风格吉他和其他吉普赛爵士乐器的工坊——从一个人的房间到圈子里都认识的名字。低音提琴、小提琴和其他席位也在这里。",
+  craft: "制琴师做的不只是一件乐器。是手艺：选木头、弯面板、找对的声音。每把吉他都是制琴人和木头的对话。",
+  invite: "多数制琴师欢迎联系。写信、打电话——他们喜欢乐手一起想。模型、木材、改动的想法？带过来。这就是工作。",
+  listLead: "下面是名字，有网站、邮箱和电话。点开页面看照片、型号和等待时间。",
 };
 
 const ZH_TW: LuthierPageCopy = {
   kicker: "社群",
   title: "製琴師",
-  what: "製琴師是親手製作與修理弦樂器的工匠——吉他、小提琴、低音提琴。不是工廠。工坊就是那間屋子。",
-  community: "在這門音樂裡，製琴師坐在社群裡面，而不是旁邊。樂手認識自己的製琴人。他們會回來修琴頸、調琴、做一把新琴。巡迴裡最好的樂器來自這些屋子，不是生產線。",
-  selmer: "從 Selmer 開始。馬里奧·馬卡費里畫出這把吉他；姜戈·萊恩哈特讓它成為這門音樂的聲音。那種私人紐帶——一個製琴人、一個演奏者、一把琴——仍是這個圈子的做法。",
-  listLead: "樞紐上收錄的所有製琴師。點開名字看工坊。依國家篩選。",
+  lead: "馬努什圈子背後的樂器工匠。做 Selmer-Maccaferri 風格吉他和其他吉普賽爵士樂器的工坊——從一個人的房間到圈子裡都認識的名字。低音提琴、小提琴和其他席位也在這裡。",
+  craft: "製琴師做的不只是一件樂器。是手藝：選木頭、彎面板、找對的聲音。每把吉他都是製琴人和木頭的對話。",
+  invite: "多數製琴師歡迎聯繫。寫信、打電話——他們喜歡樂手一起想。型號、木材、改動的想法？帶過來。這就是工作。",
+  listLead: "下面是名字，有網站、信箱和電話。點開頁面看照片、型號和等待時間。",
 };
 
 const ID: LuthierPageCopy = {
   kicker: "Komunitas",
   title: "Luthier",
-  what: "Luthier adalah perajin yang membuat dan memperbaiki alat musik gesek dan petik dengan tangan — gitar, biola, bas ganda. Bukan pabrik. Bengkel adalah ruangannya.",
-  community: "Dalam musik ini luthier duduk di dalam komunitas, bukan di sampingnya. Pemain mengenal pembuatnya. Mereka kembali untuk leher, setup, gitar baru. Instrumen terbaik di sirkuit keluar dari ruangan itu.",
-  selmer: "Dimulai dari Selmer. Mario Maccaferri menggambar gitarnya; Django Reinhardt menjadikannya suara musik ini. Ikatan pribadi itu — satu pembuat, satu pemain, satu instrumen — masih cara scene ini berjalan.",
-  listLead: "Semua luthier di hub. Buka nama untuk bengkel. Saring menurut negara.",
+  lead: "Para pembuat instrumen di belakang scene manouche. Bengkel yang membuat gitar gaya Selmer-Maccaferri dan instrumen gypsy jazz lain — dari kamar satu orang sampai nama yang dikenal sirkuit. Pembuat contrabass, biola, dan kursi lain juga di sini.",
+  craft: "Yang dibuat luthier lebih dari instrumen. Itu kerajinan: memilih kayu, menekuk tutup, mencari suara yang tepat. Setiap gitar adalah percakapan antara pembuat dan kayu.",
+  invite: "Kebanyakan luthier terbuka untuk kontak. Tulis atau telepon — mereka suka kalau pemain berpikir bersama. Ide model, kayu, perubahan? Bawa. Itu pekerjaannya.",
+  listLead: "Nama di bawah, dengan situs, email, dan telepon. Buka halaman untuk foto, model, dan waktu tunggu.",
 };
 
 const TH: LuthierPageCopy = {
   kicker: "ชุมชน",
   title: "ช่างทำกีตาร์",
-  what: "ลูธิเยร์คือช่างที่สร้างและซ่อมเครื่องสายด้วยมือ — กีตาร์ ไวโอลิน ดับเบิลเบส ไม่ใช่โรงงาน ห้องทำงานคือห้องนั้น",
-  community: "ในดนตรีนี้ช่างทำกีตาร์อยู่ในชุมชน ไม่ได้อยู่ข้างๆ นักดนตรีรู้จักผู้สร้าง พวกเขากลับมาเรื่องคอ กีตาร์ การเซ็ตอัพ เครื่องที่ดีที่สุดบนวงจรมาจากห้องเหล่านั้น",
-  selmer: "เริ่มที่เซลเมอร์ มาริโอ มักคาเฟร์รีวาดกีตาร์ แยงโก ไรน์ฮาร์ตทำให้มันเป็นเสียงของดนตรีนี้ พันธะส่วนตัว — คนสร้างหนึ่ง คนเล่นหนึ่ง เครื่องหนึ่ง — ยังเป็นวิธีที่ซีนทำงาน",
-  listLead: "ช่างทำกีตาร์ทั้งหมดบนฮับ เปิดชื่อเพื่อดูโรงงาน กรองตามประเทศ",
+  lead: "ช่างทำเครื่องดนตรีเบื้องหลังซีนมานูช โรงงานที่ทำกีตาร์สไตล์ Selmer-Maccaferri และเครื่อง gypsy jazz อื่น — จากห้องคนเดียวถึงชื่อที่วงจรรู้จัก ช่างดับเบิลเบส ไวโอลิน และที่นั่งอื่นก็อยู่ที่นี่",
+  craft: "สิ่งที่ลูธิเยร์ทำมากกว่าเครื่องดนตรี คืองานฝีมือ เลือกไม้ ดัดหน้ากีตาร์ หาเสียงที่ถูก ทุกกีตาร์คือบทสนทนาระหว่างช่างกับไม้",
+  invite: "ช่างส่วนใหญ่ยินดีให้ติดต่อ เขียนหรือโทร — พวกเขาชอบเมื่อผู้เล่นคิดด้วยกัน มีไอเดียรุ่น ไม้ หรือการปรับ นำมา นั่นคืองาน",
+  listLead: "ชื่อด้านล่าง พร้อมเว็บ อีเมล โทรศัพท์ เปิดหน้าเพื่อดูรูป รุ่น และเวลารอ",
 };
 
 const BY_LOCALE: Record<string, LuthierPageCopy> = {
