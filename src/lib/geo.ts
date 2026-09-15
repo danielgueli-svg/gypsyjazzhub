@@ -2,7 +2,7 @@ import { slugify } from "@/lib/utils";
 import { CAMPS, type Camp } from "@/lib/camps";
 import type { Concert, Legend, Profile } from "@/lib/api";
 import { FESTIVALS, overlayFestival, type Festival } from "@/lib/festivals";
-import { JAMS, overlayJam, rollJamNext, compareJamsByCadence, type Jam } from "@/lib/jams";
+import { JAMS, overlayJam, rollJamNext, compareJamsByCadence, jamCanonicalSlug, type Jam } from "@/lib/jams";
 import { VENUES, type Venue } from "@/lib/venues";
 import { LUTHIERS, sortCountryLuthiers, type Luthier } from "@/lib/luthiers";
 import { SHOPS, type Shop } from "@/lib/shops";
@@ -49,6 +49,7 @@ const ALIASES: Record<string, string> = {
   holland: "Netherlands",
   "the netherlands": "Netherlands",
   netherlands: "Netherlands",
+  nederland: "Netherlands",
   domburg: "Netherlands",
   "czech republic": "Czechia",
   czechia: "Czechia",
@@ -1073,7 +1074,9 @@ export function buildGlobeIndex(
     const row = ensure(place);
     const rolled = { ...jam, nextStartsAt: rollJamNext(jam, nowJam) };
     const past = new Date(rolled.nextStartsAt).getTime() < nowJam;
-    const idx = row.jams.findIndex((item) => item.slug === jam.slug);
+    const idx = row.jams.findIndex(
+      (item) => item.slug === jam.slug || item.slug === jamCanonicalSlug(jam.slug),
+    );
     if (idx >= 0) {
       row.jams[idx] = overlayJam(row.jams[idx], rolled) ?? rolled;
       continue;

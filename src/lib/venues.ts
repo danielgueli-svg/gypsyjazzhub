@@ -124,7 +124,7 @@ export const VENUES: Venue[] = [
   {
     slug: "gunst-wat-n-kunst",
     name: "Gunst Wat ’n Kunst",
-    city: "The Hague",
+    city: "Den Haag",
     country: "Netherlands",
     kind: "Room",
     site: "https://gunstwateenkunst.nl/",

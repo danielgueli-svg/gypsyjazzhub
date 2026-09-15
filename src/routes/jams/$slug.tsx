@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { GoingRsvp } from "@/components/going-rsvp";
 import { JamEdit } from "@/components/jam-edit";
 import { JamNights } from "@/components/jam-nights";
@@ -9,7 +9,7 @@ import { SaveButton } from "@/components/save-button";
 import { ShareBox } from "@/components/share-page";
 import { Badge } from "@/components/ui/badge";
 import { listLegends } from "@/lib/api";
-import { getJam, overlayJam, jamHours, jamMapsUrl, jamPlace } from "@/lib/jams";
+import { getJam, overlayJam, jamCanonicalSlug, jamHours, jamMapsUrl, jamPlace } from "@/lib/jams";
 import { jamHoursLabel, jamWhen } from "@/lib/jam-copy";
 import { CountryLabel } from "@/components/country-label";
 import { getHubJam, listHubChat } from "@/lib/hub-api";
@@ -25,8 +25,12 @@ export const Route = createFileRoute("/jams/$slug")({
     edit: search.edit === true || search.edit === "1" || search.edit === "true" ? true : undefined,
   }),
   loader: async ({ params }) => {
-    const catalog = getJam(params.slug);
-    const hub = await getHubJam({ data: params.slug });
+    const slug = jamCanonicalSlug(params.slug);
+    if (slug !== params.slug) {
+      throw redirect({ to: "/jams/$slug", params: { slug } });
+    }
+    const catalog = getJam(slug);
+    const hub = await getHubJam({ data: slug });
     const jam = overlayJam(catalog, hub);
     if (!jam) throw notFound();
     const [legends, chat] = await Promise.all([

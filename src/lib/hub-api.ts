@@ -3,7 +3,7 @@ import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql, getDbSource } from "@/lib/db";
 import type { Concert } from "@/lib/api";
 import type { Festival } from "@/lib/festivals";
-import type { Jam } from "@/lib/jams";
+import { jamCanonicalSlug, type Jam } from "@/lib/jams";
 import type { Venue } from "@/lib/venues";
 import type { Luthier } from "@/lib/luthiers";
 import { parseLuthierCraft } from "@/lib/luthiers";
@@ -216,6 +216,7 @@ async function runEnsureHub() {
     alter table hub_teachers add column if not exists artist_slug text not null default ''
   `);
   await seedCatalogTeachers(sql);
+  await mergeManoucheDenHaagJam(sql);
   await sql.query(`
     alter table hub_concerts add column if not exists status text not null default 'published'
   `);
@@ -296,6 +297,55 @@ async function runEnsureHub() {
   await sql.query(`
     alter table hub_teachers add column if not exists status text not null default 'published'
   `);
+}
+
+async function mergeManoucheDenHaagJam(sql: Awaited<ReturnType<typeof getSql>>) {
+  const keep = "manouche-den-haag";
+  const drop = "den-haag-manouche-jam";
+  const keepRow = await sql<{ slug: string; venue: string; when_text: string; leader: string; bio: string }>`
+    select slug, coalesce(venue, '') as venue, coalesce(when_text, '') as when_text,
+           coalesce(leader, '') as leader, coalesce(bio, '') as bio
+    from hub_jams where slug = ${keep} limit 1
+  `;
+  if (keepRow[0]) {
+    const row = keepRow[0];
+    const venue = /gunst/i.test(row.venue)
+      ? row.venue
+      : !row.venue.trim() || /raamweg/i.test(row.venue)
+        ? "Gunst Wat ’n Kunst"
+        : row.venue;
+    const when = /third/i.test(row.when_text) ? row.when_text : "Third Saturday of the month";
+    const leader =
+      /tollenaar/i.test(row.leader)
+        ? row.leader
+        : !row.leader.trim() || row.leader.trim().toLowerCase() === "evelien"
+          ? "Evelien Tollenaar"
+          : row.leader;
+    const bio =
+      row.bio.trim().length >= 80
+        ? row.bio
+        : "Manouche Den Haag — third Saturday of the month, 14:00–18:00 at Gunst Wat ’n Kunst, Raamweg 45. Organised by Evelien Tollenaar. With prior confirmation: evelien@box.nl.";
+    await sql`
+      update hub_jams set
+        country = 'Netherlands',
+        venue = ${venue},
+        address = case
+          when coalesce(address, '') = '' or address ilike '%raamweg%'
+          then 'Raamweg 45, 2596 HN Den Haag'
+          else address
+        end,
+        hours = case
+          when coalesce(hours, '') = '' then '14:00–18:00'
+          else hours
+        end,
+        when_text = ${when},
+        leader = ${leader},
+        leader_contact = coalesce(nullif(trim(leader_contact), ''), 'evelien@box.nl'),
+        bio = ${bio}
+      where slug = ${keep}
+    `;
+  }
+  await sql`delete from hub_jams where slug = ${drop}`;
 }
 
 async function seedCatalogTeachers(sql: Awaited<ReturnType<typeof getSql>>) {
@@ -782,6 +832,7 @@ export const getHubJam = createServerFn({ method: "GET" })
     try {
     await ensureHub();
     await ensureJamLeaderColumns();
+    const key = jamCanonicalSlug(slug);
     const sql = await getSql();
     const rows = await sql<{
       slug: string;
@@ -803,7 +854,7 @@ export const getHubJam = createServerFn({ method: "GET" })
              coalesce(leader, '') as leader, coalesce(leader_contact, '') as leader_contact,
              second_starts_at
       from hub_jams
-      where slug = ${slug} and coalesce(status, 'published') = 'published'
+      where slug = ${key} and coalesce(status, 'published') = 'published'
       limit 1
     `;
     return rows[0] ? mapJam(rows[0]) : null;

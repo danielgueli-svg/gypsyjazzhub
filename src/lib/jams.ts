@@ -1106,9 +1106,9 @@ export const JAMS: Jam[] = [
     site: "https://www.cafedepianist.nl/agenda-live-muziek/",
   },
   {
-    slug: "den-haag-manouche-jam",
+    slug: "manouche-den-haag",
     name: "Manouche Den Haag",
-    city: "The Hague",
+    city: "Den Haag",
     country: "Netherlands",
     venue: "Gunst Wat ’n Kunst",
     address: "Raamweg 45, 2596 HN Den Haag",
@@ -1330,44 +1330,119 @@ export const JAMS: Jam[] = [
 ];
 
 export function getJam(slug: string) {
-  return JAMS.find((jam) => jam.slug === slug);
+  return JAMS.find((jam) => jam.slug === jamCanonicalSlug(slug));
+}
+
+export const JAM_SLUG_ALIASES: Record<string, string> = {
+  "den-haag-manouche-jam": "manouche-den-haag",
+};
+
+export function jamCanonicalSlug(slug: string) {
+  return JAM_SLUG_ALIASES[slug] ?? slug;
+}
+
+function canonicalJamCountry(name: string) {
+  const key = name.trim().toLowerCase();
+  if (key === "nederland" || key === "holland" || key === "the netherlands") return "Netherlands";
+  return name.trim();
+}
+
+function pickVenue(hubVenue: string, hubAddress: string, catalogVenue: string) {
+  const venue = hubVenue.trim();
+  if (!venue) return catalogVenue;
+  const address = hubAddress.trim().toLowerCase();
+  if (address && (venue.toLowerCase() === address || address.startsWith(venue.toLowerCase()))) {
+    return catalogVenue || venue;
+  }
+  if (catalogVenue && (/^\d/.test(venue) || /\d{4}\s*[a-z]{2}/i.test(venue))) return catalogVenue;
+  return venue;
+}
+
+function pickWhen(hubWhen: string, catalogWhen: string) {
+  const hub = hubWhen.trim();
+  const catalog = catalogWhen.trim();
+  if (!hub) return catalog;
+  if (
+    catalog &&
+    /third|1st |2nd |3rd |4th |first |last /i.test(catalog) &&
+    /monthly/i.test(hub) &&
+    !/third|1st |2nd |3rd |4th |first |last /i.test(hub)
+  ) {
+    return catalog;
+  }
+  return hub;
+}
+
+function pickPerson(hub: string, catalog: string) {
+  const over = hub.trim();
+  const base = catalog.trim();
+  if (!over) return base;
+  if (base.toLowerCase().startsWith(over.toLowerCase()) && base.length > over.length) return base;
+  return over;
 }
 
 /** Hub row wins non-empty place/time fields; catalog keeps invite, related players, site. */
 export function overlayJam(catalog: Jam | undefined, hub: Jam | null | undefined): Jam | undefined {
   if (!catalog && !hub) return undefined;
   if (!hub) return catalog;
-  if (!catalog) return hub;
+  if (!catalog) return { ...hub, country: canonicalJamCountry(hub.country) };
   const pick = (over: string, base: string) => (over.trim() ? over : base);
   return {
     ...catalog,
     name: pick(hub.name, catalog.name),
     city: pick(hub.city, catalog.city),
-    country: pick(hub.country, catalog.country),
-    venue: pick(hub.venue, catalog.venue),
+    country: canonicalJamCountry(pick(hub.country, catalog.country)),
+    venue: pickVenue(hub.venue, hub.address, catalog.venue),
     address: pick(hub.address, catalog.address),
     hours: pick(hub.hours, catalog.hours),
-    when: pick(hub.when, catalog.when),
+    when: pickWhen(hub.when, catalog.when),
     nextStartsAt: hub.nextStartsAt || catalog.nextStartsAt,
-    bio: pick(hub.bio, catalog.bio),
+    bio: pick(hub.bio, catalog.bio).length >= 80 ? pick(hub.bio, catalog.bio) : catalog.bio || hub.bio,
     site: hub.site || catalog.site,
     kind: hub.kind ?? catalog.kind,
-    leader: pick(hub.leader ?? "", catalog.leader ?? ""),
+    leader: pickPerson(hub.leader ?? "", catalog.leader ?? ""),
     leaderContact: pick(hub.leaderContact ?? "", catalog.leaderContact ?? ""),
     secondStartsAt: hub.secondStartsAt || catalog.secondStartsAt,
   };
 }
 
+function jamCityKey(city: string) {
+  const key = city.trim().toLowerCase();
+  if (key === "the hague" || key === "den haag" || key === "'s-gravenhage" || key === "s-gravenhage") {
+    return "den haag";
+  }
+  return key;
+}
+
+function sameListedJam(a: Jam, b: Jam) {
+  if (a.slug === b.slug) return true;
+  if (jamCanonicalSlug(a.slug) === jamCanonicalSlug(b.slug)) return true;
+  const nameA = a.name.trim().toLowerCase();
+  const nameB = b.name.trim().toLowerCase();
+  if (nameA !== nameB) return false;
+  return jamCityKey(a.city) === jamCityKey(b.city) && jamCityKey(a.city) !== "";
+}
+
 export function overlayJamList(catalog: Jam[], extra: Jam[], now = Date.now()): Jam[] {
   const map = new Map<string, Jam>();
-  for (const jam of catalog) map.set(jam.slug, jam);
+  for (const jam of catalog) map.set(jamCanonicalSlug(jam.slug), jam);
   for (const jam of extra) {
-    const rolled = { ...jam, nextStartsAt: rollJamNext(jam, now) };
-    const seed = map.get(jam.slug);
+    const slug = jamCanonicalSlug(jam.slug);
+    const rolled = { ...jam, slug, nextStartsAt: rollJamNext(jam, now) };
+    const seed = map.get(slug);
     const merged = overlayJam(seed, rolled);
-    if (merged) map.set(jam.slug, merged);
+    if (merged) map.set(slug, { ...merged, slug });
   }
-  return [...map.values()];
+  const folded: Jam[] = [];
+  for (const jam of map.values()) {
+    const hit = folded.findIndex((row) => sameListedJam(row, jam));
+    if (hit === -1) {
+      folded.push(jam);
+      continue;
+    }
+    folded[hit] = overlayJam(folded[hit], jam) ?? jam;
+  }
+  return folded;
 }
 
 function isPostedNotRecurring(when: string) {
