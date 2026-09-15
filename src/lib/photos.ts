@@ -607,6 +607,84 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "Jasper Somsen",
     href: "https://www.jaspersomsen.com/",
   },
+  "william-brunard": {
+    src: "/artists/william-brunard.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:William_Brunard_Djangofestivalen_2025_(222209).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "sven-jungbeck": {
+    src: "/artists/sven-jungbeck.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Sven_Jungbeck_Djangofestivalen_2024_(224716).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "ola-erlien": {
+    src: "/artists/ola-erlien.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Ola_Erlien_Djangofestivalen_2024_(215947).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "giacomo-smith": {
+    src: "/artists/giacomo-smith.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Giacomo_Smith_Cosmopolite_Djangofestivalen_(225857).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "arnoud-van-den-berg": {
+    src: "/artists/arnoud-van-den-berg.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Arnoud_van_den_Berg_Cosmopolite_2018_(225647).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "franc-anastasio": {
+    src: "/artists/franc-anastasio.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Frank_Anastasio_Djangofestivalen_2025_(215722).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "johan-tobias-bergstrom": {
+    src: "/artists/johan-tobias-bergstrom.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Johan_Tobias_Bergstr%C3%B8m_Cosmopolite_Djangofestivalen_(000444).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "jeremie-arranger": {
+    src: "/artists/jeremie-arranger.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:J%C3%A9r%C3%A9mie_Arranger_Torshov_Djangofestivalen_2020_(233023).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "tonino-de-sensi": {
+    src: "/artists/tonino-de-sensi.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Tonino_De_Sensi_Djangofestivalen_2025_(204716).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "svein-aarbostad": {
+    src: "/artists/svein-aarbostad.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Svein_Aarbostad_Djangofestivalen_2019_(223607).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "volker-kamp": {
+    src: "/artists/volker-kamp.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Volker_Kamp_Djangofestivalen_2024_(225530).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "per-frydenlund": {
+    src: "/artists/per-frydenlund.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Per_Frydenlund_Stortorvet_Gj%C3%A6stgiveri_Oslo_Jazzfestival_(211427).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "duved-dunayevsky": {
+    src: "/artists/duved-dunayevsky.jpg",
+    credit: "Julien Farhi / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Duved_Dunayevsky.jpg",
+    license: "CC BY 4.0",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
