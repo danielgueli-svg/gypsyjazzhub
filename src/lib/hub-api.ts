@@ -224,6 +224,11 @@ async function runEnsureHub() {
     alter table hub_concerts add column if not exists source_id text not null default ''
   `);
   await sql.query(`
+    update hub_concerts
+    set venue = replace(venue, 'Vuctorie', 'Victorie')
+    where venue ilike '%vuctorie%'
+  `);
+  await sql.query(`
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
@@ -475,7 +480,7 @@ function mapHubConcert(row: {
     id: `h-${row.id}`,
     kind: row.artist_kind === "musician" ? "community" : "legend",
     title: row.title,
-    venue: row.venue,
+    venue: row.venue.replace(/vuctorie/gi, "Victorie"),
     city: row.city,
     country: row.country,
     startsAt: toIso(row.starts_at),
