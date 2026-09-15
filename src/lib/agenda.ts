@@ -1,6 +1,6 @@
 import type { Concert } from "@/lib/api";
 import type { Jam } from "@/lib/jams";
-import { countrySlug } from "@/lib/geo";
+import { countrySlug, primaryCountry } from "@/lib/geo";
 
 export type AgendaKind = "jam" | "concert";
 
@@ -66,9 +66,18 @@ export function jamToAgenda(jam: Jam): AgendaItem {
   };
 }
 
+function agendaCountrySlug(country: string) {
+  return countrySlug(primaryCountry(country) ?? country);
+}
+
 export function filterAgenda(items: AgendaItem[], opts: EventFilter) {
   return items.filter((item) => {
-    if (opts.country && countrySlug(item.country) !== opts.country && item.country !== opts.country) {
+    if (
+      opts.country &&
+      agendaCountrySlug(item.country) !== opts.country &&
+      countrySlug(item.country) !== opts.country &&
+      item.country !== opts.country
+    ) {
       return false;
     }
     if (opts.city && item.city.trim().toLowerCase() !== opts.city.trim().toLowerCase()) return false;
@@ -90,8 +99,9 @@ export function uniqueCities(items: { city: string }[]) {
 export function uniqueCountries(items: { country: string }[]) {
   const set = new Set<string>();
   for (const item of items) {
-    const country = item.country.trim();
-    if (country) set.add(country);
+    const raw = item.country.trim();
+    if (!raw) continue;
+    set.add(primaryCountry(raw) ?? raw);
   }
   return [...set].sort((a, b) => a.localeCompare(b));
 }

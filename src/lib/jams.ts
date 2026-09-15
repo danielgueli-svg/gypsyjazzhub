@@ -1,3 +1,5 @@
+import { primaryCountry, sameCountry } from "@/lib/geo";
+
 export type JamKind = "regular" | "meetup";
 export type JamScene = "gypsy" | "jazz";
 
@@ -1717,16 +1719,21 @@ export function upcomingJams(now = Date.now()) {
 
 export function jamsByCountry(extra: Jam[] = [], now = Date.now()) {
   const all = overlayJamList(catalogJams(now), extra, now);
-  const present = [...new Set(all.map((jam) => jam.country))];
-  const ordered = present.sort((a, b) => a.localeCompare(b));
-  return ordered.map((country) => ({
-    country,
-    jams: all
-      .filter((jam) => jam.country === country)
-      .sort(compareJamsByCadence),
-  }));
+  const groups = new Map<string, Jam[]>();
+  for (const jam of all) {
+    const country = primaryCountry(jam.country) ?? (jam.country.trim() || "Other");
+    const list = groups.get(country);
+    if (list) list.push(jam);
+    else groups.set(country, [jam]);
+  }
+  return [...groups.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([country, jams]) => ({
+      country,
+      jams: [...jams].sort(compareJamsByCadence),
+    }));
 }
 
 export function jamsInCountry(atlasName: string, now = Date.now()) {
-  return catalogJams(now).filter((jam) => jam.country === atlasName);
+  return catalogJams(now).filter((jam) => sameCountry(jam.country, atlasName));
 }

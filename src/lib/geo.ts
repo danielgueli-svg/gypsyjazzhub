@@ -50,6 +50,7 @@ const ALIASES: Record<string, string> = {
   "the netherlands": "Netherlands",
   netherlands: "Netherlands",
   nederland: "Netherlands",
+  nl: "Netherlands",
   domburg: "Netherlands",
   "czech republic": "Czechia",
   czechia: "Czechia",
@@ -398,6 +399,12 @@ const ISO2: Record<string, string> = {
   Singapore: "SG",
   Liechtenstein: "LI",
 };
+
+// ISO alpha-2 → atlas name (e.g. NL → Netherlands) so filters don't list both.
+for (const [name, code] of Object.entries(ISO2)) {
+  const key = code.toLowerCase();
+  if (!ALIASES[key]) ALIASES[key] = name;
+}
 
 function isoToFlag(iso: string) {
   return [...iso.toUpperCase()]
