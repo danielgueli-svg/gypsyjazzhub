@@ -118,12 +118,19 @@ async function checkOnce() {
 
   const jams = await fetchText("/jams");
   if (jams.status !== 200) fail(`jams ${jams.status}`);
-  const jamCountries = ["Netherlands", "France", "Germany", "United States", "Italy"].filter((c) =>
-    jams.text.includes(c),
-  );
+  const jamCountries = [
+    "Netherlands",
+    "France",
+    "Germany",
+    "United States",
+    "Italy",
+    "Belgium",
+  ].filter((c) => jams.text.includes(c));
   if (jamCountries.length < MIN_JAM_COUNTRIES) {
     fail(`jams countries ${jamCountries.join(",") || "none"}`);
   } else ok(`jams countries ${jamCountries.join(", ")}`);
+  if (!jams.text.includes("Belgium")) fail("Belgium missing from /jams");
+  else ok("Belgium on /jams");
 
   const concerts = await fetchText("/concerts");
   if (concerts.status !== 200) fail(`concerts ${concerts.status}`);
