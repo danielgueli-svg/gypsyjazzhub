@@ -796,6 +796,8 @@ const en: Dict = {
   "studio.back": "Back to Hub Profile",
   "studio.youAreIn": "You are logged in.",
   "studio.backToSite": "Go back to the website",
+  "studio.lead": "Signed in. Say if you are a musician or a fan. Turn on invitations so jam hosts can alert you. Add a concert, a clip, a bio note, a festival or a jam.",
+  "studio.firstLead": "You are in. Fill in your hub profile now — name, country, what you play. A confirmation mail is on the way; that is not the login.",
 };
 
 const nl: Dict = {
@@ -1438,6 +1440,8 @@ const nl: Dict = {
   "studio.back": "Terug naar Hubprofiel",
   "studio.youAreIn": "Je bent ingelogd.",
   "studio.backToSite": "Terug naar de website",
+  "studio.lead": "Je bent binnen. Zeg of je muzikant bent of fan. Zet uitnodigingen aan zodat jamhosts je kunnen waarschuwen. Voeg een concert, clip, bio, festival of jam toe.",
+  "studio.firstLead": "Je bent binnen. Vul nu je hub-profiel in — naam, land, wat je speelt. Er komt een bevestigingsmail; dat is niet de inlog.",
 };
 
 const de: Dict = {
@@ -1628,6 +1632,8 @@ const de: Dict = {
   "login.loggedInAs": "Du bist angemeldet als",
   "studio.youAreIn": "Du bist angemeldet.",
   "studio.backToSite": "Zurück zur Website",
+  "studio.lead": "Angemeldet. Sag ob du Musiker oder Fan bist. Schalte Einladungen ein, damit Jam-Gastgeber dich erreichen. Konzert, Clip, Bio, Festival oder Jam hinzufügen.",
+  "studio.firstLead": "Du bist drin. Füll jetzt dein Hub-Profil aus — Name, Land, was du spielst. Eine Bestätigungsmail ist unterwegs; das ist nicht der Login.",
   "login.disabled": "Anmeldung ist aus.",
   "login.badPass": "E-Mail oder Passwort stimmt nicht.",
   "login.fail": "Anmeldung nicht möglich.",
@@ -1991,6 +1997,8 @@ const fr: Dict = {
   "login.loggedInAs": "Tu es connecté en tant que",
   "studio.youAreIn": "Tu es connecté.",
   "studio.backToSite": "Retour au site",
+  "studio.lead": "Connecté. Dis si tu es musicien ou fan. Active les invitations pour que les hôtes de jam te joignent. Ajoute un concert, un clip, une bio, un festival ou un jam.",
+  "studio.firstLead": "Tu es dedans. Remplis ton profil hub maintenant — nom, pays, ce que tu joues. Un mail de confirmation arrive ; ce n’est pas la connexion.",
   "login.disabled": "La connexion est désactivée.",
   "login.badPass": "E-mail ou mot de passe incorrect.",
   "login.fail": "Impossible de se connecter.",
@@ -2361,6 +2369,8 @@ const it: Dict = {
   "login.loggedInAs": "Sei connesso come",
   "studio.youAreIn": "Sei connesso.",
   "studio.backToSite": "Torna al sito",
+  "studio.lead": "Sei dentro. Di se sei musicista o fan. Attiva gli inviti così gli host del jam ti avvisano. Aggiungi un concerto, un clip, una bio, un festival o un jam.",
+  "studio.firstLead": "Sei dentro. Compila ora il profilo hub — nome, paese, cosa suoni. Sta arrivando una mail di conferma; non è il login.",
   "login.disabled": "Accesso disattivato.",
   "login.badPass": "Email o password sbagliati.",
   "login.fail": "Accesso non riuscito.",
@@ -2866,6 +2876,8 @@ const es: Dict = {
   "login.loggedInAs": "Has iniciado sesión como",
   "studio.youAreIn": "Has iniciado sesión.",
   "studio.backToSite": "Volver al sitio",
+  "studio.lead": "Dentro. Di si eres músico o fan. Activa invitaciones para que los anfitriones del jam te avisen. Añade un concierto, un clip, una bio, un festival o un jam.",
+  "studio.firstLead": "Ya estás dentro. Rellena ahora tu perfil del hub — nombre, país, qué tocas. Va un correo de confirmación; eso no es el acceso.",
   "login.disabled": "El acceso está desactivado.",
   "login.badPass": "Correo o contraseña incorrectos.",
   "login.fail": "No se pudo entrar.",

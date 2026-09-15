@@ -136,9 +136,9 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             throw new Error(t("login.already"));
           }
         } else {
-          // Auth hook already sends the welcome / confirm mail. Do not send
-          // again here — a second send rotates the token and kills the first link.
-          await navigate({ to: "/verify-email" });
+          // Auth hook already sends the welcome / confirm mail. Land on the
+          // hub profile so they can fill it in; the mail is not the login.
+          await goAfterLogin(true);
           return;
         }
       } else {
@@ -172,7 +172,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
     return <div className="h-48 animate-pulse rounded-xl bg-raised" aria-hidden="true" />;
   }
   if (user) {
-    return <Navigate to="/studio" />;
+    return <Navigate to="/studio" search={defaultMode === "up" ? { tab: "page" } : {}} />;
   }
   if (!authEnabled) {
     return <p className="text-sm text-muted">{t("login.disabled")}</p>;

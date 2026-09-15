@@ -78,7 +78,6 @@ function StudioPage() {
   const { user, isPending } = useCurrentUserState();
   const { tab: tabFromUrl } = Route.useSearch();
   const navigate = useRouter();
-  const tab: Tab = tabFromUrl ?? "add";
   const [profile, setProfile] = useState<Profile | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -104,6 +103,14 @@ function StudioPage() {
   }
   if (!user) return <RedirectToSignIn />;
 
+  const firstVisit = !profile?.displayName;
+  const tab: Tab = tabFromUrl ?? (firstVisit ? "page" : "add");
+  const backToSite = (
+    <Button asChild>
+      <Link to="/">{t("studio.backToSite")}</Link>
+    </Button>
+  );
+
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("studio.youAreIn")}</p>
@@ -111,15 +118,9 @@ function StudioPage() {
         {t("nav.hubProfile")}
       </h1>
       <p className="mt-3 max-w-xl text-sm text-muted">
-        Signed in. Say if you are a musician or a non-musician / fan. Turn on
-        invitations so jam hosts can alert you. Add a concert, a YouTube clip,
-        a bio note, a festival or a jam.
+        {firstVisit ? t("studio.firstLead") : t("studio.lead")}
       </p>
-      <p className="mt-4">
-        <Button asChild variant="outline">
-          <Link to="/">{t("studio.backToSite")}</Link>
-        </Button>
-      </p>
+      <p className="mt-5">{backToSite}</p>
       {isHubOwnerEmail(user.primaryEmail) ? (
         <p className="mt-3 text-sm">
           <Link to="/studio/owner" className="text-muted hover:text-fg">
@@ -169,6 +170,7 @@ function StudioPage() {
         {tab === "invites" ? <InvitesPanel /> : null}
         {tab === "inbox" ? <InboxPanel /> : null}
       </div>
+      <p className="mt-12">{backToSite}</p>
     </main>
   );
 }
