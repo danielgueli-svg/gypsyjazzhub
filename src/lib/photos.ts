@@ -440,6 +440,84 @@ const LOCAL: Record<string, ArtistPhoto> = {
     credit: "YouTube",
     href: "https://www.youtube.com/watch?v=FN3YgcIUAFw",
   },
+  "martin-taylor": {
+    src: "/artists/martin-taylor.jpg",
+    credit: "Tony 1212 / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Martin_Taylor,_Hobart_2014.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "jan-akkerman": {
+    src: "/artists/jan-akkerman.jpg",
+    credit: "AVRO / Beeld en Geluid Wiki",
+    href: "https://commons.wikimedia.org/wiki/File:Jan_Akkerman_-_TopPop_1974_03.png",
+    license: "CC BY-SA 3.0 nl",
+  },
+  "john-etheridge": {
+    src: "/artists/john-etheridge.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:John_Etheridge_Cosmopolite_2018_(212859).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "jon-larsen": {
+    src: "/artists/jon-larsen.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Jon_Larsen_Djangofestivalen_2019_(202221).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "harri-stojka": {
+    src: "/artists/harri-stojka.jpg",
+    credit: "Franz Johann Morgenbesser / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:2015_Harri_Stojka_(16451168753).jpg",
+    license: "CC BY-SA 2.0",
+  },
+  "steeve-laffont": {
+    src: "/artists/steeve-laffont.jpg",
+    credit: "Jean-Christophe Windland / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Tchavolo_Schmitt_%26_Steeve_Laffont.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "gustav-lundgren": {
+    src: "/artists/gustav-lundgren.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Gustav_Lundgren_Cosmopolite_Djangofestivalen_(212647).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "richard-manetti": {
+    src: "/artists/richard-manetti.jpg",
+    credit: "Dacoucou / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Richard_Manetti,_Saint_Paul_de_Vence_2012.JPG",
+    license: "CC BY-SA 3.0",
+  },
+  "jason-anick": {
+    src: "/artists/jason-anick.jpg",
+    credit: "FloNight / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:John_Jorgenson_Quintet_at_KCTC.jpg",
+    license: "CC BY-SA 3.0",
+  },
+  "peter-beets": {
+    src: "/artists/peter-beets.jpg",
+    credit: "Todd Van Hoosear / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Django_Festival_All_Stars_with_Special_Guest_Peter_Beets_on_the_Quad_Stage_(14805781876).jpg",
+    license: "CC BY-SA 2.0",
+  },
+  "giani-lincan": {
+    src: "/artists/giani-lincan.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Giani_Lincan_Kongsberg_Jazzfestival_2022_(180523).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "torsten-goods": {
+    src: "/artists/torsten-goods.jpg",
+    credit: "Hreinn Gudlaugsson / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Torsten-goods_DSC07156.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "julien-labro": {
+    src: "/artists/julien-labro.jpg",
+    credit: "ataelw / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:JulienLabro_0044_(9179574224).jpg",
+    license: "CC BY 2.0",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
