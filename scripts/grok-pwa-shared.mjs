@@ -201,6 +201,18 @@ export function grokPwaHeadTags(appName = DEFAULT_APP_NAME) {
 }
 
 export const GROK_EXTENSIONS_SCRIPT_SRC = "https://grok.com/grok-app-builder/extensions.js";
+const GROK_EXTENSIONS_SCRIPT_RE =
+  /<script[^>]*src=["']https:\/\/grok\.com\/grok-app-builder\/extensions\.js["'][^>]*>\s*<\/script>/gi;
+
+/** Live gypsyjazzhub.com — no Grok preview chrome (CSP + Safe Browsing). */
+export function isLiveHubHost(host) {
+  const h = String(host ?? "")
+    .split(",")[0]
+    .trim()
+    .toLowerCase()
+    .split(":")[0];
+  return h === "www.gypsyjazzhub.com" || h === "gypsyjazzhub.com";
+}
 
 export function readGrokProjectId() {
   const fromProcess = typeof process !== "undefined" ? process.env?.VITE_PROJECT_ID : "";
@@ -497,7 +509,9 @@ export function injectGrokPwaHead(html, ctx = {}) {
     grokOgHeadTags({ host, appName, site, documentTitle, priorOgTitle, canonicalUrl, cwd }).join(""),
   );
 
-  if (!next.includes("/grok-app-builder/extensions.js")) {
+  if (isLiveHubHost(host)) {
+    next = next.replace(GROK_EXTENSIONS_SCRIPT_RE, "");
+  } else if (!next.includes("/grok-app-builder/extensions.js")) {
     missing.push(...grokExtensionsHeadTags(projectId));
   } else if (projectId && !next.includes('name="grok-project-id"')) {
     missing.push(`<meta name="grok-project-id" content="${escapeHtml(projectId)}">`);

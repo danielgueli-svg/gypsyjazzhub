@@ -39,6 +39,22 @@ test("injects the extensions script without a project id", () => {
   assert.doesNotMatch(out, /property="grok:app_id"/);
 });
 
+test("live hub host does not inject the grok extensions script", () => {
+  const out = injectGrokPwaHead("<html><head></head></html>", {
+    host: "www.gypsyjazzhub.com",
+    projectId: "proj-123",
+  });
+  assert.doesNotMatch(out, /grok-app-builder\/extensions\.js/);
+});
+
+test("live hub host strips a baked grok extensions script", () => {
+  const out = injectGrokPwaHead(
+    '<html><head><script src="https://grok.com/grok-app-builder/extensions.js" defer></script></head></html>',
+    { host: "gypsyjazzhub.com" },
+  );
+  assert.doesNotMatch(out, /grok-app-builder\/extensions\.js/);
+});
+
 test("injects project id on the script and meta when provided", () => {
   const out = injectGrokPwaHead("<html><head></head></html>", {
     appName: "Demo",

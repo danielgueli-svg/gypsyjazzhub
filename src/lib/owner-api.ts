@@ -76,12 +76,14 @@ function isTestAccount(email: string, name = "", id = "") {
     return true;
   }
   if (/^(test|tester|testing|test user|dummy|fake|fake user)$/.test(n)) return true;
-  if (n.startsWith("test ")) return true;
+  if (n === "hub desk probe" || n === "desk check") return true;
+  if (e.startsWith("hub-desk-probe-") && e.endsWith("@gypsyjazzhub.com")) return true;
   return false;
 }
 
 const TEST_EMAIL = `lower(email) like '%@gypsyjazzhub.test'
   or lower(email) = 'nobody@example.com'
+  or lower(email) like 'hub-desk-probe-%@gypsyjazzhub.com'
   or (instr(lower(email), '@') > 0 and substr(lower(email), instr(lower(email), '@') + 1) like '%.test')`;
 
 async function purgeTestAccounts() {
@@ -104,6 +106,11 @@ async function purgeTestAccounts() {
     `);
     await sql.query(`
       delete from hub_members where ${TEST_EMAIL}
+    `);
+    await sql.query(`
+      delete from profiles where user_id in (
+        select id from "user" where ${TEST_EMAIL}
+      )
     `);
     await sql.query(`
       delete from "user" where ${TEST_EMAIL}
