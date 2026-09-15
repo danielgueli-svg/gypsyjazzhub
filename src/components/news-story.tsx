@@ -11,10 +11,16 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { formatConcertDay, formatConcertYear } from "@/lib/utils";
 
+function newsText(t: (key: string) => string, item: NewsItem, field: "title" | "body") {
+  const key = `news.item.${item.slug}.${field}`;
+  const value = t(key);
+  return value === key ? item[field] : value;
+}
+
 export function NewsBanner({ item }: { item: NewsItem }) {
   const { t } = useI18n();
-  const title = t(`news.item.${item.slug}.title`);
-  const body = t(`news.item.${item.slug}.body`);
+  const title = newsText(t, item, "title");
+  const body = newsText(t, item, "body");
   const cover = newsThumb(item);
   const inner = (
     <>
@@ -64,7 +70,7 @@ export function NewsStory({ item }: { item: NewsItem }) {
   const { t } = useI18n();
   const album = item.albumSlug ? getAlbum(item.albumSlug) : null;
   const cover = newsThumb(item);
-  const title = t(`news.item.${item.slug}.title`);
+  const title = newsText(t, item, "title");
 
   return (
     <article className="overflow-hidden rounded-2xl bg-surface shadow-border">
@@ -84,7 +90,7 @@ export function NewsStory({ item }: { item: NewsItem }) {
           {title}
         </h1>
         <p className="mt-4 text-base leading-relaxed text-muted">
-          {t(`news.item.${item.slug}.body`)}
+          {newsText(t, item, "body")}
         </p>
         {item.youtubeUrl ? (
           <div className="mt-5">
@@ -138,7 +144,7 @@ export function NewsStory({ item }: { item: NewsItem }) {
             compact
             url={`/news/${item.slug}`}
             title={title}
-            text={t(`news.item.${item.slug}.body`)}
+            text={newsText(t, item, "body")}
           />
         </div>
       </div>
