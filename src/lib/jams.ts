@@ -207,6 +207,46 @@ export function splitUpcomingJams(jams: Jam[], now = new Date()) {
   return { today, week, later };
 }
 
+function rotateRows<T>(rows: T[], offset: number): T[] {
+  if (rows.length < 2) return rows;
+  const n = ((offset % rows.length) + rows.length) % rows.length;
+  if (!n) return rows;
+  return rows.slice(n).concat(rows.slice(0, n));
+}
+
+function firstJamPerCountry(jams: Jam[]): Jam[] {
+  const seen = new Set<string>();
+  const out: Jam[] = [];
+  for (const jam of jams) {
+    const country = jam.country.trim() || "Other";
+    if (seen.has(country)) continue;
+    seen.add(country);
+    out.push(jam);
+  }
+  return out;
+}
+
+function utcDayNumber(now: Date) {
+  return Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 86_400_000);
+}
+
+/**
+ * Homepage jam grid. Tonight and the coming week first, one jam per country,
+ * country order shifts at 00:00 UTC so the front page is not the same list every morning.
+ */
+export function frontPageJams(jams: Jam[], now = new Date(), limit = 15): Jam[] {
+  const front = jams.filter(isFrontJam);
+  const { today, week, later } = splitUpcomingJams(front, now);
+  const day = utcDayNumber(now);
+  const soon = rotateRows(firstJamPerCountry([...today, ...week]), day);
+  const taken = new Set(soon.map((jam) => jam.country.trim() || "Other"));
+  const rest = rotateRows(
+    firstJamPerCountry(later).filter((jam) => !taken.has(jam.country.trim() || "Other")),
+    day,
+  );
+  return [...soon, ...rest].slice(0, limit);
+}
+
 export function formatJamNext(jam: Jam, locale = "en") {
   const date = new Date(jam.nextStartsAt);
   if (Number.isNaN(date.getTime())) return jam.nextStartsAt;
