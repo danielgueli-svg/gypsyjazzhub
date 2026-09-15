@@ -691,6 +691,18 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:DigmonRoovers2020.jpg",
     license: "CC BY 3.0",
   },
+  "richard-smith": {
+    src: "/artists/richard-smith.jpg",
+    credit: "Whoisjohngalt / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Richard_Smith_the_English_guitarist.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "martin-heinzle": {
+    src: "/artists/martin-heinzle.jpg",
+    credit: "Manfred Werner - Tsui / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Katika_-_wir_sind_wien.festival_der_bezirke_2011_j_Barbara_Paierl,_Martin_Heinzle.jpg",
+    license: "CC BY-SA 3.0",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
