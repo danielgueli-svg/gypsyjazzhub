@@ -518,6 +518,95 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:JulienLabro_0044_(9179574224).jpg",
     license: "CC BY 2.0",
   },
+  "ian-date": {
+    src: "/artists/ian-date.jpg",
+    credit: "Tony Rees / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Ian_Date,_guitarist_on_stage_at_Bangalow,_NSW,_November_2015.jpg",
+    license: "CC0",
+  },
+  "nigel-date": {
+    src: "/artists/nigel-date.jpg",
+    credit: "Tony 1212 (Tony Rees) / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Nigel_Date,_Lismore_2015.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "george-washingmachine": {
+    src: "/artists/george-washingmachine.jpg",
+    credit: "Tony 1212 (Tony Rees) / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:George_Washingmachine,_Murwillumbah,_November_2014.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "rodolphe-raffalli": {
+    src: "/artists/rodolphe-raffalli.jpg",
+    credit: "G.Garitan / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Rodolphe_Raffalli_01102.JPG",
+    license: "CC BY-SA 4.0",
+  },
+  "samy-daussat": {
+    src: "/artists/samy-daussat.jpg",
+    credit: "Tassuad / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Samy_Daussat,_guitariste.jpg",
+    license: "CC BY-SA 3.0",
+  },
+  "gildas-le-pape": {
+    src: "/artists/gildas-le-pape.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Gildas_Le_Pape_Djangofestivalen_2019_(223759).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "finn-hauge": {
+    src: "/artists/finn-hauge.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Finn_Hauge_Djangofestivalen_2024_(214653).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "marius-preda": {
+    src: "/artists/marius-preda.jpg",
+    credit: "MIIMAGO / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Marius_Preda_Optreden_Alex_Bernath_2018.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "rony-verbiest": {
+    src: "/artists/rony-verbiest.jpg",
+    credit: "Djalt Baculalay / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Rony_Verbiest.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "rein-mercha": {
+    src: "/artists/rein-mercha.jpg",
+    credit: "Stephan Verrips / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Rein-mercha-1387837015.jpg",
+    license: "CC BY 3.0",
+  },
+  "sandro-roy": {
+    src: "/artists/sandro-roy.jpg",
+    credit: "Fanvio123 / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Sandro-Roy-by_Fanvio123.jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "mathias-levy": {
+    src: "/artists/mathias-levy.jpg",
+    credit: "Beedidla5 / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Mathias_L%C3%A9vy.jpg",
+    license: "CC0",
+  },
+  "bastien-brison": {
+    src: "/artists/bastien-brison.jpg",
+    credit: "Tore Sætre / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Bastien_Brison_Djangofestivalen_2024_(220141).jpg",
+    license: "CC BY-SA 4.0",
+  },
+  "anton-goudsmit": {
+    src: "/artists/anton-goudsmit.jpg",
+    credit: "Taco Witte / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:Anton_Goudsmit.jpg",
+    license: "CC BY 2.0",
+  },
+  "jasper-somsen": {
+    src: "/artists/jasper-somsen.jpg",
+    credit: "Jasper Somsen",
+    href: "https://www.jaspersomsen.com/",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
