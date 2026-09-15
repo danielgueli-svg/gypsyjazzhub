@@ -23,6 +23,19 @@ function slugsFrom(rel, key = "slug") {
   return [...out];
 }
 
+/** Top-level FAMILIES[].slug only — not member slugs nested under members[]. */
+function familyPageSlugs() {
+  const text = read("src/lib/families.ts");
+  const block = text.match(/export const FAMILIES(?:: [^=]+)? = \[([\s\S]*?)\n\];/);
+  if (!block) return [];
+  const out = [];
+  // Each family object starts at indent 2; member rows sit deeper inside members[].
+  for (const match of block[1].matchAll(/^\s{2}\{\s*\n\s{4}slug:\s*"([^"]+)"/gm)) {
+    out.push(match[1]);
+  }
+  return out;
+}
+
 function countrySlug(name) {
   return name
     .normalize("NFKD")
@@ -93,7 +106,7 @@ for (const slug of slugsFrom("src/lib/jams.ts")) {
 for (const slug of slugsFrom("src/lib/festivals.ts")) {
   paths.add(`/festivals/${slug}`);
 }
-for (const slug of slugsFrom("src/lib/families.ts")) {
+for (const slug of familyPageSlugs()) {
   paths.add(`/families/${slug}`);
 }
 function newsSlugs() {

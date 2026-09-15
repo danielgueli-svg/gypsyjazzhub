@@ -278,6 +278,30 @@ test("document title wins over site.json title for og:title", () => {
     out,
     /property="og:title" content="Stochelo Rosenberg — gypsy jazz \| Gypsy Jazz Hub"/,
   );
+  assert.match(
+    out,
+    /name="twitter:title" content="Stochelo Rosenberg — gypsy jazz \| Gypsy Jazz Hub"/,
+  );
+  assert.equal(out.split('property="og:title"').length - 1, 1);
+});
+
+test("page og:title is kept when document title is missing", () => {
+  const out = injectGrokPwaHead(
+    '<html><head><meta property="og:title" content="Stochelo Rosenberg — gypsy jazz | Gypsy Jazz Hub"></head></html>',
+    { site: { title: "Gypsy Jazz Hub" } },
+  );
+  assert.match(
+    out,
+    /property="og:title" content="Stochelo Rosenberg — gypsy jazz \| Gypsy Jazz Hub"/,
+  );
+  assert.equal(out.split('property="og:title"').length - 1, 1);
+});
+
+test("streaming flush preserves page og:title when </head> never arrives", () => {
+  const injector = createHeadInjector({ site: { title: "Gypsy Jazz Hub" } });
+  injector.push('<html><head><meta property="og:title" content="Page Title">');
+  const out = Buffer.concat(injector.flush()).toString("utf8");
+  assert.match(out, /property="og:title" content="Page Title"/);
   assert.equal(out.split('property="og:title"').length - 1, 1);
 });
 

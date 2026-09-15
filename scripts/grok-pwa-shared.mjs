@@ -297,6 +297,19 @@ export function titleFromDocument(html) {
   return match ? unescapeHtml(match[1]).trim() : "";
 }
 
+/** Read an existing share-card meta before stripShareMetaTags removes it. */
+export function metaContentFromDocument(html, key) {
+  const tags = String(html ?? "").match(/<meta\b[^>]*>/gi) || [];
+  const want = String(key).toLowerCase();
+  for (const tag of tags) {
+    const attrs = [...tag.matchAll(/\b(?:property|name)\s*=\s*["']([^"']+)["']/gi)];
+    if (!attrs.some((m) => String(m[1]).toLowerCase() === want)) continue;
+    const content = tag.match(/\bcontent\s*=\s*["']([^"']*)["']/i);
+    if (content) return unescapeHtml(content[1]).trim();
+  }
+  return "";
+}
+
 export function resolveOgTitle(
   site = {},
   appName = DEFAULT_APP_NAME,
@@ -313,6 +326,22 @@ export function resolveOgTitle(
   if (fromHost && fromHost !== DEFAULT_APP_NAME) return fromHost;
   const fromArg = String(appName ?? "").trim();
   return fromArg || DEFAULT_APP_NAME;
+}
+
+/**
+ * Pick the best og:title: document <title>, then a page-specific og:title
+ * already in the HTML (from pageHead), then site/app fallbacks.
+ * Avoids the injector wiping per-page titles when <title> is missing mid-stream.
+ */
+export function pickOgTitle(site = {}, appName = DEFAULT_APP_NAME, host = "", documentTitle = "", priorOgTitle = "") {
+  const fromDoc = String(documentTitle ?? "").trim();
+  if (fromDoc) return fromDoc;
+  const siteTitle = String(site.title ?? "").trim();
+  const prior = String(priorOgTitle ?? "").trim();
+  if (prior && prior !== siteTitle && prior !== DEFAULT_APP_NAME && prior !== appName) {
+    return prior;
+  }
+  return resolveOgTitle(site, appName, host, "");
 }
 
 export function canonicalFromDocument(html) {
@@ -350,14 +379,16 @@ export function grokOgHeadTags({
   appName = DEFAULT_APP_NAME,
   site = {},
   documentTitle = "",
+  priorOgTitle = "",
   canonicalUrl = "",
   cwd = process.cwd(),
 } = {}) {
-  const title = resolveOgTitle(site, appName, host, documentTitle);
+  const title = pickOgTitle(site, appName, host, documentTitle, priorOgTitle);
   const publicHost = resolvePublicHost(host);
   const tags = [
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}">`,
   ];
   const description = String(site.description ?? "").trim();
   if (description) {
@@ -442,9 +473,12 @@ export function normalizeHeadContext(ctx = {}) {
 export function injectGrokPwaHead(html, ctx = {}) {
   if (typeof html !== "string") return html;
   const { site, projectId, creator, creatorId, host, cwd } = normalizeHeadContext(ctx);
+  // Capture page-specific titles BEFORE stripShareMetaTags removes them.
   const documentTitle = titleFromDocument(html);
+  const priorOgTitle =
+    metaContentFromDocument(html, "og:title") || metaContentFromDocument(html, "twitter:title");
   const canonicalUrl = canonicalFromDocument(html);
-  // PWA chrome keeps the site/app name; og:title uses the document title.
+  // PWA chrome keeps the site/app name; og:title uses the document / page title.
   const appName = resolveOgTitle(site, ctx.appName ?? DEFAULT_APP_NAME, host, "");
   let next = stripShareMetaTags(html);
 
@@ -456,9 +490,11 @@ export function injectGrokPwaHead(html, ctx = {}) {
     })
     .map(([, tag]) => tag);
 
+  // Keep OG tags right after <head> so a second inject stays byte-identical
+  // (PWA chrome is appended before </head>; flipping that order breaks idempotency).
   next = insertAfterHeadOpen(
     next,
-    grokOgHeadTags({ host, appName, site, documentTitle, canonicalUrl, cwd }).join(""),
+    grokOgHeadTags({ host, appName, site, documentTitle, priorOgTitle, canonicalUrl, cwd }).join(""),
   );
 
   if (!next.includes("/grok-app-builder/extensions.js")) {

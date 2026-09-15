@@ -49,11 +49,19 @@ export declare function customOgAssetPath(cwd?: string): string;
 export declare function resolveOgCardAsset(site?: OgSite, cwd?: string): string;
 export declare function ogServiceUrl(): string;
 export declare function titleFromDocument(html: string): string;
+export declare function metaContentFromDocument(html: string, key: string): string;
 export declare function resolveOgTitle(
   site?: OgSite,
   appName?: string,
   host?: string,
   documentTitle?: string,
+): string;
+export declare function pickOgTitle(
+  site?: OgSite,
+  appName?: string,
+  host?: string,
+  documentTitle?: string,
+  priorOgTitle?: string,
 ): string;
 export declare function siteHasCustomCard(site?: OgSite): boolean;
 export declare function grokOgHeadTags(ctx?: {
@@ -61,6 +69,8 @@ export declare function grokOgHeadTags(ctx?: {
   appName?: string;
   site?: OgSite;
   documentTitle?: string;
+  priorOgTitle?: string;
+  canonicalUrl?: string;
   cwd?: string;
 }): string[];
 export declare function stripShareMetaTags(html: string): string;
