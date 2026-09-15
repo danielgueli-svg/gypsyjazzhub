@@ -685,6 +685,12 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:Duved_Dunayevsky.jpg",
     license: "CC BY 4.0",
   },
+  "digmon-roovers": {
+    src: "/artists/digmon-roovers.jpg",
+    credit: "Cultuur in Actie! / Wikimedia Commons",
+    href: "https://commons.wikimedia.org/wiki/File:DigmonRoovers2020.jpg",
+    license: "CC BY 3.0",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
