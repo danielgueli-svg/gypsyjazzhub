@@ -26,7 +26,7 @@ const EN: Copy = {
   mixNote:
     "Their own calendar mixes cabaret, tribute nights and parties. This page lists only gypsy jazz / jazz manouche bills — not the rest of the programme.",
   siblingNote: "Not the Dutch concert series Stichting Alhambra in Alkmaar — that organisation has its own page.",
-  aboutTitle: "The house",
+  aboutTitle: "The venue",
   about: [
     "The garden opened in 1916 as a summer theatre. After a long closure it reopened as an eat-drink-dance venue in the old building. Reservations: rezervari@gradinaalhambra.ro / +40 726 581 985.",
     "Bucharest’s working manouche stand is Django Sound Quartet — Constantin Mirea violin, Florin Pană accordion, Cristian Mirea bass. They also play Trattoria Monza and The Great Hill. Dates are posted with the band, not as a standing night here.",
@@ -51,7 +51,7 @@ const NL: Copy = {
   mixNote:
     "Hun eigen agenda mixt cabaret, tribute-avonden en feesten. Deze pagina toont alleen gypsy jazz / jazz manouche — niet de rest van het programma.",
   siblingNote: "Niet de Nederlandse concertserie Stichting Alhambra in Alkmaar — die stichting heeft een eigen pagina.",
-  aboutTitle: "Het huis",
+  aboutTitle: "De zaal",
   about: [
     "De tuin opende in 1916 als zomertheater. Na een lange sluiting is het weer een eet-drink-danszaal in het oude gebouw. Reserveren: rezervari@gradinaalhambra.ro / +40 726 581 985.",
     "De werkende manouche-stand in Boekarest is Django Sound Quartet — Constantin Mirea viool, Florin Pană accordeon, Cristian Mirea bas. Ze spelen ook Trattoria Monza en The Great Hill. Data komen met de band, niet als vaste avond hier.",
@@ -61,7 +61,7 @@ const NL: Copy = {
   noneUpcoming:
     "Er staat geen gypsy-jazzavond meer op deze zaal na de laatst bevestigde datum. Volg het kwartet en gradinaalhambra.ro — dit is geen wekelijkse sessie.",
   archiveTitle: "Laatst bevestigde avond",
-  houseTitle: "De deur",
+  houseTitle: "Adres",
   groupTitle: "Wie de manouche-avond speelde",
   groupLead: "Django Sound Quartet — aangekondigd als Gypsy Jazz Lăutăresc.",
 };
@@ -93,13 +93,13 @@ const DE: Copy = {
   mixNote:
     "Ihr eigener Kalender mischt Kabarett, Tribute und Partys. Diese Seite zeigt nur Gypsy Jazz / Jazz Manouche.",
   siblingNote: "Nicht die niederländische Konzertreihe Stichting Alhambra in Alkmaar — die Stiftung hat eine eigene Seite.",
-  aboutTitle: "Das Haus",
+  aboutTitle: "Die Spielstätte",
   nightsTitle: "Gypsy-Jazz-Abende",
   nightsLead: "Nur Hot Club / Manouche / Lăutăresc. Vor der Reise beim Quartett nachfragen.",
   noneUpcoming:
     "Kein Gypsy-Jazz-Abend nach dem letzten bestätigten Datum. Quartett und Website folgen — keine wöchentliche Session.",
   archiveTitle: "Letzter bestätigter Abend",
-  houseTitle: "Die Tür",
+  houseTitle: "Adresse",
   groupTitle: "Wer den Manouche-Abend spielte",
   groupLead: "Django Sound Quartet — als Gypsy Jazz Lăutăresc angekündigt.",
 };
@@ -112,13 +112,13 @@ const ES: Copy = {
   mixNote:
     "Su calendario mezcla cabaré, tributos y fiestas. Esta página lista solo gypsy jazz / jazz manouche.",
   siblingNote: "No es la serie neerlandesa Stichting Alhambra en Alkmaar — esa fundación tiene su propia página.",
-  aboutTitle: "La casa",
+  aboutTitle: "La sala",
   nightsTitle: "Noches de gypsy jazz",
   nightsLead: "Solo Hot Club / manouche / lăutăresc. Pregunta al cuarteto antes de viajar.",
   noneUpcoming:
     "No hay noche de gypsy jazz anunciada después de la última fecha confirmada. Sigue al cuarteto y la web — no es una sesión fija.",
   archiveTitle: "Última noche confirmada",
-  houseTitle: "La puerta",
+  houseTitle: "Dirección",
   groupTitle: "Quién tocó el cartel manouche",
   groupLead: "Django Sound Quartet — anunciado como Gypsy Jazz Lăutăresc.",
 };

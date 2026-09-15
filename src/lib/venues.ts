@@ -33,7 +33,7 @@ export const VENUES: Venue[] = [
     site: "https://stichtingalhambra.nl/",
     contact: "https://www.facebook.com/AlhambraGuitaar",
     scene: "jazz",
-    bio: "Alkmaar guitar series since 1991. Home room: Remonstrantse kerk (Schuilkerkje), Fnidsen 37. Also Gasfabriek and Theater Victorie. Mixed house — classical guitar and flamenco on their site; gypsy jazz nights on the hub page, marked organised by Stichting Alhambra.",
+    bio: "Alkmaar guitar series since 1991. Main venue: Remonstrantse kerk (Schuilkerkje), Fnidsen 37. Also Gasfabriek and Theater Victorie. Mixed programme — classical guitar and flamenco on their site; gypsy jazz nights on the hub page, marked organised by Stichting Alhambra.",
   },
   {
     slug: "cultuurkoepel-heiloo",

@@ -27,11 +27,11 @@ type Copy = {
 const EN: Copy = {
   kicker: "Dutch organisation",
   title: "Stichting Alhambra",
-  subtitle: "Alkmaar guitar series — different rooms, one organiser.",
+  subtitle: "Alkmaar guitar series — different venues, one organiser.",
   lead: "Stichting Alhambra is a cultural foundation in Alkmaar. Since 12 February 1991 they have booked guitar nights — first in theatre De Vigilantie, later in the Remonstrantse kerk (Schuilkerkje) on Fnidsen, and now also at Gasfabriek Alkmaar and Theater Victorie when the bill needs a larger venue. Chair: Hans de Weerd.",
   aboutTitle: "The organisation",
   about: [
-    "From their own site: they work for live guitar at a high level, in a small venue, for both long-time listeners and people new to the instrument. After De Vigilantie closed they paused, then returned in 2017 with culinary concerts at D’Moriaan in Warmenhuizen. That house closed in 2019. The series started again in 2023, and they added Django’s gipsy jazz to the programme.",
+    "From their own site: they work for live guitar at a high level, in a small venue, for both long-time listeners and people new to the instrument. After De Vigilantie closed they paused, then returned in 2017 with culinary concerts at D’Moriaan in Warmenhuizen. That venue closed in 2019. The series started again in 2023, and they added Django’s gipsy jazz to the programme.",
     "Main venue: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Larger gypsy jazz nights: Gasfabriek Alkmaar and Theater Victorie. Tickets: stichtingalhambra.nl. Series phone: 06-51511995.",
   ],
   nightsTitle: "Gypsy jazz nights",
@@ -95,6 +95,10 @@ const FR: Copy = {
   ticketsOnSite: "Billets sur leur site",
   organisedBy: "Organisé par Stichting Alhambra",
   houseTitle: "L’adresse",
+  about: [
+    "D’après leur site : ils travaillent pour la guitare live à un haut niveau, dans une petite salle, pour les habitués et les nouveaux. Après la fermeture de De Vigilantie ils se sont arrêtés, puis sont revenus en 2017 avec des concerts-repas à D’Moriaan à Warmenhuizen. Cette salle a fermé en 2019. La série a repris en 2023, et ils ont ajouté le gipsy jazz de Django au programme.",
+    "Salle principale : Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Plus grandes soirées gypsy jazz : Gasfabriek Alkmaar et Theater Victorie. Billets : stichtingalhambra.nl. Série : 06-51511995.",
+  ],
   groupTitle: "Sur les soirs gypsy jazz",
   groupLead: "Django a Paris ; Amati Schmitt et Angelo Debarre.",
 };
@@ -114,7 +118,11 @@ const DE: Copy = {
   kindFlamenco: "Flamenco",
   ticketsOnSite: "Karten auf ihrer Website",
   organisedBy: "Organisiert von Stichting Alhambra",
-  houseTitle: "Die Tür",
+  houseTitle: "Adresse",
+  about: [
+    "Von ihrer eigenen Seite: sie machen Live-Gitarre auf hohem Niveau, in einem kleinen Saal, für Stammhörer und Neue. Nach der Schließung von De Vigilantie pausierten sie, dann 2017 kulinarische Konzerte in D’Moriaan in Warmenhuizen. Diese Spielstätte schloss 2019. Die Reihe begann 2023 wieder, und sie nahmen Djangos Gipsy Jazz ins Programm.",
+    "Hauptspielstätte: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Größere Gypsy-Jazz-Abende: Gasfabriek Alkmaar und Theater Victorie. Karten: stichtingalhambra.nl. Reihe: 06-51511995.",
+  ],
   groupTitle: "Auf den Gypsy-Jazz-Abenden",
   groupLead: "Django a Paris; Amati Schmitt und Angelo Debarre.",
 };
@@ -134,7 +142,11 @@ const ES: Copy = {
   kindFlamenco: "Flamenco",
   ticketsOnSite: "Entradas en su web",
   organisedBy: "Organizado por Stichting Alhambra",
-  houseTitle: "La puerta",
+  houseTitle: "Dirección",
+  about: [
+    "Según su propia web: trabajan la guitarra en directo a alto nivel, en una sala pequeña, para oyentes de siempre y para quien llega ahora. Tras el cierre de De Vigilantie pararon, y en 2017 volvieron con conciertos-comida en D’Moriaan en Warmenhuizen. Esa sala cerró en 2019. La serie arrancó de nuevo en 2023, y añadieron el gipsy jazz de Django al programa.",
+    "Sala principal: Remonstrantse kerk / Schuilkerkje, Fnidsen 37, Alkmaar. Noches de gypsy jazz más grandes: Gasfabriek Alkmaar y Theater Victorie. Entradas: stichtingalhambra.nl. Serie: 06-51511995.",
+  ],
   groupTitle: "En las noches de gypsy jazz",
   groupLead: "Django a Paris; Amati Schmitt y Angelo Debarre.",
 };
