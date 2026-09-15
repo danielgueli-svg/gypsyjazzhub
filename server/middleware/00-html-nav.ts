@@ -17,6 +17,42 @@ const WWW_ORIGIN = "https://www.gypsyjazzhub.com";
 const PRIVATE_PAGE = /^\/(login|studio|join|welcome|verify-email|add|board|agenda|forgot-password|reset-password)(\/|$)/;
 const HTML_CACHE_CONTROL = "public, s-maxage=120, stale-while-revalidate=600";
 
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' blob: https:",
+  "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+  "connect-src 'self' https:",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
+function applySecurityHeaders(headers: Headers) {
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("X-Frame-Options", "SAMEORIGIN");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+  headers.set("Content-Security-Policy", CSP);
+}
+
+function withSecurityHeaders(result: Response): Response {
+  const headers = new Headers(result.headers);
+  applySecurityHeaders(headers);
+  return new Response(result.body, {
+    status: result.status,
+    statusText: result.statusText,
+    headers,
+  });
+}
+
 function isPageGet(method: string, path: string) {
   const m = method.toUpperCase();
   if (m !== "GET" && m !== "HEAD") return false;
@@ -54,14 +90,13 @@ function isAbort(err: unknown) {
 }
 
 function htmlOk() {
-  return new Response(FALLBACK, {
-    status: 200,
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
-      pragma: "no-cache",
-    },
+  const headers = new Headers({
+    "content-type": "text/html; charset=utf-8",
+    "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
+    pragma: "no-cache",
   });
+  applySecurityHeaders(headers);
+  return new Response(FALLBACK, { status: 200, headers });
 }
 
 interface NavEvent {
@@ -90,13 +125,12 @@ function apexToWww(event: NavEvent): Response | null {
     path = event.url?.pathname || "/";
     search = event.url?.search || "";
   }
-  return new Response(null, {
-    status: 301,
-    headers: {
-      location: `${WWW_ORIGIN}${path}${search}`,
-      "cache-control": "public, max-age=3600",
-    },
+  const headers = new Headers({
+    location: `${WWW_ORIGIN}${path}${search}`,
+    "cache-control": "public, max-age=3600",
   });
+  applySecurityHeaders(headers);
+  return new Response(null, { status: 301, headers });
 }
 
 function requestHref(event: NavEvent): string {
@@ -147,13 +181,14 @@ async function rememberHtml(
   path: string,
   result: Response,
 ): Promise<Response> {
-  if (!cacheableHtml(method, path) || result.status !== 200) return result;
-  if (result.headers.get("set-cookie")) return result;
+  if (!cacheableHtml(method, path) || result.status !== 200) return withSecurityHeaders(result);
+  if (result.headers.get("set-cookie")) return withSecurityHeaders(result);
   const ct = String(result.headers.get("content-type") ?? "");
-  if (!ct.includes("text/html")) return result;
+  if (!ct.includes("text/html")) return withSecurityHeaders(result);
 
   const headers = new Headers(result.headers);
   headers.set("cache-control", HTML_CACHE_CONTROL);
+  applySecurityHeaders(headers);
   const body = await result.arrayBuffer();
   const out = new Response(body, { status: 200, headers });
   const cache = cachesDefault();
@@ -207,7 +242,7 @@ export default async function htmlNavMiddleware(
 
   const href = requestHref(event);
   const cached = await lookupHtml(href, method, path);
-  if (cached) return cached;
+  if (cached) return withSecurityHeaders(cached);
 
   try {
     const result = await next();
@@ -223,10 +258,10 @@ export default async function htmlNavMiddleware(
       text = await result.clone().text();
     } catch {
       if (result.status >= 500) return htmlOk();
-      return result;
+      return withSecurityHeaders(result);
     }
     if (looksLikeErrorJson(text) || result.status >= 500) return htmlOk();
-    return result;
+    return withSecurityHeaders(result);
   } catch (err) {
     if (isAbort(err)) {
       return new Response(null, { status: 204 });
