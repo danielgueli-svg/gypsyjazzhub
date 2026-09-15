@@ -150,6 +150,10 @@ function mergeConcertOverlay(base: Concert, hub: Concert): Concert {
   };
 }
 
+function displayVenue(name: string) {
+  return (name ?? "").replace(/vuctorie/gi, "Victorie");
+}
+
 /** Hub correction wins the catalog gig so lists, country pages and home stay in sync. */
 export function overlayConcertList(rows: Concert[]): Concert[] {
   const hub = rows.filter((row) => row.id.startsWith("h-"));
@@ -168,7 +172,7 @@ export function overlayConcertList(rows: Concert[]): Concert[] {
   for (const row of hub) {
     if (!used.has(row.id)) out.push(row);
   }
-  return out;
+  return out.map((row) => ({ ...row, venue: displayVenue(row.venue) }));
 }
 
 export type MessageRow = {

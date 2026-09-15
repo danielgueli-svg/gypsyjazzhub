@@ -229,6 +229,16 @@ async function runEnsureHub() {
     where venue ilike '%vuctorie%'
   `);
   await sql.query(`
+    update concerts
+    set venue = replace(venue, 'Vuctorie', 'Victorie')
+    where venue ilike '%vuctorie%'
+  `).catch(() => {});
+  await sql.query(`
+    update legend_concerts
+    set venue = replace(venue, 'Vuctorie', 'Victorie')
+    where venue ilike '%vuctorie%'
+  `).catch(() => {});
+  await sql.query(`
     alter table hub_jams add column if not exists status text not null default 'published'
   `);
   await sql.query(`
