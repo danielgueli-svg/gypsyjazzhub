@@ -18,6 +18,55 @@ function keepToken(result: { data?: { token?: string | null } | null }) {
   if (typeof token === "string" && token) setBearerToken(token);
 }
 
+function PasswordField({
+  id,
+  label,
+  value,
+  onChange,
+  autoComplete,
+  hint,
+  show,
+  onToggle,
+  showLabel,
+  hideLabel,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  autoComplete: string;
+  hint?: string;
+  show: boolean;
+  onToggle: () => void;
+  showLabel: string;
+  hideLabel: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-3">
+        <Label htmlFor={id}>{label}</Label>
+        <button
+          type="button"
+          className="text-xs text-muted hover:text-fg"
+          onClick={onToggle}
+        >
+          {show ? hideLabel : showLabel}
+        </button>
+      </div>
+      <Input
+        id={id}
+        type={show ? "text" : "password"}
+        required
+        minLength={8}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        autoComplete={autoComplete}
+      />
+      {hint ? <p className="text-xs text-muted">{hint}</p> : null}
+    </div>
+  );
+}
+
 export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) {
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
@@ -26,6 +75,8 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -53,6 +104,10 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
     const trap = event.currentTarget.querySelector<HTMLInputElement>('input[name="company_url"]')?.value?.trim();
     if (trap) {
       await navigate({ to: "/verify-email" });
+      return;
+    }
+    if (mode === "up" && password !== passwordAgain) {
+      setError(t("login.passwordMismatch"));
       return;
     }
     setBusy(true);
@@ -133,6 +188,9 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           </label>
         </div>
         {mode === "up" ? (
+          <p className="text-sm leading-relaxed text-muted">{t("login.formSteps")}</p>
+        ) : null}
+        {mode === "up" ? (
           <div className="space-y-1.5">
             <Label htmlFor="join-name">{t("login.name")}</Label>
             <Input
@@ -145,7 +203,7 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
           </div>
         ) : null}
         <div className="space-y-1.5">
-          <Label htmlFor="join-email">{t("login.email")}</Label>
+          <Label htmlFor="join-email">{mode === "up" ? t("login.emailStep") : t("login.email")}</Label>
           <Input
             id="join-email"
             type="email"
@@ -155,23 +213,36 @@ export function JoinForm({ defaultMode = "up" }: { defaultMode?: "in" | "up" }) 
             autoComplete="email"
           />
         </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="join-password">{t("login.password")}</Label>
-          <Input
-            id="join-password"
-            type="password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete={mode === "up" ? "new-password" : "current-password"}
+        <PasswordField
+          id="join-password"
+          label={mode === "up" ? t("login.passwordChoose") : t("login.password")}
+          value={password}
+          onChange={setPassword}
+          autoComplete={mode === "up" ? "new-password" : "current-password"}
+          hint={mode === "up" ? t("login.passHint") : undefined}
+          show={showPassword}
+          onToggle={() => setShowPassword((v) => !v)}
+          showLabel={t("login.showPass")}
+          hideLabel={t("login.hidePass")}
+        />
+        {mode === "up" ? (
+          <PasswordField
+            id="join-password-again"
+            label={t("login.passwordAgain")}
+            value={passwordAgain}
+            onChange={setPasswordAgain}
+            autoComplete="new-password"
+            show={showPassword}
+            onToggle={() => setShowPassword((v) => !v)}
+            showLabel={t("login.showPass")}
+            hideLabel={t("login.hidePass")}
           />
-          <p className="text-xs text-muted">{t("login.passHint")}</p>
-        </div>
+        ) : null}
         {error ? <p className="text-sm text-danger">{error}</p> : null}
         <Button type="submit" disabled={busy} className="w-full">
           {busy ? t("login.wait") : mode === "up" ? t("login.submitUp") : t("login.submitIn")}
         </Button>
+        {mode === "up" ? <p className="text-xs leading-relaxed text-muted">{t("login.afterJoin")}</p> : null}
       </form>
       {mode === "in" ? (
         <p className="mt-3 text-sm">
