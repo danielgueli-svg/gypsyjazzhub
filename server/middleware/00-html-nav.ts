@@ -112,25 +112,53 @@ function requestHost(event: NavEvent): string {
   return raw.split(",")[0]!.trim().toLowerCase().split(":")[0]!;
 }
 
-function apexToWww(event: NavEvent): Response | null {
-  if (requestHost(event) !== APEX_HOST) return null;
-  let path = "/";
-  let search = "";
+function pagePathAndSearch(event: NavEvent): { path: string; search: string } {
   const raw = event.req.url || event.url?.href || "";
   try {
     const parsed = new URL(raw, WWW_ORIGIN);
-    path = parsed.pathname || "/";
-    search = parsed.search || "";
+    return { path: parsed.pathname || "/", search: parsed.search || "" };
   } catch {
-    path = event.url?.pathname || "/";
-    search = event.url?.search || "";
+    return {
+      path: event.url?.pathname || "/",
+      search: event.url?.search || "",
+    };
   }
+}
+
+function stripTrailingSlash(path: string): string {
+  if (path.length > 1 && path.endsWith("/")) {
+    return path.replace(/\/+$/, "") || "/";
+  }
+  return path;
+}
+
+function redirect301(location: string): Response {
   const headers = new Headers({
-    location: `${WWW_ORIGIN}${path}${search}`,
-    "cache-control": "public, max-age=3600",
+    location,
+    "cache-control": "public, max-age=86400",
   });
   applySecurityHeaders(headers);
   return new Response(null, { status: 301, headers });
+}
+
+/** One 301 to https://www… without a trailing slash (Google indexes that URL). */
+function canonicalRedirect(event: NavEvent): Response | null {
+  const method = (event.req.method ?? "GET").toUpperCase();
+  if (method !== "GET" && method !== "HEAD") return null;
+  const host = requestHost(event);
+  const onHub = host === APEX_HOST || host === "www.gypsyjazzhub.com";
+  if (!onHub) return null;
+  const { path, search } = pagePathAndSearch(event);
+  const skipSlash =
+    path.startsWith("/api/") ||
+    path.startsWith("/__") ||
+    path.startsWith("/auth/") ||
+    /\.[a-zA-Z0-9]+$/.test(path);
+  const clean = skipSlash ? path : stripTrailingSlash(path);
+  const needWww = host === APEX_HOST;
+  const needSlash = clean !== path;
+  if (!needWww && !needSlash) return null;
+  return redirect301(`${WWW_ORIGIN}${clean}${search}`);
 }
 
 function requestHref(event: NavEvent): string {
@@ -231,7 +259,7 @@ export default async function htmlNavMiddleware(
   event: NavEvent,
   next: () => unknown | Promise<unknown>,
 ): Promise<unknown> {
-  const bounced = apexToWww(event);
+  const bounced = canonicalRedirect(event);
   if (bounced) return bounced;
 
   const method = event.req.method ?? "GET";
