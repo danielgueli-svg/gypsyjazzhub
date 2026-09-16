@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { feature } from "topojson-client";
 import {
   geoContains,
+  geoDistance,
   geoGraticule10,
   geoOrthographic,
   geoPath,
@@ -104,13 +105,27 @@ export function WorldGlobe({
       projection.translate([cssEdge / 2, cssEdge / 2]);
     }
 
+    // projection() ignores clipAngle, so far-side cities still get an x,y
+    // inside the disk and look like dots floating over the ocean.
+    function cityOnFront(lon: number, lat: number) {
+      const origin = projection.invert?.([cssEdge / 2, cssEdge / 2]);
+      if (!origin) return false;
+      return geoDistance([lon, lat], origin) < Math.PI / 2 - 0.05;
+    }
+
     function draw() {
       const edge = cssEdge;
       const cx = edge / 2;
       const cy = edge / 2;
       const r = edge * 0.5;
-      brush.fillStyle = "#0a4a86";
+      // Corners stay the card colour so old browsers that skip CSS
+      // overflow+radius do not show a square ocean or loose dots.
+      brush.fillStyle = "#071018";
       brush.fillRect(0, 0, edge, edge);
+      brush.save();
+      brush.beginPath();
+      brush.arc(cx, cy, r - 0.4, 0, Math.PI * 2);
+      brush.clip();
       projection.rotate(rotation.current).clipAngle(90).scale(edge * scaleAmt.current).translate([cx, cy]);
 
       const ocean = brush.createRadialGradient(
@@ -179,6 +194,7 @@ export function WorldGlobe({
 
       for (const city of GLOBE_CITIES) {
         if (!isOnGlobe(active, city.country)) continue;
+        if (!cityOnFront(city.lon, city.lat)) continue;
         const pt = projection([city.lon, city.lat]);
         if (!pt) continue;
         const dx = pt[0] - cx;
@@ -207,6 +223,7 @@ export function WorldGlobe({
           brush.stroke();
         }
       }
+      brush.restore();
     }
 
     function placeTip(clientX: number, clientY: number, name: string | null) {
@@ -286,6 +303,7 @@ export function WorldGlobe({
       let bestD = reach2;
       for (const city of GLOBE_CITIES) {
         if (!isOnGlobe(countriesRef.current, city.country)) continue;
+        if (!cityOnFront(city.lon, city.lat)) continue;
         const pt = projection([city.lon, city.lat]);
         if (!pt) continue;
         const dx = pt[0] - x;
