@@ -551,7 +551,7 @@ export const INSTRUMENTS: Instrument[] = [
       {
         name: "De Molenhoek",
         craft: "Accordion atelier",
-        note: "Molenaarsgraaf. Family repair and restoration — acoustic and digital. Leen de Keijzer plays gypsy jazz.",
+        note: "Molenaarsgraaf. Tuner, repairer and seller — Mengascini, Bugari, Victoria. Leen de Keijzer plays gypsy jazz.",
         href: "https://www.demolenhoek-vermaak.nl/",
         city: "Molenaarsgraaf",
         country: "Netherlands",
@@ -566,7 +566,7 @@ export const INSTRUMENTS: Instrument[] = [
       },
     ],
     makersLead:
-      "Accordion ateliers — repair, restoration and teaching. De Molenhoek in the Netherlands; Vincent’s studio in Taipei.",
+      "Accordion ateliers — tuning, repair and sale. De Molenhoek in the Netherlands; Vincent’s studio in Taipei.",
     charts: SHARED_CHARTS,
     ampNotes: [
       {
@@ -946,7 +946,7 @@ export const EN_INSTRUMENT_COPY: Record<InstrumentSlug, InstrumentCopy> = {
     tips: [
       "Ask the host. An accordion in a small café is loud without trying.",
       "Listen to Marcel Loeffler for the Alsatian chair, Dominique Paats for the Dutch/German one.",
-      "Repair: De Molenhoek in Molenaarsgraaf, and Vincent’s Accordion Studio in Taipei.",
+      "Repair: De Molenhoek in Molenaarsgraaf (tuner, repairer, seller — Mengascini, Bugari, Victoria), and Vincent’s Accordion Studio in Taipei.",
     ],
   },
   mandolin: {
