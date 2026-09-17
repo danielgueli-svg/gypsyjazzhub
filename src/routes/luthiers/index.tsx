@@ -129,7 +129,9 @@ function LuthierIndexRow({ luthier }: { luthier: Luthier }) {
         ? t("luthiers.violin")
         : luthier.craft === "accordion"
           ? t("luthiers.accordion")
-          : null;
+          : luthier.craft === "other"
+            ? t("luthiers.other")
+            : null;
 
   return (
     <li className="flex gap-4 px-4 py-5 sm:px-5">

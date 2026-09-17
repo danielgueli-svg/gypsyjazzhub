@@ -1,4 +1,4 @@
-export type LuthierCraft = "guitar" | "bass" | "violin" | "accordion";
+export type LuthierCraft = "guitar" | "bass" | "violin" | "accordion" | "other";
 
 export type Luthier = {
   slug: string;
@@ -77,6 +77,7 @@ export function parseLuthierCraft(raw: string | undefined | null): LuthierCraft 
   if (raw === "bass") return "bass";
   if (raw === "violin") return "violin";
   if (raw === "accordion") return "accordion";
+  if (raw === "other" || raw === "overige") return "other";
   return "guitar";
 }
 
@@ -1673,6 +1674,7 @@ export function splitLuthiers(rows: Luthier[]) {
     bass: rows.filter((row) => row.craft === "bass"),
     violin: rows.filter((row) => row.craft === "violin"),
     accordion: rows.filter((row) => row.craft === "accordion"),
+    other: rows.filter((row) => row.craft === "other"),
   };
 }
 
@@ -1711,7 +1713,7 @@ export const COMMUNITY_LUTHIER_PIN = [
 export function sortCountryLuthiers(country: string, rows: Luthier[]) {
   const pin = LUTHIER_PIN[country] ?? [];
   const craftRank = (craft: LuthierCraft) =>
-    craft === "guitar" ? 0 : craft === "bass" ? 1 : craft === "violin" ? 2 : 3;
+    craft === "guitar" ? 0 : craft === "bass" ? 1 : craft === "violin" ? 2 : craft === "accordion" ? 3 : 4;
   return [...rows].sort((a, b) => {
     const craft = craftRank(a.craft) - craftRank(b.craft);
     if (craft) return craft;

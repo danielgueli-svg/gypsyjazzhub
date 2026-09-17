@@ -13,6 +13,7 @@ function pickPreview(
   bass: Luthier[],
   guitar: Luthier[],
   accordion: Luthier[],
+  other: Luthier[],
 ) {
   const guitarEntries = guitar.map(luthierEntry);
   const rest = [
@@ -20,6 +21,7 @@ function pickPreview(
     ...violin.map(luthierEntry),
     ...bass.map(luthierEntry),
     ...accordion.map(luthierEntry),
+    ...other.map(luthierEntry),
   ];
   const limit = Math.max(PREVIEW, guitarEntries.length, guitarEntries.length + Math.min(4, rest.length));
   return [...guitarEntries, ...rest].slice(0, limit);
@@ -30,6 +32,7 @@ export function CountryMakersPreview({
   violin,
   bass,
   accordion,
+  other,
   shops,
   countryName,
   countrySlug,
@@ -38,18 +41,21 @@ export function CountryMakersPreview({
   violin: Luthier[];
   bass: Luthier[];
   accordion: Luthier[];
+  other?: Luthier[];
   shops: Shop[];
   countryName: string;
   countrySlug: string;
 }) {
   const { t } = useI18n();
   const cta = t("country.viewAllMakers").replace("{country}", countryName);
-  const preview = pickPreview(shops, violin, bass, guitar, accordion);
+  const otherRows = other ?? [];
+  const preview = pickPreview(shops, violin, bass, guitar, accordion, otherRows);
   const bits = [
     guitar.length ? `${guitar.length} ${t("instruments.guitarLuthiers").toLowerCase()}` : null,
     bass.length ? `${bass.length} ${t("instruments.bassLuthiers").toLowerCase()}` : null,
     violin.length ? `${violin.length} ${t("instruments.violinLuthiers").toLowerCase()}` : null,
     accordion.length ? `${accordion.length} ${t("instruments.accordionLuthiers").toLowerCase()}` : null,
+    otherRows.length ? `${otherRows.length} ${t("instruments.otherLuthiers").toLowerCase()}` : null,
     shops.length ? `${shops.length} ${t("instruments.shops").toLowerCase()}` : null,
   ].filter(Boolean);
 

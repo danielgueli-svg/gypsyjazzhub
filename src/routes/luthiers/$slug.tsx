@@ -48,7 +48,9 @@ function LuthierPage() {
                 ? "Violin luthier"
                 : luthier.craft === "accordion"
                   ? "Accordion atelier"
-                  : "Luthier"}
+                  : luthier.craft === "other"
+                    ? "Other maker"
+                    : "Luthier"}
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{luthier.name}</h1>
           <p className="mt-3 text-muted">

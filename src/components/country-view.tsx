@@ -120,7 +120,7 @@ export function CountryView({
   const venues = sortVenues((country?.venues ?? []).filter((item) => sameCountry(item.country, atlasName)));
   const startJam = isThinGypsyScene(allJams, venues.length);
   const luthiers = (country?.luthiers ?? []).filter((item) => sameCountry(item.country, atlasName));
-  const { guitar: guitarLuthiers, bass: bassLuthiers, violin: violinLuthiers, accordion: accordionLuthiers } =
+  const { guitar: guitarLuthiers, bass: bassLuthiers, violin: violinLuthiers, accordion: accordionLuthiers, other: otherLuthiers } =
     splitLuthiers(luthiers);
   const shops = (country?.shops ?? []).filter((item) => sameCountry(item.country, atlasName));
   const artists = country?.artists ?? [];
@@ -178,6 +178,8 @@ export function CountryView({
         {violinLuthiers.length} violin luthier{violinLuthiers.length === 1 ? "" : "s"}
         {" · "}
         {accordionLuthiers.length} accordion atelier{accordionLuthiers.length === 1 ? "" : "s"}
+        {" · "}
+        {otherLuthiers.length} other maker{otherLuthiers.length === 1 ? "" : "s"}
         {" · "}
         {shops.length} shop{shops.length === 1 ? "" : "s"}
         {" · "}
@@ -383,6 +385,7 @@ export function CountryView({
         violin={violinLuthiers}
         bass={bassLuthiers}
         accordion={accordionLuthiers}
+        other={otherLuthiers}
         shops={shops}
         countryName={name}
         countrySlug={slug}

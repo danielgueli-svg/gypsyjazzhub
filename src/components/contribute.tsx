@@ -888,6 +888,7 @@ function LuthierForm({ defaultCraft = "guitar" }: { defaultCraft?: LuthierCraft 
           <option value="bass">Double bass</option>
           <option value="violin">Violin</option>
           <option value="accordion">Accordion</option>
+          <option value="other">Other</option>
         </select>
       </Field>
       <div className="sm:col-span-2">

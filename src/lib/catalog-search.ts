@@ -153,7 +153,9 @@ export function searchCatalog(raw: string, limit = 40): SearchHit[] {
             ? "violin"
             : luthier.craft === "accordion"
               ? "accordion"
-              : "guitar",
+              : luthier.craft === "other"
+                ? "other"
+                : "guitar",
         luthier.note,
       ]
         .filter(Boolean)

@@ -29,7 +29,7 @@ export type MakerEntry = {
   city?: string;
   site?: string;
   note?: string;
-  craft?: "guitar" | "bass" | "violin" | "accordion" | "shop";
+  craft?: "guitar" | "bass" | "violin" | "accordion" | "other" | "shop";
 };
 
 export function luthierEntry(row: Luthier): MakerEntry {
