@@ -225,6 +225,32 @@ export const CAMPS: Camp[] = [
     kind: "camp",
     bio: "Puerto de la Cruz, Tenerife. Last edition on file: 21–25 January 2026 at Sol y Luna Retreat Center, Camino Codobés 18, 38400 — Titi Bamberger and the Reinhardt family. Django’s birthday jam 23 January. 2026 already ran; next dates not posted.",
   },
+  {
+    slug: "nousche-rosenberg-amsterdam-workshop",
+    name: "Nous'che Rosenberg — Gypsy Rhythms",
+    city: "Amsterdam",
+    country: "Netherlands",
+    when: "15 November 2026, 14:00–17:00",
+    nextStartsAt: "2026-11-15T14:00:00.000Z",
+    site: "",
+    hostSlugs: ["irene-ypenburg"],
+    teacherSlugs: ["nousche-rosenberg"],
+    kind: "workshop",
+    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Nous'che Rosenberg on gypsy rhythms. 15 November 2026, 14:00–17:00. Sign up with Irene Ypenburg.",
+  },
+  {
+    slug: "feigeli-prisor-amsterdam-workshop",
+    name: "Feigeli Prisor — Create the Real Sound",
+    city: "Amsterdam",
+    country: "Netherlands",
+    when: "22 November 2026, 14:00–17:00",
+    nextStartsAt: "2026-11-22T14:00:00.000Z",
+    site: "",
+    hostSlugs: ["irene-ypenburg"],
+    teacherSlugs: ["feigeli-prisor"],
+    kind: "workshop",
+    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Feigeli Prisor, create the real sound. 22 November 2026, 14:00–17:00. Sign up with Irene Ypenburg.",
+  },
 ];
 
 export function getCamp(slug: string) {

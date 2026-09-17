@@ -106,6 +106,9 @@ for (const slug of slugsFrom("src/lib/jams.ts")) {
 for (const slug of slugsFrom("src/lib/festivals.ts")) {
   paths.add(`/festivals/${slug}`);
 }
+for (const slug of slugsFrom("src/lib/camps.ts")) {
+  paths.add(`/learn/${slug}`);
+}
 for (const slug of familyPageSlugs()) {
   paths.add(`/families/${slug}`);
 }

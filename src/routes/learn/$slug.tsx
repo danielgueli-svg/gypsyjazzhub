@@ -3,25 +3,55 @@ import { LegendCard } from "@/components/legend-card";
 import { LearnJump } from "@/components/learn-jump";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { listLegends } from "@/lib/api";
+import { listLegends, type Legend } from "@/lib/api";
+import { CIRCLE_ARTISTS } from "@/lib/circle-artists";
 import { getCamp, campKind } from "@/lib/camps";
 import { CountryLabel } from "@/components/country-label";
 import { formatConcertWhen } from "@/lib/utils";
 import { whenLabel } from "@/lib/festival-copy";
 import { useI18n } from "@/lib/i18n";
 
+function circleAsLegend(slug: string): Legend | null {
+  const row = CIRCLE_ARTISTS.find((artist) => artist.slug === slug);
+  if (!row) return null;
+  return {
+    slug: row.slug,
+    name: row.name,
+    years: row.years,
+    origin: row.origin,
+    instruments: row.instruments,
+    era: row.era,
+    bio: row.bio,
+    notable: row.notable,
+    youtubeUrl: row.youtube_url ?? "",
+    sortOrder: row.sort_order,
+    samois: false,
+    photoUrl: "",
+    photoCredit: "",
+    websiteUrl: "website_url" in row ? String(row.website_url ?? "") : "",
+    instagramUrl: "",
+    spotifyUrl: "",
+    catalogSource: "circle",
+    bioStatus: "",
+  };
+}
+
+function pickPeople(slugs: string[], legends: Legend[]) {
+  return slugs
+    .map((slug) => legends.find((row) => row.slug === slug) ?? circleAsLegend(slug))
+    .filter((row): row is Legend => Boolean(row));
+}
+
 export const Route = createFileRoute("/learn/$slug")({
   loader: async ({ params }) => {
     const camp = getCamp(params.slug);
     if (!camp) throw notFound();
     const legends = await listLegends();
-    const hosts = camp.hostSlugs
-      .map((slug) => legends.find((legend) => legend.slug === slug))
-      .filter((legend) => Boolean(legend));
-    const teachers = camp.teacherSlugs
-      .map((slug) => legends.find((legend) => legend.slug === slug))
-      .filter((legend) => Boolean(legend));
-    return { camp, hosts, teachers };
+    return {
+      camp,
+      hosts: pickPeople(camp.hostSlugs, legends),
+      teachers: pickPeople(camp.teacherSlugs, legends),
+    };
   },
   component: CampPage,
 });
