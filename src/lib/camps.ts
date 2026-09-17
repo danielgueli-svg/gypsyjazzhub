@@ -41,7 +41,7 @@ export const CAMPS: Camp[] = [
     site: "https://darionapoli.com/gypsy-jazz-full-immersion-weekend/",
     hostSlugs: ["dario-napoli", "benji-winterstein"],
     teacherSlugs: ["dario-napoli", "benji-winterstein"],
-    bio: "Dario Napoli and Benji Winterstein's three-day camp near Milan. Classes by day, jam after — guitar students sitting with the trio.",
+    bio: "Dario Napoli and Benji Winterstein, 25–27 September 2026 in Abbiategrasso near Milan. Three days of workshops and jams. Bed and meals in one price (€589). Two spots left. Email darionapoliguitar@gmail.com or call +39 339 641 3847.",
   },
   {
     slug: "under-the-tuscan-sun",

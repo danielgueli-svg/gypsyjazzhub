@@ -22,6 +22,7 @@ export const CIRCLE_ARTISTS = [
     bio: "Italian guitarist raised in New Orleans, now one of the best-known gypsy jazz voices of the Italian scene. Napoli leads a trio with Benji Winterstein on rhythm and tours a modern manouche book — swing, bebop, and original writing — from the Duc des Lombards to Django in June. He has shared stages with Stochelo Rosenberg and Robin Nolan, runs the Gypsy Jazz Full Immersion camps with Benji, and released the album Sicilian Blood in 2026.",
     notable: "Dario Napoli Trio; Sicilian Blood; Full Immersion camps with Benji Winterstein",
     youtube_url: "https://www.youtube.com/user/darionapoli74",
+    website_url: "https://darionapoli.com",
     sort_order: 85,
   },
   {

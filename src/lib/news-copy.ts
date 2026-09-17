@@ -13,6 +13,11 @@ function pack(
 }
 
 export const NEWS_EN = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Two spots left — Dario Napoli Full Immersion, 25–27 September",
+    body: "Dario Napoli wrote from Chicago, after the Midwest Gypsy Swing Fest, before the Green Mill night at Chicago Gypsy Jazz Fest. 25–27 September in Abbiategrasso, near Milan: Gypsy Jazz Full Immersion Weekend with Benji Winterstein. Small group, three days of workshops and jams. Bed and meals in one price. Two places left. Email darionapoliguitar@gmail.com, call +39 339 641 3847, or book on his site.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz announces autumn dates",
     body: "The Munich guitarist posted his public concerts for autumn 2026. 18 September: Django In London with Sunny Franz. Then Germany — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 October), Ofterschwang and Ingolstadt. Dates on his page.",
@@ -125,6 +130,11 @@ export const NEWS_EN = pack({
 });
 
 export const NEWS_NL = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Nog twee plekken — Dario Napoli Full Immersion, 25–27 september",
+    body: "Dario Napoli schreef vanuit Chicago, na het Midwest Gypsy Swing Fest, voor de Green Mill-avond van Chicago Gypsy Jazz Fest. 25–27 september in Abbiategrasso, bij Milaan: Gypsy Jazz Full Immersion Weekend met Benji Winterstein. Kleine groep, drie dagen les en jam. Bed en eten in één prijs. Twee plekken over. Mail darionapoliguitar@gmail.com, bel +39 339 641 3847, of boek op zijn site.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz zet herfstdates online",
     body: "De Münchense gitarist zette zijn publieke concerten voor najaar 2026 online. 18 september: Django In London met Sunny Franz. Daarna Duitsland — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 oktober), Ofterschwang en Ingolstadt. Data op zijn pagina.",
@@ -229,6 +239,11 @@ export const NEWS_NL = pack({
 });
 
 export const NEWS_DE = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Noch zwei Plätze — Dario Napoli Full Immersion, 25.–27. September",
+    body: "Dario Napoli schrieb aus Chicago, nach dem Midwest Gypsy Swing Fest, vor der Green-Mill-Nacht beim Chicago Gypsy Jazz Fest. 25.–27. September in Abbiategrasso bei Mailand: Gypsy Jazz Full Immersion Weekend mit Benji Winterstein. Kleine Gruppe, drei Tage Workshop und Jam. Unterkunft und Essen im Preis. Zwei Plätze frei. Mail an darionapoliguitar@gmail.com, Tel. +39 339 641 3847, oder über seine Seite buchen.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz kündigt Herbsttermine an",
     body: "Der Münchner Gitarrist hat seine öffentlichen Konzerte für den Herbst 2026 gepostet. 18. September: Django In London mit Sunny Franz. Dann Deutschland — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14.–16. Oktober), Ofterschwang und Ingolstadt. Termine auf seiner Seite.",
@@ -305,6 +320,11 @@ export const NEWS_DE = pack({
 });
 
 export const NEWS_FR = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Deux places — Dario Napoli Full Immersion, 25–27 septembre",
+    body: "Dario Napoli écrit depuis Chicago, après le Midwest Gypsy Swing Fest, avant le Green Mill au Chicago Gypsy Jazz Fest. 25–27 septembre à Abbiategrasso, près de Milan : Gypsy Jazz Full Immersion Weekend avec Benji Winterstein. Petit groupe, trois jours d’ateliers et de jams. Chambre et repas compris. Deux places. Mail darionapoliguitar@gmail.com, tél. +39 339 641 3847, ou réserve sur son site.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz annonce ses dates d’automne",
     body: "Le guitariste munichois a publié ses concerts publics pour l’automne 2026. 18 septembre : Django In London avec Sunny Franz. Puis l’Allemagne — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 octobre), Ofterschwang et Ingolstadt. Les dates sont sur sa page.",
@@ -393,6 +413,11 @@ export const NEWS_FR = pack({
 });
 
 export const NEWS_IT = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Due posti — Dario Napoli Full Immersion, 25–27 settembre",
+    body: "Dario Napoli scrive da Chicago, dopo il Midwest Gypsy Swing Fest, prima del Green Mill al Chicago Gypsy Jazz Fest. 25–27 settembre ad Abbiategrasso, vicino a Milano: Gypsy Jazz Full Immersion Weekend con Benji Winterstein. Gruppo piccolo, tre giorni di workshop e jam. Letto e pasti nel prezzo. Due posti. Scrivi a darionapoliguitar@gmail.com, chiama +39 339 641 3847, o prenota sul sito.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz annuncia le date d’autunno",
     body: "Il chitarrista di Monaco ha pubblicato i concerti pubblici per l’autunno 2026. 18 settembre: Django In London con Sunny Franz. Poi la Germania — Kiel, Hanau, Worms, Monaco (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 ottobre), Ofterschwang e Ingolstadt. Le date sono sulla sua pagina.",
@@ -465,6 +490,11 @@ export const NEWS_IT = pack({
 });
 
 export const NEWS_ES = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Quedan dos plazas — Dario Napoli Full Immersion, 25–27 septiembre",
+    body: "Dario Napoli escribe desde Chicago, después del Midwest Gypsy Swing Fest, antes del Green Mill en el Chicago Gypsy Jazz Fest. 25–27 septiembre en Abbiategrasso, cerca de Milán: Gypsy Jazz Full Immersion Weekend con Benji Winterstein. Grupo pequeño, tres días de talleres y jams. Cama y comidas en un precio. Dos plazas. Mail darionapoliguitar@gmail.com, tel. +39 339 641 3847, o reserva en su web.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz anuncia fechas de otoño",
     body: "El guitarrista de Múnich publicó sus conciertos públicos para el otoño 2026. 18 de septiembre: Django In London con Sunny Franz. Luego Alemania — Kiel, Hanau, Worms, Múnich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 de octubre), Ofterschwang e Ingolstadt. Fechas en su página.",
@@ -537,6 +567,11 @@ export const NEWS_ES = pack({
 });
 
 export const NEWS_JA = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "残り2席 — Dario Napoli Full Immersion、9月25–27日",
+    body: "Dario Napoliがシカゴから。Midwest Gypsy Swing Festのあと、Chicago Gypsy Jazz FestのGreen Millの前。9月25–27日、ミラノ近くのAbbiategrasso。Benji WintersteinとのGypsy Jazz Full Immersion Weekend。少人数、3日間のワークショップとジャム。宿泊と食事込み。残り2席。darionapoliguitar@gmail.com、+39 339 641 3847、またはサイトで予約。",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz が秋の公演を発表",
     body: "ミュンヘンのギタリストが2026年秋の公開公演を出した。9月18日：Sunny Franz と Django In London。その後ドイツ — Kiel、Hanau、Worms、Munich（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（ソロ、10月14–16日）、Ofterschwang、Ingolstadt。日程は本人のページ。",
@@ -605,6 +640,11 @@ export const NEWS_JA = pack({
 });
 
 export const NEWS_KO = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "자리 둘 — Dario Napoli Full Immersion, 9월 25–27일",
+    body: "Dario Napoli가 시카고에서 썼다. Midwest Gypsy Swing Fest 다음, Chicago Gypsy Jazz Fest Green Mill 전. 9월 25–27일, 밀라노 근처 Abbiategrasso. Benji Winterstein과 Gypsy Jazz Full Immersion Weekend. 소그룹, 사흘 워크숍과 잼. 숙박과 식사 포함. 자리 둘. darionapoliguitar@gmail.com, +39 339 641 3847, 또는 사이트에서 예약.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz, 가을 공연 발표",
     body: "뮌헨 기타리스트가 2026년 가을 공개 공연을 올렸다. 9월 18일: Sunny Franz와 Django In London. 이어 독일 — Kiel, Hanau, Worms, Munich(Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau(솔로, 10월 14–16일), Ofterschwang, Ingolstadt. 일정은 그의 페이지.",
@@ -669,6 +709,11 @@ export const NEWS_KO = pack({
 });
 
 export const NEWS_ZH = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "还剩两个名额 — Dario Napoli Full Immersion，9月25–27日",
+    body: "Dario Napoli从芝加哥写信，Midwest Gypsy Swing Fest之后、Chicago Gypsy Jazz Fest的Green Mill之前。9月25–27日在米兰附近的Abbiategrasso：与Benji Winterstein的Gypsy Jazz Full Immersion Weekend。小组，三天课与即兴。食宿含在价格里。还剩两席。写信 darionapoliguitar@gmail.com，电话 +39 339 641 3847，或在他的网站预订。",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz 公布秋季演出",
     body: "这位慕尼黑吉他手公布了 2026 年秋季公开演出。9 月 18 日：与 Sunny Franz 在 Django In London。随后德国 — Kiel、Hanau、Worms、慕尼黑（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（独奏，10 月 14–16 日）、Ofterschwang 和 Ingolstadt。日期在他的页面。",
@@ -733,6 +778,11 @@ export const NEWS_ZH = pack({
 });
 
 export const NEWS_ZH_TW = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "還剩兩個名額 — Dario Napoli Full Immersion，9月25–27日",
+    body: "Dario Napoli從芝加哥寫信，Midwest Gypsy Swing Fest之後、Chicago Gypsy Jazz Fest的Green Mill之前。9月25–27日在米蘭附近的Abbiategrasso：與Benji Winterstein的Gypsy Jazz Full Immersion Weekend。小組，三天課與即興。食宿含在價格裡。還剩兩席。寫信 darionapoliguitar@gmail.com，電話 +39 339 641 3847，或在他的網站預訂。",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz 公布秋季演出",
     body: "這位慕尼黑吉他手公布了 2026 年秋季公開演出。9 月 18 日：與 Sunny Franz 在 Django In London。隨後德國 — Kiel、Hanau、Worms、慕尼黑（Unterfahrt、Silbersaal、Bazar Cuisine）、Schloss Elmau（獨奏，10 月 14–16 日）、Ofterschwang 和 Ingolstadt。日期在他的頁面。",
@@ -797,6 +847,11 @@ export const NEWS_ZH_TW = pack({
 });
 
 export const NEWS_ID = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Sisa dua tempat — Dario Napoli Full Immersion, 25–27 September",
+    body: "Dario Napoli menulis dari Chicago, setelah Midwest Gypsy Swing Fest, sebelum malam Green Mill di Chicago Gypsy Jazz Fest. 25–27 September di Abbiategrasso, dekat Milan: Gypsy Jazz Full Immersion Weekend dengan Benji Winterstein. Grup kecil, tiga hari workshop dan jam. Tempat tidur dan makan dalam satu harga. Sisa dua tempat. Email darionapoliguitar@gmail.com, tel. +39 339 641 3847, atau pesan di situsnya.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz umumkan tanggal musim gugur",
     body: "Gitaris Munich memasang konser publik musim gugur 2026. 18 September: Django In London bersama Sunny Franz. Lalu Jerman — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 Oktober), Ofterschwang dan Ingolstadt. Tanggal di halamannya.",
@@ -861,6 +916,11 @@ export const NEWS_ID = pack({
 });
 
 export const NEWS_TH = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "เหลือสองที่ — Dario Napoli Full Immersion, 25–27 กันยายน",
+    body: "Dario Napoli เขียนจากชิคาโก หลัง Midwest Gypsy Swing Fest ก่อนคืน Green Mill ที่ Chicago Gypsy Jazz Fest 25–27 กันยายน ที่ Abbiategrasso ใกล้มิลาน: Gypsy Jazz Full Immersion Weekend กับ Benji Winterstein กลุ่มเล็ก สามวันเวิร์กช็อปและแจม ที่พักและอาหารรวมในราคา เหลือสองที่ อีเมล darionapoliguitar@gmail.com โทร +39 339 641 3847 หรือจองบนเว็บเขา",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz ประกาศรอบฤดูใบไม้ร่วง",
     body: "มือกีตาร์จากมิวนิกโพสต์คอนเสิร์ตสาธารณะฤดูใบไม้ร่วง 2026. 18 ก.ย.: Django In London กับ Sunny Franz. แล้วเยอรมนี — Kiel, Hanau, Worms, Munich (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (โซโล่ 14–16 ต.ค.), Ofterschwang และ Ingolstadt. วันที่อยู่ที่หน้าของเขา.",
@@ -925,6 +985,11 @@ export const NEWS_TH = pack({
 });
 
 export const NEWS_HU = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Két hely — Dario Napoli Full Immersion, szeptember 25–27.",
+    body: "Dario Napoli Chicagóból írt, a Midwest Gypsy Swing Fest után, a Chicago Gypsy Jazz Fest Green Mill-estéje előtt. Szeptember 25–27. Abbiategrassóban, Milánó mellett: Gypsy Jazz Full Immersion Weekend Benji Wintersteinnel. Kis csoport, három nap workshop és jam. Szállás és étkezés egy árban. Két hely. Email: darionapoliguitar@gmail.com, tel. +39 339 641 3847, vagy a honlapján.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz őszi dátumokat jelentett",
     body: "A müncheni gitáros kitette a 2026 őszi nyilvános koncertjeit. Szeptember 18.: Django In London Sunny Franzcal. Aztán Németország — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (szóló, október 14–16.), Ofterschwang és Ingolstadt. A dátumok az oldalán.",
@@ -993,6 +1058,11 @@ export const NEWS_HU = pack({
 });
 
 export const NEWS_PL = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Dwa miejsca — Dario Napoli Full Immersion, 25–27 września",
+    body: "Dario Napoli napisał z Chicago, po Midwest Gypsy Swing Fest, przed Green Mill na Chicago Gypsy Jazz Fest. 25–27 września w Abbiategrasso koło Mediolanu: Gypsy Jazz Full Immersion Weekend z Benjim Wintersteinem. Mała grupa, trzy dni warsztatów i jamów. Łóżko i posiłki w cenie. Dwa miejsca. Mail darionapoliguitar@gmail.com, tel. +39 339 641 3847, albo rezerwacja na stronie.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz ogłasza daty jesienne",
     body: "Gitarzysta z Monachium podał publiczne koncerty na jesień 2026. 18 września: Django In London z Sunny Franz. Potem Niemcy — Kiel, Hanau, Worms, Monachium (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 października), Ofterschwang i Ingolstadt. Daty na jego stronie.",
@@ -1061,6 +1131,11 @@ export const NEWS_PL = pack({
 });
 
 export const NEWS_SR = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Dva mesta — Dario Napoli Full Immersion, 25–27. septembar",
+    body: "Dario Napoli piše iz Čikaga, posle Midwest Gypsy Swing Fest, pre Green Mill na Chicago Gypsy Jazz Fest. 25–27. septembar u Abbiategrassu kod Milana: Gypsy Jazz Full Immersion Weekend sa Benji Wintersteinom. Mala grupa, tri dana radionica i džema. Krevet i obroci u ceni. Dva mesta. Mejl darionapoliguitar@gmail.com, tel. +39 339 641 3847, ili rezervacija na sajtu.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz objavljuje jesenje datume",
     body: "Gitarista iz Minhena objavio je javne koncerte za jesen 2026. 18. septembar: Django In London sa Sunny Franz. Zatim Nemačka — Kiel, Hanau, Worms, Minhen (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16. oktobar), Ofterschwang i Ingolstadt. Datumi na njegovoj stranici.",
@@ -1129,6 +1204,11 @@ export const NEWS_SR = pack({
 });
 
 export const NEWS_HR = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Dva mjesta — Dario Napoli Full Immersion, 25.–27. rujna",
+    body: "Dario Napoli piše iz Chicaga, nakon Midwest Gypsy Swing Fest, prije Green Milla na Chicago Gypsy Jazz Fest. 25.–27. rujna u Abbiategrassu kod Milana: Gypsy Jazz Full Immersion Weekend s Benji Wintersteinom. Mala grupa, tri dana radionica i jama. Krevet i obroci u cijeni. Dva mjesta. Mail darionapoliguitar@gmail.com, tel. +39 339 641 3847, ili rezervacija na stranici.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz objavljuje jesenske datume",
     body: "Gitarist iz Münchna objavio je javne koncerte za jesen 2026. 18. rujna: Django In London sa Sunny Franz. Zatim Njemačka — Kiel, Hanau, Worms, München (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16. listopada), Ofterschwang i Ingolstadt. Datumi na njegovoj stranici.",
@@ -1193,6 +1273,11 @@ export const NEWS_HR = pack({
 });
 
 export const NEWS_PT = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Duas vagas — Dario Napoli Full Immersion, 25–27 de setembro",
+    body: "Dario Napoli escreve de Chicago, depois do Midwest Gypsy Swing Fest, antes do Green Mill no Chicago Gypsy Jazz Fest. 25–27 de setembro em Abbiategrasso, perto de Milão: Gypsy Jazz Full Immersion Weekend com Benji Winterstein. Grupo pequeno, três dias de oficinas e jams. Cama e refeições no preço. Duas vagas. Email darionapoliguitar@gmail.com, tel. +39 339 641 3847, ou reserva no site.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz anuncia datas de outono",
     body: "O guitarrista de Munique publicou os concertos públicos para o outono de 2026. 18 de setembro: Django In London com Sunny Franz. Depois a Alemanha — Kiel, Hanau, Worms, Munique (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (solo, 14–16 de outubro), Ofterschwang e Ingolstadt. Datas na página dele.",
@@ -1265,6 +1350,11 @@ export const NEWS_PT = pack({
 });
 
 export const NEWS_RU = pack({
+  "dario-immersion-abbiategrasso-2026": {
+    title: "Два места — Dario Napoli Full Immersion, 25–27 сентября",
+    body: "Dario Napoli пишет из Чикаго, после Midwest Gypsy Swing Fest, перед Green Mill на Chicago Gypsy Jazz Fest. 25–27 сентября в Аббьятеграссо близ Милана: Gypsy Jazz Full Immersion Weekend с Benji Winterstein. Малая группа, три дня мастерских и джемов. Жильё и еда в цене. Два места. Почта darionapoliguitar@gmail.com, тел. +39 339 641 3847, или запись на сайте.",
+  },
+
   "elias-prinz-autumn-2026": {
     title: "Elias Prinz объявил осенние даты",
     body: "Гитарист из Мюнхена выложил открытые концерты на осень 2026. 18 сентября: Django In London с Sunny Franz. Затем Германия — Kiel, Hanau, Worms, Мюнхен (Unterfahrt, Silbersaal, Bazar Cuisine), Schloss Elmau (соло, 14–16 октября), Ofterschwang и Ingolstadt. Даты на его странице.",

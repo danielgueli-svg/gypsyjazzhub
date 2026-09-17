@@ -5,6 +5,17 @@ import { NEWS_MORE } from "./music-news-more";
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "dario-immersion-abbiategrasso-2026",
+    date: "2026-09-17",
+    title: "Two spots left — Dario Napoli Full Immersion, 25–27 September",
+    body: "Dario Napoli wrote from Chicago, after the Midwest Gypsy Swing Fest, before the Green Mill night at Chicago Gypsy Jazz Fest. 25–27 September in Abbiategrasso, near Milan: Gypsy Jazz Full Immersion Weekend with Benji Winterstein. Small group, three days of workshops and jams. Bed and meals in one price. Two places left. Email darionapoliguitar@gmail.com, call +39 339 641 3847, or book on his site.",
+    kind: "scene",
+    artistSlugs: ["dario-napoli", "benji-winterstein"],
+    href: "/learn/full-immersion-camp",
+    hrefLabel: "Camp page",
+    image: "/artists/dario-napoli-guitar.jpg",
+  },
+  {
     slug: "django-donegal-october-2026",
     date: "2026-09-13",
     title: "Django Donegal returns to Letterkenny — 2–3 October",
