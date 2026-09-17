@@ -175,6 +175,17 @@ export const VENUES: Venue[] = [
     bio: "Sunday-afternoon room. Marcia Bamberg Swing Quartet and the Dutch amateur circuit sit in here. Gypsy jazz dinner nights when posted.",
   },
   {
+    slug: "muziekcafe-miles",
+    name: "Muziekcafé Miles",
+    city: "Amersfoort",
+    country: "Netherlands",
+    kind: "Café",
+    site: "https://milesamersfoort.nl/",
+    contact: "miles@clubamersfoort.nl",
+    scene: "jazz",
+    bio: "Hof 25-26, 3811 CK Amersfoort. Live music café since 2010. Don Vink’s Parisien Gypsy Jazz Kwartet, Sunday 20 September 2026, 16:00.",
+  },
+  {
     slug: "schenkerij-de-beurs",
     name: "Schenkerij De Beurs",
     city: "Geldermalsen",

@@ -180,6 +180,23 @@ export const BANDS: Band[] = [
     ],
   },
   {
+    slug: "parisien-gypsy-jazz-kwartet",
+    name: "Don Vink’s Parisien Gypsy Jazz Kwartet",
+    origin: "Netherlands",
+    country: "Netherlands",
+    members: ["don-vink"],
+    roles: {
+      "don-vink": "Guitar",
+    },
+    bio: "Dutch gypsy jazz quartet led by guitarist Don Vink. Next: Muziekcafé Miles, Amersfoort, Sunday 20 September 2026, 16:00, with a mystery guest.",
+    clips: [
+      {
+        title: "Viaggio — Bimhuis",
+        url: "https://www.youtube.com/watch?v=t2XeYL4xwHs",
+      },
+    ],
+  },
+  {
     slug: "centre-ville",
     name: "Centre Ville",
     origin: "Netherlands",
