@@ -524,7 +524,7 @@ const en: Dict = {
   "country.africaNoJams":
     "No dedicated Gypsy Jazz jam is posted here yet. The venues below already book live jazz — a starting list, so you don’t have to hunt. Write as a group or as an artist if you want to organise a jam or a concert, then put the date on this hub.",
   "country.startJamNoJams":
-    "No dedicated Gypsy Jazz jam is posted here yet. The venues below already book live jazz — a starting list, so you don’t have to hunt. Write as a group or as an artist if you want to organise a jam or a concert, then put the date on this hub.",
+    "No dedicated Gypsy Jazz jam is posted here yet. Venues on this page already book live jazz — a starting list, so you don’t have to hunt. Write as a group or as an artist if you want to organise a jam or a concert, then put the date on this hub.",
   "country.africaVenuesLead":
     "These are potential rooms for a Gypsy Jazz jam or a Gypsy Jazz concert. The hub keeps this list so you don’t have to hunt. Write to the house as a group or as an artist — ask for a Hot Club night, then add it here so the scene can find it.",
   "country.startJamVenuesLead":
@@ -1236,7 +1236,7 @@ const nl: Dict = {
   "country.africaVenuesLead":
     "Mogelijke zalen voor een gypsy-jazzjam of -concert. De hub houdt deze lijst bij zodat je niet hoeft te zoeken. Schrijf het huis aan als groep of als artiest — vraag om een Hot Club-avond, en zet die dan hier zodat de scene hem vindt.",
   "country.startJamNoJams":
-    "Nog geen vaste gypsy-jazzjam hier. De podia hieronder boeken al live jazz — een startlijst, zodat je niet hoeft te zoeken. Schrijf als groep of als artiest als je een jam of concert wilt organiseren, en zet de datum op deze hub.",
+    "Nog geen vaste gypsy-jazzjam hier. De podia op deze pagina boeken al live jazz — een startlijst, zodat je niet hoeft te zoeken. Schrijf als groep of als artiest als je een jam of concert wilt organiseren, en zet de datum op deze hub.",
   "country.startJamVenuesLead":
     "Mogelijke zalen voor een gypsy-jazzjam of -concert. De hub houdt deze lijst bij zodat je niet hoeft te zoeken. Schrijf het huis aan als groep of als artiest — vraag om een Hot Club-avond, en zet die dan hier zodat de scene hem vindt.",
   "country.venue.booksJazz": "boekt jazz — vraag of je een jam of concert mag organiseren",
@@ -1703,7 +1703,7 @@ const de: Dict = {
   "country.africaVenuesLead":
     "Mögliche Räume für eine Gypsy-Jazz-Jam oder ein Gypsy-Jazz-Konzert. Diese Seite hält die Liste, damit du nicht suchen musst. Schreib das Haus als Gruppe oder als Künstler an — frag nach einem Hot-Club-Abend, und trag ihn hier ein.",
   "country.startJamNoJams":
-    "Noch keine feste Gypsy-Jazz-Jam hier. Die Spielorte unten buchen schon Live-Jazz — eine Startliste, damit du nicht suchen musst. Schreib als Gruppe oder als Künstler, wenn du eine Jam oder ein Konzert organisieren willst, und trag das Datum hier ein.",
+    "Noch keine feste Gypsy-Jazz-Jam hier. Die Spielorte auf dieser Seite buchen schon Live-Jazz — eine Startliste, damit du nicht suchen musst. Schreib als Gruppe oder als Künstler, wenn du eine Jam oder ein Konzert organisieren willst, und trag das Datum hier ein.",
   "country.startJamVenuesLead":
     "Mögliche Räume für eine Gypsy-Jazz-Jam oder ein Gypsy-Jazz-Konzert. Diese Seite hält die Liste, damit du nicht suchen musst. Schreib das Haus als Gruppe oder als Künstler an — frag nach einem Hot-Club-Abend, und trag ihn hier ein.",
   "country.venue.booksJazz": "bucht Jazz — schreiben, um Jam oder Konzert zu organisieren",
@@ -2069,7 +2069,7 @@ const fr: Dict = {
   "country.africaVenuesLead":
     "Salles possibles pour une jam ou un concert Gypsy Jazz. Le hub tient cette liste pour que vous n’ayez pas à chercher. Écrivez à la maison en groupe ou en artiste — demandez une soirée Hot Club, puis ajoutez-la ici.",
   "country.startJamNoJams":
-    "Pas encore de jam Gypsy Jazz ici. Les salles ci-dessous programment déjà du jazz — une liste de départ, pour ne pas chercher. Écrivez en groupe ou en artiste pour organiser une jam ou un concert, puis posez la date ici.",
+    "Pas encore de jam Gypsy Jazz ici. Les salles sur cette page programment déjà du jazz — une liste de départ, pour ne pas chercher. Écrivez en groupe ou en artiste pour organiser une jam ou un concert, puis posez la date ici.",
   "country.startJamVenuesLead":
     "Salles possibles pour une jam ou un concert Gypsy Jazz. Le hub tient cette liste pour que vous n’ayez pas à chercher. Écrivez à la maison en groupe ou en artiste — demandez une soirée Hot Club, puis ajoutez-la ici.",
   "country.venue.booksJazz": "programme du jazz — écrire pour une jam ou un concert",

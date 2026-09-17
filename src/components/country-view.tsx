@@ -163,8 +163,6 @@ export function CountryView({
         {" · "}
         {festivals.length} festival{festivals.length === 1 ? "" : "s"}
         {" · "}
-        {venues.length} venue{venues.length === 1 ? "" : "s"}
-        {" · "}
         {guitarLuthiers.length} guitar luthier{guitarLuthiers.length === 1 ? "" : "s"}
         {" · "}
         {bassLuthiers.length} bass luthier{bassLuthiers.length === 1 ? "" : "s"}
@@ -172,6 +170,8 @@ export function CountryView({
         {violinLuthiers.length} violin luthier{violinLuthiers.length === 1 ? "" : "s"}
         {" · "}
         {shops.length} shop{shops.length === 1 ? "" : "s"}
+        {" · "}
+        {venues.length} venue{venues.length === 1 ? "" : "s"}
       </p>
 
       {!country ? (
@@ -202,8 +202,8 @@ export function CountryView({
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
           { id: "makers", label: t("country.makers") },
           { id: "teachers", label: t("country.teachers") },
-          (livingBands.length || (country?.bands ?? []).length) ? { id: "groups", label: t("nav.groups") } : null,
           { id: "venues", label: t("country.venues") },
+          (livingBands.length || (country?.bands ?? []).length) ? { id: "groups", label: t("nav.groups") } : null,
           { id: "players", label: t("country.currently") },
           artists.some((artist) => artist.past) ? { id: "past", label: t("country.past") } : null,
           { id: "archive", label: t("country.archive") },
@@ -287,19 +287,6 @@ export function CountryView({
               ) : null}
             </div>
           ) : null}
-        </section>
-      ) : null}
-
-      {startJam ? (
-        <section id="venues" className="mt-12 scroll-mt-40">
-          <h2 className="font-display text-3xl font-semibold">
-            {t("country.venues")}
-            {venues.length > 10 ? (
-              <span className="ml-2 text-lg font-normal text-muted">({venues.length})</span>
-            ) : null}
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t("country.startJamVenuesLead")}</p>
-          <VenueLines venues={venues} empty={t("country.noVenues")} booksJazz={t("country.venue.booksJazz")} />
         </section>
       ) : null}
 
@@ -392,6 +379,19 @@ export function CountryView({
 
       <Teachers teachers={teachers} countrySlug={slug} countryName={name} />
 
+      <section id="venues" className="mt-12 scroll-mt-40">
+        <h2 className="font-display text-3xl font-semibold">
+          {t("country.venues")}
+          {venues.length > 10 ? (
+            <span className="ml-2 text-lg font-normal text-muted">({venues.length})</span>
+          ) : null}
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          {startJam ? t("country.startJamVenuesLead") : t("country.venuesLead")}
+        </p>
+        <VenueLines venues={venues} empty={t("country.noVenues")} booksJazz={t("country.venue.booksJazz")} />
+      </section>
+
       {livingBands.length > 0 ? (
         <section id="groups" className="mt-12 scroll-mt-40">
           <h2 className="font-display text-3xl font-semibold">
@@ -419,19 +419,6 @@ export function CountryView({
           </p>
         </section>
       ) : null}
-
-      {startJam ? null : (
-      <section id="venues" className="mt-12 scroll-mt-40">
-        <h2 className="font-display text-3xl font-semibold">
-          {t("country.venues")}
-          {venues.length > 10 ? (
-            <span className="ml-2 text-lg font-normal text-muted">({venues.length})</span>
-          ) : null}
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-muted">{t("country.venuesLead")}</p>
-        <VenueLines venues={venues} empty={t("country.noVenues")} booksJazz={t("country.venue.booksJazz")} />
-      </section>
-      )}
 
       <section id="players" className="mt-12 scroll-mt-40">
         <h2 className="font-display text-3xl font-semibold">{t("country.currently")}</h2>
