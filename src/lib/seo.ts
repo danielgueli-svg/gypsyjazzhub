@@ -143,6 +143,12 @@ export const SEO = {
       "Violin makers and workshops for gypsy jazz players — instruments, repairs and setup, listed by country.",
     path: "/luthiers/violin",
   },
+  accordionLuthiers: {
+    title: "Accordion ateliers",
+    description:
+      "Accordion repair, restoration and teaching ateliers for gypsy jazz — listed by country.",
+    path: "/luthiers/accordion",
+  },
   shops: {
     title: "Gypsy jazz guitar shops",
     description:

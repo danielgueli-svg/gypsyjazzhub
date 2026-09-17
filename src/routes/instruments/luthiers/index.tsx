@@ -46,7 +46,7 @@ export const Route = createFileRoute("/instruments/luthiers/")({
     const rows = extraCountries
       .map((name) => {
         const country = findCountry(globe, countrySlug(name));
-        const { guitar, bass, violin } = splitLuthiers(country?.luthiers ?? []);
+        const { guitar, bass, violin, accordion } = splitLuthiers(country?.luthiers ?? []);
         const shops = country?.shops ?? [];
         return {
           name,
@@ -55,7 +55,8 @@ export const Route = createFileRoute("/instruments/luthiers/")({
           violin: violin.length,
           bass: bass.length,
           guitar: guitar.length,
-          total: shops.length + violin.length + bass.length + guitar.length,
+          accordion: accordion.length,
+          total: shops.length + violin.length + bass.length + guitar.length + accordion.length,
         };
       })
       .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
@@ -83,6 +84,7 @@ function LuthiersByCountryPage() {
             row.violin ? `${row.violin} ${t("instruments.violinLuthiers").toLowerCase()}` : null,
             row.bass ? `${row.bass} ${t("instruments.bassLuthiers").toLowerCase()}` : null,
             row.guitar ? `${row.guitar} ${t("instruments.guitarLuthiers").toLowerCase()}` : null,
+            row.accordion ? `${row.accordion} ${t("instruments.accordionLuthiers").toLowerCase()}` : null,
           ].filter(Boolean);
           return (
             <li key={row.slug}>

@@ -564,10 +564,11 @@ const en: Dict = {
   "country.luthiers": "Luthiers",
   "luthiers.kicker": "The workshops",
   "luthiers.lead":
-    "Gypsy jazz guitar makers, double bass and violin workshops, by country. Open a name for the workshop. Add the luthier you know.",
+    "Gypsy jazz guitar makers, double bass, violin and accordion ateliers, by country. Open a name for the workshop. Add the luthier you know.",
   "luthiers.guitar": "Guitar",
   "luthiers.bass": "Double bass",
   "luthiers.violin": "Violin",
+  "luthiers.accordion": "Accordion",
   "bass.title": "Double bass luthiers",
   "bass.kicker": "The workshops",
   "bass.lead":
@@ -602,6 +603,14 @@ const en: Dict = {
   "violin.worldLead":
     "Violin makers and workshops for gypsy jazz players — new instruments, repairs and setup, listed by country.",
   "violin.worldwide": "Browse worldwide violin luthiers",
+  "accordion.title": "Accordion ateliers",
+  "accordion.kicker": "The ateliers",
+  "accordion.lead":
+    "Accordion repair, restoration and teaching — family ateliers and studios for gypsy jazz players.",
+  "accordion.worldLead":
+    "Accordion ateliers for gypsy jazz — repair, restoration and teaching, listed by country.",
+  "accordion.worldwide": "Browse worldwide accordion ateliers",
+  "accordion.backLuthiers": "All luthiers",
   "violin.backLuthiers": "All luthiers",
   "violin.search": "Filter luthiers",
   "violin.searchPh": "Filter by name, city or country",
@@ -1273,11 +1282,20 @@ const nl: Dict = {
   "country.luthiers": "Luthiers",
   "luthiers.kicker": "De ateliers",
   "luthiers.lead":
-    "Gypsy-jazzgitaarbouwers en contrabasateliers, per land. Open een naam voor de werkplaats. Voeg de luthier toe die jij kent.",
+    "Gypsy-jazzgitaarbouwers, contrabas-, viool- en accordeonateliers, per land. Open een naam voor de werkplaats. Voeg de luthier toe die jij kent.",
   "luthiers.guitar": "Gitaar",
   "luthiers.bass": "Contrabas",
   "luthiers.violin": "Viool",
+  "luthiers.accordion": "Accordeon",
   "country.shops": "Gitaarwinkels",
+  "accordion.title": "Accordeonateliers",
+  "accordion.kicker": "De ateliers",
+  "accordion.lead":
+    "Accordeonreparatie, restauratie en les — ateliers voor gypsy-jazzspelers.",
+  "accordion.worldLead":
+    "Accordeonateliers voor gypsy jazz — reparatie, restauratie en les, per land.",
+  "accordion.worldwide": "Accordeonateliers wereldwijd",
+  "accordion.backLuthiers": "Alle luthiers",
   "country.noShops": "Nog geen gitaarwinkels op de lijst.",
   "country.currently": "Nu actief",
   "country.seeMore": "Meer",
@@ -1722,6 +1740,7 @@ const de: Dict = {
   "luthiers.guitar": "Gitarre",
   "luthiers.bass": "Kontrabass",
   "luthiers.violin": "Geige",
+  "luthiers.accordion": "Akkordeon",
   "country.shops": "Gitarrenläden",
   "country.noShops": "Noch keine Gitarrenläden in der Liste.",
   "country.currently": "Jetzt aktiv",
@@ -2089,6 +2108,7 @@ const fr: Dict = {
   "luthiers.guitar": "Guitare",
   "luthiers.bass": "Contrebasse",
   "luthiers.violin": "Violon",
+  "luthiers.accordion": "Accordéon",
   "country.noShops": "Pas encore de magasins.",
   "country.currently": "En activité",
   "country.past": "Légendes",
@@ -2434,6 +2454,7 @@ const it: Dict = {
   "luthiers.guitar": "Chitarra",
   "luthiers.bass": "Contrabbasso",
   "luthiers.violin": "Violino",
+  "luthiers.accordion": "Fisarmonica",
   "country.noShops": "Nessun negozio in elenco.",
   "country.currently": "Attivi ora",
   "country.past": "Leggende",

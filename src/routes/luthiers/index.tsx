@@ -65,6 +65,10 @@ function LuthiersPage() {
         <Link to="/luthiers/violin" className="text-fg hover:underline">
           {t("violin.worldwide")}
         </Link>
+        {" · "}
+        <Link to="/luthiers/accordion" className="text-fg hover:underline">
+          {t("accordion.worldwide")}
+        </Link>
         .
       </p>
 
@@ -123,7 +127,9 @@ function LuthierIndexRow({ luthier }: { luthier: Luthier }) {
       ? t("luthiers.bass")
       : luthier.craft === "violin"
         ? t("luthiers.violin")
-        : null;
+        : luthier.craft === "accordion"
+          ? t("luthiers.accordion")
+          : null;
 
   return (
     <li className="flex gap-4 px-4 py-5 sm:px-5">

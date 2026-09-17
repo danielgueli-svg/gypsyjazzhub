@@ -24,6 +24,7 @@ export type InstrumentChrome = {
   luthiersGuitarLead: string;
   luthiersBassLead: string;
   luthiersViolinLead: string;
+  luthiersAccordionLead: string;
   luthiersAll: string;
   shops: string;
   shopsLead: string;
@@ -76,6 +77,8 @@ const EN_CHROME: InstrumentChrome = {
     "Double bass is a core instrument in Gypsy Jazz. Makers, restorers and jazz-setup workshops, listed by country.",
   luthiersViolinLead:
     "Violin makers and workshops — new instruments, repairs and setup. Open a name for the workshop.",
+  luthiersAccordionLead:
+    "Accordion ateliers — repair, restoration and teaching. Open a name for the atelier.",
   luthiersAll: "Browse all luthiers",
   shops: "Shops",
   shopsLead: "Shops that stock Selmer-Maccaferri style guitars. Open a name for address and hours.",
@@ -129,6 +132,8 @@ const CHROME: Record<string, Partial<InstrumentChrome>> = {
       "Contrabas hoort bij gypsy jazz. Bouwers, restaurateurs en jazz-setup, per land.",
     luthiersViolinLead:
       "Vioolbouwers en ateliers — nieuwe instrumenten, reparatie en setup.",
+    luthiersAccordionLead:
+      "Accordeonateliers — reparatie, restauratie en les. Open een naam voor het atelier.",
     luthiersAll: "Alle bouwers",
     forum: "Vragen",
     forumLead: "Vraag over dit instrument. Iedereen mag lezen. Word lid om te schrijven.",
@@ -166,6 +171,8 @@ const CHROME: Record<string, Partial<InstrumentChrome>> = {
       "La contrebasse est au cœur du gypsy jazz. Facteurs, restaurateurs et setups jazz, par pays.",
     luthiersViolinLead:
       "Facteurs de violons et ateliers — instruments neufs, réparations et réglage.",
+    luthiersAccordionLead:
+      "Ateliers d’accordéon — réparation, restauration et cours. Ouvre un nom pour l’atelier.",
     luthiersAll: "Tous les luthiers",
     forum: "Questions",
     forumLead: "Posez une question sur cet instrument. Tout le monde peut lire.",

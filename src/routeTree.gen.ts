@@ -68,6 +68,7 @@ import { Route as LegendsIndexRouteImport } from './routes/legends/index'
 import { Route as LegendsSlugRouteImport } from './routes/legends/$slug'
 import { Route as LuthiersIndexRouteImport } from './routes/luthiers/index'
 import { Route as LuthiersSlugRouteImport } from './routes/luthiers/$slug'
+import { Route as LuthiersAccordionRouteImport } from './routes/luthiers/accordion'
 import { Route as LuthiersBassRouteImport } from './routes/luthiers/bass'
 import { Route as LuthiersViolinRouteImport } from './routes/luthiers/violin'
 import { Route as MusiciansIndexRouteImport } from './routes/musicians/index'
@@ -393,6 +394,11 @@ const LuthiersSlugRoute = LuthiersSlugRouteImport.update({
   path: '/luthiers/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LuthiersAccordionRoute = LuthiersAccordionRouteImport.update({
+  id: '/luthiers/accordion',
+  path: '/luthiers/accordion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LuthiersBassRoute = LuthiersBassRouteImport.update({
   id: '/luthiers/bass',
   path: '/luthiers/bass',
@@ -591,6 +597,7 @@ export interface FileRoutesByFullPath {
   '/learn/teachers': typeof LearnTeachersRoute
   '/legends/$slug': typeof LegendsSlugRoute
   '/luthiers/$slug': typeof LuthiersSlugRoute
+  '/luthiers/accordion': typeof LuthiersAccordionRoute
   '/luthiers/bass': typeof LuthiersBassRoute
   '/luthiers/violin': typeof LuthiersViolinRoute
   '/musicians/$slug': typeof MusiciansSlugRoute
@@ -681,6 +688,7 @@ export interface FileRoutesByTo {
   '/learn/teachers': typeof LearnTeachersRoute
   '/legends/$slug': typeof LegendsSlugRoute
   '/luthiers/$slug': typeof LuthiersSlugRoute
+  '/luthiers/accordion': typeof LuthiersAccordionRoute
   '/luthiers/bass': typeof LuthiersBassRoute
   '/luthiers/violin': typeof LuthiersViolinRoute
   '/musicians/$slug': typeof MusiciansSlugRoute
@@ -772,6 +780,7 @@ export interface FileRoutesById {
   '/learn/teachers': typeof LearnTeachersRoute
   '/legends/$slug': typeof LegendsSlugRoute
   '/luthiers/$slug': typeof LuthiersSlugRoute
+  '/luthiers/accordion': typeof LuthiersAccordionRoute
   '/luthiers/bass': typeof LuthiersBassRoute
   '/luthiers/violin': typeof LuthiersViolinRoute
   '/musicians/$slug': typeof MusiciansSlugRoute
@@ -864,6 +873,7 @@ export interface FileRouteTypes {
     | '/learn/teachers'
     | '/legends/$slug'
     | '/luthiers/$slug'
+    | '/luthiers/accordion'
     | '/luthiers/bass'
     | '/luthiers/violin'
     | '/musicians/$slug'
@@ -954,6 +964,7 @@ export interface FileRouteTypes {
     | '/learn/teachers'
     | '/legends/$slug'
     | '/luthiers/$slug'
+    | '/luthiers/accordion'
     | '/luthiers/bass'
     | '/luthiers/violin'
     | '/musicians/$slug'
@@ -1044,6 +1055,7 @@ export interface FileRouteTypes {
     | '/learn/teachers'
     | '/legends/$slug'
     | '/luthiers/$slug'
+    | '/luthiers/accordion'
     | '/luthiers/bass'
     | '/luthiers/violin'
     | '/musicians/$slug'
@@ -1135,6 +1147,7 @@ export interface RootRouteChildren {
   LearnTeachersRoute: typeof LearnTeachersRoute
   LegendsSlugRoute: typeof LegendsSlugRoute
   LuthiersSlugRoute: typeof LuthiersSlugRoute
+  LuthiersAccordionRoute: typeof LuthiersAccordionRoute
   LuthiersBassRoute: typeof LuthiersBassRoute
   LuthiersViolinRoute: typeof LuthiersViolinRoute
   MusiciansSlugRoute: typeof MusiciansSlugRoute
@@ -1591,6 +1604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LuthiersSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/luthiers/accordion': {
+      id: '/luthiers/accordion'
+      path: '/luthiers/accordion'
+      fullPath: '/luthiers/accordion'
+      preLoaderRoute: typeof LuthiersAccordionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/luthiers/bass': {
       id: '/luthiers/bass'
       path: '/luthiers/bass'
@@ -1847,6 +1867,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnTeachersRoute: LearnTeachersRoute,
   LegendsSlugRoute: LegendsSlugRoute,
   LuthiersSlugRoute: LuthiersSlugRoute,
+  LuthiersAccordionRoute: LuthiersAccordionRoute,
   LuthiersBassRoute: LuthiersBassRoute,
   LuthiersViolinRoute: LuthiersViolinRoute,
   MusiciansSlugRoute: MusiciansSlugRoute,

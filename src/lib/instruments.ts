@@ -84,9 +84,10 @@ export type Instrument = {
   repertoire?: RepertoireTune[];
 };
 
-export function luthierCraftForInstrument(slug: InstrumentSlug): "guitar" | "bass" | "violin" | null {
+export function luthierCraftForInstrument(slug: InstrumentSlug): "guitar" | "bass" | "violin" | "accordion" | null {
   if (slug === "double-bass") return "bass";
   if (slug === "violin") return "violin";
+  if (slug === "accordion") return "accordion";
   if (slug === "solo-guitar" || slug === "rhythm-guitar") return "guitar";
   return null;
 }
@@ -525,6 +526,7 @@ export const INSTRUMENTS: Instrument[] = [
       { slug: "dominique-paats", name: "Dominique Paats", note: "Paulus Schäfer; Dance of Joy" },
       { slug: "julien-labro", name: "Julien Labro", note: "Hot Club of Detroit" },
       { slug: "onno-kuipers", name: "Onno Kuipers", note: "Centre Ville, Netherlands" },
+      { slug: "leen-de-keijzer", name: "Leen de Keijzer", note: "De Molenhoek, Molenaarsgraaf" },
       { slug: "vincent-tsai", name: "Vincent Tsai", note: "Taipei Gypsy Jazz Festival; teaching studio" },
       { slug: "florin-pana", name: "Florin Pană", note: "Django Sound Quartet, Bucharest" },
     ],
@@ -547,16 +549,24 @@ export const INSTRUMENTS: Instrument[] = [
     ],
     makers: [
       {
+        name: "De Molenhoek",
+        craft: "Accordion atelier",
+        note: "Molenaarsgraaf. Family repair and restoration — acoustic and digital. Leen de Keijzer plays gypsy jazz.",
+        href: "https://www.demolenhoek-vermaak.nl/",
+        city: "Molenaarsgraaf",
+        country: "Netherlands",
+      },
+      {
         name: "Vincent's Accordion Studio",
         craft: "Accordion teaching and repair",
-        note: "蔡偉靖手風琴工作室. Vincent Tsai’s Taipei studio — teaching, repair, and the classroom of Taipei Gypsy Jazz Festival workshops. Rooms also in Taichung and Kaohsiung.",
+        note: "蔡偉靖手風琴工作室. Vincent Tsai’s Taipei studio — teaching, repair, and Taipei Gypsy Jazz Festival workshops. Also Taichung and Kaohsiung.",
         href: "https://www.vincentaccordion.net/",
         city: "Taipei",
         country: "Taiwan",
       },
     ],
     makersLead:
-      "Accordion repair and teaching — not guitar luthiers. Vincent’s studio in Taipei is the one room on this hub that does both.",
+      "Accordion ateliers — repair, restoration and teaching. De Molenhoek in the Netherlands; Vincent’s studio in Taipei.",
     charts: SHARED_CHARTS,
     ampNotes: [
       {
@@ -936,7 +946,7 @@ export const EN_INSTRUMENT_COPY: Record<InstrumentSlug, InstrumentCopy> = {
     tips: [
       "Ask the host. An accordion in a small café is loud without trying.",
       "Listen to Marcel Loeffler for the Alsatian chair, Dominique Paats for the Dutch/German one.",
-      "Repair and teaching: Vincent’s Accordion Studio in Taipei is on this hub. No fake European accordion luthiers.",
+      "Repair: De Molenhoek in Molenaarsgraaf, and Vincent’s Accordion Studio in Taipei.",
     ],
   },
   mandolin: {

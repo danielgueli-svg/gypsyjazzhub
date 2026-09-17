@@ -1,4 +1,4 @@
-export type LuthierCraft = "guitar" | "bass" | "violin";
+export type LuthierCraft = "guitar" | "bass" | "violin" | "accordion";
 
 export type Luthier = {
   slug: string;
@@ -56,9 +56,27 @@ function violin(
   };
 }
 
+function accordion(
+  row: Omit<Luthier, "craft" | "contact" | "address" | "phone" | "email" | "hours" | "site" | "note"> &
+    Partial<Pick<Luthier, "contact" | "address" | "phone" | "email" | "hours" | "site" | "note">>,
+): Luthier {
+  return {
+    ...row,
+    contact: row.contact ?? "",
+    address: row.address ?? "",
+    phone: row.phone ?? "",
+    email: row.email ?? "",
+    hours: row.hours ?? "By appointment",
+    site: row.site ?? "",
+    note: row.note ?? "",
+    craft: "accordion",
+  };
+}
+
 export function parseLuthierCraft(raw: string | undefined | null): LuthierCraft {
   if (raw === "bass") return "bass";
   if (raw === "violin") return "violin";
+  if (raw === "accordion") return "accordion";
   return "guitar";
 }
 
@@ -1608,6 +1626,33 @@ const VIOLIN_LUTHIERS: Luthier[] = [
   }),
 ];
 
+const ACCORDION_LUTHIERS: Luthier[] = [
+  accordion({
+    slug: "de-molenhoek",
+    name: "De Molenhoek",
+    city: "Molenaarsgraaf",
+    country: "Netherlands",
+    site: "https://www.demolenhoek-vermaak.nl/",
+    address: "Molenhoek 7, 2973 AG Molenaarsgraaf, Netherlands",
+    phone: "+31 6 53798260",
+    email: "leen-music@hotmail.com",
+    contact: "mailto:leen-music@hotmail.com",
+    hours: "By appointment",
+    note: "Repair, restoration, sale and rental",
+    bio: "Molenaarsgraaf, between Dordrecht and Gorinchem. Family accordion atelier — repair, restoration, sale and rental of acoustic and digital accordions. Leo de Keijzer restores. Leen de Keijzer plays gypsy jazz: Festival Django Reinhardt in Fontainebleau, with Hot Flamingo.",
+  }),
+  accordion({
+    slug: "vincent-accordion-studio",
+    name: "Vincent's Accordion Studio",
+    city: "Taipei",
+    country: "Taiwan",
+    site: "https://www.vincentaccordion.net/",
+    contact: "https://www.vincentaccordion.net/",
+    note: "Teaching and repair",
+    bio: "Taipei. Vincent Tsai — accordion teaching, repair, and the classroom of Taipei Gypsy Jazz Festival workshops. Also Taichung and Kaohsiung.",
+  }),
+];
+
 export const LUTHIERS: Luthier[] = [
   ...GUITAR_LUTHIERS,
   ...BASS_LUTHIERS.map((row) => ({
@@ -1615,6 +1660,7 @@ export const LUTHIERS: Luthier[] = [
     note: BASS_NOTES[row.slug] ?? row.note,
   })),
   ...VIOLIN_LUTHIERS,
+  ...ACCORDION_LUTHIERS,
 ];
 
 export function getLuthier(slug: string) {
@@ -1626,6 +1672,7 @@ export function splitLuthiers(rows: Luthier[]) {
     guitar: rows.filter((row) => row.craft === "guitar"),
     bass: rows.filter((row) => row.craft === "bass"),
     violin: rows.filter((row) => row.craft === "violin"),
+    accordion: rows.filter((row) => row.craft === "accordion"),
   };
 }
 
@@ -1634,7 +1681,7 @@ const LUTHIER_PIN: Record<string, string[]> = {
   France: ["maurice-dupont", "jean-barault", "castelluccia", "jean-pierre-favino"],
   "United Kingdom": ["jerome-duffell", "robert-ford", "killy-nonis"],
   Germany: ["stefan-hahl"],
-  Netherlands: ["leo-eimers"],
+  Netherlands: ["leo-eimers", "de-molenhoek"],
   Canada: ["shelley-park"],
   Czechia: ["vit-cach"],
   Spain: ["geronimo-mateos"],
@@ -1664,7 +1711,7 @@ export const COMMUNITY_LUTHIER_PIN = [
 export function sortCountryLuthiers(country: string, rows: Luthier[]) {
   const pin = LUTHIER_PIN[country] ?? [];
   const craftRank = (craft: LuthierCraft) =>
-    craft === "guitar" ? 0 : craft === "bass" ? 1 : 2;
+    craft === "guitar" ? 0 : craft === "bass" ? 1 : craft === "violin" ? 2 : 3;
   return [...rows].sort((a, b) => {
     const craft = craftRank(a.craft) - craftRank(b.craft);
     if (craft) return craft;
@@ -1754,6 +1801,10 @@ export function bassLuthiersByCountry(extra: Luthier[] = []) {
 
 export function violinLuthiersByCountry(extra: Luthier[] = []) {
   return luthiersByCountryForCraft("violin", extra);
+}
+
+export function accordionLuthiersByCountry(extra: Luthier[] = []) {
+  return luthiersByCountryForCraft("accordion", extra);
 }
 
 export function siteHost(url: string) {

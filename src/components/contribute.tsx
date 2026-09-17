@@ -35,12 +35,14 @@ export function Contribute({
   heading,
   defaultKind,
   meetup,
+  defaultCraft,
 }: {
   presetSlug?: string;
   presetName?: string;
   heading?: string;
   defaultKind?: Kind;
   meetup?: boolean;
+  defaultCraft?: LuthierCraft;
 }) {
   const { t } = useI18n();
   const [kind, setKind] = useState<Kind>(defaultKind ?? "concert");
@@ -89,7 +91,7 @@ export function Contribute({
         {kind === "festival" ? <FestivalForm /> : null}
         {kind === "jam" ? <JamForm meetup={meetup} /> : null}
         {kind === "venue" ? <VenueForm /> : null}
-        {kind === "luthier" ? <LuthierForm /> : null}
+        {kind === "luthier" ? <LuthierForm defaultCraft={defaultCraft} /> : null}
         {kind === "artist" ? <ArtistForm /> : null}
         {kind === "teacher" ? <TeacherForm /> : null}
         {kind === "country" ? <CountryRequestForm compact /> : null}
@@ -821,7 +823,7 @@ function VenueForm() {
   );
 }
 
-function LuthierForm() {
+function LuthierForm({ defaultCraft = "guitar" }: { defaultCraft?: LuthierCraft }) {
   const router = useRouter();
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
@@ -829,7 +831,7 @@ function LuthierForm() {
   const [site, setSite] = useState("");
   const [contact, setContact] = useState("");
   const [bio, setBio] = useState("");
-  const [craft, setCraft] = useState<LuthierCraft>("guitar");
+  const [craft, setCraft] = useState<LuthierCraft>(defaultCraft);
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -885,6 +887,7 @@ function LuthierForm() {
           <option value="guitar">Guitar</option>
           <option value="bass">Double bass</option>
           <option value="violin">Violin</option>
+          <option value="accordion">Accordion</option>
         </select>
       </Field>
       <div className="sm:col-span-2">

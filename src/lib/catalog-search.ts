@@ -147,7 +147,13 @@ export function searchCatalog(raw: string, limit = 40): SearchHit[] {
       href: `/luthiers/${luthier.slug}`,
       blurb: [
         luthier.city,
-        luthier.craft === "bass" ? "double bass" : luthier.craft === "violin" ? "violin" : "guitar",
+        luthier.craft === "bass"
+          ? "double bass"
+          : luthier.craft === "violin"
+            ? "violin"
+            : luthier.craft === "accordion"
+              ? "accordion"
+              : "guitar",
         luthier.note,
       ]
         .filter(Boolean)

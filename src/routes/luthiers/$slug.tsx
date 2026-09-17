@@ -46,7 +46,9 @@ function LuthierPage() {
               ? "Double bass luthier"
               : luthier.craft === "violin"
                 ? "Violin luthier"
-                : "Luthier"}
+                : luthier.craft === "accordion"
+                  ? "Accordion atelier"
+                  : "Luthier"}
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{luthier.name}</h1>
           <p className="mt-3 text-muted">
@@ -83,6 +85,13 @@ function LuthierPage() {
           <p>
             <Link to="/luthiers/violin" className="text-fg hover:underline">
               All violin luthiers
+            </Link>
+          </p>
+        ) : null}
+        {luthier.craft === "accordion" ? (
+          <p>
+            <Link to="/luthiers/accordion" className="text-fg hover:underline">
+              All accordion ateliers
             </Link>
           </p>
         ) : null}

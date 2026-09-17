@@ -71,7 +71,7 @@ function CountryLuthiersPage() {
   const { country, atlasName, slug, luthiers, shops } = Route.useLoaderData();
   const { t, locale } = useI18n();
   const name = displayCountry(country?.name ?? atlasName, locale);
-  const { guitar, bass, violin } = splitLuthiers(luthiers);
+  const { guitar, bass, violin, accordion } = splitLuthiers(luthiers);
   const byName = <T extends { name: string }>(rows: T[]) =>
     [...rows].sort((a, b) => a.name.localeCompare(b.name));
 
@@ -114,6 +114,12 @@ function CountryLuthiersPage() {
         title={t("instruments.violinLuthiers")}
         lead={t("violin.lead").replaceAll("{country}", name)}
         entries={sortCountryLuthiers(atlasName, violin).map(luthierEntry)}
+      />
+
+      <MakerSection
+        title={t("instruments.accordionLuthiers")}
+        lead={t("accordion.lead")}
+        entries={sortCountryLuthiers(atlasName, accordion).map(luthierEntry)}
       />
 
       <MakerSection

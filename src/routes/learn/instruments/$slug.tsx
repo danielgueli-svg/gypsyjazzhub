@@ -8,7 +8,7 @@ import { MessageMember } from "@/components/message-member";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { BassLuthiersDirectory, SuggestBassLuthier } from "@/components/bass-luthiers";
 import { ViolinLuthiersDirectory, SuggestViolinLuthier } from "@/components/violin-luthiers";
-import { GuitarLuthiersDirectory } from "@/components/luthier-list";
+import { GuitarLuthiersDirectory, AccordionLuthiersDirectory } from "@/components/luthier-list";
 import { ShopsDirectory } from "@/components/shops-directory";
 import {
   appsForInstrument,
@@ -243,7 +243,9 @@ function InstrumentPage() {
               ? chrome.luthiersBassLead
               : craft === "violin"
                 ? chrome.luthiersViolinLead
-                : chrome.luthiersGuitarLead}
+                : craft === "accordion"
+                  ? chrome.luthiersAccordionLead
+                  : chrome.luthiersGuitarLead}
           </p>
           <p className="mt-3">
             {craft === "bass" ? (
@@ -252,6 +254,10 @@ function InstrumentPage() {
               </Link>
             ) : craft === "violin" ? (
               <Link to="/luthiers/violin" className="text-sm text-fg hover:underline">
+                {chrome.luthiersAll}
+              </Link>
+            ) : craft === "accordion" ? (
+              <Link to="/luthiers/accordion" className="text-sm text-fg hover:underline">
                 {chrome.luthiersAll}
               </Link>
             ) : (
@@ -265,6 +271,8 @@ function InstrumentPage() {
               <BassLuthiersDirectory extra={extraLuthiers.filter((row) => row.craft === "bass")} />
             ) : craft === "violin" ? (
               <ViolinLuthiersDirectory extra={extraLuthiers.filter((row) => row.craft === "violin")} />
+            ) : craft === "accordion" ? (
+              <AccordionLuthiersDirectory extra={extraLuthiers.filter((row) => row.craft === "accordion")} />
             ) : (
               <GuitarLuthiersDirectory extra={extraLuthiers.filter((row) => row.craft === "guitar")} />
             )}

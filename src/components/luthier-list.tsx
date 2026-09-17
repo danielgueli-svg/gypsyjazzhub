@@ -8,10 +8,10 @@ import { useI18n } from "@/lib/i18n";
 
 export function LuthierList({ luthiers }: { luthiers: Luthier[] }) {
   const { t } = useI18n();
-  const { guitar, bass, violin } = splitLuthiers(luthiers);
-  if (!guitar.length && !bass.length && !violin.length) return null;
+  const { guitar, bass, violin, accordion } = splitLuthiers(luthiers);
+  if (!guitar.length && !bass.length && !violin.length && !accordion.length) return null;
 
-  const labelled = [guitar.length, bass.length, violin.length].filter(Boolean).length > 1;
+  const labelled = [guitar.length, bass.length, violin.length, accordion.length].filter(Boolean).length > 1;
 
   return (
     <div className="space-y-6">
@@ -20,6 +20,33 @@ export function LuthierList({ luthiers }: { luthiers: Luthier[] }) {
       ) : null}
       {bass.length ? <CraftBlock label={t("luthiers.bass")} rows={bass} rich /> : null}
       {violin.length ? <CraftBlock label={t("luthiers.violin")} rows={violin} rich /> : null}
+      {accordion.length ? <CraftBlock label={t("luthiers.accordion")} rows={accordion} rich /> : null}
+    </div>
+  );
+}
+
+export function AccordionLuthiersDirectory({ extra = [] }: { extra?: Luthier[] }) {
+  const groups = luthiersByCountryForCraft("accordion", extra);
+
+  if (groups.length === 0) return null;
+
+  return (
+    <div className="space-y-10">
+      {groups.map((group) => (
+        <section key={group.country}>
+          <Link
+            to="/world/$slug"
+            params={{ slug: countrySlug(group.country) }}
+            className="text-[11px] tracking-[0.18em] text-faint uppercase hover:text-fg"
+          >
+            <CountryLabel name={group.country} />
+            <span className="ml-2 text-faint">({group.luthiers.length})</span>
+          </Link>
+          <div className="mt-3">
+            <LuthierList luthiers={group.luthiers} />
+          </div>
+        </section>
+      ))}
     </div>
   );
 }
