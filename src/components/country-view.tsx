@@ -15,8 +15,10 @@ import { Teachers } from "@/components/teachers";
 import { CountryRequestForm } from "@/components/country-request";
 import { FollowCountry } from "@/components/follow-country";
 import { concertToAgenda, filterAgenda, jamToAgenda, uniqueCities } from "@/lib/agenda";
+import { upcomingCamps } from "@/lib/camps";
 import {
   artistHref,
+  continentOf,
   displayCountry,
   sameCountry,
   type GlobeArtist,
@@ -106,7 +108,15 @@ export function CountryView({
   const allJams = (country?.jams ?? []).filter((jam) => sameCountry(jam.country, atlasName));
   const festivals = (country?.festivals ?? []).filter((item) => sameCountry(item.country, atlasName));
   const allConcerts = (country?.concerts ?? []).filter((item) => sameCountry(item.country, atlasName));
-  const camps = (country?.camps ?? []).filter((item) => sameCountry(item.country, atlasName));
+  const localCamps = (country?.camps ?? []).filter((item) => sameCountry(item.country, atlasName));
+  const regionId = continentOf(atlasName);
+  const camps =
+    localCamps.length > 0
+      ? localCamps
+      : regionId
+        ? upcomingCamps().filter((camp) => continentOf(camp.country) === regionId)
+        : [];
+  const campsFromRegion = localCamps.length === 0 && camps.length > 0;
   const venues = sortVenues((country?.venues ?? []).filter((item) => sameCountry(item.country, atlasName)));
   const startJam = isThinGypsyScene(allJams, venues.length);
   const luthiers = (country?.luthiers ?? []).filter((item) => sameCountry(item.country, atlasName));
@@ -147,7 +157,7 @@ export function CountryView({
       <p className="mt-3 text-sm text-muted">
         {jams.length} jam{jams.length === 1 ? "" : "s"}
         {" · "}
-        {camps.length} camp{camps.length === 1 ? "" : "s"}
+        {localCamps.length} camp{localCamps.length === 1 ? "" : "s"}
         {" · "}
         {concerts.length} concert{concerts.length === 1 ? "" : "s"}
         {" · "}
@@ -296,6 +306,11 @@ export function CountryView({
       {camps.length > 0 ? (
       <section id="camps" className="mt-12 scroll-mt-40">
         <h2 className="font-display text-3xl font-semibold">{t("country.camps")}</h2>
+        {campsFromRegion && regionId ? (
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+            {t("country.campsRegion").replace("{region}", t(`home.region.${regionId}`))}
+          </p>
+        ) : null}
           <ListFold items={camps} limit={5}>
             {(shownCamps) => (
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
