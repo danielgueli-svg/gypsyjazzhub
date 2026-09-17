@@ -54,6 +54,11 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
   "dorado-schmitt": [{ href: "/history#forbach", label: "The Forbach rooms" }],
   "tchavolo-schmitt": [{ href: "/history#forbach", label: "The Forbach rooms" }],
   "bireli-lagrene": [{ href: "/history#forbach", label: "The Forbach rooms" }],
+  "leen-de-keijzer": [
+    { href: "/luthiers/de-molenhoek", label: "De Molenhoek — accordion atelier" },
+    { href: "mailto:leen-music@hotmail.com", label: "leen-music@hotmail.com" },
+    { href: "https://keijzermusic.nl/", label: "keijzermusic.nl" },
+  ],
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {

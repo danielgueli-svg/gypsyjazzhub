@@ -526,7 +526,7 @@ export const INSTRUMENTS: Instrument[] = [
       { slug: "dominique-paats", name: "Dominique Paats", note: "Paulus Schäfer; Dance of Joy" },
       { slug: "julien-labro", name: "Julien Labro", note: "Hot Club of Detroit" },
       { slug: "onno-kuipers", name: "Onno Kuipers", note: "Centre Ville, Netherlands" },
-      { slug: "leen-de-keijzer", name: "Leen de Keijzer", note: "De Molenhoek, Molenaarsgraaf" },
+      { slug: "leen-de-keijzer", name: "Leen de Keijzer", note: "Accordion and guitar — De Molenhoek, Molenaarsgraaf" },
       { slug: "vincent-tsai", name: "Vincent Tsai", note: "Taipei Gypsy Jazz Festival; teaching studio" },
       { slug: "florin-pana", name: "Florin Pană", note: "Django Sound Quartet, Bucharest" },
     ],
