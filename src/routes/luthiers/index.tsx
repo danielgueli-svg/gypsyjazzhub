@@ -144,7 +144,7 @@ function LuthierIndexRow({ luthier }: { luthier: Luthier }) {
           <img
             src={photo}
             alt=""
-            className="size-16 rounded-xl object-cover shadow-border sm:size-20"
+            className="size-16 rounded-xl object-cover object-top shadow-border sm:size-20"
           />
         </Link>
       ) : (
@@ -170,7 +170,7 @@ function LuthierIndexRow({ luthier }: { luthier: Luthier }) {
           <span>{displayCountry(luthier.country, locale)}</span>
           {luthier.city ? <span>· {luthier.city}</span> : null}
         </p>
-        {bio ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{bio}</p> : null}
+        {bio ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted break-words">{bio}</p> : null}
       </div>
     </li>
   );

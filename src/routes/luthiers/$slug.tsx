@@ -50,7 +50,7 @@ function LuthierPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
-      <div className="flex flex-wrap items-start gap-6 sm:gap-10">
+      <div className="flex items-start gap-4 sm:gap-6">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] tracking-[0.2em] text-faint uppercase">
             {luthier.craft === "bass"
@@ -63,7 +63,7 @@ function LuthierPage() {
                     ? "Other maker"
                     : "Luthier"}
           </p>
-          <h1 className="mt-3 font-display text-4xl font-semibold sm:text-6xl">{luthier.name}</h1>
+          <h1 className="mt-3 font-display text-3xl font-semibold sm:text-6xl">{luthier.name}</h1>
           <p className="mt-3 text-muted">
             {luthier.city ? `${luthier.city} · ` : null}
             <Link
@@ -84,7 +84,7 @@ function LuthierPage() {
           <Portrait
             src={photo}
             alt={`${luthier.name} in the workshop`}
-            className="h-auto w-full max-w-sm rounded-2xl object-cover shadow-border sm:w-72 lg:w-80"
+            className="h-auto w-28 max-h-80 shrink-0 rounded-2xl object-contain object-top shadow-border sm:w-40 sm:max-h-[22rem] lg:w-64"
           />
         ) : null}
       </div>
@@ -185,7 +185,7 @@ function LuthierPage() {
                   <Mail className="mt-0.5 size-4 shrink-0 text-faint" aria-hidden />
                   <div>
                     <dt className="text-[11px] tracking-[0.16em] text-faint uppercase">Email</dt>
-                    <dd className="mt-1 text-base text-fg">
+                    <dd className="mt-1 break-all text-base text-fg">
                       <a href={`mailto:${luthier.email}`} className="hover:underline">
                         {luthier.email}
                       </a>
@@ -198,7 +198,7 @@ function LuthierPage() {
                   <Globe className="mt-0.5 size-4 shrink-0 text-faint" aria-hidden />
                   <div>
                     <dt className="text-[11px] tracking-[0.16em] text-faint uppercase">Website</dt>
-                    <dd className="mt-1 text-base text-fg">
+                    <dd className="mt-1 break-all text-base text-fg">
                       <a href={luthier.site} target="_blank" rel="noreferrer" className="hover:underline">
                         {luthier.site.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                       </a>
