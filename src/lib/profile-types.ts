@@ -1,5 +1,6 @@
 export const PROFILE_TYPES = [
   { id: "musician", label: "Musician" },
+  { id: "luthier", label: "Luthier" },
   { id: "photographer", label: "Photographer" },
   { id: "fan", label: "Fan / listener" },
   { id: "teacher", label: "Teacher" },
@@ -42,6 +43,10 @@ export function typesFromMemberKind(
 
 export function isMusician(types: ProfileTypeId[]) {
   return types.includes("musician");
+}
+
+export function isLuthier(types: ProfileTypeId[]) {
+  return types.includes("luthier");
 }
 
 export function serializeTypes(types: ProfileTypeId[]) {

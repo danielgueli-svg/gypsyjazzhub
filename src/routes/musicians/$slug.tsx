@@ -10,6 +10,7 @@ import { FollowArtist } from "@/components/follow-artist";
 import { Guestbook } from "@/components/guestbook";
 import { HubExtras } from "@/components/hub-extras";
 import { Portrait } from "@/components/portrait";
+import { RelatedPages } from "@/components/related-pages";
 import { SaveButton } from "@/components/save-button";
 import { ShareBox } from "@/components/share-page";
 import { JamLine } from "@/components/jam-line";
@@ -33,6 +34,8 @@ import { overlayJamList, catalogJams } from "@/lib/jams";
 import { listGuestbook } from "@/lib/guestbook";
 import { listArtistReviews } from "@/lib/concert-reviews";
 import { contactHref, concertShareLine, formatInstrumentList } from "@/lib/utils";
+import { isLuthier } from "@/lib/profile-types";
+import { luthierSlugForArtist } from "@/lib/related-pages";
 import { useI18n } from "@/lib/i18n";
 import { pageHead } from "@/lib/seo";
 import { settle } from "@/lib/settle";
@@ -143,6 +146,14 @@ function MemberMusicianPage({
           <p className="mt-2 text-muted">
             {country ? `Based in ${country}` : "On the road"}
           </p>
+          <RelatedPages
+            current="musician"
+            musicianSlug={musician.slug}
+            luthierSlug={
+              luthierSlugForArtist(musician.slug) ??
+              (isLuthier(musician.profileTypes) ? musician.slug : undefined)
+            }
+          />
           <div className="mt-4 flex flex-wrap gap-1.5">
             {instruments.map((item) => (
               <Badge key={item}>{item}</Badge>

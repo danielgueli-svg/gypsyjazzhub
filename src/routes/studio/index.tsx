@@ -39,6 +39,7 @@ import {
   INSTRUMENT_OPTIONS,
   PROFILE_TYPES,
   isMusician,
+  isLuthier,
   parseInstrumentIds,
   serializeInstruments,
   typesFromMemberKind,
@@ -51,7 +52,8 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { isHubOwnerEmail } from "@/lib/hub-owner";
 import { useI18n } from "@/lib/i18n";
 import { GoldMedal } from "@/components/gold-medal";
-import { getMyGold, listArtistOptions, type ArtistOption } from "@/lib/hub-api";
+import { getMyGold, listArtistOptions, ensureMyLuthierPage, type ArtistOption } from "@/lib/hub-api";
+import { luthierSlugForArtist } from "@/lib/related-pages";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
 import { listMyFavorites, type Favorite } from "@/lib/favorites";
 import { cn, formatConcertWhen } from "@/lib/utils";
@@ -197,6 +199,7 @@ function DeskIdentity({
     const next = types.includes(id) ? types.filter((item) => item !== id) : [...types, id];
     try {
       await saveProfileTypes({ data: next.length ? next : ["fan"] });
+      if (next.includes("luthier")) await ensureMyLuthierPage();
       const saved = await getMyProfile();
       onProfile(saved);
     } catch (err) {
@@ -219,7 +222,7 @@ function DeskIdentity({
   return (
     <div className="mt-8 rounded-2xl bg-surface p-5 shadow-border sm:p-6">
       <p className="text-[11px] tracking-[0.16em] text-faint uppercase">Who you are</p>
-      <p className="mt-2 text-sm text-muted">Pick every role that fits — musician and photographer is fine.</p>
+      <p className="mt-2 text-sm text-muted">Pick every role that fits — musician and luthier is two pages, with a link on each.</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {PROFILE_TYPES.map((row) => (
           <button
@@ -235,15 +238,37 @@ function DeskIdentity({
           </button>
         ))}
       </div>
+      {profile?.slug ? (
+        <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          {isMusician(types) ? (
+            <Link to="/musicians/$slug" params={{ slug: profile.slug }} className="text-fg hover:underline">
+              Musician page
+            </Link>
+          ) : null}
+          {isLuthier(types) ? (
+            <Link
+              to="/luthiers/$slug"
+              params={{ slug: luthierSlugForArtist(profile.slug) ?? profile.slug }}
+              className="text-fg hover:underline"
+            >
+              Workshop page
+            </Link>
+          ) : null}
+        </p>
+      ) : null}
       <div className="mt-4">
         <Button type="button" variant={open ? "outline" : "default"} onClick={() => void toggleInvites()}>
           {open ? "Open for invitations ✓" : "Open for invitations"}
         </Button>
       </div>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted">
-        {isMusician(types)
-          ? "Your artist page stays in Musicians. Turn invitations on if you also want hosts to invite you to a jam."
-          : "A non-musician page sits with the listeners. Turn invitations on and jam hosts can alert you when they organise a night."}
+        {isMusician(types) && isLuthier(types)
+          ? "Musician and luthier — two pages, each with a link to the other."
+          : isMusician(types)
+            ? "Your artist page stays in Musicians. Turn invitations on if you also want hosts to invite you to a jam."
+            : isLuthier(types)
+              ? "Your workshop page sits with the luthiers."
+              : "A non-musician page sits with the listeners. Turn invitations on and jam hosts can alert you when they organise a night."}
       </p>
       {status ? <p className="mt-2 text-sm text-muted">{status}</p> : null}
     </div>
@@ -397,6 +422,7 @@ function ProfileForm({
       }
       setPhotoPreview(next.photoUrl);
       onSaved(next);
+      if (isLuthier(profileTypes)) await ensureMyLuthierPage();
       setStatus("Page saved.");
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Could not save.");
@@ -410,7 +436,7 @@ function ProfileForm({
       <section className="space-y-4">
         <h2 className="font-display text-2xl font-semibold">Who you are</h2>
         <div>
-          <p className="mb-2 text-sm text-muted">Profile type — pick every role that fits</p>
+          <p className="mb-2 text-sm text-muted">Profile type — pick every role that fits. Musician and luthier each get their own page, linked.</p>
           <div className="flex flex-wrap gap-2">
             {PROFILE_TYPES.map((row) => (
               <button

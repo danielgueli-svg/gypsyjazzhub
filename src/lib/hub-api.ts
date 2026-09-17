@@ -6,7 +6,8 @@ import type { Festival } from "@/lib/festivals";
 import { jamCanonicalSlug, type Jam } from "@/lib/jams";
 import type { Venue } from "@/lib/venues";
 import type { Luthier } from "@/lib/luthiers";
-import { parseLuthierCraft } from "@/lib/luthiers";
+import { getLuthier, parseLuthierCraft } from "@/lib/luthiers";
+import { ARTIST_TO_LUTHIER } from "@/lib/related-pages";
 import { countrySlug, resolveCountry } from "@/lib/geo";
 import { ensureFanTables } from "@/lib/fans";
 import { slugify, toIso, wallClockIso, youtubeVideoId } from "@/lib/utils";
@@ -1830,6 +1831,73 @@ export const addHubLuthier = createServerFn({ method: "POST" })
       )
     `;
     return { slug, pending: gate.pending };
+  });
+
+export const ensureMyLuthierPage = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    await ensureHub();
+    await ensureFanTables();
+    const sql = await getSql();
+    const rows = await sql<{
+      slug: string;
+      display_name: string;
+      city: string;
+      country: string;
+      bio: string;
+      website_url: string;
+      contact_url: string;
+      instruments: string;
+      profile_types: string;
+    }>`
+      select slug, display_name, city, country, bio,
+             coalesce(website_url, '') as website_url,
+             coalesce(contact_url, '') as contact_url,
+             coalesce(instruments, '') as instruments,
+             coalesce(profile_types, '') as profile_types
+      from profiles where user_id = ${context.userId} limit 1
+    `;
+    const profile = rows[0];
+    if (!profile) return { slug: null as string | null };
+    const types = (profile.profile_types ?? "").split(",").map((part) => part.trim());
+    if (!types.includes("luthier")) return { slug: null as string | null };
+
+    const mapped = ARTIST_TO_LUTHIER[profile.slug];
+    if (mapped) return { slug: mapped };
+    if (getLuthier(profile.slug)) return { slug: profile.slug };
+
+    const owned = await sql<{ slug: string }>`
+      select slug from hub_luthiers where submitted_by = ${context.userId} limit 1
+    `;
+    if (owned[0]) return { slug: owned[0].slug };
+
+    const taken = await sql<{ n: number }>`
+      select 1 as n from hub_luthiers where slug = ${profile.slug} limit 1
+    `;
+    const slug = taken[0] ? await uniqueSlug("hub_luthiers", profile.display_name) : profile.slug;
+    const instruments = (profile.instruments ?? "").toLowerCase();
+    const craft = parseLuthierCraft(
+      instruments.includes("accordion")
+        ? "accordion"
+        : instruments.includes("violin")
+          ? "violin"
+          : instruments.includes("bass")
+            ? "bass"
+            : instruments.includes("guitar")
+              ? "guitar"
+              : "other",
+    );
+    const contact = (profile.contact_url ?? "").trim();
+    await sql`
+      insert into hub_luthiers (
+        slug, name, city, country, site, contact, bio, craft, note, submitted_by, submitted_name, status
+      ) values (
+        ${slug}, ${profile.display_name}, ${profile.city ?? ""}, ${profile.country || "Netherlands"},
+        ${profile.website_url ?? ""}, ${contact}, ${profile.bio ?? ""},
+        ${craft}, ${"Musician and maker"}, ${context.userId}, ${profile.display_name}, ${"published"}
+      )
+    `;
+    return { slug };
   });
 
 export const addHubArtist = createServerFn({ method: "POST" })

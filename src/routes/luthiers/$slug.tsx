@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, Globe, Mail, MapPin, Phone } from "lucide-react";
 import { HubChat } from "@/components/hub-chat";
+import { RelatedPages } from "@/components/related-pages";
 import { Portrait } from "@/components/portrait";
 import { Button } from "@/components/ui/button";
 import { YouTubeEmbed } from "@/components/youtube-embed";
@@ -9,6 +10,9 @@ import { mapsHref, telHref } from "@/lib/contact";
 import { countrySlug } from "@/lib/geo";
 import { getHubLuthier, listHubChat } from "@/lib/hub-api";
 import { getLuthier } from "@/lib/luthiers";
+import { artistSlugForLuthier } from "@/lib/related-pages";
+import { catalogLegend, getMusician } from "@/lib/api";
+import { settle } from "@/lib/settle";
 import { makerBio } from "@/lib/maker-copy";
 import { useI18n } from "@/lib/i18n";
 import { luthierPhotoSrc } from "@/lib/photos";
@@ -20,13 +24,20 @@ export const Route = createFileRoute("/luthiers/$slug")({
       getLuthier(params.slug) ?? (await getHubLuthier({ data: params.slug }));
     if (!luthier) throw notFound();
     const chat = await listHubChat({ data: { kind: "luthier", slug: luthier.slug } });
-    return { luthier, chat };
+    const mapped = artistSlugForLuthier(luthier.slug);
+    const same = catalogLegend(luthier.slug);
+    let musicianSlug = mapped ?? same?.slug ?? null;
+    if (!musicianSlug) {
+      const member = await settle("luthier-musician", null, () => getMusician({ data: luthier.slug }));
+      if (member && member.memberKind !== "fan") musicianSlug = member.slug;
+    }
+    return { luthier, chat, musicianSlug };
   },
   component: LuthierPage,
 });
 
 function LuthierPage() {
-  const { luthier, chat } = Route.useLoaderData();
+  const { luthier, chat, musicianSlug } = Route.useLoaderData();
   const { locale } = useI18n();
   const bio = makerBio(luthier.slug, locale) || luthier.bio;
   const shop = SHOPS.find((row) => row.luthierSlug === luthier.slug);
@@ -63,6 +74,11 @@ function LuthierPage() {
               <CountryLabel name={luthier.country} />
             </Link>
           </p>
+          <RelatedPages
+            current="luthier"
+            musicianSlug={musicianSlug}
+            luthierSlug={luthier.slug}
+          />
         </div>
         {photo ? (
           <Portrait

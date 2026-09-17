@@ -14,6 +14,7 @@ import { HubExtras } from "@/components/hub-extras";
 import { JoinedMark } from "@/components/joined-mark";
 import { LearnLinks } from "@/components/learn-links";
 import { MessageMember } from "@/components/message-member";
+import { RelatedPages } from "@/components/related-pages";
 import { PlaysWith } from "@/components/plays-with";
 import { Portrait } from "@/components/portrait";
 import { SaveButton } from "@/components/save-button";
@@ -25,6 +26,7 @@ import { basedInCountry } from "@/lib/geo";
 import { claimArtist } from "@/lib/hub-api";
 import { artistPhoto } from "@/lib/photos";
 import type { DirectoryArtistData } from "@/lib/directory-artist";
+import { luthierSlugForArtist } from "@/lib/related-pages";
 import { useI18n } from "@/lib/i18n";
 import { concertShareLine } from "@/lib/utils";
 
@@ -55,7 +57,6 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
   "tchavolo-schmitt": [{ href: "/history#forbach", label: "The Forbach rooms" }],
   "bireli-lagrene": [{ href: "/history#forbach", label: "The Forbach rooms" }],
   "leen-de-keijzer": [
-    { href: "/luthiers/de-molenhoek", label: "De Molenhoek — accordion atelier" },
     { href: "mailto:leen-music@hotmail.com", label: "leen-music@hotmail.com" },
     { href: "https://keijzermusic.nl/", label: "keijzermusic.nl" },
   ],
@@ -125,6 +126,11 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
               ))}
             </p>
           ) : null}
+          <RelatedPages
+            current="musician"
+            musicianSlug={legend.slug}
+            luthierSlug={luthierSlugForArtist(legend.slug)}
+          />
           {websiteUrl || youtubeUrl || instagramUrl || spotifyUrl ? (
             <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
               {websiteUrl ? (
