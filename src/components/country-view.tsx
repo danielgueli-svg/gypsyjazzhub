@@ -60,6 +60,15 @@ function agendaText(countryName: string, country: GlobeCountry | null, pageUrl: 
     }
     lines.push("");
   }
+  const camps = country?.camps ?? [];
+  if (camps.length) {
+    lines.push("Workshops & camps");
+    for (const camp of camps.slice(0, 8)) {
+      const when = camp.when;
+      lines.push(`• ${camp.name}${when ? ` — ${when}` : ""}${camp.city ? `, ${camp.city}` : ""}`);
+    }
+    lines.push("");
+  }
   if (concerts.length) {
     lines.push("Concerts");
     for (const concert of concerts.slice(0, 8)) {
@@ -138,11 +147,11 @@ export function CountryView({
       <p className="mt-3 text-sm text-muted">
         {jams.length} jam{jams.length === 1 ? "" : "s"}
         {" · "}
+        {camps.length} camp{camps.length === 1 ? "" : "s"}
+        {" · "}
         {concerts.length} concert{concerts.length === 1 ? "" : "s"}
         {" · "}
         {festivals.length} festival{festivals.length === 1 ? "" : "s"}
-        {" · "}
-        {camps.length} camp{camps.length === 1 ? "" : "s"}
         {" · "}
         {venues.length} venue{venues.length === 1 ? "" : "s"}
         {" · "}
@@ -177,9 +186,9 @@ export function CountryView({
         items={[
           { id: "jams", label: t("nav.jams") },
           featured ? { id: "featured", label: featured.title } : null,
+          camps.length ? { id: "camps", label: t("country.camps") } : null,
           { id: "concerts", label: t("nav.concerts") },
           { id: "festivals", label: t("nav.festivals") },
-          { id: "camps", label: t("nav.camps") },
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
           { id: "makers", label: t("country.makers") },
           { id: "teachers", label: t("country.teachers") },
@@ -284,6 +293,34 @@ export function CountryView({
         </section>
       ) : null}
 
+      {camps.length > 0 ? (
+      <section id="camps" className="mt-12 scroll-mt-40">
+        <h2 className="font-display text-3xl font-semibold">{t("country.camps")}</h2>
+          <ListFold items={camps} limit={5}>
+            {(shownCamps) => (
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {shownCamps.map((camp) => (
+              <Link
+                key={camp.slug}
+                to="/learn/$slug"
+                params={{ slug: camp.slug }}
+                className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
+              >
+                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
+                  <CountryLabel name={camp.country} short /> · {whenLabel(camp.when, locale)}
+                </p>
+                <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
+                  {camp.name}
+                </h3>
+                <p className="mt-1 text-sm text-muted">{camp.city}</p>
+              </Link>
+            ))}
+          </div>
+            )}
+          </ListFold>
+      </section>
+      ) : null}
+
       <ConcertList
         id="concerts"
         title={t("country.concerts")}
@@ -324,36 +361,6 @@ export function CountryView({
               </Link>
             ))}
           </div>
-        )}
-      </section>
-
-      <section id="camps" className="mt-12 scroll-mt-40">
-        <h2 className="font-display text-3xl font-semibold">{t("country.camps")}</h2>
-        {camps.length === 0 ? (
-          <p className="mt-4 text-sm text-muted">{t("country.noCamps")}</p>
-        ) : (
-          <ListFold items={camps} limit={5}>
-            {(shownCamps) => (
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            {shownCamps.map((camp) => (
-              <Link
-                key={camp.slug}
-                to="/learn/$slug"
-                params={{ slug: camp.slug }}
-                className="block rounded-2xl bg-surface p-5 shadow-border hover:bg-raised"
-              >
-                <p className="text-[11px] tracking-[0.16em] text-faint uppercase">
-                  <CountryLabel name={camp.country} short /> · {whenLabel(camp.when, locale)}
-                </p>
-                <h3 className="mt-2 font-display text-2xl font-semibold leading-tight">
-                  {camp.name}
-                </h3>
-                <p className="mt-1 text-sm text-muted">{camp.city}</p>
-              </Link>
-            ))}
-          </div>
-            )}
-          </ListFold>
         )}
       </section>
 
