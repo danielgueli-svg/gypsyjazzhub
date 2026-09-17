@@ -1641,6 +1641,8 @@ const ACCORDION_LUTHIERS: Luthier[] = [
     hours: "By appointment",
     note: "Tuner, repairer, seller — Mengascini, Bugari, Victoria",
     bio: "Molenaarsgraaf, between Dordrecht and Gorinchem. Family accordion atelier: tuner, repairer and seller. Dealer for Mengascini, Bugari and Victoria. Acoustic and digital. Leo de Keijzer restores. Leen de Keijzer plays gypsy jazz on accordion and guitar: Festival Django Reinhardt in Fontainebleau, with Hot Flamingo.",
+    youtubeUrl: "https://www.youtube.com/watch?v=U4vRmhrlCOg",
+    youtubeTitle: "L.O.V.E. — Leen de Keijzer, gypsy jazz accordion",
   }),
   accordion({
     slug: "vincent-accordion-studio",

@@ -393,6 +393,11 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:Grand_Gala_du_Disque_in_de_RAI._Gitarist_Manitas_de_Platas_uit_Spanje,_Bestanddeelnr_921-1450.jpg",
     license: "CC0 1.0",
   },
+  "leen-de-keijzer": {
+    src: "/artists/leen-de-keijzer.jpg",
+    credit: "Leen de Keijzer / YouTube",
+    href: "https://www.youtube.com/watch?v=U4vRmhrlCOg",
+  },
   "marcel-loeffler": {
     src: "/artists/marcel-loeffler.jpg",
     credit: "Nouvel accord / Wikimedia Commons",
@@ -829,6 +834,7 @@ const LUTHIER_PHOTOS = new Set([
   "ajl-guitars",
   "bruno-bagnarelli",
   "castelluccia",
+  "de-molenhoek",
   "jean-barault",
   "jean-pierre-favino",
   "jerome-duffell",

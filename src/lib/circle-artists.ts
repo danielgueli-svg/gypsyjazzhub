@@ -2426,7 +2426,7 @@ export const CIRCLE_ARTISTS = [
     era: "The Circle",
     bio: "Dutch accordion and guitar. Family atelier De Molenhoek in Molenaarsgraaf — tuner, repairer and seller; dealer for Mengascini, Bugari and Victoria. Gypsy jazz, musette and swing. Played Festival Django Reinhardt in Fontainebleau with Hot Flamingo (UK). Also The Keijzer Gypsy Project.",
     notable: "De Molenhoek; Mengascini; Bugari; Victoria",
-    youtube_url: "",
+    youtube_url: "https://www.youtube.com/watch?v=U4vRmhrlCOg",
     website_url: "https://www.demolenhoek-vermaak.nl/",
     sort_order: 289,
   },
