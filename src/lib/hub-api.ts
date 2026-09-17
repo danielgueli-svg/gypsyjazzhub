@@ -3065,3 +3065,10 @@ export const applyHubPasswordReset = createServerFn({ method: "POST" })
     return applyPasswordReset(data.token, data.password);
   });
 
+export const getMyGold = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const { isGoldUser } = await import("@/lib/hub-guard");
+    return isGoldUser(context.userId);
+  });
+

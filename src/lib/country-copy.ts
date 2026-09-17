@@ -14,6 +14,8 @@ export const COUNTRY_NOTES: Record<string, string> = {
     "Malmö has the weekly room: Dame Ginette, every Wednesday, trio then sit-in. Stockholm’s jazz houses (Fasching, Glenn Miller Café) book Django nights when Gustav Lundgren or Andreas Öberg post them — not a weekly Hot Club jam.",
   Denmark:
     "Copenhagen: Django Jam at Christianshavns Beboerhus, last Tuesday from 20:00, free. Café Bartof takes Sinti bills (Paulus Schäfer). Jazzhus Montmartre and La Fontaine are the jazz houses to write for a gypsy night.",
+  "Hong Kong":
+    "Hot Club de Hong Kong is the working gypsy jazz band — Simon Choi, Neil Lau, Bob Pang. Jazz Booker Asia is Charles Draper, based here.",
   Romania:
     "Bucharest’s living Django chair is Django Sound Quartet — manouche with lăutărească, nights at Trattoria Monza and The Great Hill when they post them. Grădina Alhambra has hosted them (Gypsy Jazz Lăutăresc, 26 Oct 2025) — mixed house, not a weekly jam. The older Romanian violin the Mirando family still name is Georges Boulanger (Gheorghe Pantazi, 1893–1958, Tulcea): gypsy colour with Viennese light music, The Great Gypsy Violinist sides 1934–1939. Historic records, not a current jam.",
 };

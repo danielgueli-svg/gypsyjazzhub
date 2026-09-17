@@ -1,6 +1,7 @@
 import { getRequest } from "@tanstack/react-start/server";
 import { getSql } from "@/lib/db";
-import { parseMailLocale, welcomeMail, type MailLocale } from "@/lib/welcome-mail";
+import { parseMailLocale, welcomeMail, goldWelcomeMail, type MailLocale } from "@/lib/welcome-mail";
+import { isGoldInvite, CHARLES_DRAPER } from "@/lib/gold-members";
 
 const RATE_PER_HOUR = 6;
 
@@ -30,6 +31,11 @@ export async function ensureGuard() {
   }
   try {
     await sql.query(`alter table hub_members add column trust text not null default 'yellow'`);
+  } catch {
+    /* column already there */
+  }
+  try {
+    await sql.query(`alter table hub_members add column gold integer not null default 0`);
   } catch {
     /* column already there */
   }
@@ -111,7 +117,7 @@ function localeFromRequest(): MailLocale {
   }
 }
 
-export async function startEmailVerification(userId: string, email: string, resend = false) {
+export async function startEmailVerification(userId: string, email: string, resend = false, name?: string) {
   await ensureGuard();
   const sql = await getSql();
   const address = email.trim();
@@ -126,15 +132,40 @@ export async function startEmailVerification(userId: string, email: string, rese
       select verified, verify_token from hub_members where user_id = ${userId} limit 1
     `;
   }
+  let displayName = (name ?? "").trim();
+  if (!displayName) {
+    try {
+      const users = await sql<{ name: string }>`select name from "user" where id = ${userId} limit 1`;
+      displayName = String(users[0]?.name ?? "").trim();
+    } catch {
+      /* name is optional */
+    }
+  }
+  const gold = isGoldInvite(displayName, address);
   if (Number(existing[0]?.verified) === 1) {
+    if (gold) {
+      try {
+        await sql`update hub_members set gold = 1, trust = ${"green"}, locale = ${"nl"} where user_id = ${userId}`;
+      } catch {
+        /* ignore */
+      }
+    }
     return { token: "", mailed: false, already: true as const };
   }
   const oldToken = String(existing[0]?.verify_token ?? "").trim();
+  const stored = String(existing[0]?.locale ?? "").trim();
+  let locale = gold ? "nl" : stored ? parseMailLocale(stored) : localeFromRequest();
   if (oldToken && !resend) {
+    if (gold) {
+      try {
+        await sql`update hub_members set gold = 1, trust = ${"green"}, locale = ${"nl"} where user_id = ${userId}`;
+        await grantCharlesProfile(userId, displayName);
+      } catch {
+        /* ignore */
+      }
+    }
     return { token: oldToken, mailed: false, already: false as const };
   }
-  const stored = String(existing[0]?.locale ?? "").trim();
-  const locale = stored ? parseMailLocale(stored) : localeFromRequest();
   const token = crypto.randomUUID();
   try {
     await sql`
@@ -155,10 +186,31 @@ export async function startEmailVerification(userId: string, email: string, rese
       on conflict (user_id) do update set email = excluded.email, verify_token = excluded.verify_token
     `;
   }
-  const mail = welcomeMail(
-    parseMailLocale(stored || locale),
-    `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`,
-  );
+  if (gold) {
+    try {
+      await sql`
+        update hub_members
+        set gold = 1, trust = ${"green"}, locale = ${"nl"}
+        where user_id = ${userId}
+      `;
+    } catch {
+      /* gold column missing on first boot */
+    }
+    try {
+      await grantCharlesProfile(userId, displayName);
+    } catch {
+      /* profile is optional until he opens studio */
+    }
+  }
+  const mail = gold
+    ? goldWelcomeMail(
+        `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`,
+        displayName,
+      )
+    : welcomeMail(
+        parseMailLocale(stored || locale),
+        `https://www.gypsyjazzhub.com/verify-email?token=${encodeURIComponent(token)}`,
+      );
   let mailed = false;
   try {
     const { sendHubMail } = await import("@/lib/digest");
@@ -257,17 +309,18 @@ export async function memberFlags(userId: string) {
       banned: number;
       approved_count: number;
       trust: string;
+      gold?: number;
     }>`
-      select verified, banned, approved_count, trust from hub_members where user_id = ${userId} limit 1
+      select verified, banned, approved_count, trust, gold from hub_members where user_id = ${userId} limit 1
     `;
     if (!rows[0]) return null;
-    return { ...rows[0], trust: asTrust(rows[0].trust) };
+    return { ...rows[0], trust: asTrust(rows[0].trust), gold: Number((rows[0] as { gold?: number }).gold ?? 0) === 1 };
   } catch {
     const rows = await sql<{ verified: number; banned: number; approved_count: number }>`
       select verified, banned, approved_count from hub_members where user_id = ${userId} limit 1
     `;
     if (!rows[0]) return null;
-    return { ...rows[0], trust: "yellow" as const };
+    return { ...rows[0], trust: "yellow" as const, gold: false };
   }
 }
 
@@ -367,7 +420,7 @@ export async function gateContribution(
   await sql`insert into hub_submits (user_id) values (${userId})`;
   const auto = await autoPublishOn();
   const soon = startsWithinADay(input.startsAt);
-  const trusted = asTrust(row?.trust) === "green";
+  const trusted = asTrust(row?.trust) === "green" || Boolean(row?.gold);
   const pending = trusted || auto || soon ? false : true;
   if (!pending) {
     try {
@@ -377,4 +430,43 @@ export async function gateContribution(
     }
   }
   return { skip: false, pending, status: pending ? "pending" : "published" };
+}
+
+async function grantCharlesProfile(userId: string, name: string) {
+  const { ensureFanTables } = await import("@/lib/fans");
+  await ensureFanTables();
+  const sql = await getSql();
+  const label = name.trim() || CHARLES_DRAPER.name;
+  const bio =
+    "Jazz Booker Asia, based in Hong Kong. Gold member of Gypsy Jazz Hub.";
+  const existing = await sql<{ user_id: string }>`
+    select user_id from profiles where user_id = ${userId} limit 1
+  `;
+  if (existing[0]) {
+    await sql`
+      update profiles
+      set display_name = ${label},
+          country = ${CHARLES_DRAPER.country},
+          city = ${CHARLES_DRAPER.city},
+          member_kind = ${"fan"},
+          profile_types = ${"booker"},
+          bio = case when coalesce(bio, '') = '' then ${bio} else bio end,
+          updated_at = now()
+      where user_id = ${userId}
+    `;
+    return;
+  }
+  await sql`
+    insert into profiles (
+      user_id, slug, display_name, city, country, bio, member_kind, profile_types, updated_at
+    ) values (
+      ${userId}, ${CHARLES_DRAPER.slug}, ${label}, ${CHARLES_DRAPER.city},
+      ${CHARLES_DRAPER.country}, ${bio}, ${"fan"}, ${"booker"}, now()
+    )
+  `;
+}
+
+export async function isGoldUser(userId: string) {
+  const flags = await memberFlags(userId);
+  return Boolean(flags?.gold);
 }

@@ -261,7 +261,7 @@ function createAuthInstance() {
           if (!user.email) return;
           try {
             const { startEmailVerification } = await import("@/lib/hub-guard");
-            await startEmailVerification(user.id, user.email);
+            await startEmailVerification(user.id, user.email, false, user.name);
           } catch {
             /* verify-email page can send again */
           }

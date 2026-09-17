@@ -412,6 +412,38 @@ export function welcomeMail(locale: MailLocale, link: string) {
   };
 }
 
+export function goldWelcomeMail(link: string, name?: string) {
+  const who = (name ?? "").trim() || "Charles";
+  const first = who.split(/\s+/)[0] || "Charles";
+  const body = [
+    `Beste ${first},`,
+    "",
+    "Welkom bij Gypsy Jazz Hub. Je bent meteen goudlid.",
+    "Achter je naam staat een gouden medaille: Jazz Booker Asia, Hong Kong.",
+    "",
+    "Je pagina:",
+    "https://www.gypsyjazzhub.com/bookers/charles-draper",
+    "",
+    "Bevestig je e-mail via deze link:",
+    link,
+    "",
+    "Daarna inloggen: hetzelfde adres en het wachtwoord dat je koos.",
+    LOGIN,
+    "",
+    "Daniel / Gypsy Jazz Hub",
+  ].join("\n");
+  return {
+    subject: "Welkom Charles — je bent goudlid van Gypsy Jazz Hub",
+    body,
+    html: wrapHubMailHtml({
+      body,
+      buttonLabel: CONFIRM_BUTTON.nl ?? CONFIRM_BUTTON.en,
+      buttonHref: link,
+      locale: "nl",
+    }),
+  };
+}
+
 const RESET: Record<MailLocale, MailCopy> = {
   en: {
     subject: "Set your Gypsy Jazz Hub password",

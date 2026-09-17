@@ -39,6 +39,7 @@ import { Route as ApiMailQueueRouteImport } from './routes/api/mail-queue'
 import { Route as ApiRomaniMusicRouteImport } from './routes/api/romani-music'
 import { Route as ArchiveIndexRouteImport } from './routes/archive/index'
 import { Route as ArchiveSlugRouteImport } from './routes/archive/$slug'
+import { Route as BookersCharlesDraperRouteImport } from './routes/bookers/charles-draper'
 import { Route as ConcertsIndexRouteImport } from './routes/concerts/index'
 import { Route as ConcertsIdRouteImport } from './routes/concerts/$id'
 import { Route as FamiliesSlugRouteImport } from './routes/families/$slug'
@@ -247,6 +248,11 @@ const ArchiveIndexRoute = ArchiveIndexRouteImport.update({
 const ArchiveSlugRoute = ArchiveSlugRouteImport.update({
   id: '/archive/$slug',
   path: '/archive/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookersCharlesDraperRoute = BookersCharlesDraperRouteImport.update({
+  id: '/bookers/charles-draper',
+  path: '/bookers/charles-draper',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConcertsIndexRoute = ConcertsIndexRouteImport.update({
@@ -577,6 +583,7 @@ export interface FileRoutesByFullPath {
   '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/bookers/charles-draper': typeof BookersCharlesDraperRoute
   '/concerts/$id': typeof ConcertsIdRoute
   '/families/$slug': typeof FamiliesSlugRoute
   '/fans/$slug': typeof FansSlugRoute
@@ -668,6 +675,7 @@ export interface FileRoutesByTo {
   '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/bookers/charles-draper': typeof BookersCharlesDraperRoute
   '/concerts/$id': typeof ConcertsIdRoute
   '/families/$slug': typeof FamiliesSlugRoute
   '/fans/$slug': typeof FansSlugRoute
@@ -760,6 +768,7 @@ export interface FileRoutesById {
   '/api/mail-queue': typeof ApiMailQueueRoute
   '/api/romani-music': typeof ApiRomaniMusicRoute
   '/archive/$slug': typeof ArchiveSlugRoute
+  '/bookers/charles-draper': typeof BookersCharlesDraperRoute
   '/concerts/$id': typeof ConcertsIdRoute
   '/families/$slug': typeof FamiliesSlugRoute
   '/fans/$slug': typeof FansSlugRoute
@@ -853,6 +862,7 @@ export interface FileRouteTypes {
     | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
+    | '/bookers/charles-draper'
     | '/concerts/$id'
     | '/families/$slug'
     | '/fans/$slug'
@@ -944,6 +954,7 @@ export interface FileRouteTypes {
     | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
+    | '/bookers/charles-draper'
     | '/concerts/$id'
     | '/families/$slug'
     | '/fans/$slug'
@@ -1035,6 +1046,7 @@ export interface FileRouteTypes {
     | '/api/mail-queue'
     | '/api/romani-music'
     | '/archive/$slug'
+    | '/bookers/charles-draper'
     | '/concerts/$id'
     | '/families/$slug'
     | '/fans/$slug'
@@ -1127,6 +1139,7 @@ export interface RootRouteChildren {
   ApiMailQueueRoute: typeof ApiMailQueueRoute
   ApiRomaniMusicRoute: typeof ApiRomaniMusicRoute
   ArchiveSlugRoute: typeof ArchiveSlugRoute
+  BookersCharlesDraperRoute: typeof BookersCharlesDraperRoute
   ConcertsIdRoute: typeof ConcertsIdRoute
   FamiliesSlugRoute: typeof FamiliesSlugRoute
   FansSlugRoute: typeof FansSlugRoute
@@ -1399,6 +1412,13 @@ declare module '@tanstack/react-router' {
       path: '/archive/$slug'
       fullPath: '/archive/$slug'
       preLoaderRoute: typeof ArchiveSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookers/charles-draper': {
+      id: '/bookers/charles-draper'
+      path: '/bookers/charles-draper'
+      fullPath: '/bookers/charles-draper'
+      preLoaderRoute: typeof BookersCharlesDraperRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/concerts/': {
@@ -1847,6 +1867,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiMailQueueRoute: ApiMailQueueRoute,
   ApiRomaniMusicRoute: ApiRomaniMusicRoute,
   ArchiveSlugRoute: ArchiveSlugRoute,
+  BookersCharlesDraperRoute: BookersCharlesDraperRoute,
   ConcertsIdRoute: ConcertsIdRoute,
   FamiliesSlugRoute: FamiliesSlugRoute,
   FansSlugRoute: FansSlugRoute,

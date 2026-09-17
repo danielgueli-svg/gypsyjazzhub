@@ -50,7 +50,8 @@ import { RedirectToSignIn } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { isHubOwnerEmail } from "@/lib/hub-owner";
 import { useI18n } from "@/lib/i18n";
-import { listArtistOptions, type ArtistOption } from "@/lib/hub-api";
+import { GoldMedal } from "@/components/gold-medal";
+import { getMyGold, listArtistOptions, type ArtistOption } from "@/lib/hub-api";
 import { COUNTRY_OPTIONS, countryFlag, displayCountry } from "@/lib/geo";
 import { listMyFavorites, type Favorite } from "@/lib/favorites";
 import { cn, formatConcertWhen } from "@/lib/utils";
@@ -80,6 +81,7 @@ function StudioPage() {
   const navigate = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [ready, setReady] = useState(false);
+  const [gold, setGold] = useState(false);
 
   function setTab(next: Tab) {
     void navigate.navigate({ to: "/studio", search: { tab: next }, replace: true });
@@ -87,10 +89,13 @@ function StudioPage() {
 
   useEffect(() => {
     if (isPending || !user) return;
-    void getMyProfile()
-      .then(setProfile)
-      .catch(() => setProfile(null))
-      .finally(() => setReady(true));
+    void Promise.all([
+      getMyProfile().catch(() => null),
+      getMyGold().catch(() => false),
+    ]).then(([page, medal]) => {
+      setProfile(page);
+      setGold(Boolean(medal));
+    }).finally(() => setReady(true));
   }, [isPending, user]);
 
   if (isPending || (user && !ready)) {
@@ -114,11 +119,12 @@ function StudioPage() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
       <p className="text-[11px] tracking-[0.2em] text-faint uppercase">{t("studio.youAreIn")}</p>
-      <h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">
+      <h1 className="mt-3 inline-flex flex-wrap items-baseline gap-3 font-display text-4xl font-semibold sm:text-5xl">
         {t("nav.hubProfile")}
+        {gold ? <GoldMedal className="size-8" /> : null}
       </h1>
       <p className="mt-3 max-w-xl text-sm text-muted">
-        {firstVisit ? t("studio.firstLead") : t("studio.lead")}
+        {gold ? t("studio.goldLead") : firstVisit ? t("studio.firstLead") : t("studio.lead")}
       </p>
       <p className="mt-5">{backToSite}</p>
       {isHubOwnerEmail(user.primaryEmail) ? (

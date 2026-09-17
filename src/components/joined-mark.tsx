@@ -1,3 +1,4 @@
+import { GoldMedal } from "@/components/gold-medal";
 import { cn } from "@/lib/utils";
 
 function Soundhole({ className }: { className?: string }) {
@@ -29,15 +30,17 @@ export function JoinedMark({ className }: { className?: string }) {
 export function NameWithJoin({
   name,
   joined,
+  gold,
 }: {
   name: string;
   joined?: boolean;
+  gold?: boolean;
 }) {
-  if (!joined) return name;
+  if (!joined && !gold) return name;
   return (
     <span className="inline-flex items-baseline gap-1.5">
       {name}
-      <JoinedMark />
+      {gold ? <GoldMedal /> : joined ? <JoinedMark /> : null}
     </span>
   );
 }

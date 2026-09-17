@@ -808,6 +808,7 @@ const en: Dict = {
   "studio.backToSite": "Go back to the website",
   "studio.lead": "Signed in. Say if you are a musician or a fan. Turn on invitations so jam hosts can alert you. Add a concert, a clip, a bio note, a festival or a jam.",
   "studio.firstLead": "You are in. Fill in your hub profile now — name, country, what you play. A confirmation mail is on the way; that is not the login.",
+  "studio.goldLead": "You are a gold member. A gold medal sits by your name. Jazz Booker Asia, Hong Kong. Posts go live without a wait.",
 };
 
 const nl: Dict = {
@@ -1462,6 +1463,7 @@ const nl: Dict = {
   "studio.backToSite": "Terug naar de website",
   "studio.lead": "Je bent binnen. Zeg of je muzikant bent of fan. Zet uitnodigingen aan zodat jamhosts je kunnen waarschuwen. Voeg een concert, clip, bio, festival of jam toe.",
   "studio.firstLead": "Je bent binnen. Vul nu je hub-profiel in — naam, land, wat je speelt. Er komt een bevestigingsmail; dat is niet de inlog.",
+  "studio.goldLead": "Je bent goudlid. Achter je naam staat een gouden medaille. Jazz Booker Asia, Hongkong. Posts gaan live zonder wachtrij.",
 };
 
 const de: Dict = {

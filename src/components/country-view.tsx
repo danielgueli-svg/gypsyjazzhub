@@ -155,6 +155,13 @@ export function CountryView({
       {COUNTRY_NOTES[atlasName] ? (
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{COUNTRY_NOTES[atlasName]}</p>
       ) : null}
+      {atlasName === "Hong Kong" ? (
+        <p className="mt-3">
+          <Link to="/bookers/charles-draper" className="inline-flex items-baseline gap-1.5 text-fg hover:underline">
+            Charles Draper — Jazz Booker Asia
+          </Link>
+        </p>
+      ) : null}
       <p className="mt-3 text-sm text-muted">
         {jams.length} jam{jams.length === 1 ? "" : "s"}
         {" · "}

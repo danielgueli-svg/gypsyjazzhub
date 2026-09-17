@@ -2,7 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CountryLabel } from "@/components/country-label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { GoldMedal } from "@/components/gold-medal";
 import { getFan } from "@/lib/fans";
+import { isCharlesDraperSlug } from "@/lib/gold-members";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/fans/$slug")({
@@ -25,7 +27,10 @@ function FanPage() {
       </Link>
       <p className="mt-6 text-[11px] tracking-[0.2em] text-faint uppercase">{t("fans.kicker")}</p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <h1 className="font-display text-4xl font-semibold sm:text-6xl">{fan.displayName}</h1>
+        <h1 className="inline-flex flex-wrap items-baseline gap-3 font-display text-4xl font-semibold sm:text-6xl">
+          {fan.displayName}
+          {isCharlesDraperSlug(fan.slug) ? <GoldMedal className="size-7" /> : null}
+        </h1>
         {fan.openForInvites ? <Badge>{t("fans.open")}</Badge> : null}
       </div>
       <p className="mt-3 text-muted">
