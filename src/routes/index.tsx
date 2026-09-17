@@ -204,6 +204,37 @@ function Home() {
 
       <section className="mt-14 sm:mt-16">
         <SectionHeading
+          kicker={t("home.camps")}
+          title={t("home.learn")}
+          to="/learn"
+          action={t("nav.learn")}
+        />
+        <div className="mt-4 space-y-1">
+          {camps.map((camp) => (
+            <Link
+              key={camp.slug}
+              to="/learn/$slug"
+              params={{ slug: camp.slug }}
+              className="grid grid-cols-[4.5rem_1fr] items-center gap-3 py-2 hover:underline"
+            >
+              <div className="text-center">
+                <CountryLabel name={camp.country} short className="justify-center" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-display text-base font-semibold leading-tight">
+                  {camp.name}
+                </h3>
+                <p className="mt-0.5 truncate text-xs text-muted">
+                  {camp.city} · {whenLabel(camp.when, locale)}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14 sm:mt-16">
+        <SectionHeading
           kicker={t("home.worldwide")}
           title={t("home.upcoming")}
           to="/concerts"
@@ -249,37 +280,6 @@ function Home() {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section className="mt-14 sm:mt-16">
-        <SectionHeading
-          kicker={t("home.camps")}
-          title={t("home.learn")}
-          to="/learn"
-          action={t("nav.learn")}
-        />
-        <div className="mt-4 space-y-1">
-          {camps.map((camp) => (
-            <Link
-              key={camp.slug}
-              to="/learn/$slug"
-              params={{ slug: camp.slug }}
-              className="grid grid-cols-[4.5rem_1fr] items-center gap-3 py-2 hover:underline"
-            >
-              <div className="text-center">
-                <CountryLabel name={camp.country} short className="justify-center" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="font-display text-base font-semibold leading-tight">
-                  {camp.name}
-                </h3>
-                <p className="mt-0.5 truncate text-xs text-muted">
-                  {camp.city} · {whenLabel(camp.when, locale)}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
       </section>
 
       <section className="mt-16 grid gap-3 sm:mt-20 sm:grid-cols-3">
