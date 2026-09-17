@@ -25,7 +25,7 @@ import {
   type GlobeCountry,
 } from "@/lib/geo";
 import type { HubChatMessage, HubTeacher } from "@/lib/hub-api";
-import { splitLuthiers } from "@/lib/luthiers";
+import { sortCountryLuthiers, splitLuthiers } from "@/lib/luthiers";
 import { countryFeatured, COUNTRY_LAST_JAM, COUNTRY_NOTES } from "@/lib/country-copy";
 import { familiesForCountry } from "@/lib/families";
 import { isArchiveBand } from "@/lib/archive";
@@ -210,9 +210,9 @@ export function CountryView({
           featured ? { id: "featured", label: featured.title } : null,
           camps.length ? { id: "camps", label: t("country.camps") } : null,
           { id: "concerts", label: t("nav.concerts") },
+          { id: "makers", label: t("country.makers") },
           { id: "festivals", label: t("nav.festivals") },
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
-          { id: "makers", label: t("country.makers") },
           { id: "teachers", label: t("country.teachers") },
           { id: "venues", label: t("country.venues") },
           (livingBands.length || (country?.bands ?? []).length) ? { id: "groups", label: t("nav.groups") } : null,
@@ -343,6 +343,13 @@ export function CountryView({
         initial={5}
       />
 
+      <CountryMakersPreview
+        luthiers={sortCountryLuthiers(atlasName, luthiers)}
+        shops={shops}
+        countryName={name}
+        countrySlug={slug}
+      />
+
       <div className="mt-10">
         <ShareBox
           url={pageUrl}
@@ -379,17 +386,6 @@ export function CountryView({
       </section>
 
       {hotClubs.length > 0 ? <HotClubBlock clubs={hotClubs} /> : null}
-
-      <CountryMakersPreview
-        guitar={guitarLuthiers}
-        violin={violinLuthiers}
-        bass={bassLuthiers}
-        accordion={accordionLuthiers}
-        other={otherLuthiers}
-        shops={shops}
-        countryName={name}
-        countrySlug={slug}
-      />
 
       <Teachers teachers={teachers} countrySlug={slug} countryName={name} />
 

@@ -1685,7 +1685,7 @@ const LUTHIER_PIN: Record<string, string[]> = {
   France: ["maurice-dupont", "jean-barault", "castelluccia", "jean-pierre-favino"],
   "United Kingdom": ["jerome-duffell", "robert-ford", "killy-nonis"],
   Germany: ["stefan-hahl"],
-  Netherlands: ["leo-eimers", "de-molenhoek"],
+  Netherlands: ["de-molenhoek", "leo-eimers"],
   Canada: ["shelley-park"],
   Czechia: ["vit-cach"],
   Spain: ["geronimo-mateos"],
@@ -1717,8 +1717,6 @@ export function sortCountryLuthiers(country: string, rows: Luthier[]) {
   const craftRank = (craft: LuthierCraft) =>
     craft === "guitar" ? 0 : craft === "bass" ? 1 : craft === "violin" ? 2 : craft === "accordion" ? 3 : 4;
   return [...rows].sort((a, b) => {
-    const craft = craftRank(a.craft) - craftRank(b.craft);
-    if (craft) return craft;
     const ia = pin.indexOf(a.slug);
     const ib = pin.indexOf(b.slug);
     if (ia !== -1 || ib !== -1) {
@@ -1726,6 +1724,8 @@ export function sortCountryLuthiers(country: string, rows: Luthier[]) {
       if (ib === -1) return -1;
       return ia - ib;
     }
+    const craft = craftRank(a.craft) - craftRank(b.craft);
+    if (craft) return craft;
     return a.name.localeCompare(b.name);
   });
 }

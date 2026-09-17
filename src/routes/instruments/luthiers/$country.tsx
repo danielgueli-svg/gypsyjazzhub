@@ -96,6 +96,14 @@ function CountryLuthiersPage() {
       </p>
       <InstrumentsSubnav />
 
+      {atlasName === "Netherlands" && accordion.length ? (
+        <MakerSection
+          title={t("instruments.accordionLuthiers")}
+          lead={t("accordion.lead")}
+          entries={sortCountryLuthiers(atlasName, accordion).map(luthierEntry)}
+        />
+      ) : null}
+
       {guitar.length ? (
         <MakerSection
           title={t("instruments.guitarLuthiers")}
@@ -116,11 +124,13 @@ function CountryLuthiersPage() {
         entries={sortCountryLuthiers(atlasName, violin).map(luthierEntry)}
       />
 
+      {atlasName !== "Netherlands" ? (
       <MakerSection
         title={t("instruments.accordionLuthiers")}
         lead={t("accordion.lead")}
         entries={sortCountryLuthiers(atlasName, accordion).map(luthierEntry)}
       />
+      ) : null}
 
       {other.length ? (
         <MakerSection
