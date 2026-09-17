@@ -232,11 +232,11 @@ export const CAMPS: Camp[] = [
     country: "Netherlands",
     when: "15 November 2026, 14:00–17:00",
     nextStartsAt: "2026-11-15T14:00:00.000Z",
-    site: "",
+    site: "mailto:ireneypenburg@gmail.com",
     hostSlugs: ["irene-ypenburg"],
     teacherSlugs: ["nousche-rosenberg"],
     kind: "workshop",
-    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Nous'che Rosenberg on gypsy rhythms. 15 November 2026, 14:00–17:00. Sign up with Irene Ypenburg.",
+    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Nous'che Rosenberg on gypsy rhythms. 15 November 2026, 14:00–17:00. Almost full — sign up by email: ireneypenburg@gmail.com.",
   },
   {
     slug: "feigeli-prisor-amsterdam-workshop",
@@ -245,11 +245,11 @@ export const CAMPS: Camp[] = [
     country: "Netherlands",
     when: "22 November 2026, 14:00–17:00",
     nextStartsAt: "2026-11-22T14:00:00.000Z",
-    site: "",
+    site: "mailto:ireneypenburg@gmail.com",
     hostSlugs: ["irene-ypenburg"],
     teacherSlugs: ["feigeli-prisor"],
     kind: "workshop",
-    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Feigeli Prisor, create the real sound. 22 November 2026, 14:00–17:00. Sign up with Irene Ypenburg.",
+    bio: "Masters of the Authentic Sound. Irene Ypenburg organises this afternoon in Amsterdam. Feigeli Prisor, create the real sound. 22 November 2026, 14:00–17:00. Places still open — sign up by email: ireneypenburg@gmail.com.",
   },
 ];
 

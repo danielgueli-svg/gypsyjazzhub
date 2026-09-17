@@ -98,8 +98,13 @@ function CampPage() {
       {camp.site ? (
         <div className="mt-6">
           <Button asChild>
-            <a href={camp.site} target="_blank" rel="noreferrer">
-              Official camp site
+            <a
+              href={camp.site}
+              {...(camp.site.startsWith("mailto:")
+                ? {}
+                : { target: "_blank", rel: "noreferrer" })}
+            >
+              {camp.site.startsWith("mailto:") ? "Sign up by email" : "Official camp site"}
             </a>
           </Button>
         </div>
