@@ -5,6 +5,17 @@ import { NEWS_MORE } from "./music-news-more";
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "jimmy-stochelo-scheveningen-2026",
+    date: "2026-09-18",
+    title: "Jimmy Rosenberg with Stochelo — Scheveningen, 15 November",
+    body: "One afternoon at Podium Aan Zee: Jimmy Rosenberg with Stochelo Rosenberg. Sunday 15 November 2026, 15:00, Scheveningen. Details on the concert page.",
+    kind: "scene",
+    artistSlugs: ["jimmy-rosenberg", "stochelo-rosenberg"],
+    href: "/concerts/live-jimmy-rosenberg-2026-11-15T15:00:00.000Z",
+    hrefLabel: "Concert",
+    image: "/artists/jimmy-rosenberg.jpg",
+  },
+  {
     slug: "dario-immersion-abbiategrasso-2026",
     date: "2026-09-17",
     title: "Two spots left — Dario Napoli Full Immersion, 25–27 September",
