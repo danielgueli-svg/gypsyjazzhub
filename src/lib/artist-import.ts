@@ -1,12 +1,27 @@
 import { getSql } from "@/lib/db";
-import { ARTIST_TOUR_SITES, parseArtistPage } from "@/lib/artist-sites";
+import {
+  ARTIST_TOUR_SITES,
+  agendaFollowUrl,
+  isCrawlableUrl,
+  parseArtistPage,
+  urlKey,
+  venueEventFits,
+  type CrawlTarget,
+} from "@/lib/artist-sites";
 import { syncDiscoveries } from "@/lib/discovery-api";
 import type { ScanFind } from "@/lib/discovery";
+import { CIRCLE_ARTISTS } from "@/lib/circle-artists";
+import { FESTIVALS } from "@/lib/festivals";
+import { CAMPS } from "@/lib/camps";
+import { VENUES } from "@/lib/venues";
+import { SCAN_SOURCES } from "@/lib/discovery";
+import { slugify } from "@/lib/utils";
 
 export type ArtistRun = {
   fetched: number;
   parsed: number;
   ingested: number;
+  targets: number;
   sites: { name: string; url: string; ok: boolean; events: number }[];
   scannedAt: string;
 };
@@ -32,7 +47,7 @@ async function fetchText(url: string) {
         "user-agent": "Mozilla/5.0 (compatible; GypsyJazzHub/1.0; +https://gypsyjazzhub.com)",
       },
       redirect: "follow",
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) return "";
     return await res.text();
@@ -41,47 +56,178 @@ async function fetchText(url: string) {
   }
 }
 
+async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>) {
+  const out: R[] = new Array(items.length);
+  let cursor = 0;
+  async function worker() {
+    while (cursor < items.length) {
+      const index = cursor;
+      cursor += 1;
+      out[index] = await fn(items[index]!);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) || 1 }, () => worker()));
+  return out;
+}
+
+function addTarget(list: CrawlTarget[], seen: Set<string>, target: CrawlTarget) {
+  if (!isCrawlableUrl(target.url)) return;
+  const key = urlKey(target.url);
+  if (seen.has(key)) return;
+  seen.add(key);
+  list.push(target);
+}
+
+export function collectCrawlTargets(): CrawlTarget[] {
+  const seen = new Set<string>();
+  const list: CrawlTarget[] = [];
+  for (const site of ARTIST_TOUR_SITES) addTarget(list, seen, site);
+
+  for (const artist of CIRCLE_ARTISTS) {
+    const url =
+      "website_url" in artist && typeof artist.website_url === "string" ? artist.website_url.trim() : "";
+    addTarget(list, seen, {
+      slug: artist.slug,
+      name: artist.name,
+      url,
+      parse: "jsonld",
+      sourceKind: "artist_site",
+      artistSlug: artist.slug,
+    });
+  }
+
+  for (const festival of FESTIVALS) {
+    addTarget(list, seen, {
+      slug: festival.slug,
+      name: festival.name,
+      url: festival.site,
+      parse: "jsonld",
+      sourceKind: "festival_official",
+      eventKind: "festival",
+      festivalSlug: festival.slug,
+      city: festival.city,
+      country: festival.country,
+      followAgenda: true,
+    });
+  }
+
+  for (const camp of CAMPS) {
+    addTarget(list, seen, {
+      slug: camp.slug,
+      name: `Camp · ${camp.name}`,
+      url: camp.site,
+      parse: "jsonld",
+      sourceKind: "listing",
+      eventKind: "festival",
+      city: camp.city,
+      country: camp.country,
+      followAgenda: true,
+    });
+  }
+
+  for (const venue of VENUES) {
+    addTarget(list, seen, {
+      slug: venue.slug,
+      name: venue.name,
+      url: venue.site,
+      parse: "jsonld",
+      sourceKind: "venue",
+      city: venue.city,
+      country: venue.country,
+    });
+  }
+
+  for (const source of SCAN_SOURCES) {
+    addTarget(list, seen, {
+      slug: slugify(source.name),
+      name: source.name,
+      url: source.url,
+      parse: "jsonld",
+      sourceKind: "listing",
+      followAgenda: true,
+    });
+  }
+
+  return list;
+}
+
+function artistHints() {
+  const names = new Set<string>();
+  for (const artist of CIRCLE_ARTISTS) {
+    const name = artist.name.trim().toLowerCase();
+    if (name.length > 4) names.add(name);
+    const last = name.split(/\s+/).pop() ?? "";
+    if (last.length > 4) names.add(last);
+  }
+  return [...names];
+}
+
 export async function runArtistImport(): Promise<ArtistRun> {
   await ensureLog();
-  const sites: ArtistRun["sites"] = [];
+  const targets = collectCrawlTargets();
+  const hints = artistHints();
   const live: ScanFind[] = [];
   const seen = new Set<string>();
 
-  for (const site of ARTIST_TOUR_SITES) {
+  const rows = await mapLimit(targets, 8, async (site) => {
     try {
-      const html = await fetchText(site.url);
-      const finds = html ? parseArtistPage(html, site) : [];
-      let events = 0;
-      for (const find of finds) {
-        const key = `${find.title}|${find.startsAt.slice(0, 10)}|${find.venue}`.toLowerCase();
-        if (seen.has(key)) continue;
-        seen.add(key);
-        live.push(find);
-        events += 1;
+      let html = await fetchText(site.url);
+      if (!html) return { name: site.name, url: site.url, ok: false, events: 0, finds: [] as ScanFind[] };
+      let finds = parseArtistPage(html, site);
+      if (finds.length === 0 && site.followAgenda) {
+        const extra = agendaFollowUrl(html, site.url);
+        if (extra) {
+          const next = await fetchText(extra);
+          if (next) finds = parseArtistPage(next, { ...site, url: extra });
+        }
       }
-      sites.push({ name: site.name, url: site.url, ok: Boolean(html), events });
+      if (site.sourceKind === "venue") {
+        finds = finds.filter((find) => venueEventFits(find.title, hints));
+      }
+      return { name: site.name, url: site.url, ok: true, events: finds.length, finds };
     } catch {
-      sites.push({ name: site.name, url: site.url, ok: false, events: 0 });
+      return { name: site.name, url: site.url, ok: false, events: 0, finds: [] as ScanFind[] };
+    }
+  });
+
+  const sites = rows.map((row) => ({
+    name: row.name,
+    url: row.url,
+    ok: row.ok,
+    events: row.events,
+  }));
+
+  for (const row of rows) {
+    for (const find of row.finds) {
+      const key = `${find.title}|${find.startsAt.slice(0, 10)}|${find.venue}`.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      live.push(find);
     }
   }
 
   await syncDiscoveries(live);
 
   const sql = await getSql();
+  const hits = sites.filter((row) => row.events > 0);
   const detail = [
-    ...sites.map((row) => `${row.name}: ${row.ok ? `${row.events} dates` : "no fetch"}`),
+    `${targets.length} urls`,
+    `${sites.filter((row) => row.ok).length} fetched`,
+    `${live.length} dates`,
+    ...hits.slice(0, 12).map((row) => `${row.name}: ${row.events}`),
     ...live.slice(0, 8).map((find) => find.title),
   ].join(" · ");
   await sql`
     insert into hub_artist_runs (fetched, parsed, detail)
-    values (${sites.filter((row) => row.ok).length}, ${live.length}, ${detail})
+    values (${sites.filter((row) => row.ok).length}, ${live.length}, ${detail.slice(0, 4000)})
   `;
 
   return {
     fetched: sites.filter((row) => row.ok).length,
     parsed: live.length,
     ingested: live.length,
-    sites,
+    targets: targets.length,
+    sites: hits.length ? hits : sites.slice(0, 12),
     scannedAt: new Date().toISOString(),
   };
 }

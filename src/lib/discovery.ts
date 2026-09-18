@@ -131,6 +131,17 @@ export function scanVerdict(find: ScanFind): {
       reason: "Trusted festival — official site is enough.",
     };
   }
+  if (
+    kinds.has("festival_official") &&
+    find.festivalSlug &&
+    find.title.trim() &&
+    find.startsAt
+  ) {
+    return {
+      status: "publish",
+      reason: "Official festival site — date is on their own page.",
+    };
+  }
   const artistAndVenue = kinds.has("artist_site") && kinds.has("venue") && urls.size >= 2;
   const artistAndFestival =
     kinds.has("artist_site") && kinds.has("festival_official") && urls.size >= 2;
@@ -171,9 +182,9 @@ export function scanVerdict(find: ScanFind): {
       reason: `DjangoBooks thread — ${forum.label}. Date, venue and place are on the post.`,
     };
   }
-  const sinti = find.sources.find((source) => /sintimusic\.nl/i.test(source.url));
+  const artistSite = find.sources.find((source) => source.kind === "artist_site");
   if (
-    sinti &&
+    artistSite &&
     find.title.trim() &&
     find.artistName.trim() &&
     find.venue.trim() &&
@@ -182,13 +193,40 @@ export function scanVerdict(find: ScanFind): {
   ) {
     return {
       status: "publish",
-      reason: `Sinti Music shows — ${sinti.label}. Date, venue and artist are on the agency site.`,
+      reason: `Artist website — ${artistSite.label}. Date, venue and artist are on their site.`,
+    };
+  }
+  const camp = find.sources.find(
+    (source) => source.kind === "listing" && source.label.startsWith("Camp ·"),
+  );
+  if (
+    camp &&
+    find.title.trim() &&
+    find.startsAt &&
+    (find.city.trim() || find.country.trim())
+  ) {
+    return {
+      status: "publish",
+      reason: `Camp site — ${camp.label}. Date is on their own page.`,
+    };
+  }
+  const venueBill = find.sources.find((source) => source.kind === "venue");
+  if (
+    venueBill &&
+    find.title.trim() &&
+    find.venue.trim() &&
+    find.country.trim() &&
+    find.startsAt
+  ) {
+    return {
+      status: "publish",
+      reason: `Venue calendar — ${venueBill.label}. Gypsy jazz bill with a date.`,
     };
   }
   return {
     status: "hold",
     reason:
-      "Needs two confirmations (artist website and venue). One source is not enough, except a trusted festival official site, a complete Facebook group post, a complete DjangoBooks thread, or a complete Sinti Music listing.",
+      "Needs two confirmations (artist website and venue). One source is not enough, except a trusted festival official site, a complete Facebook group post, a complete DjangoBooks thread, a complete artist/Sinti listing, a camp page, or a gypsy jazz bill on a known venue site.",
   };
 }
 

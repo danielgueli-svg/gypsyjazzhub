@@ -22,6 +22,7 @@ export const Route = createFileRoute("/api/artist-import")({
             fetched: result.fetched,
             parsed: result.parsed,
             ingested: result.ingested,
+            targets: result.targets,
             sites: result.sites,
           });
         } catch (err) {

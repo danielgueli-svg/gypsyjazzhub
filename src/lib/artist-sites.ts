@@ -1,47 +1,113 @@
-import type { ScanFind } from "@/lib/discovery";
+import type { ScanFind, SourceKind } from "@/lib/discovery";
 import { resolveCountry } from "@/lib/geo";
 import { slugify } from "@/lib/utils";
 
-export type ArtistTourSite = {
+export type CrawlTarget = {
   slug: string;
   name: string;
   url: string;
   parse: "sinti" | "jsonld";
+  sourceKind: SourceKind;
+  eventKind?: "concert" | "jam" | "festival";
+  festivalSlug?: string;
+  city?: string;
+  country?: string;
+  artistSlug?: string;
+  followAgenda?: boolean;
 };
 
-/** Agency + a few artist sites the Monday/Friday crawl fetches. */
-export const ARTIST_TOUR_SITES: ArtistTourSite[] = [
+/** Always fetched first: agency + artists who keep a public tour page. */
+export const ARTIST_TOUR_SITES: CrawlTarget[] = [
   {
     slug: "sinti-music",
     name: "Sinti Music",
     url: "https://www.sintimusic.nl/en/shows/",
     parse: "sinti",
+    sourceKind: "artist_site",
   },
   {
     slug: "stephane-wrembel",
     name: "Stéphane Wrembel",
     url: "https://www.stephanewrembel.com/",
     parse: "jsonld",
+    sourceKind: "artist_site",
+    artistSlug: "stephane-wrembel",
   },
   {
     slug: "dario-napoli",
     name: "Dario Napoli",
     url: "https://darionapoli.com/",
     parse: "jsonld",
+    sourceKind: "artist_site",
+    artistSlug: "dario-napoli",
   },
   {
     slug: "denis-chang",
     name: "Denis Chang",
     url: "https://www.denischang.com/",
     parse: "jsonld",
+    sourceKind: "artist_site",
+    artistSlug: "denis-chang",
   },
   {
     slug: "nuno-marinho",
     name: "Nuno Marinho",
     url: "https://www.nunomarinho.com/",
     parse: "jsonld",
+    sourceKind: "artist_site",
+    artistSlug: "nuno-marinho",
+  },
+  {
+    slug: "paulus-schafer",
+    name: "Paulus Schäfer",
+    url: "http://www.paulusschafer.com/",
+    parse: "jsonld",
+    sourceKind: "artist_site",
+    artistSlug: "paulus-schafer",
   },
 ];
+
+export type ArtistTourSite = CrawlTarget;
+
+const SOCIAL =
+  /facebook\.com|instagram\.com|youtube\.com|youtu\.be|spotify\.com|soundcloud\.com|tiktok\.com|twitter\.com|x\.com|bandcamp\.com/i;
+
+export function isCrawlableUrl(url: string) {
+  if (!/^https?:\/\//i.test(url.trim())) return false;
+  return !SOCIAL.test(url);
+}
+
+export function urlKey(url: string) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+    const path = parsed.pathname.replace(/\/+$/, "") || "/";
+    return `${host}${path}`;
+  } catch {
+    return url.replace(/\/+$/, "").toLowerCase();
+  }
+}
+
+export function agendaFollowUrl(html: string, base: string) {
+  const hrefs = [...html.matchAll(/href=["']([^"'#]+)["']/gi)].map((row) => row[1]!);
+  for (const href of hrefs) {
+    if (!/agenda|programma|programs?|concerts?|shows|tour|dates|line-?up|timetable|kalender|optredens/i.test(href)) {
+      continue;
+    }
+    try {
+      const next = new URL(href, base);
+      if (next.hostname.replace(/^www\./, "") !== new URL(base).hostname.replace(/^www\./, "")) {
+        continue;
+      }
+      if (urlKey(next.href) === urlKey(base)) continue;
+      if (!isCrawlableUrl(next.href)) continue;
+      return next.href;
+    } catch {
+      continue;
+    }
+  }
+  return "";
+}
 
 const MONTHS: Record<string, number> = {
   january: 0,
@@ -196,12 +262,13 @@ function walkJsonLd(node: unknown, acc: Record<string, unknown>[]): Record<strin
   return acc;
 }
 
-export function parseJsonLdEvents(
-  html: string,
-  site: Pick<ArtistTourSite, "name" | "url">,
-): ScanFind[] {
+export function parseJsonLdEvents(html: string, site: CrawlTarget): ScanFind[] {
   const out: ScanFind[] = [];
   const seen = new Set<string>();
+  const sourceKind = site.sourceKind;
+  const eventKind =
+    site.eventKind ??
+    (sourceKind === "festival_official" ? "festival" : "concert");
   for (const block of jsonLdBlocks(html)) {
     for (const event of walkJsonLd(block, [])) {
       const title = String(event.name || "").replace(/\s+/g, " ").trim();
@@ -218,17 +285,19 @@ export function parseJsonLdEvents(
         locObj.address && typeof locObj.address === "object"
           ? (locObj.address as Record<string, unknown>)
           : {};
-      const venue = String(locObj.name || event.location || "")
+      const venue = String(locObj.name || event.location || site.name || "")
         .replace(/\s+/g, " ")
         .trim()
         .slice(0, 80);
-      const city = String(address.addressLocality || "").trim();
+      const city = String(address.addressLocality || site.city || "").trim();
       const country =
         resolveCountry(String(address.addressCountry || "")) ??
+        resolveCountry(String(site.country || "")) ??
         resolveCountry(String(address.addressLocality || "")) ??
         "";
       if (!venue && !city) continue;
-      const who = artistFromTitle(title.includes(site.name) ? title : `${site.name} — ${title}`);
+      const billed = title.includes(site.name) ? title : `${site.name} — ${title}`;
+      const who = artistFromTitle(billed);
       const startsAt = when.toISOString();
       const key = `${title}|${startsAt.slice(0, 10)}|${venue}`.toLowerCase();
       if (seen.has(key)) continue;
@@ -236,20 +305,30 @@ export function parseJsonLdEvents(
       out.push({
         title: title.slice(0, 120),
         artistName: who.name,
-        artistSlug: who.slug,
+        artistSlug: site.artistSlug || who.slug,
         venue: venue || city,
         city,
         country,
         startsAt,
-        eventKind: /\b(festival|fest)\b/i.test(title) ? "festival" : "concert",
-        sources: [{ kind: "artist_site", url: site.url, label: site.name }],
+        festivalSlug: site.festivalSlug,
+        eventKind: /\b(festival|fest|camp|workshop)\b/i.test(title) ? "festival" : eventKind,
+        sources: [{ kind: sourceKind, url: site.url, label: site.name }],
       });
     }
   }
   return out;
 }
 
-export function parseArtistPage(html: string, site: ArtistTourSite): ScanFind[] {
+export function parseArtistPage(html: string, site: CrawlTarget): ScanFind[] {
   if (site.parse === "sinti") return parseSintiShows(html, site.url);
   return parseJsonLdEvents(html, site);
+}
+
+const GYPSY_HINT =
+  /\b(django|manouche|gypsy|gipsy|sinti|reinhardt|hot club|selmer|rosenberg|schafer|schäfer)\b/i;
+
+export function venueEventFits(title: string, hints: string[]) {
+  if (GYPSY_HINT.test(title)) return true;
+  const hay = title.toLowerCase();
+  return hints.some((name) => name.length > 4 && hay.includes(name));
 }
