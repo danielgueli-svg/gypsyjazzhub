@@ -15,6 +15,7 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as AlhambraRouteImport } from './routes/alhambra'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as CampsRouteImport } from './routes/camps'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DenisChangRouteImport } from './routes/denis-chang'
 import { Route as DjangoRouteImport } from './routes/django'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -129,6 +130,11 @@ const BoardRoute = BoardRouteImport.update({
 const CampsRoute = CampsRouteImport.update({
   id: '/camps',
   path: '/camps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DenisChangRoute = DenisChangRouteImport.update({
@@ -566,6 +572,7 @@ export interface FileRoutesByFullPath {
   '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
+  '/contact': typeof ContactRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -659,6 +666,7 @@ export interface FileRoutesByTo {
   '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
+  '/contact': typeof ContactRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -753,6 +761,7 @@ export interface FileRoutesById {
   '/alhambra': typeof AlhambraRoute
   '/board': typeof BoardRoute
   '/camps': typeof CampsRoute
+  '/contact': typeof ContactRoute
   '/denis-chang': typeof DenisChangRoute
   '/django': typeof DjangoRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -848,6 +857,7 @@ export interface FileRouteTypes {
     | '/alhambra'
     | '/board'
     | '/camps'
+    | '/contact'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
@@ -941,6 +951,7 @@ export interface FileRouteTypes {
     | '/alhambra'
     | '/board'
     | '/camps'
+    | '/contact'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
@@ -1034,6 +1045,7 @@ export interface FileRouteTypes {
     | '/alhambra'
     | '/board'
     | '/camps'
+    | '/contact'
     | '/denis-chang'
     | '/django'
     | '/forgot-password'
@@ -1128,6 +1140,7 @@ export interface RootRouteChildren {
   AlhambraRoute: typeof AlhambraRoute
   BoardRoute: typeof BoardRoute
   CampsRoute: typeof CampsRoute
+  ContactRoute: typeof ContactRoute
   DenisChangRoute: typeof DenisChangRoute
   DjangoRoute: typeof DjangoRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -1257,6 +1270,13 @@ declare module '@tanstack/react-router' {
       path: '/camps'
       fullPath: '/camps'
       preLoaderRoute: typeof CampsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/denis-chang': {
@@ -1864,6 +1884,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlhambraRoute: AlhambraRoute,
   BoardRoute: BoardRoute,
   CampsRoute: CampsRoute,
+  ContactRoute: ContactRoute,
   DenisChangRoute: DenisChangRoute,
   DjangoRoute: DjangoRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,

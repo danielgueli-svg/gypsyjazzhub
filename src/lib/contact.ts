@@ -2,8 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getSql } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
-import { HUB_CONTACT_EMAIL } from "@/lib/hub-owner";
+import { HUB_CONTACT_EMAIL, PUBLIC_CONTACT_EMAIL } from "@/lib/hub-owner";
 import { toIso } from "@/lib/utils";
+
+export const CONTACT_TOPICS = ["festival", "concert", "jam", "question", "other"] as const;
+export type ContactTopic = (typeof CONTACT_TOPICS)[number];
 
 export function telHref(phone: string) {
   const digits = phone.replace(/[^\d+]/g, "");
@@ -64,7 +67,30 @@ function validEmail(value: string) {
 }
 
 function isUserError(message: string) {
-  return /please |working email|short message|wait a moment/i.test(message);
+  return /please |working email|short message|wait a moment|public photo/i.test(message);
+}
+
+function isContactTopic(value: string): value is ContactTopic {
+  return (CONTACT_TOPICS as readonly string[]).includes(value);
+}
+
+function cleanPhotoUrl(value: string) {
+  const raw = value.trim().slice(0, 500);
+  if (!raw) return "";
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error("Please use a public photo link (http or https).");
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new Error("Please use a public photo link (http or https).");
+  }
+  return url.toString();
+}
+
+function mailLines(parts: Array<string | undefined>) {
+  return parts.filter((line): line is string => line !== undefined).join("\n");
 }
 
 export const submitContact = createServerFn({ method: "POST" })
@@ -75,6 +101,11 @@ export const submitContact = createServerFn({ method: "POST" })
       subject?: string;
       message?: string;
       company?: string;
+      topic?: string;
+      eventTitle?: string;
+      date?: string;
+      place?: string;
+      photoUrl?: string;
     }) => input,
   )
   .handler(async ({ data }) => {
@@ -83,10 +114,22 @@ export const submitContact = createServerFn({ method: "POST" })
       await ensureContact();
       const name = clean(data.name ?? "", 80);
       const email = clean(data.email ?? "", 120).toLowerCase();
-      const subject = clean(data.subject ?? "", 140);
+      const topicRaw = clean(data.topic ?? "", 40).toLowerCase();
+      const fromPage = Boolean(topicRaw);
+      const topic = fromPage && isContactTopic(topicRaw) ? topicRaw : "";
+      const eventTitle = clean(data.eventTitle ?? "", 140);
+      const date = clean(data.date ?? "", 40);
+      const place = clean(data.place ?? "", 140);
+      const photoUrl = cleanPhotoUrl(data.photoUrl ?? "");
       const message = (data.message ?? "").trim().slice(0, 4000);
+      const subject = fromPage
+        ? clean([topic, eventTitle].filter(Boolean).join(": "), 140)
+        : clean(data.subject ?? "", 140);
+
       if (name.length < 2) throw new Error("Please add your name.");
       if (!validEmail(email)) throw new Error("Please add a working email.");
+      if (fromPage && !topic) throw new Error("Please pick a topic.");
+      if (fromPage && eventTitle.length < 2) throw new Error("Please add a title or event name.");
       if (subject.length < 2) throw new Error("Please add a subject.");
       if (message.length < 8) throw new Error("Please write a short message.");
 
@@ -100,19 +143,45 @@ export const submitContact = createServerFn({ method: "POST" })
         throw new Error("Please wait a moment before sending another note.");
       }
 
-      const body = [
-        `${name} wrote via Contact the Board.`,
-        `From: ${name} <${email}>`,
-        `Subject: ${subject}`,
-        "",
-        message,
-        "",
-        "Reply to this mail to answer them.",
-      ].join("\n");
+      const storedMessage = fromPage
+        ? mailLines([
+            topic ? `Topic: ${topic}` : undefined,
+            eventTitle ? `Title: ${eventTitle}` : undefined,
+            date ? `Date: ${date}` : undefined,
+            place ? `Place: ${place}` : undefined,
+            photoUrl ? `Photo: ${photoUrl}` : undefined,
+            "",
+            message,
+          ]).slice(0, 4000)
+        : message;
+
+      const body = fromPage
+        ? mailLines([
+            `${name} wrote via the Contact page.`,
+            `From: ${name} <${email}>`,
+            `Topic: ${topic}`,
+            `Title: ${eventTitle}`,
+            date ? `Date: ${date}` : undefined,
+            place ? `Place: ${place}` : undefined,
+            photoUrl ? `Photo: ${photoUrl}` : undefined,
+            "",
+            message,
+            "",
+            "Reply to this mail to answer them.",
+          ])
+        : mailLines([
+            `${name} wrote via Contact the Board.`,
+            `From: ${name} <${email}>`,
+            `Subject: ${subject}`,
+            "",
+            message,
+            "",
+            "Reply to this mail to answer them.",
+          ]);
 
       await sendHubMail(
-        HUB_CONTACT_EMAIL,
-        `Contact the Board — ${subject}`,
+        fromPage ? PUBLIC_CONTACT_EMAIL : HUB_CONTACT_EMAIL,
+        fromPage ? `Contact — ${subject}` : `Contact the Board — ${subject}`,
         body,
         undefined,
         email,
@@ -121,7 +190,7 @@ export const submitContact = createServerFn({ method: "POST" })
 
       await sql.query(
         `insert into hub_contact (name, email, subject, message) values ($1, $2, $3, $4)`,
-        [name, email, subject, message],
+        [name, email, subject, storedMessage],
       );
       return { ok: true as const };
     } catch (err) {

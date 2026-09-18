@@ -32,6 +32,7 @@ const MORE = [
   { to: "/history", key: "nav.history" },
   { to: "/romani-music", key: "nav.archiveRomani", href: "https://www.romanimusic.com" },
   { to: "/news", key: "nav.news" },
+  { to: "/contact", key: "nav.contact" },
   { to: "/world", key: "nav.globe" },
   { to: "/join", key: "nav.join" },
 ] as const;

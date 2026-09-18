@@ -66,6 +66,7 @@ const staticPaths = [
   "/news",
   "/join",
   "/board",
+  "/contact",
   "/history",
   "/archive",
   "/venues",

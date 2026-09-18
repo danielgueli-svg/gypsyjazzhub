@@ -18,6 +18,7 @@ const routes = [
   "/musicians/adrien-moignard",
   "/news/shrewsbury-django-fest-2026",
   "/board",
+  "/contact",
   "/instruments",
 ];
 
