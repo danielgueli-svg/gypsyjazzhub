@@ -133,6 +133,17 @@ export const VENUES: Venue[] = [
     bio: "Raamweg 45. Manouche Den Haag — third Saturday of the month, 14:00–18:00. With prior confirmation: evelien@box.nl.",
   },
   {
+    slug: "podium-aan-zee",
+    name: "Podium Aan Zee",
+    city: "Scheveningen",
+    country: "Netherlands",
+    kind: "Hall",
+    site: "https://podiumaanzee.nl/",
+    contact: "info@podiumaanzee.nl",
+    scene: "jazz",
+    bio: "Keizerstraat 58, Scheveningen. Live venue that also programmes the Bethelkerk. Jimmy Rosenberg Trio has played here; 15 November 2026 Jimmy Rosenberg with Stochelo Rosenberg at the Bethelkerk.",
+  },
+  {
     slug: "cafe-van-de-refter",
     name: "Café van de Refter",
     city: "Ubbergen",
