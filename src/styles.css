@@ -150,7 +150,7 @@
   .hub-ticker {
     position: relative;
     overflow: hidden;
-    height: 2.75rem;
+    height: 3.25rem;
     background: #050505;
     color: #ffbf2a;
     box-shadow: none;
@@ -185,7 +185,9 @@
     position: relative;
     z-index: 1;
     display: flex;
+    align-items: stretch;
     width: max-content;
+    height: 100%;
     padding-left: 0.7rem;
     animation: hub-ticker-scroll 42s linear infinite;
   }
@@ -196,15 +198,17 @@
   .hub-ticker-copy {
     display: flex;
     align-items: center;
+    height: 100%;
     padding-right: 3rem;
   }
   .hub-ticker-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    height: 100%;
+    gap: 0.4rem;
     white-space: nowrap;
     padding: 0 1.35rem;
-    font-size: 0.8rem;
+    font-size: 0.98rem;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -230,8 +234,8 @@
     color: #ffe27a;
   }
   .hub-ticker-flag {
-    height: 0.85rem;
-    width: 1.25rem;
+    height: 1rem;
+    width: 1.5rem;
     border-radius: 1px;
     box-shadow: 0 0 6px rgb(255 160 0 / 0.45);
   }
