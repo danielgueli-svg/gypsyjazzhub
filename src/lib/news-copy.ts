@@ -13,6 +13,11 @@ function pack(
 }
 
 export const NEWS_EN = pack({
+  "jimmy-stochelo-scheveningen-2026": {
+    title: "Jimmy Rosenberg with Stochelo — Scheveningen, 15 November",
+    body: "One afternoon at Podium Aan Zee: Jimmy Rosenberg with Stochelo Rosenberg. Sunday 15 November 2026, 15:00, Scheveningen. Details on the concert page.",
+  },
+
   "dario-immersion-abbiategrasso-2026": {
     title: "Two spots left — Dario Napoli Full Immersion, 25–27 September",
     body: "Dario Napoli wrote from Chicago, after the Midwest Gypsy Swing Fest, before the Green Mill night at Chicago Gypsy Jazz Fest. 25–27 September in Abbiategrasso, near Milan: Gypsy Jazz Full Immersion Weekend with Benji Winterstein. Small group, three days of workshops and jams. Bed and meals in one price. Two places left. Email darionapoliguitar@gmail.com, call +39 339 641 3847, or book on his site.",
