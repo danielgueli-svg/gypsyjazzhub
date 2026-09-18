@@ -14,6 +14,16 @@ import { slugify, toIso, wallClockIso, youtubeVideoId } from "@/lib/utils";
 import { CATALOG_TEACHERS } from "@/lib/teachers";
 import { ensureCatalogArtist } from "@/lib/catalog";
 import { namedPhotoUrl } from "@/lib/profile-photos";
+import {
+  emptyArtistPage,
+  normalizeArtistLinks,
+  parseArtistLinks,
+  sanitizePhotoUrl,
+  type HubArtistLink,
+  type HubArtistPage,
+} from "@/lib/artist-page";
+
+export type { HubArtistLink, HubArtistPage };
 
 export type ArtistOption = {
   slug: string;
@@ -301,6 +311,16 @@ async function runEnsureHub() {
       updated_at timestamptz not null default now()
     )
   `);
+  for (const col of [
+    "links text not null default '[]'",
+    "photo_url text not null default ''",
+  ]) {
+    try {
+      await sql.query(`alter table hub_artist_bios add column if not exists ${col}`);
+    } catch {
+      /* column already there */
+    }
+  }
   await sql.query(`
     alter table hub_clips add column if not exists status text not null default 'published'
   `);
@@ -565,6 +585,50 @@ function mapJam(row: {
 }
 
 let jamLeaderReady: Promise<void> | null = null;
+let artistPageReady: Promise<void> | null = null;
+
+async function ensureArtistPageColumns() {
+  if (getDbSource() === "none") return;
+  artistPageReady ??= (async () => {
+    const sql = await getSql();
+    await sql.query(`
+      create table if not exists hub_artist_bios (
+        artist_slug text primary key,
+        bio text not null,
+        submitted_by text not null,
+        submitted_name text not null default '',
+        status text not null default 'published',
+        updated_at timestamptz not null default now()
+      )
+    `);
+    for (const col of [
+      "links text not null default '[]'",
+      "photo_url text not null default ''",
+    ]) {
+      try {
+        await sql.query(`alter table hub_artist_bios add column if not exists ${col}`);
+      } catch {
+        /* column already there */
+      }
+    }
+  })().catch((err) => {
+    artistPageReady = null;
+    throw err;
+  });
+  await artistPageReady;
+}
+
+function mapArtistPage(row: {
+  bio?: string | null;
+  links?: unknown;
+  photo_url?: string | null;
+}): HubArtistPage {
+  return {
+    bio: (row.bio ?? "").trim(),
+    links: parseArtistLinks(row.links),
+    photoUrl: sanitizePhotoUrl(row.photo_url ?? ""),
+  };
+}
 
 async function ensureJamLeaderColumns() {
   if (getDbSource() === "none") return;
@@ -726,17 +790,30 @@ export const listHubNotes = createServerFn({ method: "GET" })
 
 export const getHubArtistBio = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
-  .handler(async ({ data: slug }) => {
+  .handler(async ({ data: slug }): Promise<HubArtistPage | null> => {
     try {
       await ensureHub();
+      await ensureArtistPageColumns();
       const sql = await getSql();
-      const rows = await sql<{ bio: string }>`
-        select bio from hub_artist_bios
-        where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
-        limit 1
-      `;
-      const bio = rows[0]?.bio.trim() ?? "";
-      return bio || null;
+      try {
+        const rows = await sql<{ bio: string; links: string; photo_url: string }>`
+          select bio, coalesce(links, '[]') as links, coalesce(photo_url, '') as photo_url
+          from hub_artist_bios
+          where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
+          limit 1
+        `;
+        if (!rows[0]) return null;
+        return mapArtistPage(rows[0]);
+      } catch (err) {
+        console.error("getHubArtistBio extras failed", err);
+        const rows = await sql<{ bio: string }>`
+          select bio from hub_artist_bios
+          where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
+          limit 1
+        `;
+        if (!rows[0]) return null;
+        return { ...emptyArtistPage(), bio: rows[0].bio.trim() };
+      }
     } catch (err) {
       console.error("getHubArtistBio db failed", err);
       return null;
@@ -745,34 +822,72 @@ export const getHubArtistBio = createServerFn({ method: "GET" })
 
 export const updateHubArtistBio = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
-  .validator((input: { slug: string; bio: string }) => input)
+  .validator((input: {
+    slug: string;
+    bio: string;
+    links?: HubArtistLink[];
+    photoUrl?: string;
+  }) => input)
   .handler(async ({ context, data }) => {
     await ensureHub();
+    await ensureArtistPageColumns();
     const { gateContribution } = await import("@/lib/hub-guard");
     const gate = await gateContribution(context.userId, { sessionTrusted: true });
     if (gate.skip) return { ok: true as const, pending: true as const };
     const slug = data.slug.trim();
-    const bio = data.bio.trim();
     if (!slug) throw new Error("Missing musician.");
-    if (bio.length < 20) throw new Error("Write a little more — a short paragraph is enough.");
+    const sql = await getSql();
+    const current = await sql<{ bio: string }>`
+      select bio from hub_artist_bios where artist_slug = ${slug} limit 1
+    `;
+    const submittedBio = data.bio.trim();
+    const bio = submittedBio || (current[0]?.bio.trim() ?? "");
+    const links = normalizeArtistLinks(data.links ?? []);
+    const photoUrl = sanitizePhotoUrl(data.photoUrl ?? "");
+    if (!bio && !links.length && !photoUrl) {
+      throw new Error("Add a short bio, a labelled link, or a photo URL.");
+    }
+    if (bio && bio.length < 20) {
+      throw new Error("Write a little more — a short paragraph is enough.");
+    }
     if (bio.length > 4000) throw new Error("Keep the bio under a few thousand characters.");
     const name = await submitterName(context.userId);
-    const sql = await getSql();
+    const payload = [slug, bio, JSON.stringify(links), photoUrl, context.userId, name, gate.status, new Date().toISOString()];
     try {
       await sql.query(
-        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
-         values ($1, $2, $3, $4, $5, $6)
+        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at, links, photo_url)
+         values ($1, $2, $5, $6, $7, $8, $3, $4)
          on conflict (artist_slug) do update set
            bio = excluded.bio,
            submitted_by = excluded.submitted_by,
            submitted_name = excluded.submitted_name,
            status = excluded.status,
-           updated_at = excluded.updated_at`,
-        [slug, bio, context.userId, name, gate.status, new Date().toISOString()],
+           updated_at = excluded.updated_at,
+           links = excluded.links,
+           photo_url = excluded.photo_url`,
+        payload,
       );
     } catch (err) {
+      try {
+        await sql.query(
+          `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
+           values ($1, $2, $3, $4, $5, $6)
+           on conflict (artist_slug) do update set
+             bio = excluded.bio,
+             submitted_by = excluded.submitted_by,
+             submitted_name = excluded.submitted_name,
+             status = excluded.status,
+             updated_at = excluded.updated_at`,
+          [slug, bio, context.userId, name, gate.status, new Date().toISOString()],
+        );
+      } catch (inner) {
+        const message = inner instanceof Error ? inner.message : String(inner);
+        throw new Error(`Could not save the page (${message}).`);
+      }
       const message = err instanceof Error ? err.message : String(err);
-      throw new Error(`Could not save the bio (${message}).`);
+      if (links.length || photoUrl) {
+        throw new Error(`Saved the bio, but extra links and photo need a HubDb update (${message}).`);
+      }
     }
     return { ok: true as const, pending: gate.pending };
   });

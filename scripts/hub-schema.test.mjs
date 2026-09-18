@@ -71,3 +71,16 @@ test("0032 seeds Yorkshire Gypsy Swing Collective bios without inventing McGee o
   const sqlite = pgToSqlite(text);
   assert.match(sqlite, /updated_at = datetime\('now'\)/);
 });
+
+test("0033 adds labelled links and photo_url on hub_artist_bios without a new image host", () => {
+  const files = migrationFiles();
+  assert.ok(files.includes("0033_artist_page_extras.sql"), "0033_artist_page_extras.sql missing");
+  const text = readFileSync(join(migrationsDir, "0033_artist_page_extras.sql"), "utf8");
+  assert.match(text, /alter table hub_artist_bios add column if not exists links/i);
+  assert.match(text, /alter table hub_artist_bios add column if not exists photo_url/i);
+  assert.doesNotMatch(text, /timestamptz[^\n]*default ''/i);
+  assert.doesNotMatch(text, /insert into hub_concerts/i);
+  const sqlite = pgToSqlite(text);
+  assert.match(sqlite, /alter table hub_artist_bios add column links text not null default '\[\]'/i);
+  assert.match(sqlite, /alter table hub_artist_bios add column photo_url text not null default ''/i);
+});

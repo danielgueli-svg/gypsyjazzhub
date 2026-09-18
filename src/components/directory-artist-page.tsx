@@ -14,6 +14,7 @@ import { HubExtras } from "@/components/hub-extras";
 import { JoinedMark } from "@/components/joined-mark";
 import { LearnLinks } from "@/components/learn-links";
 import { MessageMember } from "@/components/message-member";
+import { PageLinks } from "@/components/page-links";
 import { RelatedPages } from "@/components/related-pages";
 import { PlaysWith } from "@/components/plays-with";
 import { Portrait } from "@/components/portrait";
@@ -86,7 +87,7 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
-  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports, camps, schools, member, hubBio } =
+  const { legend, concerts, collaborators, bands, festivals, clips, notes, shoutouts, reports, camps, schools, member, hubPage } =
     data;
   const { t } = useI18n();
   const { user } = useCurrentUserState();
@@ -94,15 +95,19 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
   const upcoming = concerts.filter((c) => !c.isHistoric && new Date(c.startsAt).getTime() >= Date.now());
   const joined = claimed || Boolean(member);
   const filePhoto = artistPhoto(legend.slug, legend.instruments);
-  const memberPhoto = member?.photoUrl
-    ? { src: member.photoUrl, credit: member.displayName || legend.name }
+  const hubPhoto = hubPage?.photoUrl
+    ? { src: hubPage.photoUrl, credit: "", href: undefined as string | undefined }
     : null;
-  const photo = memberPhoto ?? filePhoto ?? (legend.photoUrl
+  const memberPhoto = member?.photoUrl
+    ? { src: member.photoUrl, credit: member.displayName || legend.name, href: undefined as string | undefined }
+    : null;
+  const photo = hubPhoto ?? memberPhoto ?? filePhoto ?? (legend.photoUrl
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
   const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;
-  const overlay = typeof hubBio === "string" ? hubBio.trim() : "";
+  const overlay = hubPage?.bio?.trim() ?? "";
   const bio = overlay || member?.bio?.trim() || legend.bio;
+  const extraLinks = hubPage?.links ?? [];
   const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
   const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
   const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;
@@ -137,19 +142,16 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             ))}
           </div>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
-          <ArtistBioEdit slug={legend.slug} bio={bio} />
+          <ArtistBioEdit
+            slug={legend.slug}
+            bio={bio}
+            links={extraLinks}
+            photoUrl={hubPage?.photoUrl ?? ""}
+          />
           {legend.notable && !member?.bio?.trim() ? (
             <p className="mt-3 text-sm text-faint">{legend.notable}</p>
           ) : null}
-          {SCENE_LINKS[legend.slug]?.length ? (
-            <p className="mt-4 flex flex-col items-start gap-1 text-sm">
-              {SCENE_LINKS[legend.slug]!.map((link) => (
-                <a key={link.href} href={link.href} className="text-muted hover:text-fg hover:underline">
-                  {link.label}
-                </a>
-              ))}
-            </p>
-          ) : null}
+          <PageLinks catalog={SCENE_LINKS[legend.slug] ?? []} extra={extraLinks} />
           <RelatedPages
             current="musician"
             musicianSlug={legend.slug}
