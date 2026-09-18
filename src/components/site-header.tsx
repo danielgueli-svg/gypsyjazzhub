@@ -144,7 +144,7 @@ export function SiteHeader({ ticker }: { ticker?: TickerPayload | null }) {
     | undefined;
 
   return (
-    <header ref={root} className="spruce-bar sticky top-0 z-50 border-b border-black/15">
+    <header ref={root} className="spruce-bar sticky top-0 z-50 overflow-hidden">
       <div className="header-row relative z-[90] mx-auto flex h-16 max-w-6xl items-center gap-1.5 px-2 sm:h-20 sm:gap-3 sm:px-6">
         <Link
           to="/"

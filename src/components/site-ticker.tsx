@@ -1,14 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { Flag } from "@/components/flag";
 import { useI18n } from "@/lib/i18n";
 import type { TickerNews, TickerPayload, TickerStat } from "@/lib/ticker";
-
-function fill(template: string, vars: Record<string, string | number>) {
-  let out = template;
-  for (const [key, value] of Object.entries(vars)) {
-    out = out.replaceAll(`{${key}}`, String(value));
-  }
-  return out;
-}
 
 function StatLink({ item }: { item: TickerStat }) {
   const { t } = useI18n();
@@ -24,12 +17,7 @@ function StatLink({ item }: { item: TickerStat }) {
 
 function NewsLink({ item }: { item: TickerNews }) {
   const { t } = useI18n();
-  const label =
-    item.kind === "weekend" && item.name
-      ? fill(t("ticker.thisWeekend"), { name: item.name })
-      : item.slug
-        ? t(`news.item.${item.slug}.title`)
-        : item.name ?? "";
+  const label = item.slug ? t(`news.item.${item.slug}.title`) : item.name ?? "";
   if (!label || label.startsWith("news.item.")) return null;
   if (/^https?:\/\//i.test(item.href)) {
     return (
@@ -45,13 +33,34 @@ function NewsLink({ item }: { item: TickerNews }) {
   );
 }
 
+function WeekendLink({ item }: { item: TickerNews }) {
+  if (!item.name) return null;
+  return (
+    <Link to={item.href as never} className="hub-ticker-item">
+      <span>{item.name}</span>
+      {item.country ? <Flag name={item.country} className="hub-ticker-flag" eager /> : null}
+    </Link>
+  );
+}
+
 function Tape({ data }: { data: TickerPayload }) {
+  const { t } = useI18n();
+  const weekend = data.news.filter((item) => item.kind === "weekend");
+  const news = data.news.filter((item) => item.kind === "news");
   return (
     <>
       {data.stats.map((item) => (
         <StatLink key={item.id} item={item} />
       ))}
-      {data.news.map((item) => (
+      {weekend.length ? (
+        <>
+          <span className="hub-ticker-item hub-ticker-kicker">{t("ticker.thisWeekend")}</span>
+          {weekend.map((item) => (
+            <WeekendLink key={item.id} item={item} />
+          ))}
+        </>
+      ) : null}
+      {news.map((item) => (
         <NewsLink key={item.id} item={item} />
       ))}
     </>

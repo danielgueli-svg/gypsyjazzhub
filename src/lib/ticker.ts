@@ -11,6 +11,7 @@ export type TickerNews = {
   href: string;
   slug?: string;
   name?: string;
+  country?: string;
   kind: "news" | "weekend";
 };
 

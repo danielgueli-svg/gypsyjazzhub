@@ -35,6 +35,7 @@ export function tickerPayload(now = Date.now()): TickerPayload {
       id: `fest-${festival.slug}`,
       href: `/festivals/${festival.slug}`,
       name: festival.name,
+      country: festival.country,
       kind: "weekend",
     });
   }

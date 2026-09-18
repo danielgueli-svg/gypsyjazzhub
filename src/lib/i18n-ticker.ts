@@ -5,7 +5,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} camps and workshops worldwide",
     "ticker.concerts": "{n} concerts on the calendar",
     "ticker.artists": "{n} artists",
-    "ticker.thisWeekend": "This weekend: {name}",
+    "ticker.thisWeekend": "This weekend",
     "ticker.label": "Hub news",
   },
   nl: {
@@ -13,7 +13,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} kampen en workshops wereldwijd",
     "ticker.concerts": "{n} concerten op de agenda",
     "ticker.artists": "{n} artiesten",
-    "ticker.thisWeekend": "Dit weekend: {name}",
+    "ticker.thisWeekend": "Dit weekend",
     "ticker.label": "Hub-nieuws",
   },
   de: {
@@ -21,7 +21,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} Camps und Workshops weltweit",
     "ticker.concerts": "{n} Konzerte im Kalender",
     "ticker.artists": "{n} Musiker",
-    "ticker.thisWeekend": "Dieses Wochenende: {name}",
+    "ticker.thisWeekend": "Dieses Wochenende",
     "ticker.label": "Hub-News",
   },
   fr: {
@@ -29,7 +29,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} stages et camps dans le monde",
     "ticker.concerts": "{n} concerts au calendrier",
     "ticker.artists": "{n} musiciens",
-    "ticker.thisWeekend": "Ce week-end : {name}",
+    "ticker.thisWeekend": "Ce week-end",
     "ticker.label": "Actu du hub",
   },
   es: {
@@ -37,7 +37,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} camps y talleres en el mundo",
     "ticker.concerts": "{n} conciertos en la agenda",
     "ticker.artists": "{n} músicos",
-    "ticker.thisWeekend": "Este fin de semana: {name}",
+    "ticker.thisWeekend": "Este fin de semana",
     "ticker.label": "Noticias del hub",
   },
   pt: {
@@ -45,7 +45,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} campos e workshops no mundo",
     "ticker.concerts": "{n} concertos na agenda",
     "ticker.artists": "{n} músicos",
-    "ticker.thisWeekend": "Este fim de semana: {name}",
+    "ticker.thisWeekend": "Este fim de semana",
     "ticker.label": "Notícias do hub",
   },
   it: {
@@ -53,7 +53,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} camp e workshop nel mondo",
     "ticker.concerts": "{n} concerti in agenda",
     "ticker.artists": "{n} musicisti",
-    "ticker.thisWeekend": "Questo weekend: {name}",
+    "ticker.thisWeekend": "Questo weekend",
     "ticker.label": "Notizie dell’hub",
   },
   ru: {
@@ -61,7 +61,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} лагерей и воркшопов в мире",
     "ticker.concerts": "{n} концертов в календаре",
     "ticker.artists": "{n} музыкантов",
-    "ticker.thisWeekend": "В эти выходные: {name}",
+    "ticker.thisWeekend": "В эти выходные",
     "ticker.label": "Новости хаба",
   },
   ja: {
@@ -69,7 +69,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "世界のキャンプとワークショップ {n}",
     "ticker.concerts": "カレンダーのコンサート {n}",
     "ticker.artists": "アーティスト {n}",
-    "ticker.thisWeekend": "今週末：{name}",
+    "ticker.thisWeekend": "今週末",
     "ticker.label": "ハブニュース",
   },
   ko: {
@@ -77,7 +77,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "전 세계 캠프와 워크숍 {n}",
     "ticker.concerts": "일정 콘서트 {n}",
     "ticker.artists": "아티스트 {n}",
-    "ticker.thisWeekend": "이번 주말: {name}",
+    "ticker.thisWeekend": "이번 주말",
     "ticker.label": "허브 뉴스",
   },
   zh: {
@@ -85,7 +85,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "全球营地和工作坊 {n}",
     "ticker.concerts": "日程音乐会 {n} 场",
     "ticker.artists": "乐手 {n} 位",
-    "ticker.thisWeekend": "本周末：{name}",
+    "ticker.thisWeekend": "本周末",
     "ticker.label": "站点新闻",
   },
   "zh-tw": {
@@ -93,7 +93,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "全球營地和工作坊 {n}",
     "ticker.concerts": "日程音樂會 {n} 場",
     "ticker.artists": "樂手 {n} 位",
-    "ticker.thisWeekend": "本週末：{name}",
+    "ticker.thisWeekend": "本週末",
     "ticker.label": "站點新聞",
   },
   id: {
@@ -101,7 +101,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} kamp dan lokakarya di seluruh dunia",
     "ticker.concerts": "{n} konser di kalender",
     "ticker.artists": "{n} musisi",
-    "ticker.thisWeekend": "Akhir pekan ini: {name}",
+    "ticker.thisWeekend": "Akhir pekan ini",
     "ticker.label": "Berita hub",
   },
   th: {
@@ -109,7 +109,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "ค่ายและเวิร์กช็อปทั่วโลก {n}",
     "ticker.concerts": "คอนเสิร์ตในปฏิทิน {n}",
     "ticker.artists": "ศิลปิน {n}",
-    "ticker.thisWeekend": "สุดสัปดาห์นี้: {name}",
+    "ticker.thisWeekend": "สุดสัปดาห์นี้",
     "ticker.label": "ข่าวฮับ",
   },
   hu: {
@@ -117,7 +117,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} tábor és workshop világszerte",
     "ticker.concerts": "{n} koncert a naptárban",
     "ticker.artists": "{n} zenész",
-    "ticker.thisWeekend": "Ezen a hétvégén: {name}",
+    "ticker.thisWeekend": "Ezen a hétvégén",
     "ticker.label": "Hub hírek",
   },
   pl: {
@@ -125,7 +125,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} obozów i warsztatów na świecie",
     "ticker.concerts": "{n} koncertów w kalendarzu",
     "ticker.artists": "{n} muzyków",
-    "ticker.thisWeekend": "W ten weekend: {name}",
+    "ticker.thisWeekend": "W ten weekend",
     "ticker.label": "Newsy huba",
   },
   cs: {
@@ -133,7 +133,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} kempů a workshopů ve světě",
     "ticker.concerts": "{n} koncertů v kalendáři",
     "ticker.artists": "{n} hudebníků",
-    "ticker.thisWeekend": "Tento víkend: {name}",
+    "ticker.thisWeekend": "Tento víkend",
     "ticker.label": "Zprávy hubu",
   },
   hr: {
@@ -141,7 +141,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} kampova i radionica u svijetu",
     "ticker.concerts": "{n} koncerata u kalendaru",
     "ticker.artists": "{n} glazbenika",
-    "ticker.thisWeekend": "Ovaj vikend: {name}",
+    "ticker.thisWeekend": "Ovaj vikend",
     "ticker.label": "Hub vijesti",
   },
   sr: {
@@ -149,7 +149,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} kampova i radionica u svetu",
     "ticker.concerts": "{n} koncerata u kalendaru",
     "ticker.artists": "{n} muzičara",
-    "ticker.thisWeekend": "Ovog vikenda: {name}",
+    "ticker.thisWeekend": "Ovog vikenda",
     "ticker.label": "Hub vesti",
   },
   ro: {
@@ -157,7 +157,7 @@ export const TICKER_UI: Record<string, Record<string, string>> = {
     "ticker.camps": "{n} tabere și workshopuri în lume",
     "ticker.concerts": "{n} concerte în calendar",
     "ticker.artists": "{n} muzicieni",
-    "ticker.thisWeekend": "În weekend: {name}",
+    "ticker.thisWeekend": "În weekend",
     "ticker.label": "Știri hub",
   },
 };
