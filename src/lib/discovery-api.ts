@@ -658,7 +658,11 @@ async function runSyncDiscoveries(extra: ScanFind[]) {
   `;
   for (const row of pending) {
     if (row.status === "publish") {
-      await publishRow(row.id, false);
+      try {
+        await publishRow(row.id, false);
+      } catch (err) {
+        console.error("[discoveries] publish failed", row.id, err);
+      }
     }
   }
 }

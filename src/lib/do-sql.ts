@@ -48,6 +48,7 @@ export function pgToSqlite(sql: string): string {
       "$1 default ''",
     )
     .replace(/::\w+/g, "")
+    .replace(/\bleft\s*\(\s*([^,]+?)\s*,\s*(\d+)\s*\)/gi, "substr($1, 1, $2)")
     .replace(/\bilike\b/gi, "like");
 }
 

@@ -30,16 +30,20 @@ async function ensureLog() {
 }
 
 async function fetchText(url: string) {
-  const res = await fetch(url, {
-    headers: {
-      accept: "text/html",
-      "user-agent": "Mozilla/5.0 (compatible; GypsyJazzHub/1.0; +https://gypsyjazzhub.com)",
-    },
-    redirect: "follow",
-    signal: AbortSignal.timeout(7000),
-  });
-  if (!res.ok) return "";
-  return res.text();
+  try {
+    const res = await fetch(url, {
+      headers: {
+        accept: "text/html",
+        "user-agent": "Mozilla/5.0 (compatible; GypsyJazzHub/1.0; +https://gypsyjazzhub.com)",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(7000),
+    });
+    if (!res.ok) return "";
+    return await res.text();
+  } catch {
+    return "";
+  }
 }
 
 function stripHtml(html: string) {

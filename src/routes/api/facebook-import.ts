@@ -15,13 +15,22 @@ export const Route = createFileRoute("/api/facebook-import")({
         if (!allowed) {
           return new Response("Unauthorized", { status: 401 });
         }
-        const result = await runFacebookImport();
-        return Response.json({
-          ok: true,
-          fetched: result.fetched,
-          parsed: result.parsed,
-          groups: result.groups,
-        });
+        try {
+          const result = await runFacebookImport();
+          return Response.json({
+            ok: true,
+            fetched: result.fetched,
+            parsed: result.parsed,
+            groups: result.groups,
+          });
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err));
+          console.error("[facebook-import]", error);
+          return Response.json(
+            { ok: false, error: error.message, name: error.name },
+            { status: 500 },
+          );
+        }
       },
     },
   },

@@ -23,16 +23,20 @@ async function ensureFacebookLog() {
 }
 
 async function fetchText(url: string) {
-  const res = await fetch(url, {
-    headers: {
-      accept: "text/html",
-      "user-agent": "Mozilla/5.0 (compatible; GypsyJazzHub/1.0; +https://gypsyjazzhub.com)",
-    },
-    redirect: "follow",
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!res.ok) return "";
-  return res.text();
+  try {
+    const res = await fetch(url, {
+      headers: {
+        accept: "text/html",
+        "user-agent": "Mozilla/5.0 (compatible; GypsyJazzHub/1.0; +https://gypsyjazzhub.com)",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return "";
+    return await res.text();
+  } catch {
+    return "";
+  }
 }
 
 function postUrls(html: string, groupUrl: string) {
@@ -47,6 +51,7 @@ function postUrls(html: string, groupUrl: string) {
 export async function runFacebookImport(): Promise<FacebookRun> {
   await ensureFacebookLog();
   const groups: FacebookRun["groups"] = [];
+  const live: ReturnType<typeof parseFacebookPost>[] = [];
   let parsed = 0;
 
   for (const group of FACEBOOK_GROUPS) {
@@ -57,7 +62,10 @@ export async function runFacebookImport(): Promise<FacebookRun> {
       for (const url of urls.slice(0, 8)) {
         const body = url === group.url ? html : (await fetchText(url)) || html;
         const find = parseFacebookPost(body.replace(/<[^>]+>/g, " "), group, url);
-        if (find) posts += 1;
+        if (find) {
+          posts += 1;
+          live.push(find);
+        }
       }
       parsed += posts;
       groups.push({ name: group.name, url: group.url, ok: Boolean(html), posts });
@@ -66,7 +74,7 @@ export async function runFacebookImport(): Promise<FacebookRun> {
     }
   }
 
-  await syncDiscoveries();
+  await syncDiscoveries(live.filter((row): row is NonNullable<typeof row> => Boolean(row)));
 
   const sql = await getSql();
   const detail = groups

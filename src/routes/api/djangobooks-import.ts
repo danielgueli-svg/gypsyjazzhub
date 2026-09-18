@@ -15,14 +15,23 @@ export const Route = createFileRoute("/api/djangobooks-import")({
         if (!allowed) {
           return new Response("Unauthorized", { status: 401 });
         }
-        const result = await runDjangoBooksImport();
-        return Response.json({
-          ok: true,
-          fetched: result.fetched,
-          parsed: result.parsed,
-          ingested: result.ingested,
-          boards: result.boards,
-        });
+        try {
+          const result = await runDjangoBooksImport();
+          return Response.json({
+            ok: true,
+            fetched: result.fetched,
+            parsed: result.parsed,
+            ingested: result.ingested,
+            boards: result.boards,
+          });
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error(String(err));
+          console.error("[djangobooks-import]", error);
+          return Response.json(
+            { ok: false, error: error.message, name: error.name },
+            { status: 500 },
+          );
+        }
       },
     },
   },
