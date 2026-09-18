@@ -6,6 +6,13 @@ import { JAMS } from "@/lib/jams";
 import { NEWS } from "@/lib/music-news";
 import type { TickerNews, TickerPayload, TickerStat } from "@/lib/ticker";
 
+function countryFromHref(href: string) {
+  const fest = href.match(/\/festivals\/([^/?#]+)/);
+  if (fest) return FESTIVALS.find((row) => row.slug === fest[1])?.country;
+  const camp = href.match(/\/learn\/([^/?#]+)/);
+  if (camp) return CAMPS.find((row) => row.slug === camp[1])?.country;
+}
+
 function uniqueUpcomingConcerts(now: number) {
   const keys = new Set<string>();
   for (const row of CIRCLE_CONCERTS) {
@@ -40,10 +47,12 @@ export function tickerPayload(now = Date.now()): TickerPayload {
     });
   }
   for (const item of NEWS.slice(0, 4)) {
+    const href = item.href || `/news/${item.slug}`;
     news.push({
       id: `news-${item.slug}`,
-      href: item.href || `/news/${item.slug}`,
+      href,
       slug: item.slug,
+      country: countryFromHref(href),
       kind: "news",
     });
   }

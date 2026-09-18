@@ -19,16 +19,19 @@ function NewsLink({ item }: { item: TickerNews }) {
   const { t } = useI18n();
   const label = item.slug ? t(`news.item.${item.slug}.title`) : item.name ?? "";
   if (!label || label.startsWith("news.item.")) return null;
+  const flag = item.country ? <Flag name={item.country} className="hub-ticker-flag" eager /> : null;
   if (/^https?:\/\//i.test(item.href)) {
     return (
       <a href={item.href} className="hub-ticker-item" rel="noreferrer">
         {label}
+        {flag}
       </a>
     );
   }
   return (
     <Link to={item.href as never} className="hub-ticker-item">
       {label}
+      {flag}
     </Link>
   );
 }
