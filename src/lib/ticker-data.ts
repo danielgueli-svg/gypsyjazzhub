@@ -13,6 +13,15 @@ function countryFromHref(href: string) {
   if (camp) return CAMPS.find((row) => row.slug === camp[1])?.country;
 }
 
+function countryFromNews(item: { href?: string; artistSlugs?: string[] }) {
+  const href = item.href || "";
+  const fromHref = countryFromHref(href);
+  if (fromHref) return fromHref;
+  const slug = item.artistSlugs?.[0];
+  if (!slug) return;
+  return CIRCLE_ARTISTS.find((row) => row.slug === slug)?.origin;
+}
+
 function uniqueUpcomingConcerts(now: number) {
   const keys = new Set<string>();
   for (const row of CIRCLE_CONCERTS) {
@@ -52,7 +61,7 @@ export function tickerPayload(now = Date.now()): TickerPayload {
       id: `news-${item.slug}`,
       href,
       slug: item.slug,
-      country: countryFromHref(href),
+      country: countryFromNews(item),
       kind: "news",
     });
   }
