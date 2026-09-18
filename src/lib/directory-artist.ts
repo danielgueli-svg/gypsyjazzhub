@@ -25,9 +25,9 @@ export async function loadArtistExtras(slug: string) {
     settle("joined", [], () => listJoinedArtists()),
     settle("guestbook", seedGuestbook(slug), () => listGuestbook({ data: slug })),
     settle("reviews", [], () => listArtistReviews({ data: slug })),
-    settle("hub-bio", null, () => getHubArtistBio({ data: slug })),
+    settle("hub-page", null, () => getHubArtistBio({ data: slug })),
   ]);
-  return { concerts, collaborators, clips, notes, joined, shoutouts, reports, hubBio };
+  return { concerts, collaborators, clips, notes, joined, shoutouts, reports, hubPage: hubBio };
 }
 
 export async function loadDirectoryArtist(slug: string) {
@@ -50,7 +50,7 @@ export async function loadDirectoryArtist(slug: string) {
     notes: extras.notes,
     shoutouts: extras.shoutouts,
     reports: extras.reports,
-    hubBio: extras.hubBio,
+    hubPage: extras.hubPage,
     bands: bandsFor(legend.slug),
     festivals: festivalsForArtist(legend.slug, legend.samois),
     camps: campsForArtist(legend.slug),

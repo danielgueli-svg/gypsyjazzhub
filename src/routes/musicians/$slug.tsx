@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArtistBioEdit } from "@/components/artist-bio-edit";
+import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
 import { ConcertList } from "@/components/concert-row";
 import { Nightbook } from "@/components/i-was-there";
@@ -9,6 +10,7 @@ import { DirectoryArtistPage } from "@/components/directory-artist-page";
 import { FollowArtist } from "@/components/follow-artist";
 import { Guestbook } from "@/components/guestbook";
 import { HubExtras } from "@/components/hub-extras";
+import { PageLinks } from "@/components/page-links";
 import { Portrait } from "@/components/portrait";
 import { RelatedPages } from "@/components/related-pages";
 import { SaveButton } from "@/components/save-button";
@@ -62,7 +64,7 @@ export const Route = createFileRoute("/musicians/$slug")({
       settle("member-guestbook", [], () => listGuestbook({ data: musician.slug })),
       listHubJams(),
       settle("member-reviews", [], () => listArtistReviews({ data: musician.slug })),
-      settle("member-hub-bio", null, () => getHubArtistBio({ data: musician.slug })),
+      settle("member-hub-page", null, () => getHubArtistBio({ data: musician.slug })),
     ]);
     const city = musician.city.trim().toLowerCase();
     const nearbyJams = city
@@ -70,7 +72,7 @@ export const Route = createFileRoute("/musicians/$slug")({
           .filter((jam) => jam.city.trim().toLowerCase() === city)
           .slice(0, 6)
       : [];
-    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio: typeof hubPage === "string" ? hubPage : "" };
+    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubPage };
   },
   head: ({ loaderData, params }) => {
     const path = `/musicians/${params.slug}`;
@@ -114,12 +116,12 @@ function MemberMusicianPage({
     clips: Awaited<ReturnType<typeof listHubClips>>;
     notes: Awaited<ReturnType<typeof listHubNotes>>;
     shoutouts: Awaited<ReturnType<typeof listGuestbook>>;
-    nearbyJams: ReturnType<typeof upcomingJams>;
+    nearbyJams: ReturnType<typeof overlayJamList>;
     reports: Awaited<ReturnType<typeof listArtistReviews>>;
-    hubBio: string;
+    hubPage: Awaited<ReturnType<typeof getHubArtistBio>>;
   };
 }) {
-  const { musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio } = data;
+  const { musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubPage } = data;
   const { t } = useI18n();
   const { user, isPending } = useCurrentUserState();
   const [note, setNote] = useState("");
@@ -130,10 +132,14 @@ function MemberMusicianPage({
   const booking = contactHref(musician.contactUrl);
   const upcoming = concerts.filter((c) => new Date(c.startsAt).getTime() >= Date.now());
   const catalogPhoto = artistPhoto(musician.slug, musician.instruments);
-  const photo = musician.photoUrl
-    ? { src: musician.photoUrl, credit: musician.displayName }
-    : catalogPhoto;
-  const bio = hubBio.trim() || musician.bio.trim();
+  const hubPhoto = hubPage?.photoUrl
+    ? { src: hubPage.photoUrl, credit: "", href: undefined as string | undefined }
+    : null;
+  const photo = hubPhoto ?? (musician.photoUrl
+    ? { src: musician.photoUrl, credit: musician.displayName, href: undefined as string | undefined }
+    : catalogPhoto);
+  const bio = hubPage?.bio?.trim() || musician.bio.trim();
+  const extraLinks = hubPage?.links ?? [];
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-10">
@@ -194,7 +200,7 @@ function MemberMusicianPage({
             src={photo.src}
             alt={musician.displayName}
             credit={photo.credit}
-            creditHref={"href" in photo ? photo.href : undefined}
+            creditHref={photo.href}
             className="h-auto w-28 max-h-80 shrink-0 rounded-2xl object-contain object-top shadow-border sm:w-40 sm:max-h-[22rem] lg:w-64"
           />
         ) : null}
@@ -205,7 +211,12 @@ function MemberMusicianPage({
       ) : (
         <p className="mt-8 text-sm text-faint">This player has not written a bio yet.</p>
       )}
-      <ArtistBioEdit slug={musician.slug} bio={bio} />
+      <ArtistBioEdit
+        slug={musician.slug}
+        bio={bio}
+        links={extraLinks}
+        photoUrl={hubPage?.photoUrl ?? ""}
+      />
 
       {musician.youtubeUrl ? (
         <div className="mt-10 max-w-3xl">
@@ -240,6 +251,7 @@ function MemberMusicianPage({
           </a>
         ) : null}
       </div>
+      <PageLinks extra={extraLinks} />
 
       <ArtistMusic slug={musician.slug} name={musician.displayName} />
 

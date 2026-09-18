@@ -1,18 +1,22 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import { ArtistBioEdit } from "@/components/artist-bio-edit";
 import { ArtistNameLink } from "@/components/artist-name-link";
 import { ConcertList } from "@/components/concert-row";
 import { Nightbook } from "@/components/i-was-there";
 import { FestivalLinks } from "@/components/festival-links";
 import { LegendCard } from "@/components/legend-card";
+import { PageLinks } from "@/components/page-links";
 import { Portrait } from "@/components/portrait";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { Badge } from "@/components/ui/badge";
 import { listLegendConcerts, listLegends, type Concert, type Legend } from "@/lib/api";
 import { listReviewsForConcerts } from "@/lib/concert-reviews";
 import { festivalsForArtist } from "@/lib/festivals";
+import { getHubArtistBio } from "@/lib/hub-api";
 import { groupPhoto } from "@/lib/photos";
 import { getBand } from "@/lib/scene";
 import { useI18n } from "@/lib/i18n";
+import { settle } from "@/lib/settle";
 
 const GROUP_LINKS: Record<string, { href: string; label: string }[]> = {
   "yorkshire-gypsy-swing-collective": [
@@ -62,18 +66,24 @@ export const Route = createFileRoute("/groups/$slug")({
       return hay.includes(band.name.toLowerCase());
     });
     const reports = await listReviewsForConcerts({ data: concerts.map((row) => row.id) });
-    return { band, members, lead, concerts, festivals, reports };
+    const hubPage = await settle("group-hub-page", null, () => getHubArtistBio({ data: band.slug }));
+    return { band, members, lead, concerts, festivals, reports, hubPage };
   },
   component: GroupPage,
 });
 
 function GroupPage() {
-  const { band, members, lead, concerts, festivals, reports } = Route.useLoaderData();
+  const { band, members, lead, concerts, festivals, reports, hubPage } = Route.useLoaderData();
   const { t } = useI18n();
   const upcoming = concerts.filter(
     (concert) => !concert.isHistoric && new Date(concert.startsAt).getTime() >= Date.now(),
   );
-  const photo = groupPhoto(band.slug, band.members);
+  const catalogPhoto = groupPhoto(band.slug, band.members);
+  const photo = hubPage?.photoUrl
+    ? { src: hubPage.photoUrl, credit: "", href: undefined as string | undefined }
+    : catalogPhoto;
+  const bio = hubPage?.bio?.trim() || band.bio;
+  const extraLinks = hubPage?.links ?? [];
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
@@ -96,16 +106,15 @@ function GroupPage() {
           />
         </p>
       ) : null}
-      <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted">{band.bio}</p>
-      {GROUP_LINKS[band.slug]?.length ? (
-        <p className="mt-4 flex flex-col items-start gap-1 text-sm">
-          {GROUP_LINKS[band.slug]!.map((link) => (
-            <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
-              {link.label}
-            </a>
-          ))}
-        </p>
-      ) : null}
+      <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
+      <ArtistBioEdit
+        slug={band.slug}
+        bio={bio}
+        links={extraLinks}
+        photoUrl={hubPage?.photoUrl ?? ""}
+        returnTo={`/groups/${band.slug}`}
+      />
+      <PageLinks catalog={GROUP_LINKS[band.slug] ?? []} extra={extraLinks} />
       {photo ? (
         <Portrait
           src={photo.src}
