@@ -60,6 +60,29 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "mailto:leen-music@hotmail.com", label: "leen-music@hotmail.com" },
     { href: "https://keijzermusic.nl/", label: "keijzermusic.nl" },
   ],
+  "yorkshire-gypsy-swing-collective": [
+    { href: "https://www.jazzleeds.org.uk/whats-on/gypsy-swing-collective/", label: "Jazz Leeds — Yorkshire Gypsy Swing Collective" },
+    { href: "https://www.guitarworld.com/features/django-reinhardt-legacy", label: "Guitar World — Django Reinhardt’s legacy (Denny Ilett, 7 March 2023)" },
+    { href: "https://pocketmags.com/guitarist-magazine/march-2023/articles/django-s-legacy", label: "Guitarist, March 2023 — Django’s Legacy" },
+  ],
+  "lewis-kilvington": [
+    { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+    { href: "https://www.guitarworld.com/features/django-reinhardt-legacy", label: "Guitar World — Django Reinhardt’s legacy (Denny Ilett, 7 March 2023)" },
+    { href: "https://pocketmags.com/guitarist-magazine/march-2023/articles/django-s-legacy", label: "Guitarist, March 2023 — Django’s Legacy" },
+  ],
+  "martin-chung": [
+    { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+    { href: "https://martinchungmusic.wordpress.com/", label: "martinchungmusic.wordpress.com" },
+  ],
+  "james-munroe": [
+    { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+  ],
+  "derek-magee": [
+    { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+  ],
+  "christine-pinkard": [
+    { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+  ],
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
@@ -78,7 +101,8 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
     ? { src: legend.photoUrl, credit: legend.photoCredit || "YouTube", href: legend.youtubeUrl || undefined }
     : null);
   const place = [member?.city?.trim(), member?.country?.trim()].filter(Boolean).join(", ") || legend.origin;
-  const bio = hubBio?.bio?.trim() || member?.bio?.trim() || legend.bio;
+  const overlay = typeof hubBio === "string" ? hubBio.trim() : "";
+  const bio = overlay || member?.bio?.trim() || legend.bio;
   const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
   const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
   const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;

@@ -70,7 +70,7 @@ export const Route = createFileRoute("/musicians/$slug")({
           .filter((jam) => jam.city.trim().toLowerCase() === city)
           .slice(0, 6)
       : [];
-    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio: hubPage?.bio ?? "" };
+    return { kind: "member" as const, musician, concerts, clips, notes, shoutouts, nearbyJams, reports, hubBio: typeof hubPage === "string" ? hubPage : "" };
   },
   head: ({ loaderData, params }) => {
     const path = `/musicians/${params.slug}`;

@@ -70,6 +70,7 @@ const staticPaths = [
   "/archive",
   "/venues",
   "/groups",
+  "/groups/yorkshire-gypsy-swing-collective",
   "/luthiers",
   "/luthiers/bass",
   "/luthiers/violin",

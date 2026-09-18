@@ -264,6 +264,12 @@ const CLIPS: Record<string, ArtistClip[]> = {
       url: "https://www.youtube.com/watch?v=r96e6yqvQ6I",
     },
   ],
+  "yorkshire-gypsy-swing-collective": [
+    {
+      title: "Yorkshire Gypsy Swing Collective — trailer (Lewis Kilvington)",
+      url: "https://www.youtube.com/watch?v=GgDYOZTgeYg",
+    },
+  ],
 };
 
 export function clipsForArtist(slug: string): ArtistClip[] {

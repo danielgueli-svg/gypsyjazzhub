@@ -2657,6 +2657,33 @@ export const BANDS: Band[] = [
     },
     bio: "Sébastien and Youri Félix — Manouche brothers from Bourg-en-Bresse. Vinta (2001) with John Intrator. The 2003 trio sat Tchavolo Schmitt as guest. Later Sébastien’s quintet and Latcho Mentcho put son Esteban on bass.",
   },
+  {
+    slug: "yorkshire-gypsy-swing-collective",
+    name: "Yorkshire Gypsy Swing Collective",
+    origin: "Yorkshire, United Kingdom",
+    country: "United Kingdom",
+    members: [
+      "lewis-kilvington",
+      "martin-chung",
+      "james-munroe",
+      "derek-magee",
+      "christine-pinkard",
+    ],
+    roles: {
+      "lewis-kilvington": "Guitar",
+      "martin-chung": "Guitar",
+      "james-munroe": "Double bass",
+      "derek-magee": "Violin",
+      "christine-pinkard": "Clarinet",
+    },
+    bio: "Yorkshire Gypsy Swing Collective is a gypsy jazz group from around Yorkshire. Lewis Kilvington and Martin Chung on guitar, James Munroe on double bass, Derek Magee on violin, Christine Pinkard on clarinet. They stay in the spirit of Django Reinhardt and Stéphane Grappelli, with fast swing, ballads, and some Latin pieces. Jazz Leeds bills the group as featured in Guitarist magazine on the Django Reinhardt legacy; the March 2023 piece (also on Guitar World, 7 March 2023, Denny Ilett) interviews Lewis Kilvington among six guitarists, not the band as a whole.",
+    clips: [
+      {
+        title: "Yorkshire Gypsy Swing Collective — trailer (Lewis Kilvington)",
+        url: "https://www.youtube.com/watch?v=GgDYOZTgeYg",
+      },
+    ],
+  },
 ].map((band) => applyGroupBio(band as Band));
 
 const PAIRS: [string, string][] = [
