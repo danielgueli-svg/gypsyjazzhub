@@ -53,3 +53,21 @@ test("Workers SQLite rewrite of 0031 keeps a now() default, not empty string", (
   assert.match(sqlite, /updated_at text not null default \(datetime\('now'\)\)/i);
   assert.match(sqlite, /alter table hub_concerts add column source_id text not null default ''/i);
 });
+
+test("0032 seeds Yorkshire Gypsy Swing Collective bios without inventing McGee or concerts", () => {
+  const files = migrationFiles();
+  assert.ok(files.includes("0032_ygsc_bios.sql"), "0032_ygsc_bios.sql missing");
+  const text = readFileSync(join(migrationsDir, "0032_ygsc_bios.sql"), "utf8");
+  assert.match(text, /yorkshire-gypsy-swing-collective/);
+  assert.match(text, /lewis-kilvington/);
+  assert.match(text, /martin-chung/);
+  assert.match(text, /james-munroe/);
+  assert.match(text, /derek-magee/);
+  assert.match(text, /christine-pinkard/);
+  assert.match(text, /Derek Magee/);
+  assert.doesNotMatch(text, /McGee/);
+  assert.doesNotMatch(text, /insert into hub_concerts/i);
+  assert.doesNotMatch(text, /insert into legend_concerts/i);
+  const sqlite = pgToSqlite(text);
+  assert.match(sqlite, /updated_at = datetime\('now'\)/);
+});

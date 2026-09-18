@@ -708,6 +708,11 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:Katika_-_wir_sind_wien.festival_der_bezirke_2011_j_Barbara_Paierl,_Martin_Heinzle.jpg",
     license: "CC BY-SA 3.0",
   },
+  "yorkshire-gypsy-swing-collective": {
+    src: "/groups/yorkshire-gypsy-swing-collective.jpg",
+    credit: "Lewis Kilvington trailer still",
+    href: "https://www.youtube.com/watch?v=GgDYOZTgeYg",
+  },
 };
 
 const GROUPS: Record<string, ArtistPhoto> = {
@@ -775,6 +780,11 @@ const GROUPS: Record<string, ArtistPhoto> = {
     src: "/groups/gonzalo-bergara-group.jpg",
     credit: "Gonzalo Bergara",
     href: "https://www.gonzalobergara.com/",
+  },
+  "yorkshire-gypsy-swing-collective": {
+    src: "/groups/yorkshire-gypsy-swing-collective.jpg",
+    credit: "Lewis Kilvington trailer still",
+    href: "https://www.youtube.com/watch?v=GgDYOZTgeYg",
   },
 };
 

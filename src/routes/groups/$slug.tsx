@@ -14,6 +14,14 @@ import { groupPhoto } from "@/lib/photos";
 import { getBand } from "@/lib/scene";
 import { useI18n } from "@/lib/i18n";
 
+const GROUP_LINKS: Record<string, { href: string; label: string }[]> = {
+  "yorkshire-gypsy-swing-collective": [
+    { href: "https://www.jazzleeds.org.uk/whats-on/gypsy-swing-collective/", label: "Jazz Leeds — Yorkshire Gypsy Swing Collective" },
+    { href: "https://www.guitarworld.com/features/django-reinhardt-legacy", label: "Guitar World — Django Reinhardt’s legacy (Denny Ilett, 7 March 2023)" },
+    { href: "https://pocketmags.com/guitarist-magazine/march-2023/articles/django-s-legacy", label: "Guitarist, March 2023 — Django’s Legacy" },
+  ],
+};
+
 function uniqueConcerts(rows: Concert[]): Concert[] {
   const seen = new Set<string>();
   const out: Concert[] = [];
@@ -89,6 +97,15 @@ function GroupPage() {
         </p>
       ) : null}
       <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted">{band.bio}</p>
+      {GROUP_LINKS[band.slug]?.length ? (
+        <p className="mt-4 flex flex-col items-start gap-1 text-sm">
+          {GROUP_LINKS[band.slug]!.map((link) => (
+            <a key={link.href} href={link.href} target="_blank" rel="noreferrer" className="text-muted hover:text-fg hover:underline">
+              {link.label}
+            </a>
+          ))}
+        </p>
+      ) : null}
       {photo ? (
         <Portrait
           src={photo.src}

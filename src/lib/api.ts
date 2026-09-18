@@ -11,6 +11,7 @@ import { slugify, toIso, wallClockIso } from "@/lib/utils";
 import { syncSocialAlertFollow } from "@/lib/alerts";
 import { ensureFanTables } from "@/lib/fans";
 import { ensureCatalogColumns } from "@/lib/catalog";
+import { preferCatalogBio } from "@/lib/profile-bios";
 import {
   isMusician,
   parseProfileTypes,
@@ -305,7 +306,7 @@ function mergeLegends(rows: Legend[]): Legend[] {
   for (const legend of LEGENDS) bySlug.set(legend.slug, mapSeedLegend(legend));
   for (const row of rows) {
     const seed = bySlug.get(row.slug);
-    bySlug.set(row.slug, seed ? { ...seed, ...row, bio: row.bio || seed.bio } : row);
+    bySlug.set(row.slug, seed ? { ...seed, ...row, bio: preferCatalogBio(seed.bio, row.bio) } : row);
   }
   return [...bySlug.values()].sort(
     (a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name),
@@ -590,7 +591,9 @@ export const getLegend = createServerFn({ method: "GET" })
       if (rows[0]) {
         const seed = LEGENDS.find((row) => row.slug === slug);
         const mapped = mapLegend(rows[0]);
-        return seed ? { ...mapSeedLegend(seed), ...mapped, bio: mapped.bio || seed.bio } : mapped;
+        return seed
+          ? { ...mapSeedLegend(seed), ...mapped, bio: preferCatalogBio(mapSeedLegend(seed).bio, mapped.bio) }
+          : mapped;
       }
     } catch (err) {
       console.error("get legend failed", err);

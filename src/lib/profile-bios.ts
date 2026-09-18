@@ -273,6 +273,18 @@ const FEATURED_ARTIST_BIOS: Record<string, string> = {
     "Giacomo Smith is a clarinettist who sits with Mozes Rosenberg and other Dutch leads. The reed chair inside a guitar music — swing clarinet on pompe.",
   "koos-koopmans":
     "Koos Koopmans is a Dutch violinist, leader of Centre Ville with John Ligthart and Ronald Weel. Official site: kooskoopmans.nl. The Dutch violin chair that also runs its own band.",
+  "yorkshire-gypsy-swing-collective":
+    "Yorkshire Gypsy Swing Collective is a gypsy jazz group from around Yorkshire. Lewis Kilvington and Martin Chung on guitar, James Munroe on double bass, Derek Magee on violin, Christine Pinkard on clarinet. They stay in the spirit of Django Reinhardt and Stéphane Grappelli, with fast swing, ballads, and some Latin pieces. Jazz Leeds bills the group as featured in Guitarist magazine on the Django Reinhardt legacy; the March 2023 piece (also on Guitar World, 7 March 2023, Denny Ilett) interviews Lewis Kilvington among six guitarists, not the band as a whole.",
+  "lewis-kilvington":
+    "Lewis Kilvington plays guitar with the Yorkshire Gypsy Swing Collective. He comes from a musical family. His father is a pianist inspired by Jerry Lee Lewis, hence the name. He describes his approach as “Django with a modern twist.” He is involved in the Collective, “a group dedicated to playing music inspired by Django.” He says he feels lucky to share and teach Django’s music, and that his younger students react to Django with amazement.",
+  "martin-chung":
+    "Martin Chung is a Yorkshire guitarist and composer. He plays guitar with the Yorkshire Gypsy Swing Collective. His own site is https://martinchungmusic.wordpress.com/. A public post of his mentions the Collective and an Eastman DM1.",
+  "james-munroe":
+    "James Munroe plays double bass with the Yorkshire Gypsy Swing Collective, based in Yorkshire, United Kingdom.",
+  "derek-magee":
+    "Derek Magee plays violin with the Yorkshire Gypsy Swing Collective, based in Yorkshire, United Kingdom.",
+  "christine-pinkard":
+    "Christine Pinkard plays clarinet with the Yorkshire Gypsy Swing Collective, based in Yorkshire, United Kingdom.",
 };
 
 const FEATURED_GROUP_BIOS: Record<string, string> = {
@@ -356,6 +368,8 @@ const FEATURED_GROUP_BIOS: Record<string, string> = {
     "Richard and Pierre Manetti — two French leads who share a family pompe and split the solos. Festival Django Reinhardt bills them as a pair.",
   "lulo-reinhardt-group":
     "Lulo Reinhardt’s group — German Sinti guitar, Latin colours and the straight book, festival circuit under the family name.",
+  "yorkshire-gypsy-swing-collective":
+    "Yorkshire Gypsy Swing Collective is a gypsy jazz group from around Yorkshire. Lewis Kilvington and Martin Chung on guitar, James Munroe on double bass, Derek Magee on violin, Christine Pinkard on clarinet. They stay in the spirit of Django Reinhardt and Stéphane Grappelli, with fast swing, ballads, and some Latin pieces. Jazz Leeds bills the group as featured in Guitarist magazine on the Django Reinhardt legacy; the March 2023 piece (also on Guitar World, 7 March 2023, Denny Ilett) interviews Lewis Kilvington among six guitarists, not the band as a whole.",
 };
 
 /** Featured copy wins over rest-file research when both exist. */
@@ -371,6 +385,17 @@ export const GROUP_BIOS: Record<string, string> = {
 
 const STUB =
   /this page opened from a date|short bio will follow|on the gypsy jazz circuit\. this page/i;
+
+export function isCatalogStubBio(bio?: string | null) {
+  const text = bio?.trim() ?? "";
+  if (!text) return true;
+  return STUB.test(text);
+}
+
+export function preferCatalogBio(seedBio: string, dbBio?: string | null) {
+  if (isCatalogStubBio(dbBio)) return seedBio;
+  return (dbBio ?? "").trim();
+}
 
 function prettySlug(slug: string) {
   return slug
