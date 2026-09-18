@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Flag } from "@/components/flag";
 import { useI18n } from "@/lib/i18n";
@@ -72,9 +73,30 @@ function Tape({ data }: { data: TickerPayload }) {
 
 export function SiteTicker({ data }: { data: TickerPayload }) {
   const { t } = useI18n();
+  const [paused, setPaused] = useState(false);
+  const resumeAt = useRef<ReturnType<typeof setTimeout> | null>(null);
   if (!data.stats.length) return null;
+
+  function hold() {
+    if (resumeAt.current) clearTimeout(resumeAt.current);
+    setPaused(true);
+  }
+  function release() {
+    if (resumeAt.current) clearTimeout(resumeAt.current);
+    resumeAt.current = setTimeout(() => setPaused(false), 700);
+  }
+
   return (
-    <div className="hub-ticker" aria-label={t("ticker.label")}>
+    <div
+      className={paused ? "hub-ticker is-paused" : "hub-ticker"}
+      aria-label={t("ticker.label")}
+      onMouseEnter={hold}
+      onMouseLeave={release}
+      onFocusCapture={hold}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) release();
+      }}
+    >
       <div className="hub-ticker-track">
         <div className="hub-ticker-copy">
           <Tape data={data} />

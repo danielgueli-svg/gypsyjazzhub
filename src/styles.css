@@ -189,10 +189,11 @@
     width: max-content;
     height: 100%;
     padding-left: 0.7rem;
-    animation: hub-ticker-scroll 42s linear infinite;
+    animation: hub-ticker-scroll 52s linear infinite;
   }
   .hub-ticker:hover .hub-ticker-track,
-  .hub-ticker:focus-within .hub-ticker-track {
+  .hub-ticker:focus-within .hub-ticker-track,
+  .hub-ticker.is-paused .hub-ticker-track {
     animation-play-state: paused;
   }
   .hub-ticker-copy {
@@ -214,6 +215,7 @@
     text-transform: uppercase;
     color: #ffbf2a;
     text-decoration: none;
+    cursor: pointer;
     text-shadow:
       0 0 4px rgb(255 150 0 / 0.95),
       0 0 14px rgb(255 110 0 / 0.45);
