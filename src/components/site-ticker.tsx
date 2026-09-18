@@ -12,9 +12,12 @@ function fill(template: string, vars: Record<string, string | number>) {
 
 function StatLink({ item }: { item: TickerStat }) {
   const { t } = useI18n();
+  const [before, after] = t(item.key).split("{n}");
   return (
     <Link to={item.href as never} hash={item.hash ?? ""} className="hub-ticker-item">
-      {fill(t(item.key), { n: item.n })}
+      {before}
+      <span className="hub-ticker-n">{item.n}</span>
+      {after}
     </Link>
   );
 }

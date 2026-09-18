@@ -148,16 +148,47 @@
   }
 
   .hub-ticker {
+    position: relative;
     overflow: hidden;
-    border-top: 1px solid rgb(0 0 0 / 0.18);
-    background: #2a1c10;
-    color: #f4e6c8;
-    height: 2rem;
+    height: 2.35rem;
+    background: #050505;
+    color: #ffbf2a;
+    box-shadow:
+      inset 0 1px 0 rgb(255 210 80 / 0.18),
+      inset 0 -2px 0 rgb(0 0 0 / 0.85);
+  }
+  .hub-ticker::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 3;
+    width: 0.45rem;
+    background: linear-gradient(180deg, #ffe27a, #ff9a00 55%, #c45a00);
+    box-shadow: 0 0 10px #ff9900;
+  }
+  .hub-ticker::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0 2px,
+        rgb(0 0 0 / 0.28) 2px 3px
+      ),
+      linear-gradient(180deg, rgb(255 200 80 / 0.1), transparent 42%, rgb(0 0 0 / 0.38));
   }
   .hub-ticker-track {
+    position: relative;
+    z-index: 1;
     display: flex;
     width: max-content;
-    animation: hub-ticker-scroll 55s linear infinite;
+    padding-left: 0.7rem;
+    animation: hub-ticker-scroll 42s linear infinite;
   }
   .hub-ticker:hover .hub-ticker-track,
   .hub-ticker:focus-within .hub-ticker-track {
@@ -166,26 +197,38 @@
   .hub-ticker-copy {
     display: flex;
     align-items: center;
-    gap: 0;
-    padding-right: 2.5rem;
+    padding-right: 3rem;
   }
   .hub-ticker-item {
     display: inline-flex;
     align-items: center;
+    gap: 0.35rem;
     white-space: nowrap;
-    padding: 0 1.15rem;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    color: #f4e6c8;
+    padding: 0 1.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #ffbf2a;
     text-decoration: none;
+    text-shadow:
+      0 0 4px rgb(255 150 0 / 0.95),
+      0 0 14px rgb(255 110 0 / 0.45);
   }
-  .hub-ticker-item + .hub-ticker-item {
-    border-left: 1px solid rgb(244 230 200 / 0.22);
+  .hub-ticker-item + .hub-ticker-item::before {
+    content: "◆";
+    margin-right: 1.35rem;
+    font-size: 0.45rem;
+    color: #ff9a00;
+    text-shadow: 0 0 8px #ff9a00;
+  }
+  .hub-ticker-n {
+    font-variant-numeric: tabular-nums;
+    color: #ffe27a;
   }
   .hub-ticker-item:hover,
   .hub-ticker-item:focus-visible {
-    color: #e4b05a;
+    color: #fff3c0;
   }
   @keyframes hub-ticker-scroll {
     from { transform: translate3d(0, 0, 0); }
