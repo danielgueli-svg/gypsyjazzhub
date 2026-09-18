@@ -612,30 +612,46 @@ export const listArtistOptions = createServerFn({ method: "GET" }).handler(async
   return options;
 });
 
+function missingSqlObject(err: unknown, name: string) {
+  const message = err instanceof Error ? err.message : String(err);
+  return /no such (table|column)/i.test(message) && message.includes(name);
+}
+
+async function loadHubConcerts(slug: string, withSourceId: boolean) {
+  await ensureHub();
+  const sql = await getSql();
+  const sourceSelect = withSourceId ? "coalesce(source_id, '') as source_id" : "'' as source_id";
+  const rows = slug
+    ? await sql.query<Parameters<typeof mapHubConcert>[0]>(
+        `select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
+                ${sourceSelect}
+         from hub_concerts
+         where artist_slug = $1 and coalesce(status, 'published') = 'published'
+         order by starts_at asc`,
+        [slug],
+      )
+    : await sql.query<Parameters<typeof mapHubConcert>[0]>(
+        `select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
+                ${sourceSelect}
+         from hub_concerts
+         where coalesce(status, 'published') = 'published'
+         order by starts_at asc`,
+      );
+  return rows.map(mapHubConcert);
+}
+
 export const listHubConcerts = createServerFn({ method: "GET" })
   .validator((slug?: string) => slug ?? "")
   .handler(async ({ data: slug }) => {
+    const load = async () => {
+      try {
+        return await loadHubConcerts(slug, true);
+      } catch (err) {
+        if (!missingSqlObject(err, "source_id")) throw err;
+        return await loadHubConcerts(slug, false);
+      }
+    };
     try {
-      const load = async () => {
-        await ensureHub();
-        const sql = await getSql();
-        const rows = slug
-          ? await sql<Parameters<typeof mapHubConcert>[0]>`
-              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
-                     coalesce(source_id, '') as source_id
-              from hub_concerts
-              where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
-              order by starts_at asc
-            `
-          : await sql<Parameters<typeof mapHubConcert>[0]>`
-              select id, title, venue, city, country, starts_at, note, artist_name, artist_slug, artist_kind,
-                     coalesce(source_id, '') as source_id
-              from hub_concerts
-              where coalesce(status, 'published') = 'published'
-              order by starts_at asc
-            `;
-        return rows.map(mapHubConcert);
-      };
       if (!slug) return await hubConcertsMemo(load);
       return await load();
     } catch (err) {
@@ -742,17 +758,22 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
     if (bio.length > 4000) throw new Error("Keep the bio under a few thousand characters.");
     const name = await submitterName(context.userId);
     const sql = await getSql();
-    await sql.query(
-      `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
-       values ($1, $2, $3, $4, $5, $6)
-       on conflict (artist_slug) do update set
-         bio = excluded.bio,
-         submitted_by = excluded.submitted_by,
-         submitted_name = excluded.submitted_name,
-         status = excluded.status,
-         updated_at = excluded.updated_at`,
-      [slug, bio, context.userId, name, gate.status, new Date().toISOString()],
-    );
+    try {
+      await sql.query(
+        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at)
+         values ($1, $2, $3, $4, $5, $6)
+         on conflict (artist_slug) do update set
+           bio = excluded.bio,
+           submitted_by = excluded.submitted_by,
+           submitted_name = excluded.submitted_name,
+           status = excluded.status,
+           updated_at = excluded.updated_at`,
+        [slug, bio, context.userId, name, gate.status, new Date().toISOString()],
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Could not save the bio (${message}).`);
+    }
     return { ok: true as const, pending: gate.pending };
   });
 
@@ -931,16 +952,21 @@ export const addHubConcert = createServerFn({ method: "POST" })
     const artistName = resolved.name;
     const kind = resolved.kind;
     const name = await submitterName(context.userId);
-    await sql`
-      insert into hub_concerts (
-        artist_slug, artist_name, artist_kind, title, venue, city, country,
-        starts_at, note, submitted_by, submitted_name, status
-      ) values (
-        ${resolved.slug}, ${artistName}, ${kind}, ${title}, ${data.venue.trim()},
-        ${data.city.trim()}, ${country}, ${starts.toISOString()}, ${data.note.trim()},
-        ${context.userId}, ${name}, ${gate.status}
-      )
-    `;
+    try {
+      await sql`
+        insert into hub_concerts (
+          artist_slug, artist_name, artist_kind, title, venue, city, country,
+          starts_at, note, submitted_by, submitted_name, status
+        ) values (
+          ${resolved.slug}, ${artistName}, ${kind}, ${title}, ${data.venue.trim()},
+          ${data.city.trim()}, ${country}, ${starts.toISOString()}, ${data.note.trim()},
+          ${context.userId}, ${name}, ${gate.status}
+        )
+      `;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`Could not save the concert (${message}).`);
+    }
     hubConcertsMemo.bust();
     return { ok: true as const, pending: gate.pending };
   });
