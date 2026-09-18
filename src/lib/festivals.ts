@@ -131,7 +131,7 @@ export const FESTIVALS: Festival[] = [
     when: "September",
     founded: "2000",
     site: "https://www.djangofest.com/",
-    bio: "Founded in 2000 to bring gypsy jazz to the Pacific Northwest. DjangoFest NW is concerts, workshops and late jams on Whidbey Island — a West Coast counterpart to Django in June. 15–20 September 2026 at Whidbey Island Center for the Arts, Langley: 15 Sep 3 Parts Bourbon and Café Impromptu; 17 Sep Eric Vanderbilt-Mathews All-Stars and Leah and I; 18 Sep John Jorgenson Trio (matinee) and Gonzalo Bergara Quintet (evening); 19 Sep Pino Noir and Grappelli’s Django (matinee) and Gismo Graf Quintet (evening); 20 Sep Stella Heath and the Nick Lehr Memorial Djam. Free second stage: Ranger and the Re-Arrangers, Lone Fir Hot Club.",
+    bio: "Founded in 2000 to bring gypsy jazz to the Pacific Northwest. DjangoFest NW is concerts, workshops and late jams on Whidbey Island — a West Coast counterpart to Django in June. 15–20 September 2026 at Whidbey Island Center for the Arts, Langley: 15 Sep 3 Parts Bourbon and Café Impromptu; 17 Sep Eric Vanderbilt-Mathews All-Stars and Leah and I; 18 Sep John Jorgenson Trio (matinee) and Gonzalo Bergara Quintet (evening); 19 Sep Pino Noir and Grappelli’s Django (matinee) and Gismo Graf Quintet feat. Tim Kliphuis & special guest Sam Farthing (evening); 20 Sep Stella Heath and the Nick Lehr Memorial DJAM. Free second stage: Ranger and the Re-Arrangers, Lone Fir Hot Club.",
     nextStartsAt: "2026-09-16T02:00:00.000Z",
     relatedSlugs: [
       "gismo-graf",
