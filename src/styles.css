@@ -147,6 +147,64 @@
     right: 0;
   }
 
+  .hub-ticker {
+    overflow: hidden;
+    border-top: 1px solid rgb(0 0 0 / 0.18);
+    background: #2a1c10;
+    color: #f4e6c8;
+    height: 2rem;
+  }
+  .hub-ticker-track {
+    display: flex;
+    width: max-content;
+    animation: hub-ticker-scroll 55s linear infinite;
+  }
+  .hub-ticker:hover .hub-ticker-track,
+  .hub-ticker:focus-within .hub-ticker-track {
+    animation-play-state: paused;
+  }
+  .hub-ticker-copy {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding-right: 2.5rem;
+  }
+  .hub-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0 1.15rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #f4e6c8;
+    text-decoration: none;
+  }
+  .hub-ticker-item + .hub-ticker-item {
+    border-left: 1px solid rgb(244 230 200 / 0.22);
+  }
+  .hub-ticker-item:hover,
+  .hub-ticker-item:focus-visible {
+    color: #e4b05a;
+  }
+  @keyframes hub-ticker-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hub-ticker-track {
+      animation: none;
+      width: 100%;
+    }
+    .hub-ticker-copy:last-child {
+      display: none;
+    }
+    .hub-ticker-copy {
+      overflow: auto;
+      padding-right: 0;
+    }
+  }
+
   .spruce-flat {
     background-color: #c39452;
     color: #2a1c10;

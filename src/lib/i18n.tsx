@@ -24,6 +24,7 @@ import { FESTIVAL_UI } from "@/lib/i18n-festivals";
 import { HOT_CLUB_UI } from "@/lib/i18n-hot-clubs";
 import { MAKERS_UI } from "@/lib/i18n-makers";
 import { NAV_UI } from "@/lib/i18n-nav";
+import { TICKER_UI } from "@/lib/i18n-ticker";
 import { JAM_UI } from "@/lib/jam-copy";
 import { JAM_GOING_UI } from "@/lib/jam-going-copy";
 
@@ -4903,27 +4904,27 @@ const ru: Dict = {
 };
 
 const DICTS: Record<LocaleId, Dict> = {
-  en: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en, ...MAKERS_UI.en, ...NAV_UI.en, ...JAM_UI.en, ...JAM_GOING_UI.en },
-  he: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en, ...MAKERS_UI.en, ...NAV_UI.en, ...JAM_UI.en, ...JAM_GOING_UI.en },
-  nl: { ...nl, ...FESTIVAL_UI.nl, ...HOT_CLUB_UI.nl, ...MAKERS_UI.nl, ...NAV_UI.nl, ...JAM_UI.nl, ...JAM_GOING_UI.nl },
-  es: { ...es, ...FESTIVAL_UI.es, ...HOT_CLUB_UI.es, ...MAKERS_UI.es, ...NAV_UI.es, ...JAM_UI.es, ...JAM_GOING_UI.es },
-  de: { ...de, ...FESTIVAL_UI.de, ...HOT_CLUB_UI.de, ...MAKERS_UI.de, ...NAV_UI.de, ...JAM_UI.de, ...JAM_GOING_UI.de },
-  fr: { ...fr, ...FESTIVAL_UI.fr, ...HOT_CLUB_UI.fr, ...MAKERS_UI.fr, ...NAV_UI.fr, ...JAM_UI.fr, ...JAM_GOING_UI.fr },
-  it: { ...it, ...FESTIVAL_UI.it, ...HOT_CLUB_UI.it, ...MAKERS_UI.it, ...NAV_UI.it, ...JAM_UI.it, ...JAM_GOING_UI.it },
-  ja: { ...ja, ...FESTIVAL_UI.ja, ...HOT_CLUB_UI.ja, ...MAKERS_UI.ja, ...NAV_UI.ja, ...JAM_UI.ja, ...JAM_GOING_UI.ja },
-  ko: { ...ko, ...FESTIVAL_UI.ko, ...HOT_CLUB_UI.ko, ...MAKERS_UI.ko, ...NAV_UI.ko, ...JAM_UI.ko, ...JAM_GOING_UI.ko },
-  zh: { ...zh, ...FESTIVAL_UI.zh, ...HOT_CLUB_UI.zh, ...MAKERS_UI.zh, ...NAV_UI.zh, ...JAM_UI.zh, ...JAM_GOING_UI.zh },
-  "zh-tw": { ...zhTw, ...FESTIVAL_UI["zh-tw"], ...HOT_CLUB_UI["zh-tw"], ...MAKERS_UI["zh-tw"], ...NAV_UI["zh-tw"], ...JAM_UI["zh-tw"], ...JAM_GOING_UI["zh-tw"] },
-  id: { ...id, ...FESTIVAL_UI.id, ...HOT_CLUB_UI.id, ...MAKERS_UI.id, ...NAV_UI.id, ...JAM_UI.id, ...JAM_GOING_UI.id },
-  th: { ...th, ...FESTIVAL_UI.th, ...HOT_CLUB_UI.th, ...MAKERS_UI.th, ...NAV_UI.th, ...JAM_UI.th, ...JAM_GOING_UI.th },
-  hu: { ...hu, ...FESTIVAL_UI.hu, ...HOT_CLUB_UI.hu, ...MAKERS_UI.hu, ...NAV_UI.hu, ...JAM_UI.hu, ...JAM_GOING_UI.hu },
-  ro: { ...ro, ...FESTIVAL_UI.ro, ...HOT_CLUB_UI.ro, ...MAKERS_UI.ro, ...NAV_UI.ro, ...JAM_UI.ro, ...JAM_GOING_UI.ro },
-  sr: { ...sr, ...FESTIVAL_UI.sr, ...HOT_CLUB_UI.sr, ...MAKERS_UI.sr, ...NAV_UI.sr, ...JAM_UI.sr, ...JAM_GOING_UI.sr },
-  cs: { ...cs, ...FESTIVAL_UI.cs, ...HOT_CLUB_UI.cs, ...MAKERS_UI.cs, ...NAV_UI.cs, ...JAM_UI.cs, ...JAM_GOING_UI.cs },
-  pl: { ...pl, ...FESTIVAL_UI.pl, ...HOT_CLUB_UI.pl, ...MAKERS_UI.pl, ...NAV_UI.pl, ...JAM_UI.pl, ...JAM_GOING_UI.pl },
-  hr: { ...hr, ...FESTIVAL_UI.hr, ...HOT_CLUB_UI.hr, ...MAKERS_UI.hr, ...NAV_UI.hr, ...JAM_UI.hr, ...JAM_GOING_UI.hr },
-  pt: { ...pt, ...FESTIVAL_UI.pt, ...HOT_CLUB_UI.pt, ...MAKERS_UI.pt, ...NAV_UI.pt, ...JAM_UI.pt, ...JAM_GOING_UI.pt },
-  ru: { ...ru, ...FESTIVAL_UI.ru, ...HOT_CLUB_UI.ru, ...MAKERS_UI.ru, ...NAV_UI.ru, ...JAM_UI.ru, ...JAM_GOING_UI.ru },
+  en: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en, ...MAKERS_UI.en, ...NAV_UI.en, ...JAM_UI.en, ...JAM_GOING_UI.en, ...TICKER_UI.en },
+  he: { ...en, ...FESTIVAL_UI.en, ...HOT_CLUB_UI.en, ...MAKERS_UI.en, ...NAV_UI.en, ...JAM_UI.en, ...JAM_GOING_UI.en, ...TICKER_UI.en },
+  nl: { ...nl, ...FESTIVAL_UI.nl, ...HOT_CLUB_UI.nl, ...MAKERS_UI.nl, ...NAV_UI.nl, ...JAM_UI.nl, ...JAM_GOING_UI.nl, ...TICKER_UI.nl },
+  es: { ...es, ...FESTIVAL_UI.es, ...HOT_CLUB_UI.es, ...MAKERS_UI.es, ...NAV_UI.es, ...JAM_UI.es, ...JAM_GOING_UI.es, ...TICKER_UI.es },
+  de: { ...de, ...FESTIVAL_UI.de, ...HOT_CLUB_UI.de, ...MAKERS_UI.de, ...NAV_UI.de, ...JAM_UI.de, ...JAM_GOING_UI.de, ...TICKER_UI.de },
+  fr: { ...fr, ...FESTIVAL_UI.fr, ...HOT_CLUB_UI.fr, ...MAKERS_UI.fr, ...NAV_UI.fr, ...JAM_UI.fr, ...JAM_GOING_UI.fr, ...TICKER_UI.fr },
+  it: { ...it, ...FESTIVAL_UI.it, ...HOT_CLUB_UI.it, ...MAKERS_UI.it, ...NAV_UI.it, ...JAM_UI.it, ...JAM_GOING_UI.it, ...TICKER_UI.it },
+  ja: { ...ja, ...FESTIVAL_UI.ja, ...HOT_CLUB_UI.ja, ...MAKERS_UI.ja, ...NAV_UI.ja, ...JAM_UI.ja, ...JAM_GOING_UI.ja, ...TICKER_UI.ja },
+  ko: { ...ko, ...FESTIVAL_UI.ko, ...HOT_CLUB_UI.ko, ...MAKERS_UI.ko, ...NAV_UI.ko, ...JAM_UI.ko, ...JAM_GOING_UI.ko, ...TICKER_UI.ko },
+  zh: { ...zh, ...FESTIVAL_UI.zh, ...HOT_CLUB_UI.zh, ...MAKERS_UI.zh, ...NAV_UI.zh, ...JAM_UI.zh, ...JAM_GOING_UI.zh, ...TICKER_UI.zh },
+  "zh-tw": { ...zhTw, ...FESTIVAL_UI["zh-tw"], ...HOT_CLUB_UI["zh-tw"], ...MAKERS_UI["zh-tw"], ...NAV_UI["zh-tw"], ...JAM_UI["zh-tw"], ...JAM_GOING_UI["zh-tw"], ...TICKER_UI["zh-tw"] },
+  id: { ...id, ...FESTIVAL_UI.id, ...HOT_CLUB_UI.id, ...MAKERS_UI.id, ...NAV_UI.id, ...JAM_UI.id, ...JAM_GOING_UI.id, ...TICKER_UI.id },
+  th: { ...th, ...FESTIVAL_UI.th, ...HOT_CLUB_UI.th, ...MAKERS_UI.th, ...NAV_UI.th, ...JAM_UI.th, ...JAM_GOING_UI.th, ...TICKER_UI.th },
+  hu: { ...hu, ...FESTIVAL_UI.hu, ...HOT_CLUB_UI.hu, ...MAKERS_UI.hu, ...NAV_UI.hu, ...JAM_UI.hu, ...JAM_GOING_UI.hu, ...TICKER_UI.hu },
+  ro: { ...ro, ...FESTIVAL_UI.ro, ...HOT_CLUB_UI.ro, ...MAKERS_UI.ro, ...NAV_UI.ro, ...JAM_UI.ro, ...JAM_GOING_UI.ro, ...TICKER_UI.ro },
+  sr: { ...sr, ...FESTIVAL_UI.sr, ...HOT_CLUB_UI.sr, ...MAKERS_UI.sr, ...NAV_UI.sr, ...JAM_UI.sr, ...JAM_GOING_UI.sr, ...TICKER_UI.sr },
+  cs: { ...cs, ...FESTIVAL_UI.cs, ...HOT_CLUB_UI.cs, ...MAKERS_UI.cs, ...NAV_UI.cs, ...JAM_UI.cs, ...JAM_GOING_UI.cs, ...TICKER_UI.cs },
+  pl: { ...pl, ...FESTIVAL_UI.pl, ...HOT_CLUB_UI.pl, ...MAKERS_UI.pl, ...NAV_UI.pl, ...JAM_UI.pl, ...JAM_GOING_UI.pl, ...TICKER_UI.pl },
+  hr: { ...hr, ...FESTIVAL_UI.hr, ...HOT_CLUB_UI.hr, ...MAKERS_UI.hr, ...NAV_UI.hr, ...JAM_UI.hr, ...JAM_GOING_UI.hr, ...TICKER_UI.hr },
+  pt: { ...pt, ...FESTIVAL_UI.pt, ...HOT_CLUB_UI.pt, ...MAKERS_UI.pt, ...NAV_UI.pt, ...JAM_UI.pt, ...JAM_GOING_UI.pt, ...TICKER_UI.pt },
+  ru: { ...ru, ...FESTIVAL_UI.ru, ...HOT_CLUB_UI.ru, ...MAKERS_UI.ru, ...NAV_UI.ru, ...JAM_UI.ru, ...JAM_GOING_UI.ru, ...TICKER_UI.ru },
 };
 
 const STORAGE = "gjh-locale";

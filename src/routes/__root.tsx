@@ -17,6 +17,10 @@ import appCss from "../styles.css?url";
 const APP_NAME = "Gypsy Jazz Hub";
 
 export const Route = createRootRoute({
+  loader: async () => {
+    const { tickerPayload } = await import("@/lib/ticker-data");
+    return tickerPayload();
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -46,6 +50,7 @@ export const Route = createRootRoute({
 
 function RootDocument() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const ticker = Route.useLoaderData();
   const scene = pathname === "/" ? "home" : "read";
 
   return (
@@ -59,7 +64,7 @@ function RootDocument() {
           <LocaleProvider>
           <VisitPing />
           <div className="flex min-h-dvh flex-col">
-            <SiteHeader />
+            <SiteHeader ticker={ticker} />
             <Outlet />
             <SiteFooter />
           </div>

@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "@/components/brand-mark";
 import { ChromeAuth } from "@/components/chrome-auth";
 import { LanguageSwitch } from "@/components/language-switch";
+import { SiteTicker } from "@/components/site-ticker";
 import { useI18n } from "@/lib/i18n";
+import type { TickerPayload } from "@/lib/ticker";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -102,7 +104,7 @@ function historyActive(pathname: string) {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ ticker }: { ticker?: TickerPayload | null }) {
   const { t } = useI18n();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const hash = useRouterState({ select: (s) => s.location.hash.replace(/^#/, "") });
@@ -234,6 +236,7 @@ export function SiteHeader() {
           ) : null}
         </div>
       )}
+      {ticker ? <SiteTicker data={ticker} /> : null}
     </header>
   );
 }
