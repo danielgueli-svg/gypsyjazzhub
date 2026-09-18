@@ -32,6 +32,7 @@ import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as YoutubeRouteImport } from './routes/youtube'
 import { Route as ApiAlertsRouteImport } from './routes/api/alerts'
+import { Route as ApiArtistImportRouteImport } from './routes/api/artist-import'
 import { Route as ApiDigestRouteImport } from './routes/api/digest'
 import { Route as ApiDjangobooksImportRouteImport } from './routes/api/djangobooks-import'
 import { Route as ApiFacebookImportRouteImport } from './routes/api/facebook-import'
@@ -213,6 +214,11 @@ const YoutubeRoute = YoutubeRouteImport.update({
 const ApiAlertsRoute = ApiAlertsRouteImport.update({
   id: '/api/alerts',
   path: '/api/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiArtistImportRoute = ApiArtistImportRouteImport.update({
+  id: '/api/artist-import',
+  path: '/api/artist-import',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiDigestRoute = ApiDigestRouteImport.update({
@@ -577,6 +583,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/youtube': typeof YoutubeRoute
   '/api/alerts': typeof ApiAlertsRoute
+  '/api/artist-import': typeof ApiArtistImportRoute
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
@@ -669,6 +676,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/youtube': typeof YoutubeRoute
   '/api/alerts': typeof ApiAlertsRoute
+  '/api/artist-import': typeof ApiArtistImportRoute
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
@@ -762,6 +770,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/youtube': typeof YoutubeRoute
   '/api/alerts': typeof ApiAlertsRoute
+  '/api/artist-import': typeof ApiArtistImportRoute
   '/api/digest': typeof ApiDigestRoute
   '/api/djangobooks-import': typeof ApiDjangobooksImportRoute
   '/api/facebook-import': typeof ApiFacebookImportRoute
@@ -856,6 +865,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/youtube'
     | '/api/alerts'
+    | '/api/artist-import'
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
@@ -948,6 +958,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/youtube'
     | '/api/alerts'
+    | '/api/artist-import'
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
@@ -1040,6 +1051,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/youtube'
     | '/api/alerts'
+    | '/api/artist-import'
     | '/api/digest'
     | '/api/djangobooks-import'
     | '/api/facebook-import'
@@ -1133,6 +1145,7 @@ export interface RootRouteChildren {
   WelcomeRoute: typeof WelcomeRoute
   YoutubeRoute: typeof YoutubeRoute
   ApiAlertsRoute: typeof ApiAlertsRoute
+  ApiArtistImportRoute: typeof ApiArtistImportRoute
   ApiDigestRoute: typeof ApiDigestRoute
   ApiDjangobooksImportRoute: typeof ApiDjangobooksImportRoute
   ApiFacebookImportRoute: typeof ApiFacebookImportRoute
@@ -1363,6 +1376,13 @@ declare module '@tanstack/react-router' {
       path: '/api/alerts'
       fullPath: '/api/alerts'
       preLoaderRoute: typeof ApiAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/artist-import': {
+      id: '/api/artist-import'
+      path: '/api/artist-import'
+      fullPath: '/api/artist-import'
+      preLoaderRoute: typeof ApiArtistImportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/digest': {
@@ -1861,6 +1881,7 @@ const rootRouteChildren: RootRouteChildren = {
   WelcomeRoute: WelcomeRoute,
   YoutubeRoute: YoutubeRoute,
   ApiAlertsRoute: ApiAlertsRoute,
+  ApiArtistImportRoute: ApiArtistImportRoute,
   ApiDigestRoute: ApiDigestRoute,
   ApiDjangobooksImportRoute: ApiDjangobooksImportRoute,
   ApiFacebookImportRoute: ApiFacebookImportRoute,

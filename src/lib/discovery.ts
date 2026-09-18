@@ -171,10 +171,24 @@ export function scanVerdict(find: ScanFind): {
       reason: `DjangoBooks thread — ${forum.label}. Date, venue and place are on the post.`,
     };
   }
+  const sinti = find.sources.find((source) => /sintimusic\.nl/i.test(source.url));
+  if (
+    sinti &&
+    find.title.trim() &&
+    find.artistName.trim() &&
+    find.venue.trim() &&
+    find.country.trim() &&
+    find.startsAt
+  ) {
+    return {
+      status: "publish",
+      reason: `Sinti Music shows — ${sinti.label}. Date, venue and artist are on the agency site.`,
+    };
+  }
   return {
     status: "hold",
     reason:
-      "Needs two confirmations (artist website and venue). One source is not enough, except a trusted festival official site, a complete Facebook group post, or a complete DjangoBooks thread.",
+      "Needs two confirmations (artist website and venue). One source is not enough, except a trusted festival official site, a complete Facebook group post, a complete DjangoBooks thread, or a complete Sinti Music listing.",
   };
 }
 

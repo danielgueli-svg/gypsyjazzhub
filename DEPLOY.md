@@ -64,4 +64,5 @@ Never use `timestamptz … default ''` — use a real timestamp constant or null
   - daily `/api/alerts` + `/api/digest` (`15 6 * * *` UTC)
   - daily `/api/mail-queue` (`0 17` / `0 18` UTC)
   - weekly Mon `/api/facebook-import` (`0 7 * * 1` UTC) and `/api/djangobooks-import` (`20 7 * * 1` UTC)
+  - Sinti Music + artist sites `/api/artist-import` Mon 05:00 NL (`0 3` / `0 4 * * 1` UTC) and Fri 17:00 NL (`0 15` / `0 16 * * 5` UTC)
 - Grok draft URLs and the `glow-shale-falcon-daisy` export are noindex drafts only.

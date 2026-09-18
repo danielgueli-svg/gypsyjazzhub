@@ -41,12 +41,23 @@ test("cf-prep enables Workers observability", () => {
     assert.equal(cfg.observability?.enabled, true);
     assert.equal(cfg.observability?.logs?.invocation_logs, true);
     const crons = cfg.triggers?.crons || [];
-    for (const needed of ["15 6 * * *", "0 7 * * 1", "20 7 * * 1", "0 17 * * *", "0 18 * * *"]) {
+    for (const needed of [
+      "15 6 * * *",
+      "0 3 * * 1",
+      "0 4 * * 1",
+      "0 7 * * 1",
+      "20 7 * * 1",
+      "0 15 * * 5",
+      "0 16 * * 5",
+      "0 17 * * *",
+      "0 18 * * *",
+    ]) {
       assert.ok(crons.includes(needed), `missing cron ${needed}`);
     }
     const index = readFileSync(join(serverDir, "index.mjs"), "utf8");
     assert.match(index, /\/api\/facebook-import/);
     assert.match(index, /\/api\/djangobooks-import/);
+    assert.match(index, /\/api\/artist-import/);
     assert.match(index, /\/api\/mail-queue/);
   } finally {
     process.chdir(prev);

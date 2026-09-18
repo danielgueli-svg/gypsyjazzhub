@@ -81,6 +81,8 @@ const ALIASES: Record<string, string> = {
   montpellier: "France",
   belgium: "Belgium",
   germany: "Germany",
+  deutschland: "Germany",
+  iceland: "Iceland",
   cologne: "Germany",
   koln: "Germany",
   "köln": "Germany",
