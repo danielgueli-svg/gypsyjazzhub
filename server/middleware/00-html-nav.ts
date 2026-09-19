@@ -1,3 +1,9 @@
+import {
+  isCrawler,
+  localeFromCookie,
+  resolveLocale,
+} from "../../src/lib/locale-detect";
+
 /**
  * Deployed (Nitro) counterpart of the Vite htmlNavPlugin.
  * Safari / WebKit often:
@@ -9,13 +15,18 @@
  * Cloudflare Workers: request headers are immutable, and `event.req.url` can be
  * a relative path. Mutating headers or calling `new URL("")` throws
  * `Invalid URL string.` — clone a Request with an absolute href instead.
+ *
+ * HTML is cached in the Worker Cache API **per UI language**. Do not set a
+ * public s-maxage the CDN will store by URL alone — that served English to
+ * every country.
  */
 const FALLBACK = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gypsy Jazz Hub</title><style>html,body{margin:0;min-height:100%;background:#100c0a;color:#faf6ef;font-family:Georgia,serif}body{display:grid;place-items:center;gap:1rem;padding:2rem;text-align:center}a{color:#e8c9a0}</style></head><body><p>Gypsy Jazz Hub</p><p><a href="/">Home</a></p><script>(function(){try{var k="gjh-retry:"+location.pathname;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,"1");location.reload();}}catch(e){}})();</script></body></html>`;
 const PUBLIC_ORIGIN = "https://www.gypsyjazzhub.com";
 const APEX_HOST = "gypsyjazzhub.com";
 const WWW_ORIGIN = "https://www.gypsyjazzhub.com";
 const PRIVATE_PAGE = /^\/(login|studio|join|welcome|verify-email|add|board|agenda|forgot-password|reset-password)(\/|$)/;
-const HTML_CACHE_CONTROL = "public, s-maxage=120, stale-while-revalidate=600";
+const HTML_STORE_CACHE_CONTROL = "public, s-maxage=120, stale-while-revalidate=600";
+const HTML_BROWSER_CACHE_CONTROL = "private, max-age=0, must-revalidate";
 
 const CSP = [
   "default-src 'self'",
@@ -179,6 +190,42 @@ function requestHref(event: NavEvent): string {
   }
 }
 
+function htmlLocaleBucket(headers: Headers): string {
+  try {
+    const country = (headers.get("cf-ipcountry") ?? "").trim().toUpperCase();
+    return resolveLocale({
+      chosen: localeFromCookie(headers.get("cookie") ?? ""),
+      country,
+      acceptLanguage: headers.get("accept-language"),
+      crawler: isCrawler(headers.get("user-agent")),
+    });
+  } catch {
+    return "en";
+  }
+}
+
+function cacheHrefFor(href: string, headers: Headers): string {
+  try {
+    const url = new URL(href, PUBLIC_ORIGIN);
+    url.searchParams.set("_gjh_l", htmlLocaleBucket(headers));
+    return url.href;
+  } catch {
+    return href;
+  }
+}
+
+function toBrowser(result: Response): Response {
+  const headers = new Headers(result.headers);
+  headers.set("cache-control", HTML_BROWSER_CACHE_CONTROL);
+  headers.delete("age");
+  applySecurityHeaders(headers);
+  return new Response(result.body, {
+    status: result.status,
+    statusText: result.statusText,
+    headers,
+  });
+}
+
 function cachesDefault(): Cache | null {
   try {
     const store = (globalThis as { caches?: { default?: Cache } }).caches?.default;
@@ -192,12 +239,17 @@ function cacheableHtml(method: string, path: string) {
   return method.toUpperCase() === "GET" && isPageGet(method, path) && !PRIVATE_PAGE.test(path);
 }
 
-async function lookupHtml(href: string, method: string, path: string): Promise<Response | null> {
+async function lookupHtml(
+  href: string,
+  method: string,
+  path: string,
+  headers: Headers,
+): Promise<Response | null> {
   if (!cacheableHtml(method, path)) return null;
   const cache = cachesDefault();
   if (!cache) return null;
   try {
-    return (await cache.match(new Request(href, { method: "GET" }))) ?? null;
+    return (await cache.match(new Request(cacheHrefFor(href, headers), { method: "GET" }))) ?? null;
   } catch {
     return null;
   }
@@ -208,26 +260,27 @@ async function rememberHtml(
   method: string,
   path: string,
   result: Response,
+  headers: Headers,
 ): Promise<Response> {
-  if (!cacheableHtml(method, path) || result.status !== 200) return withSecurityHeaders(result);
-  if (result.headers.get("set-cookie")) return withSecurityHeaders(result);
+  if (!cacheableHtml(method, path) || result.status !== 200) return toBrowser(result);
+  if (result.headers.get("set-cookie")) return toBrowser(result);
   const ct = String(result.headers.get("content-type") ?? "");
-  if (!ct.includes("text/html")) return withSecurityHeaders(result);
+  if (!ct.includes("text/html")) return toBrowser(result);
 
-  const headers = new Headers(result.headers);
-  headers.set("cache-control", HTML_CACHE_CONTROL);
-  applySecurityHeaders(headers);
+  const storedHeaders = new Headers(result.headers);
+  storedHeaders.set("cache-control", HTML_STORE_CACHE_CONTROL);
+  applySecurityHeaders(storedHeaders);
   const body = await result.arrayBuffer();
-  const out = new Response(body, { status: 200, headers });
+  const stored = new Response(body, { status: 200, headers: storedHeaders });
   const cache = cachesDefault();
   if (cache) {
     try {
-      await cache.put(new Request(href, { method: "GET" }), out.clone());
+      await cache.put(new Request(cacheHrefFor(href, headers), { method: "GET" }), stored.clone());
     } catch {
       /* Cache API is optional — headers still help the browser. */
     }
   }
-  return out;
+  return toBrowser(stored);
 }
 
 function withHtmlAccept(event: NavEvent) {
@@ -269,8 +322,9 @@ export default async function htmlNavMiddleware(
   if (page) withHtmlAccept(event);
 
   const href = requestHref(event);
-  const cached = await lookupHtml(href, method, path);
-  if (cached) return withSecurityHeaders(cached);
+  const reqHeaders = event.req.headers;
+  const cached = await lookupHtml(href, method, path, reqHeaders);
+  if (cached) return toBrowser(cached);
 
   try {
     const result = await next();
@@ -278,7 +332,7 @@ export default async function htmlNavMiddleware(
 
     const ct = String(result.headers.get("content-type") ?? "");
     if (result.status < 400 && !ct.includes("json")) {
-      return rememberHtml(href, method, path, result);
+      return rememberHtml(href, method, path, result, reqHeaders);
     }
 
     let text = "";

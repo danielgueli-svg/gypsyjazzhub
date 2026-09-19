@@ -5023,7 +5023,10 @@ export function LocaleProvider({
   initial?: LocaleId;
 }) {
   const start = isLocaleId(initial) ? initial : "en";
-  const [locale, setLocaleState] = useState<LocaleId>(start);
+  const [locale, setLocaleState] = useState<LocaleId>(() => {
+    if (typeof window === "undefined") return start;
+    return readPicked() ?? start;
+  });
 
   useEffect(() => {
     const picked = readPicked();
