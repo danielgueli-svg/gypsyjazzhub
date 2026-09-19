@@ -472,6 +472,17 @@ async function refreshConcerts() {
   await concertRefresh;
 }
 
+function overlayFestersen(row: ProfileRow): ProfileRow {
+  if (row.slug !== "benjamin-festersen" && !/festersen/i.test(row.display_name ?? "")) {
+    return row;
+  }
+  return {
+    ...row,
+    website_url: "https://www.benjaminfestersenguitars.com/",
+    contact_url: "mailto:info@benjaminfestersenguitars.com",
+  };
+}
+
 function mapProfile(row: ProfileRow): Profile {
   return {
     userId: row.user_id,
@@ -671,6 +682,18 @@ export const getMusician = createServerFn({ method: "GET" })
     try {
       await ensureFanTables();
       const sql = await getSql();
+      if (slug === "benjamin-festersen") {
+        try {
+          await sql.query(
+            `update profiles
+             set website_url = $1, contact_url = $2, updated_at = now()
+             where slug = 'benjamin-festersen' or lower(display_name) like '%festersen%'`,
+            ["https://www.benjaminfestersenguitars.com/", "mailto:info@benjaminfestersenguitars.com"],
+          );
+        } catch (err) {
+          console.error("Festersen profile link repair failed", err);
+        }
+      }
       try {
         const rows = await sql<ProfileRow>`
       select p.*, (
@@ -680,12 +703,12 @@ export const getMusician = createServerFn({ method: "GET" })
       where p.slug = ${slug}
       limit 1
     `;
-        return rows[0] ? mapProfile(rows[0]) : null;
+        return rows[0] ? mapProfile(overlayFestersen(rows[0])) : null;
       } catch {
         const rows = await sql<ProfileRow>`
           select * from profiles where slug = ${slug} limit 1
         `;
-        return rows[0] ? mapProfile(rows[0]) : null;
+        return rows[0] ? mapProfile(overlayFestersen(rows[0])) : null;
       }
     } catch (err) {
       console.error("getMusician db failed", err);
