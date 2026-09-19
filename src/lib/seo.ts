@@ -101,6 +101,12 @@ export const SEO = {
       "The gypsy jazz community board — looking for a player, charts, venue tips. Post after you join the hub.",
     path: "/board",
   },
+  contact: {
+    title: "Contact",
+    description:
+      "Contact Gypsy Jazz Hub — send a festival, concert or jam date, a picture, or a question to contact@gypsyjazzhub.com.",
+    path: "/contact",
+  },
   history: {
     title: "History of Gypsy Jazz and the Sinti",
     description:

@@ -74,6 +74,7 @@ const TOP: TopItem[] = [
     ],
   },
   { kind: "link", key: "nav.news", to: "/news" },
+  { kind: "link", key: "nav.contact", to: "/contact" },
 ];
 
 function itemKey(link: { to: string; hash?: string; key: string; href?: string }) {
@@ -193,7 +194,7 @@ export function SiteHeader({ ticker }: { ticker?: TickerPayload | null }) {
       ) : (
         <div className="hidden border-t border-black/10 bg-[#c39452]/45 md:block">
           <nav
-            className="site-topics mx-auto grid h-auto w-full max-w-6xl grid-cols-6 items-stretch gap-0.5 px-0.5 py-0.5 sm:flex sm:h-12 sm:justify-evenly sm:gap-0 sm:px-4 sm:py-0"
+            className="site-topics mx-auto grid h-auto w-full max-w-6xl grid-cols-7 items-stretch gap-0.5 px-0.5 py-0.5 sm:flex sm:h-12 sm:justify-evenly sm:gap-0 sm:px-4 sm:py-0"
             aria-label="Main"
           >
             {TOP.map((item) =>
@@ -310,7 +311,7 @@ function SheetMenu({
         {t("nav.search")}
       </Link>
       <ChromeAuth sheet onPick={onPick} />
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-2 gap-1">
         <Link
           to="/"
           onClick={onPick}
@@ -340,6 +341,16 @@ function SheetMenu({
           )}
         >
           {t("nav.news")}
+        </Link>
+        <Link
+          to="/contact"
+          onClick={onPick}
+          className={cn(
+            "rounded-xl px-3 py-2 text-center text-sm font-medium",
+            pathActive(pathname, "/contact") ? "bg-[#2a1c10] text-[#f4e6c8]" : "bg-[#d9a24e] hover:bg-[#e4b05a]",
+          )}
+        >
+          {t("nav.contact")}
         </Link>
       </div>
       {menus.map((menu) => (
