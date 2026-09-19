@@ -855,6 +855,17 @@ export const VENUES: Venue[] = [
     bio: "Charlottenburg cellar under Theater des Westens. Berlin’s long jazz basement.",
   },
   {
+    slug: "kulturhaus-abraxas",
+    name: "Kulturhaus Abraxas",
+    city: "Augsburg",
+    country: "Germany",
+    kind: "Hall",
+    site: "https://www.kulturhaus-abraxas.de/",
+    contact: "",
+    scene: "jazz",
+    bio: "Augsburg hall. Posted Guttenberger Gypsy Jazz Project with Florin Niculescu, 18 September 2026.",
+  },
+  {
     slug: "domicil-dortmund",
     name: "Domicil",
     city: "Dortmund",
