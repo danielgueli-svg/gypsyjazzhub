@@ -410,7 +410,11 @@ export function isCatalogStubBio(bio?: string | null) {
 
 export function preferCatalogBio(seedBio: string, dbBio?: string | null) {
   if (isCatalogStubBio(dbBio)) return seedBio;
-  return (dbBio ?? "").trim();
+  const db = (dbBio ?? "").trim();
+  const seed = seedBio.trim();
+  // Catalog refresh: a longer sourced seed wins over an older short row.
+  if (seed.length > db.length + 40) return seed;
+  return db;
 }
 
 function prettySlug(slug: string) {

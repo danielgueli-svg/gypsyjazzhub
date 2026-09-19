@@ -602,9 +602,15 @@ export const getLegend = createServerFn({ method: "GET" })
       if (rows[0]) {
         const seed = LEGENDS.find((row) => row.slug === slug);
         const mapped = mapLegend(rows[0]);
-        return seed
-          ? { ...mapSeedLegend(seed), ...mapped, bio: preferCatalogBio(mapSeedLegend(seed).bio, mapped.bio) }
-          : mapped;
+        if (!seed) return mapped;
+        const fromSeed = mapSeedLegend(seed);
+        return {
+          ...fromSeed,
+          ...mapped,
+          bio: preferCatalogBio(fromSeed.bio, mapped.bio),
+          websiteUrl: mapped.websiteUrl?.trim() || fromSeed.websiteUrl,
+          youtubeUrl: mapped.youtubeUrl?.trim() || fromSeed.youtubeUrl,
+        };
       }
     } catch (err) {
       console.error("get legend failed", err);
