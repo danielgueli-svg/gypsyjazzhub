@@ -176,6 +176,7 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "/groups/julia-hornung-trio", label: "Julia Hornung Trio" },
     { href: "/groups/collectif-django", label: "Collectif Django" },
     { href: "/groups/duo-solera", label: "Duo Solèra" },
+    { href: "/groups/munich-connection", label: "Munich Connection — Joscho Stephan" },
   ],
   "giangiacomo-rosso": [
     { href: "https://www.jazzschooltorino.it/jazz-school-torino-team/giangiacomo-rosso/", label: "Jazz School Torino" },

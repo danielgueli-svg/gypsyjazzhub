@@ -2758,6 +2758,18 @@ export const BANDS: Band[] = [
     bio: "House project on juliahornungbass.de: Duo Solèra — Julia Hornung and Giangiacomo Rosso. Next listed date: Lauterbacher Mühle, Seeshaupt, 11 October 2026.",
   },
   {
+    slug: "munich-connection",
+    name: "Munich Connection",
+    origin: "Munich, Germany",
+    country: "Germany",
+    members: ["joscho-stephan", "julia-hornung"],
+    roles: {
+      "joscho-stephan": "Guitar",
+      "julia-hornung": "Double bass",
+    },
+    bio: "Joscho Stephan trio with Julia Hornung bass and Raffael Müller rhythm. Ticket copy for Fürth 7 December, Dudenhofen 8 December and Meerbusch 11 December 2026 names that lineup. juliahornungbass.de/live/ lists the Germany run as Joscho Stephan 7–11 December.",
+  },
+  {
     slug: "biel-ballester-trio",
     name: "Biel Ballester Trio",
     origin: "Mallorca, Spain",
@@ -3061,6 +3073,7 @@ const PAIRS: [string, string][] = [
   ["julia-hornung", "giangiacomo-rosso"],
   ["aurore-voilque", "giangiacomo-rosso"],
   ["julien-cattiaux", "giangiacomo-rosso"],
+  ["julia-hornung", "joscho-stephan"],
   ["aurore-voilque", "julien-cattiaux"],
 ];
 

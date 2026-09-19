@@ -8654,12 +8654,12 @@ export const CIRCLE_CONCERTS = [
   },
   ...([
     {
-      title: "Julia Hornung – Collectif Django",
-      venue: "Jazzclub Bamberg",
+      title: "Julia Hornung – Collectif Django feat. Ben Holder",
+      venue: "Jazzkeller Bamberg",
       city: "Bamberg",
       country: "Germany",
-      starts_at: "2026-09-19T00:00:00.000Z",
-      note: "Saturday 19 September 2026. No clock on juliahornungbass.de/live/.",
+      starts_at: "2026-09-19T18:00:00.000Z",
+      note: "Saturday 19 September 2026, 20:00. Jazzkeller, Obere Sandstraße 18. Gypsy-Feuerwerk feat. Ben Holder. kultur.bamberg.de / wobla.net.",
       artists: ["julia-hornung"],
     },
     {
@@ -8787,6 +8787,33 @@ export const CIRCLE_CONCERTS = [
       starts_at: "2026-12-12T00:00:00.000Z",
       note: "Saturday 12 December 2026. Maria Pascual & Hugo Guezbar with Giangiacomo Rosso and Julia Hornung. juliahornungbass.de/live/. No clock.",
       artists: ["julia-hornung", "giangiacomo-rosso"],
+    },
+    {
+      title: "Joscho Stephan — Munich Connection",
+      venue: "Kofferfabrik",
+      city: "Fürth",
+      country: "Germany",
+      starts_at: "2026-12-07T19:00:00.000Z",
+      note: "Monday 7 December 2026, 20:00. Joscho Stephan, Raffael Müller rhythm, Julia Hornung bass. Lange Str. 81. reservix.de e2534226.",
+      artists: ["julia-hornung", "joscho-stephan"],
+    },
+    {
+      title: "Joscho Stephan — Munich Connection",
+      venue: "Festhalle Dudenhofen",
+      city: "Dudenhofen",
+      country: "Germany",
+      starts_at: "2026-12-08T19:00:00.000Z",
+      note: "Tuesday 8 December 2026, 20:00. Munich Connection: Joscho Stephan, Raffael Müller, Julia Hornung. Albrecht-Dürer-Straße 5. venyoo.de.",
+      artists: ["julia-hornung", "joscho-stephan"],
+    },
+    {
+      title: "Joscho Stephan — Munich Connection",
+      venue: "Forum Wasserturm",
+      city: "Meerbusch",
+      country: "Germany",
+      starts_at: "2026-12-11T19:00:00.000Z",
+      note: "Friday 11 December 2026, 20:00. Joscho Stephan, Raffael Müller rhythm, Julia Hornung bass. Rheinstrasse 10, 40668. regioactive.de.",
+      artists: ["julia-hornung", "joscho-stephan"],
     },
   ] as const).flatMap(({ artists, ...row }) =>
     artists.map((legend_slug) => ({
