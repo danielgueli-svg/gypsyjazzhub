@@ -13,7 +13,8 @@ type DraftLink = { label: string; url: string };
 
 function draftsFrom(links: HubArtistLink[]): DraftLink[] {
   const rows = links.map((link) => ({ label: link.label, url: link.url }));
-  return rows.length ? rows : [{ label: "", url: "" }];
+  if (!rows.length) return [{ label: "Website", url: "" }];
+  return rows;
 }
 
 export function ArtistBioEdit({

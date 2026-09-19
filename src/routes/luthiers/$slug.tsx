@@ -1,14 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, Globe, Mail, MapPin, Phone } from "lucide-react";
+import { ArtistBioEdit } from "@/components/artist-bio-edit";
 import { HubChat } from "@/components/hub-chat";
 import { RelatedPages } from "@/components/related-pages";
+import { PageLinks } from "@/components/page-links";
 import { Portrait } from "@/components/portrait";
 import { Button } from "@/components/ui/button";
 import { YouTubeEmbed } from "@/components/youtube-embed";
 import { CountryLabel } from "@/components/country-label";
 import { mapsHref, telHref } from "@/lib/contact";
 import { countrySlug } from "@/lib/geo";
-import { getHubLuthier, listHubChat } from "@/lib/hub-api";
+import { getHubLuthier, listHubChat, getHubArtistBio } from "@/lib/hub-api";
 import { getLuthier } from "@/lib/luthiers";
 import { artistSlugForLuthier } from "@/lib/related-pages";
 import { catalogLegend, getMusician } from "@/lib/api";
@@ -23,7 +25,10 @@ export const Route = createFileRoute("/luthiers/$slug")({
     const luthier =
       getLuthier(params.slug) ?? (await getHubLuthier({ data: params.slug }));
     if (!luthier) throw notFound();
-    const chat = await listHubChat({ data: { kind: "luthier", slug: luthier.slug } });
+    const [chat, hubPage] = await Promise.all([
+      listHubChat({ data: { kind: "luthier", slug: luthier.slug } }),
+      settle("luthier-hub-page", null, () => getHubArtistBio({ data: luthier.slug })),
+    ]);
     const mapped = artistSlugForLuthier(luthier.slug);
     const same = catalogLegend(luthier.slug);
     let musicianSlug = mapped ?? same?.slug ?? null;
@@ -31,22 +36,22 @@ export const Route = createFileRoute("/luthiers/$slug")({
       const member = await settle("luthier-musician", null, () => getMusician({ data: luthier.slug }));
       if (member && member.memberKind !== "fan") musicianSlug = member.slug;
     }
-    return { luthier, chat, musicianSlug };
+    return { luthier, chat, musicianSlug, hubPage };
   },
   component: LuthierPage,
 });
 
 function LuthierPage() {
-  const { luthier, chat, musicianSlug } = Route.useLoaderData();
+  const { luthier, chat, musicianSlug, hubPage } = Route.useLoaderData();
   const { locale } = useI18n();
-  const bio = makerBio(luthier.slug, locale) || luthier.bio;
+  const bio = hubPage?.bio.trim() || makerBio(luthier.slug, locale) || luthier.bio;
   const shop = SHOPS.find((row) => row.luthierSlug === luthier.slug);
   const call = telHref(luthier.phone);
   const map = mapsHref(luthier.address);
   const hasContact = Boolean(
     luthier.address || luthier.phone || luthier.email || luthier.site || luthier.hours,
   );
-  const photo = luthierPhotoSrc(luthier.slug);
+  const photo = hubPage?.photoUrl.trim() || luthierPhotoSrc(luthier.slug);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6">
@@ -127,6 +132,20 @@ function LuthierPage() {
           </p>
         ) : null}
       </article>
+
+      <div className="max-w-2xl">
+        <PageLinks
+          catalog={luthier.site ? [{ href: luthier.site, label: "Website" }] : []}
+          extra={hubPage?.links ?? []}
+        />
+        <ArtistBioEdit
+          slug={luthier.slug}
+          bio={hubPage?.bio.trim() || luthier.bio}
+          links={hubPage?.links ?? []}
+          photoUrl={hubPage?.photoUrl ?? ""}
+          returnTo={`/luthiers/${luthier.slug}`}
+        />
+      </div>
 
       {luthier.youtubeUrl ? (
         <section className="mt-10 max-w-2xl">
