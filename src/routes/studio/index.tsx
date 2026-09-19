@@ -537,15 +537,17 @@ function ProfileForm({
       <section className="space-y-4">
         <h2 className="font-display text-2xl font-semibold">For bookers</h2>
         <p className="text-sm text-muted">
-          A public link or email so venues and bookers can reach you. It shows
-          as a contact button on your page.
+          An email so venues and bookers can reach you. It shows as a contact
+          button on your page. Put your website in Website, not here.
         </p>
-        <Field label="Contact link or email" htmlFor="contact">
+        <Field label="Email for bookings" htmlFor="contact">
           <Input
             id="contact"
             value={contactUrl}
             onChange={(e) => setContactUrl(e.target.value)}
-            placeholder="booking@you.com or https://…"
+            placeholder="you@atelier.com"
+            inputMode="email"
+            autoComplete="email"
           />
         </Field>
         <div className="flex flex-col gap-3 sm:flex-row">

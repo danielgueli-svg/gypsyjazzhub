@@ -51,7 +51,16 @@ export type HubNote = {
 let hubReady: Promise<void> | null = null;
 
 async function ensureHub() {
-  if (getDbSource() === "none" || getDbSource() === "do") return;
+  if (getDbSource() === "none") return;
+  if (getDbSource() === "do") {
+    try {
+      const sql = await getSql();
+      await repairFestersenContact(sql);
+    } catch (err) {
+      console.error("ensureHub durable-object repair failed", err);
+    }
+    return;
+  }
   hubReady ??= runEnsureHub().catch((err) => {
     hubReady = null;
     throw err;
@@ -228,6 +237,7 @@ async function runEnsureHub() {
   `);
   await seedCatalogTeachers(sql);
   await mergeManoucheDenHaagJam(sql);
+  await repairFestersenContact(sql);
   await sql.query(`
     alter table hub_concerts add column if not exists status text not null default 'published'
   `);
@@ -333,6 +343,50 @@ async function runEnsureHub() {
   await sql.query(`
     alter table hub_teachers add column if not exists status text not null default 'published'
   `);
+}
+
+async function repairFestersenContact(sql: Awaited<ReturnType<typeof getSql>>) {
+  const site = "https://www.benjaminfestersenguitars.com/";
+  const mail = "mailto:info@benjaminfestersenguitars.com";
+  const band = { label: "Duke & Dukies", url: "https://www.dukies.de/" };
+  try {
+    await sql.query(
+      `update profiles
+       set website_url = $1, contact_url = $2, updated_at = now()
+       where slug = 'benjamin-festersen'`,
+      [site, mail],
+    );
+    await sql.query(
+      `update hub_luthiers
+       set site = $1, contact = $2
+       where slug = 'benjamin-festersen' or lower(name) like '%festersen%'`,
+      [site, mail],
+    );
+    const rows = await sql<{ bio: string; links: string }>`
+      select coalesce(bio, '') as bio, coalesce(links, '[]') as links
+      from hub_artist_bios where artist_slug = 'benjamin-festersen' limit 1
+    `;
+    const links = parseArtistLinks(rows[0]?.links);
+    if (!links.some((row) => row.url.toLowerCase().includes("dukies.de"))) {
+      links.push(band);
+    }
+    const payload = JSON.stringify(links);
+    if (rows[0]) {
+      await sql.query(`update hub_artist_bios set links = $2, updated_at = now() where artist_slug = $1`, [
+        "benjamin-festersen",
+        payload,
+      ]);
+    } else {
+      await sql.query(
+        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at, links, photo_url)
+         values ($1, '', 'hub', 'Hub', 'published', $2, $3, '')
+         on conflict (artist_slug) do update set links = excluded.links, updated_at = excluded.updated_at`,
+        ["benjamin-festersen", new Date().toISOString(), payload],
+      );
+    }
+  } catch (err) {
+    console.error("repair Festersen contact failed", err);
+  }
 }
 
 async function mergeManoucheDenHaagJam(sql: Awaited<ReturnType<typeof getSql>>) {
@@ -1962,12 +2016,21 @@ export const addHubLuthier = createServerFn({ method: "POST" })
     const submitted = await submitterName(context.userId);
     const craft = parseLuthierCraft(data.craft);
     const note = (data.note ?? "").trim();
+    let site = data.site.trim();
+    let contact = data.contact.trim();
+    const contactLooksLikeSite =
+      /^(https?:\/\/)/i.test(contact) ||
+      (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(contact) && !contact.includes("@"));
+    if (contactLooksLikeSite) {
+      if (!site) site = contact;
+      contact = "";
+    }
     await sql`
       insert into hub_luthiers (
         slug, name, city, country, site, contact, bio, craft, note, submitted_by, submitted_name, status
       ) values (
         ${slug}, ${name}, ${data.city.trim()}, ${country},
-        ${data.site.trim()}, ${data.contact.trim()}, ${data.bio.trim()},
+        ${site}, ${contact}, ${data.bio.trim()},
         ${craft}, ${note}, ${context.userId}, ${submitted}, ${gate.status}
       )
     `;

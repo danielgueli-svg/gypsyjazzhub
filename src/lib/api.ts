@@ -750,6 +750,15 @@ export const saveMyProfile = createServerFn({ method: "POST" })
       const lookingForGigs = data.lookingForGigs ? 1 : 0;
       const availableToJam = data.availableToJam ? 1 : 0;
       const profileTypes = serializeTypes(types);
+      let websiteUrl = data.websiteUrl.trim();
+      let contactUrl = data.contactUrl.trim();
+      const contactLooksLikeSite =
+        /^(https?:\/\/)/i.test(contactUrl) ||
+        (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(contactUrl) && !contactUrl.includes("@"));
+      if (contactLooksLikeSite) {
+        if (!websiteUrl) websiteUrl = contactUrl;
+        contactUrl = "";
+      }
       await sql`
       insert into profiles (
         user_id, slug, display_name, city, country, instruments, bio,
@@ -758,8 +767,8 @@ export const saveMyProfile = createServerFn({ method: "POST" })
       ) values (
         ${context.userId}, ${slug}, ${displayName}, ${data.city.trim()},
         ${data.country.trim()}, ${data.instruments.trim()}, ${data.bio.trim()},
-        ${data.websiteUrl.trim()}, ${data.youtubeUrl.trim()}, ${data.instagramUrl.trim()},
-        ${(data.spotifyUrl ?? "").trim()}, ${data.contactUrl.trim()}, ${lookingForGigs}, ${availableToJam},
+        ${websiteUrl}, ${data.youtubeUrl.trim()}, ${data.instagramUrl.trim()},
+        ${(data.spotifyUrl ?? "").trim()}, ${contactUrl}, ${lookingForGigs}, ${availableToJam},
         ${memberKind}, ${profileTypes}, ${openForInvites}, now()
       )
       on conflict (user_id) do update set

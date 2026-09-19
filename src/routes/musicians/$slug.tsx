@@ -129,7 +129,11 @@ function MemberMusicianPage({
   const instruments = formatInstrumentList(musician.instruments);
   const country = basedInCountry(musician.country, musician.city);
   const isSelf = user?.id === musician.userId;
-  const booking = contactHref(musician.contactUrl);
+  const bookingHrefRaw = contactHref(musician.contactUrl);
+  const contactIsWebsite =
+    /^https?:\/\//i.test(bookingHrefRaw) && !musician.contactUrl.includes("@");
+  const booking = contactIsWebsite ? "" : bookingHrefRaw;
+  const websiteUrl = musician.websiteUrl.trim() || (contactIsWebsite ? bookingHrefRaw : "");
   const upcoming = concerts.filter((c) => new Date(c.startsAt).getTime() >= Date.now());
   const catalogPhoto = artistPhoto(musician.slug, musician.instruments);
   const hubPhoto = hubPage?.photoUrl
@@ -225,8 +229,8 @@ function MemberMusicianPage({
       ) : null}
 
       <div className="mt-6 flex flex-wrap gap-4 text-sm">
-        {musician.websiteUrl ? (
-          <a href={musician.websiteUrl} className="text-muted hover:text-fg" target="_blank" rel="noreferrer">
+        {websiteUrl ? (
+          <a href={websiteUrl.startsWith("http") ? websiteUrl : `https://${websiteUrl}`} className="text-muted hover:text-fg" target="_blank" rel="noreferrer">
             Website
           </a>
         ) : null}
