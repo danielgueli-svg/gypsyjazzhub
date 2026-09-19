@@ -88,7 +88,11 @@ export function ConcertRow({
   );
 
   const title =
-    href.kind === "group" ? (
+    !href.slug ? (
+      <Link to="/concerts/$id" params={{ id: concert.id }} className={titleLink}>
+        {bill}
+      </Link>
+    ) : href.kind === "group" ? (
       <Link to="/groups/$slug" params={{ slug: href.slug }} className={titleLink}>
         {bill}
       </Link>
