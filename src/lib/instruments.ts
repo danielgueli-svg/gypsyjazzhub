@@ -307,6 +307,7 @@ export const INSTRUMENTS: Instrument[] = [
       { slug: "nonnie-rosenberg", name: "Nonnie Rosenberg", note: "Rosenberg Trio floor" },
       { slug: "sebastien-girardot", name: "Sébastien Girardot", note: "Rosenberg / Kelbie groups" },
       { slug: "diego-imbert", name: "Diego Imbert", note: "French first-call bass" },
+      { slug: "julia-hornung", name: "Julia Hornung", note: "Munich — Julia Hornung Trio" },
       { slug: "juan-pablo-robaldo", name: "Juan Pablo Robaldo", note: "Buenos Aires — Swing Medical" },
     ],
     resources: [

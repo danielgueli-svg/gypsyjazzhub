@@ -2722,6 +2722,19 @@ export const BANDS: Band[] = [
     bio: "French chanson and swing group on Le QuecumBar International Gypsy Swing Guitar Festival (Le Q Records LEQ0108, 2010): Menilmontant, Romance de Paris, Sérénade sans espoir, La Vie en rose. Discogs does not list the players.",
   },
   {
+    slug: "julia-hornung-trio",
+    name: "Julia Hornung Trio",
+    origin: "Munich, Germany",
+    country: "Germany",
+    members: ["julia-hornung", "giangiacomo-rosso", "julien-cattiaux"],
+    roles: {
+      "julia-hornung": "Double bass",
+      "giangiacomo-rosso": "Guitar",
+      "julien-cattiaux": "Rhythm guitar",
+    },
+    bio: "Munich double bassist Julia Hornung’s trio. 2026 Paris and Munich bills: Giangiacomo Rosso lead guitar, Julien Cattiaux rhythm. Aurore Voilqué joins on violin and vocal when posted — Le Son de la Terre, Maison La Feuilleraie, 38Riv, Gypsy Jazz Tage. juliahornungbass.de.",
+  },
+  {
     slug: "biel-ballester-trio",
     name: "Biel Ballester Trio",
     origin: "Mallorca, Spain",
@@ -3020,6 +3033,12 @@ const PAIRS: [string, string][] = [
   ["lollo-meier", "feigeli-prisor"],
   ["wattie-rosenberg", "sani-van-mullem"],
   ["stochelo-rosenberg", "ritary-gaguenetti"],
+  ["julia-hornung", "aurore-voilque"],
+  ["julia-hornung", "julien-cattiaux"],
+  ["julia-hornung", "giangiacomo-rosso"],
+  ["aurore-voilque", "giangiacomo-rosso"],
+  ["julien-cattiaux", "giangiacomo-rosso"],
+  ["aurore-voilque", "julien-cattiaux"],
 ];
 
 export function collaboratorSlugs(slug: string): string[] {

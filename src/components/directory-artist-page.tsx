@@ -167,6 +167,20 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "https://www.discogs.com/artist/6470230-Sylvia-Rushbrooke", label: "Sylvia Rushbrooke — Discogs" },
     { href: "https://www.thejazzmann.com/news/article/le-quecumbar-has-closed", label: "Closing statement — The Jazz Mann, 27 April 2022" },
   ],
+  "julia-hornung": [
+    { href: "https://juliahornungbass.de/", label: "Website — juliahornungbass.de" },
+    { href: "mailto:booking@juliahornungbass.de", label: "booking@juliahornungbass.de" },
+    { href: "https://www.youtube.com/@JuliaHornungBass", label: "YouTube" },
+    { href: "/groups/julia-hornung-trio", label: "Julia Hornung Trio" },
+    { href: "https://www.sondelaterre.fr/event/julia-hornung-group-feat-aurore-voilque/", label: "20 Sep 2026 — Le Son de la Terre, Paris" },
+    { href: "https://maisonlafeuilleraie.fr/event/julia-hornung-trio-feat-aurore-voilque/", label: "24 Sep 2026 — Maison La Feuilleraie" },
+    { href: "https://38riv.com/en/concerts/julia-hornung-trio", label: "27 Sep 2026 — 38Riv, Paris" },
+    { href: "https://eventfrog.de/en/p/concerts/swing/gypsy-jazz-tage-2026-julia-hornung-trio-ft-aurore-voilque-7477361133696882476.html", label: "20 Oct 2026 — Gypsy Jazz Tage, Munich" },
+  ],
+  "giangiacomo-rosso": [
+    { href: "/musicians/julia-hornung", label: "Julia Hornung" },
+    { href: "/groups/julia-hornung-trio", label: "Julia Hornung Trio" },
+  ],
 };
 
 export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
