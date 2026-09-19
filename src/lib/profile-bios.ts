@@ -132,7 +132,7 @@ const FEATURED_ARTIST_BIOS: Record<string, string> = {
   "elios-ferre":
     "Elios Ferré was born in 1956 in Paris, brother of Boulou, son of Matelo. The Ferré duo is how the family guitar left the 1950s rooms and walked onto the festival stage. Two brothers, one phrasing.",
   "patrick-saussois":
-    "Patrick Saussois (1954–1995) was a French guitarist of the 1980s scene, a name Festival Django Reinhardt still lists among the players who carried the music between the old family bands and the nouvelle vague. His records are short; the circuit remembers the touch.",
+    "Patrick Saussois (1954–2012) was a French manouche guitarist, Alma Sinti, Montrouge. Discogs lists Le QuecumBar Live in London (2009) with Daniel John Martin. He died 22 September 2012.",
   "sebastien-giniaux":
     "Sébastien Giniaux was born in 1983 in France. Guitar and cello on the same bills — a rare double on Festival Django Reinhardt programmes. The cello writing is his, not a gimmick; the guitar remains manouche.",
   "noe-reinhardt":

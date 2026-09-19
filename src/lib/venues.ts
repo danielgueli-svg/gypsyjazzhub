@@ -444,6 +444,17 @@ export const VENUES: Venue[] = [
     bio: "Frith Street. The London jazz house that still takes a gypsy jazz week.",
   },
   {
+    slug: "le-quecumbar",
+    name: "Le QuecumBar",
+    city: "London",
+    country: "United Kingdom",
+    kind: "Club",
+    site: "https://www.quecumbar.co.uk/",
+    contact: "mailto:info@quecumbar.co.uk",
+    scene: "gypsy",
+    bio: "Closed. 42–44 Battersea High Street, SW11 3HX. Sylvia Rushbrooke’s gypsy-swing brasserie, February 2003–April 2022. Le Q Records live tapes from the room — including the 3×CD Le QuecumBar International Gypsy Swing Guitar Festival (LEQ0108, 2010; Django’s 100th birthday week, 17–25 January). discogs.com/release/11968877. House site still up as an archive.",
+  },
+  {
     slug: "khachapuri-cave",
     name: "The Cave at Khachapuri",
     city: "London",

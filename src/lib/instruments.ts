@@ -246,6 +246,8 @@ export const INSTRUMENTS: Instrument[] = [
       { slug: "stephane-grappelli", name: "Stéphane Grappelli", note: "The other half of the Hot Club" },
       { slug: "florin-niculescu", name: "Florin Niculescu", note: "Romanian swing violin" },
       { slug: "tcha-limberger", name: "Tcha Limberger", note: "Belgian Sinti violin" },
+      { slug: "andy-aitchison", name: "Andy Aitchison", note: "UK violin, Le QuecumBar" },
+      { slug: "wattie-rosenberg", name: "Wattie Rosenberg", note: "Dutch Sinti violin" },
       { slug: "tim-kliphuis", name: "Tim Kliphuis", note: "Grappelli-Django camp" },
       { slug: "christiaan-van-hemert", name: "Christiaan van Hemert", note: "Rosenberg orbit, teacher" },
       { slug: "costel-nitescu", name: "Costel Nitescu", note: "Romanian concert violin" },

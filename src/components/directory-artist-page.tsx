@@ -64,6 +64,31 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
   "sven-jungbeck": [
     { href: "/luthiers/amin-sharifi", label: "Amin Sharifi — guitar workshop, Köln-Kalk" },
   ],
+  "pete-kubryk-townsend": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+  ],
+  "andy-aitchison": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+  ],
+  "andy-crowdy": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+  ],
+  "benoit-viellefon": [
+    { href: "https://benoitviellefon.com", label: "Website — benoitviellefon.com" },
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/groups/benoit-viellefon-hot-club", label: "Benoit Viellefon Hot Club" },
+  ],
+  "ducato-piotrowski": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+  ],
+  "gary-potter": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11969919-The-Gary-Potter-Quartet-Le-QuecumBar-Live-In-London-", label: "Live In London — Discogs" },
+  ],
   "holzmanno-winterstein": [
     { href: "/history#forbach", label: "History / Forbach" },
   ],

@@ -2694,6 +2694,42 @@ export const BANDS: Band[] = [
       },
     ],
   },
+  {
+    slug: "fleur-de-paris",
+    name: "Fleur de Paris",
+    origin: "United Kingdom",
+    country: "United Kingdom",
+    members: [],
+    roles: {},
+    bio: "French chanson and swing group on Le QuecumBar International Gypsy Swing Guitar Festival (Le Q Records LEQ0108, 2010): Menilmontant, Romance de Paris, Sérénade sans espoir, La Vie en rose. Discogs does not list the players.",
+  },
+  {
+    slug: "biel-ballester-trio",
+    name: "Biel Ballester Trio",
+    origin: "Mallorca, Spain",
+    country: "Spain",
+    members: ["biel-ballester"],
+    roles: { "biel-ballester": "Guitar" },
+    bio: "Biel Ballester’s trio. Le QuecumBar International Gypsy Swing Guitar Festival 3×CD (2010): My Sweet, Midnight Blue, Avanti, Centuries Ago. Discogs also lists Live In London (2005) and Gypsy Jazz Live In London (2006, 2008) from the same Battersea room.",
+  },
+  {
+    slug: "benoit-viellefon-hot-club",
+    name: "Benoit Viellefon Hot Club",
+    origin: "London, United Kingdom",
+    country: "United Kingdom",
+    members: ["benoit-viellefon"],
+    roles: { "benoit-viellefon": "Guitar, vocal" },
+    bio: "Benoit Viellefon’s Hot Club — Django, Grappelli, Armstrong and Bechet. Live at the Quecumbar (JohnJohn Records, 2012) is on Discogs and on benoitviellefon.com.",
+  },
+  {
+    slug: "le-quecumbar-allstars",
+    name: "Le QuecumBar Allstars",
+    origin: "London, United Kingdom",
+    country: "United Kingdom",
+    members: ["lollo-meier"],
+    roles: { "lollo-meier": "Guitar" },
+    bio: "House all-stars of Le QuecumBar, Battersea. Discogs: Le QuecumBar Allstars featuring Lollo Meier (2007).",
+  },
 ].map((band) => applyGroupBio(band as Band));
 
 const PAIRS: [string, string][] = [
@@ -2945,6 +2981,18 @@ const PAIRS: [string, string][] = [
   ["ola-erlien", "finn-hauge"],
   ["gildas-le-pape", "finn-hauge"],
   ["gustav-skaaret", "jon-larsen"],
+  ["pete-kubryk-townsend", "sebastien-giniaux"],
+  ["pete-kubryk-townsend", "ducato-piotrowski"],
+  ["andy-aitchison", "ritary-gaguenetti"],
+  ["andy-aitchison", "paulus-schafer"],
+  ["andy-aitchison", "ducato-piotrowski"],
+  ["andy-aitchison", "noah-schafer"],
+  ["andy-aitchison", "dave-kelbie"],
+  ["andy-crowdy", "hugo-richter"],
+  ["lollo-meier", "ritary-gaguenetti"],
+  ["lollo-meier", "feigeli-prisor"],
+  ["wattie-rosenberg", "sani-van-mullem"],
+  ["stochelo-rosenberg", "ritary-gaguenetti"],
 ];
 
 export function collaboratorSlugs(slug: string): string[] {
