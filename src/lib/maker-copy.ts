@@ -129,6 +129,14 @@ const BIOS: Record<string, Record<string, string>> = {
     es: "Maestro luthier en Mudershausen. Guitarras Hahl Selmer-Maccaferri.",
     pt: "Mestre luthier em Mudershausen. Guitarras Hahl Selmer-Maccaferri.",
   },
+  "benjamin-festersen": {
+    fr: "Hambourg Farmsen. Guitares gypsy jazz Selmer-Maccaferri et archtops, faites à la main. Atelier Klaus-Groth-Straße 31b. Aussi chez gypsyguitar.de. Hono Winterstein joue une Festersen.",
+    de: "Hamburg Farmsen. Handgebaute Selmer-Maccaferri Gypsy-Jazz-Gitarren und Archtops. Atelier Klaus-Groth-Straße 31b. Auch bei gypsyguitar.de. Hono Winterstein spielt eine Festersen.",
+    nl: "Hamburg Farmsen. Handgemaakte Selmer-Maccaferri gypsy-jazzgitaren en archtops. Atelier Klaus-Groth-Straße 31b. Ook via gypsyguitar.de. Hono Winterstein speelt een Festersen.",
+    it: "Amburgo Farmsen. Chitarre gypsy jazz Selmer-Maccaferri e archtop fatte a mano. Atelier Klaus-Groth-Straße 31b. Anche su gypsyguitar.de. Hono Winterstein suona una Festersen.",
+    es: "Hamburgo Farmsen. Guitarras gypsy jazz Selmer-Maccaferri y archtops hechas a mano. Atelier Klaus-Groth-Straße 31b. También en gypsyguitar.de. Hono Winterstein toca una Festersen.",
+    pt: "Hamburgo Farmsen. Guitarras gypsy jazz Selmer-Maccaferri e archtops feitas à mão. Atelier Klaus-Groth-Straße 31b. Também em gypsyguitar.de. Hono Winterstein toca uma Festersen.",
+  },
   "nicolas-perez": {
     fr: "Né en France, atelier à Berlin. Guitares acoustiques et gypsy jazz haut de gamme.",
     de: "In Frankreich geboren, Werkstatt in Berlin. High-End-Akustik- und Gypsy-Jazz-Gitarren.",

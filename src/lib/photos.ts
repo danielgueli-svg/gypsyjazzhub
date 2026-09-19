@@ -842,6 +842,7 @@ export function hasGroupPortrait(slug: string): boolean {
 const LUTHIER_PHOTOS = new Set([
   "adam-berten",
   "ajl-guitars",
+  "benjamin-festersen",
   "bruno-bagnarelli",
   "castelluccia",
   "de-molenhoek",
