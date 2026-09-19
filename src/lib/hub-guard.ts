@@ -2,6 +2,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { getSql } from "@/lib/db";
 import { parseMailLocale, welcomeMail, goldWelcomeMail, type MailLocale } from "@/lib/welcome-mail";
 import { isGoldInvite, CHARLES_DRAPER } from "@/lib/gold-members";
+import { readRequestLocale } from "@/lib/locale-detect.server";
 
 const RATE_PER_HOUR = 6;
 
@@ -105,13 +106,7 @@ async function turnstileOk(token?: string) {
 
 function localeFromRequest(): MailLocale {
   try {
-    const request = getRequest();
-    if (!request) return "en";
-    const cookie = request.headers.get("cookie") ?? "";
-    const match = cookie.match(/(?:^|;\s*)gjh-locale=([^;]*)/);
-    const fromCookie = match?.[1] ? decodeURIComponent(match[1]) : "";
-    if (fromCookie) return parseMailLocale(fromCookie);
-    return parseMailLocale(request.headers.get("accept-language"));
+    return parseMailLocale(readRequestLocale());
   } catch {
     return "en";
   }

@@ -3,7 +3,7 @@ import { getSql } from "@/lib/db";
 import { sendHubMail } from "@/lib/digest";
 import { SIGNIN_BUTTON, wrapHubMailHtml } from "@/lib/hub-mail-html";
 import { parseMailLocale, passwordMail } from "@/lib/welcome-mail";
-import { getRequest } from "@tanstack/react-start/server";
+import { readRequestLocale } from "@/lib/locale-detect.server";
 
 const TTL_MS = 60 * 60 * 1000;
 const COOLDOWN_MS = 10 * 60 * 1000;
@@ -87,11 +87,7 @@ export async function requestPasswordReset(
   }
   if (!haveStored) {
     try {
-      const request = getRequest();
-      const cookie = request?.headers.get("cookie") ?? "";
-      const match = cookie.match(/(?:^|;\s*)gjh-locale=([^;]*)/);
-      if (match?.[1]) locale = parseMailLocale(decodeURIComponent(match[1]));
-      else locale = parseMailLocale(request?.headers.get("accept-language"));
+      locale = parseMailLocale(readRequestLocale());
     } catch {
       /* stay en */
     }

@@ -7,19 +7,29 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { AppErrorComponent } from "@/lib/error-component";
-import { LocaleProvider } from "@/lib/i18n";
+import { LocaleProvider, isLocaleId, type LocaleId } from "@/lib/i18n";
+import { localeFromCookie } from "@/lib/locale-detect";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { VisitPing } from "@/components/visit-ping";
+import type { TickerPayload } from "@/lib/ticker";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Gypsy Jazz Hub";
 
 export const Route = createRootRoute({
-  loader: async () => {
+  loader: async (): Promise<{ ticker: TickerPayload; locale: LocaleId }> => {
     const { tickerPayload } = await import("@/lib/ticker-data");
-    return tickerPayload();
+    let locale: LocaleId = "en";
+    try {
+      const { getRequestLocale } = await import("@/lib/locale-hint");
+      const guessed = await getRequestLocale();
+      if (isLocaleId(guessed)) locale = guessed;
+    } catch {
+      /* no request (build) — stay English */
+    }
+    return { ticker: tickerPayload(), locale };
   },
   head: () => ({
     meta: [
@@ -48,20 +58,28 @@ export const Route = createRootRoute({
   notFoundComponent: NotFound,
 });
 
+function htmlLocale(ssr: LocaleId): LocaleId {
+  if (typeof document === "undefined") return ssr;
+  const picked = localeFromCookie(document.cookie);
+  return isLocaleId(picked) ? picked : ssr;
+}
+
 function RootDocument() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const ticker = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const ticker = data?.ticker;
+  const locale = htmlLocale(isLocaleId(data?.locale) ? data.locale : "en");
   const scene = pathname === "/" ? "home" : "read";
 
   return (
-    <html lang="en" className="antialiased" suppressHydrationWarning>
+    <html lang={locale} className="antialiased" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body className="min-h-dvh text-fg" data-scene={scene}>
         <PreviewHostBridge />
         <AuthProvider>
-          <LocaleProvider>
+          <LocaleProvider initial={locale}>
           <VisitPing />
           <div className="flex min-h-dvh flex-col">
             <SiteHeader ticker={ticker} />

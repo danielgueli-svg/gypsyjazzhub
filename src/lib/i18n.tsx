@@ -28,6 +28,7 @@ import { TICKER_UI } from "@/lib/i18n-ticker";
 import { BOOKING_UI } from "@/lib/i18n-booking";
 import { JAM_UI } from "@/lib/jam-copy";
 import { JAM_GOING_UI } from "@/lib/jam-going-copy";
+import { LOCALE_COOKIE, LOCALE_PICKED_COOKIE, localeFromCookie } from "@/lib/locale-detect";
 
 export const LOCALES = [
   { id: "en", native: "English", latin: "English", short: "EN", flag: "🇬🇧", iso: "gb" },
@@ -4966,7 +4967,8 @@ const DICTS: Record<LocaleId, Dict> = {
   ru: { ...ru, ...FESTIVAL_UI.ru, ...HOT_CLUB_UI.ru, ...MAKERS_UI.ru, ...NAV_UI.ru, ...JAM_UI.ru, ...JAM_GOING_UI.ru, ...TICKER_UI.ru, ...BOOKING_UI.ru },
 };
 
-const STORAGE = "gjh-locale";
+const STORAGE = LOCALE_COOKIE;
+const PICKED = LOCALE_PICKED_COOKIE;
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 type Ctx = {
@@ -4979,34 +4981,38 @@ const I18nContext = createContext<Ctx | null>(null);
 
 function readCookie(): LocaleId | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/(?:^|;\s*)gjh-locale=([^;]*)/);
-  const raw = match?.[1] ? decodeURIComponent(match[1]) : "";
+  const raw = localeFromCookie(document.cookie);
   return isLocaleId(raw) ? raw : null;
 }
 
 function persistLocale(id: LocaleId) {
   try {
     window.localStorage.setItem(STORAGE, id);
+    window.localStorage.setItem(PICKED, "1");
   } catch {
     /* private mode */
   }
   try {
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = `${STORAGE}=${encodeURIComponent(id)}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+    const base = `Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+    document.cookie = `${STORAGE}=${encodeURIComponent(id)}; ${base}`;
+    document.cookie = `${PICKED}=1; ${base}`;
   } catch {
     /* ignore */
   }
 }
 
-function readStored(): LocaleId {
-  if (typeof window === "undefined") return "en";
+function readPicked(): LocaleId | null {
+  if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(STORAGE);
-    if (isLocaleId(raw)) return raw;
+    if (window.localStorage.getItem(PICKED) === "1") {
+      const raw = window.localStorage.getItem(STORAGE);
+      if (isLocaleId(raw)) return raw;
+    }
   } catch {
     /* private mode */
   }
-  return readCookie() ?? "en";
+  return readCookie();
 }
 
 export function LocaleProvider({
@@ -5016,17 +5022,13 @@ export function LocaleProvider({
   children: ReactNode;
   initial?: LocaleId;
 }) {
-  const [locale, setLocaleState] = useState<LocaleId>(() =>
-    typeof window === "undefined"
-      ? isLocaleId(initial)
-        ? initial
-        : "en"
-      : readStored(),
-  );
+  const start = isLocaleId(initial) ? initial : "en";
+  const [locale, setLocaleState] = useState<LocaleId>(start);
 
   useEffect(() => {
-    persistLocale(locale);
-  }, [locale]);
+    const picked = readPicked();
+    if (picked && picked !== locale) setLocaleState(picked);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
