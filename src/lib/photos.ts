@@ -111,6 +111,16 @@ const LOCAL: Record<string, ArtistPhoto> = {
     href: "https://commons.wikimedia.org/wiki/File:Aurore_Voilqu%C3%A9_Djangofestivalen_2023_(225637).jpg",
     license: "CC BY-SA 4.0",
   },
+  "julia-hornung": {
+    src: "/artists/julia-hornung.jpg",
+    credit: "Julia Hornung",
+    href: "https://juliahornungbass.de/",
+  },
+  "giangiacomo-rosso": {
+    src: "/artists/giangiacomo-rosso.jpg",
+    credit: "Giangiacomo Rosso / Gypsy Jazz Guitar Master",
+    href: "https://gypsyjazzguitarmaster.com/meet-the-teachers/",
+  },
   "tchavolo-schmitt": {
     src: "/artists/tchavolo-schmitt.jpg",
     credit: "Jeronimo Vicente Cunha / Wikimedia Commons",

@@ -2746,6 +2746,18 @@ export const BANDS: Band[] = [
     bio: "Julia Hornung’s Collectif Django. Kulturbüro Schwabmünchen bills the group with Aurore Voilqué as guest — Gypsy Swing im MUGS, 1 October 2026. Other chairs not named on that ticket. juliahornungbass.de.",
   },
   {
+    slug: "duo-solera",
+    name: "Duo Solèra",
+    origin: "Munich, Germany",
+    country: "Germany",
+    members: ["julia-hornung", "giangiacomo-rosso"],
+    roles: {
+      "julia-hornung": "Double bass",
+      "giangiacomo-rosso": "Guitar",
+    },
+    bio: "House project on juliahornungbass.de: Duo Solèra — Julia Hornung and Giangiacomo Rosso. Next listed date: Lauterbacher Mühle, Seeshaupt, 11 October 2026.",
+  },
+  {
     slug: "biel-ballester-trio",
     name: "Biel Ballester Trio",
     origin: "Mallorca, Spain",
