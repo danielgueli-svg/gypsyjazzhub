@@ -133,7 +133,14 @@ export function CountryView({
     families: familiesForCountry(atlasName).length,
     orchestras: (country?.bands ?? []).filter((band) => isArchiveBand(band)).length,
   };
-  const livingBands = (country?.bands ?? []).filter((band) => !isArchiveBand(band));
+  const livingBands = pinCountryBands(
+    atlasName,
+    (country?.bands ?? []).filter((band) => !isArchiveBand(band)),
+  );
+  const players = pinCountryArtists(
+    atlasName,
+    artists.filter((artist) => !artist.past),
+  );
   const [city, setCity] = useState("");
   const [weekday, setWeekday] = useState("");
   const cities = useMemo(() => uniqueCities([...allJams, ...allConcerts]), [allJams, allConcerts]);
@@ -434,7 +441,7 @@ export function CountryView({
 
       <section id="players" className="mt-12 scroll-mt-40">
         <h2 className="font-display text-3xl font-semibold">{t("country.currently")}</h2>
-        <PlayerFold artists={artists.filter((artist) => !artist.past)} empty={t("country.noPlayers")} />
+        <PlayerFold artists={players} empty={t("country.noPlayers")} />
       </section>
 
       {artists.some((artist) => artist.past) ? (
@@ -545,6 +552,31 @@ function CountryJump({ items }: { items: { id: string; label: string }[] }) {
       ) : null}
     </div>
   );
+}
+
+const COUNTRY_PIN: Record<string, { artists: string[]; bands: string[] }> = {
+  Hungary: {
+    artists: ["david-cooper"],
+    bands: ["valami-swing"],
+  },
+};
+
+function pinBySlug<T extends { slug: string }>(slugs: string[] | undefined, rows: T[]): T[] {
+  if (!slugs?.length) return rows;
+  const rank = new Map(slugs.map((slug, i) => [slug, i]));
+  return [...rows].sort((a, b) => {
+    const ra = rank.has(a.slug) ? rank.get(a.slug)! : 1000;
+    const rb = rank.has(b.slug) ? rank.get(b.slug)! : 1000;
+    return ra - rb;
+  });
+}
+
+function pinCountryArtists(country: string, rows: GlobeArtist[]) {
+  return pinBySlug(COUNTRY_PIN[country]?.artists, rows);
+}
+
+function pinCountryBands<T extends { slug: string }>(country: string, rows: T[]) {
+  return pinBySlug(COUNTRY_PIN[country]?.bands, rows);
 }
 
 function PlayerFold({ artists, empty }: { artists: GlobeArtist[]; empty: string }) {

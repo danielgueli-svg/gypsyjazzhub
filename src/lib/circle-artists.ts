@@ -1703,10 +1703,10 @@ export const CIRCLE_ARTISTS = [
     origin: "Budapest, Hungary",
     instruments: "Guitar",
     era: "The Circle",
-    bio: "Budapest manouche guitar. Leader of Valami Swing since 2015 — hot jazz and cool swing from Django. Album Hungarian Django Tales with Roby Lakatos as guest. Plays with primas. Hosts travelling musicians in Budapest. facebook.com/valamiswing.",
-    notable: "Valami Swing",
+    bio: "Budapest guitar. Leader of Valami Swing. Songwriter, guitarist, lyricist and producer. Resident guitarist at Déryné in Buda for 11 years — Mondays and Wednesdays. Valami Swing albums: Barbara (with Izabella Caussanel) and Hungarian Django Tales (Roby Lakatos as guest). His page: davidcooper.eu/music.",
+    notable: "Valami Swing; Déryné",
     youtube_url: "https://www.youtube.com/watch?v=m2EbMvpSvRM",
-    website_url: "https://www.facebook.com/valamiswing",
+    website_url: "https://www.davidcooper.eu/music/",
     sort_order: 216,
   },
   {

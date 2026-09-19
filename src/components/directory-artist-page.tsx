@@ -49,6 +49,12 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "/history#forbach", label: "History / Forbach" },
     { href: "/festivals/festival-jazz-manouche-forbach", label: "Festival de jazz manouche de Forbach" },
   ],
+  "david-cooper": [
+    { href: "https://www.davidcooper.eu/music/", label: "Website — davidcooper.eu/music" },
+    { href: "https://valamiswing.bandcamp.com/album/hungarian-django-tales", label: "Hungarian Django Tales — Bandcamp" },
+    { href: "https://valamiswing.bandcamp.com/album/barbara", label: "Barbara — Bandcamp" },
+    { href: "/groups/valami-swing", label: "Valami Swing" },
+  ],
   "holzmanno-winterstein": [
     { href: "/history#forbach", label: "History / Forbach" },
   ],

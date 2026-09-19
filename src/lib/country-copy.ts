@@ -3,7 +3,7 @@ export const COUNTRY_NOTES: Record<string, string> = {
   Israel:
     "Gypsy jazz in Israel is a small circle, mostly Tel Aviv, not a festival country. The first local manouche band, Swing de Gitanes, started in 2007. The public jam, when it happens, is a table session: a set, then the table opens. There is no weekly listing on file. Teachers and a luthier are here. Sign in to post the next night.",
   Hungary:
-    "Budapest Django is one scene: Canarro, Swing à la Django, Valami Swing (David Cooper), the Gypsy Jazz Band with Roby Lakatos as mentor, jams when Manuska posts them. Restaurant primas orchestras — csárdás and nóta — are a different tradition. Those names sit in the country archive, not in this Django list.",
+    "Budapest Django is one scene: Valami Swing (David Cooper — davidcooper.eu/music), Canarro, Swing à la Django, the Gypsy Jazz Band with Roby Lakatos as mentor, jams when Manuska posts them. Restaurant primas orchestras — csárdás and nóta — are a different tradition. Those names sit in the country archive, not in this Django list.",
   Russia:
     "Moscow chairs: Georgiy Yashagashvili / Django Friends, Dmitry Kuptsov, Lu Golovina, Ilya Delizonas — Kozlov Club, Maroseyka 9/2 and Unplugged on Myasnitskaya 15. Next billed: Django Friends, 18 September 2026, 18:00, Unplugged. No printed weekly jam. Saint Petersburg: Hot Club of Saint-Petersburg at JFC, Shpalernaya 33 — concerts when posted; mid-September board has no Hot Club night. Perm, Yekaterinburg, Samara and Tyumen bands exist; they post city by city.",
   Norway:
@@ -39,6 +39,17 @@ export type CountryFeatured = {
 
 /** Featured clip + house note at the top of a country page. Facts only. */
 export const COUNTRY_FEATURED: Record<string, CountryFeatured> = {
+  Hungary: {
+    kicker: "Budapest",
+    title: "David Cooper — Valami Swing",
+    body: "Budapest guitar. He leads Valami Swing, writes songs, and has been resident guitarist at Déryné in Buda for 11 years — Mondays and Wednesdays. Two records on his own page: Barbara (with Izabella Caussanel) and Hungarian Django Tales (Roby Lakatos as guest). Facts from davidcooper.eu/music — not from a mixed primas list.",
+    youtubeUrl: "https://www.youtube.com/watch?v=m2EbMvpSvRM",
+    videoTitle: "Valami Swing ft. Roby Lakatos — Bei Dir War Es Immer So Schön",
+    site: "https://www.davidcooper.eu/music/",
+    siteLabel: "davidcooper.eu/music",
+    pageHref: "/musicians/david-cooper",
+    pageLabel: "David Cooper",
+  },
   France: {
     kicker: "Paris",
     title: "Paris Guitar Connection",
@@ -69,8 +80,24 @@ export const COUNTRY_FEATURED: Record<string, CountryFeatured> = {
 };
 
 const FEATURED_COPY: Record<string, Record<string, Partial<CountryFeatured>>> = {
+  nl: {
+    France: { kicker: "Parijs", title: "Paris Guitar Connection", body: "Een Parijse podcast: zes gitaristen, twee banken, en een lang gesprek over de gitaar. Lives en tutos na elke aflevering — geen wekelijkse open jam.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" },
+    Hungary: {
+      kicker: "Boedapest",
+      title: "David Cooper — Valami Swing",
+      body: "Gitaar in Boedapest. Hij leidt Valami Swing, schrijft songs, en speelt al 11 jaar resident in Déryné in Buda — maandag en woensdag. Twee platen op zijn eigen pagina: Barbara (met Izabella Caussanel) en Hungarian Django Tales (Roby Lakatos als gast). Feiten van davidcooper.eu/music.",
+      videoTitle: "Valami Swing ft. Roby Lakatos — Bei Dir War Es Immer So Schön",
+    },
+  },
+  hu: {
+    Hungary: {
+      kicker: "Budapest",
+      title: "David Cooper — Valami Swing",
+      body: "Budapesti gitáros. Ő vezeti a Valami Swinget, dalokat ír, és 11 éve a Déryné rezidens gitárosa Budán — hétfőn és szerdán. Két lemez a saját oldalán: Barbara (Izabella Caussanellel) és Hungarian Django Tales (Roby Lakatos vendégként). Forrás: davidcooper.eu/music.",
+      videoTitle: "Valami Swing ft. Roby Lakatos — Bei Dir War Es Immer So Schön",
+    },
+  },
   fr: { France: { kicker: "Paris", title: "Paris Guitar Connection", body: "Un podcast parisien : six guitaristes, deux canapés, et une longue conversation sur la guitare. Lives et tutos après chaque épisode — ce n’est pas un jam public hebdomadaire. La maison, c’est YouTube @ParisGuitarConnection.", videoTitle: "Gypsy Jazz with a Gypsy : Steven Reinhardt — Paris Guitar Connection" } },
-  nl: { France: { kicker: "Parijs", title: "Paris Guitar Connection", body: "Een Parijse podcast: zes gitaristen, twee banken, en een lang gesprek over de gitaar. Lives en tutos na elke aflevering — geen wekelijkse open jam.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
   de: { France: { kicker: "Paris", title: "Paris Guitar Connection", body: "Ein Pariser Podcast: sechs Gitarristen, zwei Sofas, und ein langes Gespräch über die Gitarre. Lives und Tutorials nach jeder Folge — kein wöchentlicher öffentlicher Jam.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
   es: { France: { kicker: "París", title: "Paris Guitar Connection", body: "Un podcast parisino: seis guitarristas, dos sofás y una larga conversación sobre la guitarra. Directos y tutoriales después de cada episodio — no es un jam público semanal.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },
   it: { France: { kicker: "Parigi", title: "Paris Guitar Connection", body: "Un podcast parigino: sei chitarristi, due divani e una lunga chiacchierata sulla chitarra. Live e tutorial dopo ogni puntata — non è un jam pubblico settimanale.", videoTitle: "Gypsy Jazz with a Gypsy: Steven Reinhardt — Paris Guitar Connection" } },

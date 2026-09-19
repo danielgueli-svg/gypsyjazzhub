@@ -1686,7 +1686,7 @@ export const VENUES: Venue[] = [
     site: "",
     contact: "",
     scene: "jazz",
-    bio: "Castle District bakery-bistro since 1914. Jazz nights and the occasional manouche set — a listening room, not a jam.",
+    bio: "Castle District bakery-bistro. David Cooper has been the resident guitarist here for 11 years — Mondays and Wednesdays. His page: davidcooper.eu/music. A listening room, not a posted jam.",
   },
   {
     slug: "szazeves-etterem",

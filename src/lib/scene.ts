@@ -1428,7 +1428,7 @@ export const BANDS: Band[] = [
     roles: {
       "david-cooper": "Guitar, leader",
     },
-    bio: "Budapest hot jazz and cool swing, born from Django. David Cooper has led the band since 2015 — manouche guitar. Album Hungarian Django Tales with Roby Lakatos as guest, not as bandleader. iF Jazz Café, Ráday utca 19. facebook.com/valamiswing · valamiswing.bandcamp.com.",
+    bio: "Budapest band led by David Cooper — guitar. Albums on his site: Barbara (with Izabella Caussanel) and Hungarian Django Tales (Roby Lakatos as guest). Cooper has been resident guitarist at Déryné in Buda for 11 years, Mondays and Wednesdays. davidcooper.eu/music · valamiswing.bandcamp.com.",
   },
   {
     slug: "la-barriere",

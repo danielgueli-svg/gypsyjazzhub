@@ -20,6 +20,11 @@ import { useI18n } from "@/lib/i18n";
 import { settle } from "@/lib/settle";
 
 const GROUP_LINKS: Record<string, { href: string; label: string }[]> = {
+  "valami-swing": [
+    { href: "https://www.davidcooper.eu/music/", label: "David Cooper — davidcooper.eu/music" },
+    { href: "https://valamiswing.bandcamp.com/album/hungarian-django-tales", label: "Hungarian Django Tales — Bandcamp" },
+    { href: "https://valamiswing.bandcamp.com/album/barbara", label: "Barbara — Bandcamp" },
+  ],
   "yorkshire-gypsy-swing-collective": [
     { href: "https://www.jazzleeds.org.uk/whats-on/gypsy-swing-collective/", label: "Jazz Leeds — Yorkshire Gypsy Swing Collective" },
     { href: "https://www.guitarworld.com/features/django-reinhardt-legacy", label: "Guitar World — Django Reinhardt’s legacy (Denny Ilett, 7 March 2023)" },
