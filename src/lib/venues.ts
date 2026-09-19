@@ -2691,6 +2691,17 @@ export const VENUES: Venue[] = [
     bio: "Kaulbachstraße 13. Gypsy Jazz Tage opening, 20 October 2026 — Julia Hornung Trio feat. Aurore Voilqué.",
   },
   {
+    slug: "mugs-schwabmuenchen",
+    name: "Museum und Galerie der Stadt Schwabmünchen",
+    city: "Schwabmünchen",
+    country: "Germany",
+    kind: "Hall",
+    site: "https://schwabmuenchen.de/museum-und-galerie-mugs/",
+    contact: "https://www.eventim-light.com/de/a/638f15ff9c9eb20bf98bd685/e/6931bcd36fe9085f5020d6df",
+    scene: "gypsy",
+    bio: "MUGS, Holzheystr. 12, 86830 Schwabmünchen. Kulturbüro night 1 October 2026, 20:00 — Julia Hornung & Collectif Django feat. Aurore Voilqué.",
+  },
+  {
     slug: "jazzinitiative-schwetzingen",
     name: "Jazzinitiative Schwetzingen",
     city: "Schwetzingen",

@@ -172,9 +172,11 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "mailto:booking@juliahornungbass.de", label: "booking@juliahornungbass.de" },
     { href: "https://www.youtube.com/@JuliaHornungBass", label: "YouTube" },
     { href: "/groups/julia-hornung-trio", label: "Julia Hornung Trio" },
+    { href: "/groups/collectif-django", label: "Collectif Django" },
     { href: "https://www.sondelaterre.fr/event/julia-hornung-group-feat-aurore-voilque/", label: "20 Sep 2026 — Le Son de la Terre, Paris" },
     { href: "https://maisonlafeuilleraie.fr/event/julia-hornung-trio-feat-aurore-voilque/", label: "24 Sep 2026 — Maison La Feuilleraie" },
     { href: "https://38riv.com/en/concerts/julia-hornung-trio", label: "27 Sep 2026 — 38Riv, Paris" },
+    { href: "https://www.eventim-light.com/de/a/638f15ff9c9eb20bf98bd685/e/6931bcd36fe9085f5020d6df", label: "1 Oct 2026 — MUGS, Schwabmünchen" },
     { href: "https://eventfrog.de/en/p/concerts/swing/gypsy-jazz-tage-2026-julia-hornung-trio-ft-aurore-voilque-7477361133696882476.html", label: "20 Oct 2026 — Gypsy Jazz Tage, Munich" },
   ],
   "giangiacomo-rosso": [

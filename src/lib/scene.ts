@@ -2735,6 +2735,17 @@ export const BANDS: Band[] = [
     bio: "Munich double bassist Julia Hornung’s trio. 2026 Paris and Munich bills: Giangiacomo Rosso lead guitar, Julien Cattiaux rhythm. Aurore Voilqué joins on violin and vocal when posted — Le Son de la Terre, Maison La Feuilleraie, 38Riv, Gypsy Jazz Tage. juliahornungbass.de.",
   },
   {
+    slug: "collectif-django",
+    name: "Collectif Django",
+    origin: "Munich, Germany",
+    country: "Germany",
+    members: ["julia-hornung"],
+    roles: {
+      "julia-hornung": "Double bass",
+    },
+    bio: "Julia Hornung’s Collectif Django. Kulturbüro Schwabmünchen bills the group with Aurore Voilqué as guest — Gypsy Swing im MUGS, 1 October 2026. Other chairs not named on that ticket. juliahornungbass.de.",
+  },
+  {
     slug: "biel-ballester-trio",
     name: "Biel Ballester Trio",
     origin: "Mallorca, Spain",
