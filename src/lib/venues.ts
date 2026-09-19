@@ -451,8 +451,9 @@ export const VENUES: Venue[] = [
     kind: "Club",
     site: "https://www.quecumbar.co.uk/",
     contact: "mailto:info@quecumbar.co.uk",
+    booker: "Sylvia Rushbrooke",
     scene: "gypsy",
-    bio: "Closed. 42–44 Battersea High Street, SW11 3HX. Sylvia Rushbrooke’s gypsy-swing brasserie, February 2003–April 2022. Le Q Records live tapes from the room — including the 3×CD Le QuecumBar International Gypsy Swing Guitar Festival (LEQ0108, 2010; Django’s 100th birthday week, 17–25 January). discogs.com/release/11968877. House site still up as an archive.",
+    bio: "Closed. 42–44 Battersea High Street, SW11 3HX. Sylvia Rushbrooke’s gypsy-swing brasserie, February 2003–April 2022. Doors forced shut 6 April 2022 after a new landlord doubled the rent and would not renew the lease (her statement, The Jazz Mann, 27 April 2022). Le Q Records live tapes from the room — including the 3×CD Le QuecumBar International Gypsy Swing Guitar Festival (LEQ0108, 2010; Django’s 100th birthday week, 17–25 January), with Rushbrooke’s own festival, birthday-night and last-night introductions. discogs.com/release/11968877. House site still up as an archive.",
   },
   {
     slug: "khachapuri-cave",

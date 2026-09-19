@@ -66,32 +66,39 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
   ],
   "pete-kubryk-townsend": [
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
   ],
   "andy-aitchison": [
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
   ],
   "andy-crowdy": [
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
   ],
   "benoit-viellefon": [
     { href: "https://benoitviellefon.com", label: "Website — benoitviellefon.com" },
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "/groups/benoit-viellefon-hot-club", label: "Benoit Viellefon Hot Club" },
   ],
   "ducato-piotrowski": [
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
   ],
   "gary-potter": [
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11969919-The-Gary-Potter-Quartet-Le-QuecumBar-Live-In-London-", label: "Live In London — Discogs" },
   ],
   "hugo-richter": [
     { href: "/groups/kussi-weiss-gipsy-connection", label: "Kussi Weiss Gipsy Connection" },
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "/musicians/sylvia-rushbrooke", label: "Sylvia Rushbrooke — Le QuecumBar" },
     { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
   ],
   "holzmanno-winterstein": [
@@ -152,6 +159,13 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "/musicians/kussi-weiss", label: "Kussi Weiss" },
     { href: "/groups/kussi-weiss-trio", label: "Kussi Weiss Trio" },
     { href: "/groups/kussi-weiss-gipsy-connection", label: "Gipsy Connection" },
+  ],
+  "sylvia-rushbrooke": [
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.quecumbar.co.uk/", label: "House site — quecumbar.co.uk (archive)" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+    { href: "https://www.discogs.com/artist/6470230-Sylvia-Rushbrooke", label: "Sylvia Rushbrooke — Discogs" },
+    { href: "https://www.thejazzmann.com/news/article/le-quecumbar-has-closed", label: "Closing statement — The Jazz Mann, 27 April 2022" },
   ],
 };
 

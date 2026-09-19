@@ -160,6 +160,19 @@ export const CIRCLE_ARTISTS = [
     sort_order: 897,
   },
   {
+    slug: "sylvia-rushbrooke",
+    name: "Sylvia Rushbrooke",
+    years: "United Kingdom",
+    origin: "London, United Kingdom",
+    instruments: "Le QuecumBar",
+    era: "The Circle",
+    bio: "Opened Le QuecumBar, the Battersea gypsy-swing brasserie, in February 2003 and ran it until April 2022. Organised the January 2010 International Gypsy Swing Guitar Festival for Django’s 100th birthday; Le Q Records taped the week as the 3×CD LEQ0108, with her own festival, birthday-night and last-night introductions. House site still up as an archive: quecumbar.co.uk.",
+    notable: "Le QuecumBar; Le Q Records; 2010 festival 3×CD",
+    youtube_url: "",
+    website_url: "https://www.quecumbar.co.uk/",
+    sort_order: 898,
+  },
+  {
     slug: "tonino-de-sensi",
     name: "Tonino De Sensi",
     years: "Italy",
@@ -8492,6 +8505,7 @@ export const CIRCLE_CONCERTS = [
     "wattie-rosenberg",
     "sani-van-mullem",
     "stochelo-rosenberg",
+    "sylvia-rushbrooke",
   ].map((legend_slug) => ({
     legend_slug,
     title: "Le QuecumBar International Gypsy Swing Guitar Festival",

@@ -115,6 +115,7 @@ export const ALBUMS: Album[] = [
     year: 2010,
     billed: "Various",
     artists: [
+      "sylvia-rushbrooke",
       "kussi-weiss",
       "hugo-richter",
       "biel-ballester",
@@ -133,7 +134,7 @@ export const ALBUMS: Album[] = [
       "wattie-rosenberg",
       "sani-van-mullem",
     ],
-    note: "3×CD, Le Q Records LEQ0108, Battersea, January 2010. Kussi Weiss Quintet: Them There Eyes, Close To You, All of Me, Close Your Eyes.",
+    note: "3×CD, Le Q Records LEQ0108, Battersea, 17–25 January 2010 — Django’s 100th birthday week. Opens with Sylvia Rushbrooke’s festival introduction; she also speaks Django’s birthday night and the last night.",
     href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-",
     hrefLabel: "Discogs",
   },

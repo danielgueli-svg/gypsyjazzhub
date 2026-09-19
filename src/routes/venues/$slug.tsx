@@ -81,6 +81,25 @@ function VenuePage() {
       <article className="mt-10 max-w-2xl space-y-5 text-base leading-relaxed text-muted">
         <h2 className="font-display text-3xl font-semibold text-fg">About</h2>
         <p>{venue.bio}</p>
+        {venue.slug === "le-quecumbar" ? (
+          <p className="flex flex-col items-start gap-1 text-sm">
+            <Link
+              to="/musicians/$slug"
+              params={{ slug: "sylvia-rushbrooke" }}
+              className="text-fg hover:underline"
+            >
+              Sylvia Rushbrooke — owner
+            </Link>
+            <a
+              href="https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-"
+              target="_blank"
+              rel="noreferrer"
+              className="text-muted hover:text-fg hover:underline"
+            >
+              Festival 3×CD — Discogs
+            </a>
+          </p>
+        ) : null}
         {venueScene(venue) !== "gypsy" ? (
           <p className="rounded-2xl bg-surface p-5 text-fg shadow-border">
             This house already books jazz. It is a potential room for a Gypsy Jazz jam
@@ -95,7 +114,19 @@ function VenuePage() {
         {venue.booker || venue.contact ? (
           <div className="mt-4 rounded-2xl bg-surface p-5 shadow-border">
             {venue.booker ? (
-              <p className="font-display text-xl font-semibold">{venue.booker}</p>
+              venue.slug === "le-quecumbar" ? (
+                <p className="font-display text-xl font-semibold">
+                  <Link
+                    to="/musicians/$slug"
+                    params={{ slug: "sylvia-rushbrooke" }}
+                    className="hover:underline"
+                  >
+                    {venue.booker}
+                  </Link>
+                </p>
+              ) : (
+                <p className="font-display text-xl font-semibold">{venue.booker}</p>
+              )
             ) : (
               <p className="text-sm text-muted">Booker name not on file yet.</p>
             )}
