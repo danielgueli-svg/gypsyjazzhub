@@ -89,6 +89,11 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
     { href: "https://www.discogs.com/release/11969919-The-Gary-Potter-Quartet-Le-QuecumBar-Live-In-London-", label: "Live In London — Discogs" },
   ],
+  "hugo-richter": [
+    { href: "/groups/kussi-weiss-gipsy-connection", label: "Kussi Weiss Gipsy Connection" },
+    { href: "/venues/le-quecumbar", label: "Le QuecumBar, Battersea" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "Festival 3×CD — Discogs" },
+  ],
   "holzmanno-winterstein": [
     { href: "/history#forbach", label: "History / Forbach" },
   ],
@@ -124,6 +129,29 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
   ],
   "christine-pinkard": [
     { href: "/groups/yorkshire-gypsy-swing-collective", label: "Yorkshire Gypsy Swing Collective" },
+  ],
+  "kussi-weiss": [
+    { href: "https://kussiweisstrio.jimdofree.com/", label: "Website — kussiweisstrio.jimdofree.com" },
+    { href: "/groups/kussi-weiss-trio", label: "Kussi Weiss Trio" },
+    { href: "/groups/kussi-weiss-gipsy-connection", label: "Gipsy Connection" },
+    { href: "https://secondhandsongs.com/release/486647/all", label: "There Will Never Be Another You (1996) — SecondHandSongs" },
+    { href: "https://secondhandsongs.com/release/486650/all", label: "A Little Magic (1998) — SecondHandSongs" },
+    { href: "https://www.glm.de/produkt/martin-weiss-ensemble-savoir-vivre/", label: "Savoir Vivre (2001) — GLM" },
+    { href: "https://open.spotify.com/album/3rZK69ya2N9pvgOd89IPZB", label: "Gipsy Celebration (2008) — Spotify" },
+    { href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-", label: "QuecumBar festival 3×CD — Discogs" },
+    { href: "https://music.apple.com/us/artist/kussi-weiss-quintet/410149196", label: "Kussi Weiss Quintet — Apple Music" },
+    { href: "https://de.wikipedia.org/wiki/Kussi_Weiss", label: "Wikipedia" },
+    { href: "/musicians/martin-weiss", label: "Martin Weiss" },
+  ],
+  "tschabo-franzen": [
+    { href: "/musicians/kussi-weiss", label: "Kussi Weiss" },
+    { href: "/groups/kussi-weiss-trio", label: "Kussi Weiss Trio" },
+    { href: "/groups/kussi-weiss-gipsy-connection", label: "Gipsy Connection" },
+  ],
+  "dietmar-osterburg": [
+    { href: "/musicians/kussi-weiss", label: "Kussi Weiss" },
+    { href: "/groups/kussi-weiss-trio", label: "Kussi Weiss Trio" },
+    { href: "/groups/kussi-weiss-gipsy-connection", label: "Gipsy Connection" },
   ],
 };
 

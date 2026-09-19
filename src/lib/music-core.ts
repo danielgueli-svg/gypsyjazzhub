@@ -5,6 +5,8 @@ export type Album = {
   billed: string;
   artists: string[];
   note?: string;
+  href?: string;
+  hrefLabel?: string;
 };
 
 export type NewsItem = {
@@ -67,6 +69,74 @@ export function artistItunes(name: string, appleId?: string) {
 }
 
 export const ALBUMS: Album[] = [
+  {
+    slug: "kussi-weiss-there-will-never-be-another-you",
+    title: "There Will Never Be Another You",
+    year: 1996,
+    billed: "Kussi Weiss Ensemble",
+    artists: ["kussi-weiss"],
+    note: "First album as leader. Idol Records IR 8096 5. Recorded December 1995 and February 1996.",
+    href: "https://secondhandsongs.com/release/486647/all",
+    hrefLabel: "SecondHandSongs",
+  },
+  {
+    slug: "kussi-weiss-a-little-magic",
+    title: "A Little Magic",
+    year: 1998,
+    billed: "Kussi Weiss Trio",
+    artists: ["kussi-weiss"],
+    note: "Idol Records IR 1798 5. Second album under his name, billed Kussi Weiss Trio.",
+    href: "https://secondhandsongs.com/release/486650/all",
+    hrefLabel: "SecondHandSongs",
+  },
+  {
+    slug: "martin-weiss-savoir-vivre",
+    title: "Savoir Vivre",
+    year: 2001,
+    billed: "Martin Weiss Ensemble",
+    artists: ["martin-weiss", "kussi-weiss", "tschabo-franzen"],
+    note: "GLM / Edition Collage EC 523-2. Kussi Weiss solo guitar; Tschabo Franzen rhythm; Martin Weiss violin.",
+    href: "https://www.glm.de/produkt/martin-weiss-ensemble-savoir-vivre/",
+    hrefLabel: "GLM",
+  },
+  {
+    slug: "martin-weiss-gipsy-celebration",
+    title: "Gipsy Celebration",
+    year: 2008,
+    billed: "Martin Weiss",
+    artists: ["martin-weiss", "kussi-weiss", "tschabo-franzen", "dietmar-osterburg"],
+    note: "H19 Produktion, 2 May 2008. Martin Weiss with Kussi Weiss, Tschabo Franzen and Dietmar Osterburg.",
+    href: "https://open.spotify.com/album/3rZK69ya2N9pvgOd89IPZB",
+    hrefLabel: "Spotify",
+  },
+  {
+    slug: "le-quecumbar-international-gypsy-swing-guitar-festival",
+    title: "Le QuecumBar International Gypsy Swing Guitar Festival",
+    year: 2010,
+    billed: "Various",
+    artists: [
+      "kussi-weiss",
+      "hugo-richter",
+      "biel-ballester",
+      "stochelo-rosenberg",
+      "lollo-meier",
+      "paulus-schafer",
+      "tcha-limberger",
+      "ritary-gaguenetti",
+      "sebastien-giniaux",
+      "ducato-piotrowski",
+      "pete-kubryk-townsend",
+      "andy-aitchison",
+      "noah-schafer",
+      "andy-crowdy",
+      "feigeli-prisor",
+      "wattie-rosenberg",
+      "sani-van-mullem",
+    ],
+    note: "3×CD, Le Q Records LEQ0108, Battersea, January 2010. Kussi Weiss Quintet: Them There Eyes, Close To You, All of Me, Close Your Eyes.",
+    href: "https://www.discogs.com/release/11968877-Various-Le-QuecumBar-International-Gypsy-Swing-Guitar-Festival-",
+    hrefLabel: "Discogs",
+  },
   {
     slug: "fanou-gipsy-guitar-vol-2",
     title: "Gipsy Guitar From Corsica, Vol. 2",

@@ -104,6 +104,7 @@ const ARTIST_PHOTOS = new Set([
   "jon-larsen",
   "joscho-stephan",
   "julien-labro",
+  "kussi-weiss",
   "marcia-bamberg",
   "marion-lenfant-preus",
   "marius-preda",

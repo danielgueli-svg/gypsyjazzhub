@@ -141,6 +141,7 @@ export const CHANNEL_VIDEOS: ChannelVideo[] = [
     clip: "For my Mandy — Festival Django Reinhardt 2023",
     place: "concert",
     hub: { name: "Kussi Weiss Trio", href: group("kussi-weiss-trio") },
+    with: [{ name: "Kussi Weiss", href: artist("kussi-weiss") }],
   },
   {
     name: "Marcia Bamberg Swing Quartet",

@@ -615,9 +615,10 @@ export const SAMOIS_ARTISTS = [
     origin: "Germany",
     instruments: "Guitar",
     era: "Samois",
-    bio: "German Sinti guitarist documented on the Samois official and off-festival circuit. Weiss represents the German family bands that travel to Festival Django Reinhardt each summer.",
-    notable: "Festival Django Reinhardt; German Sinti",
-    youtube_url: "",
+    bio: "German Sinti guitarist of the Weiss family. First album There Will Never Be Another You (Idol Records, 1996). Festival Django Reinhardt; Le QuecumBar 2010 3×CD.",
+    notable: "Idol Records 1996; Festival Django Reinhardt; Le QuecumBar 2010",
+    youtube_url: "https://www.youtube.com/watch?v=FZbziPoF_bw",
+    website_url: "https://kussiweisstrio.jimdofree.com/",
     sort_order: 74,
   },
   {

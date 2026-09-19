@@ -97,6 +97,9 @@ const paths = new Set(staticPaths);
 for (const slug of slugsFrom("src/lib/circle-artists.ts")) {
   paths.add(artistPath(slug));
 }
+for (const slug of slugsFrom("src/lib/samois-artists.ts")) {
+  paths.add(artistPath(slug));
+}
 for (const slug of slugsFrom("src/lib/seed-data.ts")) {
   // seed-data also has legend_slug — artistPath still fine for musician pages
   if (slug.includes("-") || /^[a-z0-9]+$/.test(slug)) paths.add(artistPath(slug));
@@ -112,6 +115,19 @@ for (const slug of slugsFrom("src/lib/camps.ts")) {
 }
 for (const slug of familyPageSlugs()) {
   paths.add(`/families/${slug}`);
+}
+function bandPageSlugs() {
+  const text = read("src/lib/scene.ts");
+  const block = text.match(/export const BANDS(?:: [^=]+)? = \[([\s\S]*?)\]\.map/);
+  if (!block) return [];
+  const out = [];
+  for (const match of block[1].matchAll(/^\s{2}\{\s*\n\s{4}slug:\s*"([^"]+)"/gm)) {
+    out.push(match[1]);
+  }
+  return out;
+}
+for (const slug of bandPageSlugs()) {
+  paths.add(`/groups/${slug}`);
 }
 function newsSlugs() {
   const text = read("src/lib/music.ts");

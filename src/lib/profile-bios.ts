@@ -212,7 +212,7 @@ const FEATURED_ARTIST_BIOS: Record<string, string> = {
   "mike-reinhardt":
     "Mike Reinhardt is Alsatian guitar of the Reinhardt family, a Festival Django Reinhardt name. Another living branch of the surname on the Samois grass.",
   "kussi-weiss":
-    "Kussi Weiss is German Sinti guitar, a Festival Django Reinhardt regular. The German family school on a French festival bill.",
+    "Kussi Weiss is a German Sinti guitarist of the Weiss family. He took up guitar at ten, played rhythm for his uncle Moritz Weiss, and later stood on stage with Martin Weiss and Häns’che Weiss. At seventeen he formed the Kussi Weiss Ensemble. First album: There Will Never Be Another You (Idol Records IR 8096 5, 1996). A Little Magic (Kussi Weiss Trio, Idol IR 1798 5) followed in 1998. Wikipedia also names Maro Ziro with his quartet Gypsy Connection. Martin Weiss put him on Savoir Vivre (GLM EC 523-2, 2001) and Gipsy Celebration (H19, 2008). In January 2010 the Kussi Weiss Quintet played Le QuecumBar International Gypsy Swing Guitar Festival — four tracks on the Le Q Records 3×CD (LEQ0108). Official trio site: kussiweisstrio.jimdofree.com. Working trio: Tschabo Franzen, guitar; Dietmar Osterburg, double bass. Babik Reinhardt heard him at Festival Django Reinhardt, Samois, in 1996 and brought him to the main stage the next year.",
   "olivier-kikteff":
     "Olivier Kikteff is a French guitarist and composer, a Festival Django Reinhardt regular. Original writing inside the manouche right hand — the French composer-guitarist chair.",
   "cyrille-aimee":

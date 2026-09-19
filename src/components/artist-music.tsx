@@ -28,6 +28,13 @@ function AlbumRow({ album }: { album: Album }) {
           {album.year} · {album.billed}
         </p>
         {album.note ? <p className="mt-1 text-xs text-faint">{album.note}</p> : null}
+        {album.href ? (
+          <p className="mt-1 text-xs">
+            <a href={album.href} target="_blank" rel="noreferrer" className="text-muted hover:text-fg">
+              {album.hrefLabel || "Source"}
+            </a>
+          </p>
+        ) : null}
         {album.artists.length > 1 ? (
           <p className="mt-1 flex flex-wrap gap-x-2 text-xs text-muted">
             {album.artists.map((slug) => (

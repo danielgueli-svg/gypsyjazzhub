@@ -199,7 +199,11 @@ export const REST_ARTIST_BIOS: Record<string, string> = {
   "giovanni-weiss":
     "Giovanni Weiss is German Sinti guitar of the Weiss family, heard on the German festival bills beside Kussi Weiss and the Karlsruhe school.",
   "hugo-richter":
-    "Hugo Richter is German gypsy jazz guitar. Django Festival Augsburg bills him with Giovanni Weiss, Eva Scholten and Franck Wolf — a working German festival chair.",
+    "Hugo Richter is German gypsy jazz guitar and accordion. Django Festival Augsburg bills him with Giovanni Weiss, Eva Scholten and Franck Wolf. In 2009 Jazz in der Remise, Wernigerode, listed him on accordion and piano in Kussi Weiss Gipsy Connection. Le QuecumBar’s January 2010 festival put him on accordion; the Le Q Records 3×CD has him with Andy Crowdy.",
+  "tschabo-franzen":
+    "Tschabo Franzen is German guitar, the working partner of Kussi Weiss: Kussi Weiss Trio, Gipsy Connection, and Martin Weiss records Savoir Vivre (2001) and Gipsy Celebration (2008).",
+  "dietmar-osterburg":
+    "Dietmar Osterburg is German double bass with Kussi Weiss — Kussi Weiss Trio and Gipsy Connection — and on Martin Weiss, Gipsy Celebration (H19, 2008).",
   "franck-wolf":
     "Franck Wolf plays saxophone on the German gypsy jazz bills. Django Festival Augsburg has him with Giovanni Weiss, Hugo Richter and Eva Scholten — reed inside a guitar music.",
   "franc-anastasio":
@@ -360,7 +364,9 @@ export const REST_GROUP_BIOS: Record<string, string> = {
   "fanou-torracinta-hugo-guezbar":
     "Fanou Torracinta and Hugo Guezbar — Corsican lead and Montpellier guitar on the same bill. Two of the current French voices, Winterstein pompe underneath when the nights line up.",
   "kussi-weiss-trio":
-    "Kussi Weiss Trio — German Sinti guitar, a regular of the Festival Django Reinhardt afternoon stages. The German family school in working-band form.",
+    "Kussi Weiss Trio — Kussi Weiss and Tschabo Franzen on guitar, Dietmar Osterburg on double bass. Official page kussiweisstrio.jimdofree.com. Festival Django Reinhardt afternoon stages.",
+  "kussi-weiss-gipsy-connection":
+    "Kussi Weiss Gipsy Connection — quartet with Tschabo Franzen, Hugo Richter (accordion, piano) and Dietmar Osterburg. Wikipedia names their album Maro Ziro. Wernigerode billed the same chairs in December 2009.",
   "william-brunard-cello-project":
     "William Brunard’s cello project — gypsy jazz from the low strings. The French first-call bassist opening the book to cello writing. Festival Django Reinhardt.",
   "rocky-gresset-trio":
