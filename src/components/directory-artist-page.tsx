@@ -61,6 +61,9 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "/groups/sansonis-hot-fives", label: "Sansoni’s Hot Fives" },
     { href: "https://nicksansonejazz.com/upcoming-gigs-concerts/", label: "Events" },
   ],
+  "sven-jungbeck": [
+    { href: "/luthiers/amin-sharifi", label: "Amin Sharifi — guitar workshop, Köln-Kalk" },
+  ],
   "holzmanno-winterstein": [
     { href: "/history#forbach", label: "History / Forbach" },
   ],
