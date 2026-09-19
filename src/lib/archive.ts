@@ -115,3 +115,13 @@ export function archiveCounts(country: string) {
     orchestras: archiveBandsForCountry(country).length,
   };
 }
+
+/** EN intro for a country archive. Hungary uses “Families”; others keep the shared i18n lead. */
+const ARCHIVE_COUNTRY_LEAD_EN: Record<string, string> = {
+  Hungary: "Families, older orchestras and past chairs. Living Hot Club groups stay on the country page.",
+};
+
+export function archiveCountryLead(country: string, locale: string, fallback: string): string {
+  if (locale === "en") return ARCHIVE_COUNTRY_LEAD_EN[country] ?? fallback;
+  return fallback;
+}

@@ -7,6 +7,7 @@ import { LineageLinks } from "@/components/lineage-links";
 import { listLegends, type Legend } from "@/lib/api";
 import {
   archiveBandsForCountry,
+  archiveCountryLead,
   archiveSourcesForCountry,
 } from "@/lib/archive";
 import { archiveVideosForCountry } from "@/lib/archive-videos";
@@ -79,7 +80,9 @@ function ArchiveCountryPage() {
         <Flag name={country} className="h-8 w-11" />
         {name}
       </h1>
-      <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">{t("archive.countryLead")}</p>
+      <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
+        {archiveCountryLead(country, locale, t("archive.countryLead"))}
+      </p>
       <div className="mt-6">
         <LineageLinks current="/archive" />
       </div>

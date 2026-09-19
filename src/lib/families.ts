@@ -417,7 +417,7 @@ export const FAMILIES: Family[] = [
     name: "The Lakatos family",
     kicker: "Budapest violin",
     summary:
-      "Hungarian Roma violin house. Uncle Sándor was the famous primas; Roby Lakatos walks the same line into jazz, classical and Django’s book.",
+      "Hungarian Roma violin family. Uncle Sándor was the famous primas; Roby Lakatos walks the same line into jazz, classical and Django’s book.",
     href: "/families/lakatos",
     members: [
       { slug: "sandor-lakatos", name: "Sándor Lakatos", role: "Violin" },

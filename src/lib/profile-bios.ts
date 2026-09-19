@@ -310,6 +310,22 @@ const FEATURED_GROUP_BIOS: Record<string, string> = {
     "Budapest primas orchestra. Sándor Járóka (1922–1984), then his son Sándor Járóka Jr (1954–2007). At the father’s funeral the Budapest Gypsy Symphony Orchestra was born.",
   "lajos-boross-gypsy-band":
     "Budapest primas Lajos Boross (1925–2014) and his gypsy orchestra.",
+  "lakatos-pityu-zenekara":
+    "Hungarian primas orchestra. Lakatos Pityu, violin. Archive nights on this page.",
+  "olah-vilmos-orchestra":
+    "Budapest primas orchestra. Oláh Vilmos, violin. Archive nights on this page.",
+  "tonte-andras-zenekara":
+    "Hungarian primas orchestra based in Hortobágy. Tonté András, violin. Archive nights on this page.",
+  "balogh-janos-zenekara":
+    "Hungarian primas orchestra. Balogh János, violin. Archive nights on this page.",
+  "varga-jeno-zenekara":
+    "Hungarian primas orchestra. Varga Jenő, violin. Archive nights on this page.",
+  "santa-ferenc-zenekara":
+    "Hungarian primas orchestra. Sánta Ferenc, violin. Archive nights on this page.",
+  "gagyi-oszkar-zenekara":
+    "Hungarian primas orchestra. Gagyi Oszkár, violin. Archive nights on this page.",
+  "horvath-gyula-orchestra":
+    "Budapest primas orchestra. Horváth Gyula, violin. Archive nights on this page.",
   "georges-boulanger-orchestra":
     "Gheorghe Pantazi (1893–1958), billed Georges Boulanger. Romanian violin orchestra — gypsy colour with Viennese light music. The Great Gypsy Violinist sides, 1934–1939.",
   "mozes-rosenberg-trio":

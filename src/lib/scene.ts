@@ -2425,7 +2425,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["lakatos-pityu"],
     roles: { "lakatos-pityu": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra billed on The International Archive for Sinti & Gypsy Music.",
+    bio: "Hungarian primas orchestra. Lakatos Pityu, violin. Archive nights on this page.",
     clips: [{ title: "Lakatos Pityu és zenekara", url: "https://www.youtube.com/watch?v=rcjRk7qstdg" }],
   },
   {
@@ -2445,7 +2445,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["olah-vilmos"],
     roles: { "olah-vilmos": "Violin, leader" },
-    bio: "Budapest primas orchestra. Gierő Pup, 2005. The International Archive.",
+    bio: "Budapest primas orchestra. Oláh Vilmos, violin. Archive nights on this page.",
     clips: [{ title: "Oláh Vilmos — Budapest, 2005", url: "https://www.youtube.com/watch?v=9ODFJUOOk9Y" }],
   },
   {
@@ -2525,7 +2525,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["tonte-andras"],
     roles: { "tonte-andras": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra. Hortobágyi Csárda. The International Archive.",
+    bio: "Hungarian primas orchestra based in Hortobágy. Tonté András, violin. Archive nights on this page.",
     clips: [{ title: "Tonté András és zenekara", url: "https://www.youtube.com/watch?v=fS2aK2PqPAg" }],
   },
   {
@@ -2535,7 +2535,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["balogh-janos"],
     roles: { "balogh-janos": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra. The International Archive.",
+    bio: "Hungarian primas orchestra. Balogh János, violin. Archive nights on this page.",
   },
   {
     slug: "varga-jeno-zenekara",
@@ -2544,7 +2544,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["varga-jeno"],
     roles: { "varga-jeno": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra. The International Archive.",
+    bio: "Hungarian primas orchestra. Varga Jenő, violin. Archive nights on this page.",
   },
   {
     slug: "santa-ferenc-zenekara",
@@ -2553,7 +2553,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["santa-ferenc"],
     roles: { "santa-ferenc": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra. The International Archive.",
+    bio: "Hungarian primas orchestra. Sánta Ferenc, violin. Archive nights on this page.",
   },
   {
     slug: "gagyi-oszkar-zenekara",
@@ -2562,7 +2562,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["gagyi-oszkar"],
     roles: { "gagyi-oszkar": "Violin, leader" },
-    bio: "Hungarian gypsy orchestra. The International Archive.",
+    bio: "Hungarian primas orchestra. Gagyi Oszkár, violin. Archive nights on this page.",
   },
   {
     slug: "puporka-geza-zenekara",
@@ -2581,7 +2581,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: ["horvath-gyula"],
     roles: { "horvath-gyula": "Violin, leader" },
-    bio: "Budapest primas orchestra. Vigadó, 2000. The International Archive.",
+    bio: "Budapest primas orchestra. Horváth Gyula, violin. Archive nights on this page.",
   },
   {
     slug: "rene-bikar-orchestra",
