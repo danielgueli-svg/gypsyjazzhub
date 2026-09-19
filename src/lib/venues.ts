@@ -25,6 +25,17 @@ export const VENUES: Venue[] = [
     bio: "Amsterdam's jazz house. Django Amsterdam, Rosenberg nights and visiting manouche bills. The Dutch room bookers know.",
   },
   {
+    slug: "cecconis-amsterdam",
+    name: "Cecconi’s Amsterdam",
+    city: "Amsterdam",
+    country: "Netherlands",
+    kind: "Restaurant",
+    site: "https://www.cecconisamsterdam.com/en",
+    contact: "",
+    scene: "jazz",
+    bio: "Northern Italian restaurant, Spuistraat 210. Nick Sansone posts Friday and Saturday 19:00–23:00 here. nicksansonejazz.com/upcoming-gigs-concerts.",
+  },
+  {
     slug: "stichting-alhambra",
     name: "Stichting Alhambra",
     city: "Alkmaar",

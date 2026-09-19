@@ -180,6 +180,17 @@ export const BANDS: Band[] = [
     ],
   },
   {
+    slug: "sansonis-hot-fives",
+    name: "Sansoni’s Hot Fives",
+    origin: "Amsterdam, Netherlands",
+    country: "Netherlands",
+    members: ["nick-sansone"],
+    roles: {
+      "nick-sansone": "Guitar",
+    },
+    bio: "Amsterdam. Hot jazz from the 1930s in the style of Django Reinhardt, Louis Armstrong and Duved Dunayevsky. Nick Sansone, guitar. Also billed: solo, and The New Haarlem Hot Band. Posted Friday and Saturday 19:00–23:00 at Cecconi’s, Amsterdam. nicksansonejazz.com/sansonis-hot-fives.",
+  },
+  {
     slug: "parisien-gypsy-jazz-kwartet",
     name: "Don Vink’s Parisien Gypsy Jazz Kwartet",
     origin: "Netherlands",

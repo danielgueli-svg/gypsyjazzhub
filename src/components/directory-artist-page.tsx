@@ -55,6 +55,12 @@ const SCENE_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "https://valamiswing.bandcamp.com/album/barbara", label: "Barbara — Bandcamp" },
     { href: "/groups/valami-swing", label: "Valami Swing" },
   ],
+  "nick-sansone": [
+    { href: "https://nicksansonejazz.com/", label: "Website — nicksansonejazz.com" },
+    { href: "mailto:nicksansonejazz@yahoo.com", label: "nicksansonejazz@yahoo.com" },
+    { href: "/groups/sansonis-hot-fives", label: "Sansoni’s Hot Fives" },
+    { href: "https://nicksansonejazz.com/upcoming-gigs-concerts/", label: "Events" },
+  ],
   "holzmanno-winterstein": [
     { href: "/history#forbach", label: "History / Forbach" },
   ],

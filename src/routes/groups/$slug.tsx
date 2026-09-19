@@ -25,6 +25,11 @@ const GROUP_LINKS: Record<string, { href: string; label: string }[]> = {
     { href: "https://valamiswing.bandcamp.com/album/hungarian-django-tales", label: "Hungarian Django Tales — Bandcamp" },
     { href: "https://valamiswing.bandcamp.com/album/barbara", label: "Barbara — Bandcamp" },
   ],
+  "sansonis-hot-fives": [
+    { href: "https://nicksansonejazz.com/sansonis-hot-fives/", label: "Sansoni’s Hot Fives — nicksansonejazz.com" },
+    { href: "https://nicksansonejazz.com/", label: "Nick Sansone" },
+    { href: "mailto:nicksansonejazz@yahoo.com", label: "nicksansonejazz@yahoo.com" },
+  ],
   "yorkshire-gypsy-swing-collective": [
     { href: "https://www.jazzleeds.org.uk/whats-on/gypsy-swing-collective/", label: "Jazz Leeds — Yorkshire Gypsy Swing Collective" },
     { href: "https://www.guitarworld.com/features/django-reinhardt-legacy", label: "Guitar World — Django Reinhardt’s legacy (Denny Ilett, 7 March 2023)" },

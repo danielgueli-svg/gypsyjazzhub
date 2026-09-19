@@ -92,6 +92,16 @@ export const CATALOG_TEACHERS: CatalogTeacher[] = [
     note: "Gitaarschool Heiloo. Private lessons — gypsy jazz and the rest of the guitar.",
   },
   {
+    countrySlug: "netherlands",
+    name: "Nick Sansone",
+    instruments: "Guitar",
+    contact: "https://nicksansonejazz.com/",
+    region: "Noord-Holland",
+    city: "Amsterdam",
+    artistSlug: "nick-sansone",
+    note: "1930s old-school Django guitar. Private lessons in Amsterdam, in person and online. nicksansonejazz@yahoo.com. Also plectrums, guitar restoration, and Introduction to Gypsy Swing Improvisation. nicksansonejazz.com.",
+  },
+  {
     countrySlug: "germany",
     name: "Sven Jungbeck",
     instruments: "Guitar",
