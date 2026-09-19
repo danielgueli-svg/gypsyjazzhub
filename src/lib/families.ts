@@ -422,7 +422,6 @@ export const FAMILIES: Family[] = [
     members: [
       { slug: "sandor-lakatos", name: "Sándor Lakatos", role: "Violin" },
       { slug: "roby-lakatos", name: "Roby Lakatos", role: "Violin" },
-      { slug: "vilmos-lakatos", name: "Vilmos Lakatos", role: "Guitar" },
       { slug: "lakatos-vilmos", name: "Lakatos Vilmos", role: "Violin, primas" },
       { slug: "lakatos-miklos", name: "Lakatos Miklós", role: "Violin, primas" },
     ],
@@ -431,7 +430,7 @@ export const FAMILIES: Family[] = [
         heading: "The house",
         paragraphs: [
           "The Lakatos family is one of Hungary’s Roma violin houses. Roby Lakatos was born in 1965. He learned in his uncle Sándor’s band and his father Antal’s — Sándor Lakatos (17 December 1924 — 24 May 1994, Budapest) was the famous primas of that generation, radio folk orchestra 1950–52. The family traces itself to János Bihari, the nineteenth-century “king of gypsy violinists.” Café gypsy, classical rooms and jazz sit in the same right hand.",
-          "Roby is the one who walks into Django’s book: nights with Christiaan van Hemert, mentor to Budapest’s Gypsy Jazz Band (Róbert Kárpáti), and a guest on Valami Swing’s Hungarian Django Tales with Vilmos Lakatos on guitar. The restaurant orchestras of Budapest and the Hot Club bills are not two worlds here. They are two rooms of the same house.",
+          "Roby is the one who walks into Django’s book: nights with Christiaan van Hemert, mentor to Budapest’s Gypsy Jazz Band (Róbert Kárpáti), and a guest on Valami Swing’s Hungarian Django Tales — that band is David Cooper’s, not a Lakatos quintet. Restaurant primas orchestras and the Hot Club bills are different rooms. Do not read them as one list.",
         ],
       },
     ],

@@ -1403,7 +1403,7 @@ export const BANDS: Band[] = [
       "robert-karpati": "Guitar",
       "roby-lakatos": "Violin",
     },
-    bio: "Founded 2018: Róbert Kárpáti guitar, Roby Lakatos mentor, Myriam Lakatos voice, Flór Noémi bass, Kökény László guitar. Next: 30 August 2026, 19:30, Klebelsberg Kultúrkúria — guests Charlie Horváth and Csondor Kata. megegykort.com.",
+    bio: "Founded 2018: Róbert Kárpáti guitar, Roby Lakatos mentor, Myriam Lakatos voice, Flór Noémi bass, Kökény László guitar. megegykort.com.",
   },
   {
     slug: "canarro",
@@ -1424,12 +1424,11 @@ export const BANDS: Band[] = [
     name: "Valami Swing",
     origin: "Budapest, Hungary",
     country: "Hungary",
-    members: ["vilmos-lakatos", "roby-lakatos"],
+    members: ["david-cooper"],
     roles: {
-      "vilmos-lakatos": "Guitar",
-      "roby-lakatos": "Violin",
+      "david-cooper": "Guitar, leader",
     },
-    bio: "Budapest hot jazz and cool swing, born from Django. Album Hungarian Django Tales with Roby Lakatos. Vilmos Lakatos guitar. iF Jazz Café (Ráday utca 19) has billed them. valamiswing.bandcamp.com.",
+    bio: "Budapest hot jazz and cool swing, born from Django. David Cooper has led the band since 2015 — manouche guitar. Album Hungarian Django Tales with Roby Lakatos as guest, not as bandleader. iF Jazz Café, Ráday utca 19. facebook.com/valamiswing · valamiswing.bandcamp.com.",
   },
   {
     slug: "la-barriere",
@@ -1438,7 +1437,7 @@ export const BANDS: Band[] = [
     country: "Hungary",
     members: [],
     roles: {},
-    bio: "Hungarian manouche band in the 1930s–40s French Hot Club language. Django Feszt jam-stage regular. Also billed La Barriere Manouche Jazz Zenekar.",
+    bio: "Hungarian manouche band in the 1930s–40s French Hot Club language. Also billed La Barriere Manouche Jazz Zenekar.",
   },
   {
     slug: "sarkozy-collective",

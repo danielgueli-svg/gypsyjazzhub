@@ -3,7 +3,7 @@ export const COUNTRY_NOTES: Record<string, string> = {
   Israel:
     "Gypsy jazz in Israel is a small circle, mostly Tel Aviv, not a festival country. The first local manouche band, Swing de Gitanes, started in 2007. The public jam, when it happens, is a table session: a set, then the table opens. There is no weekly listing on file. Teachers and a luthier are here. Sign in to post the next night.",
   Hungary:
-    "Budapest has two rooms. One is Django: Canarro, Swing à la Django, the Gypsy Jazz Band around Roby Lakatos, jams when Manuska posts them. Next posted: Canarro at Kristály Színtér, 14 September 2026, 20:00; Roby Lakatos & Gypsy Jazz Band at Hangvilla, Veszprém, 10 October 2026, 19:00. The other is the primas orchestra — csárdás and nóta in restaurants. That is not a weekly Hot Club jam.",
+    "Budapest Django is one scene: Canarro, Swing à la Django, Valami Swing (David Cooper), the Gypsy Jazz Band with Roby Lakatos as mentor, jams when Manuska posts them. Restaurant primas orchestras — csárdás and nóta — are a different tradition. Those names sit in the country archive, not in this Django list.",
   Russia:
     "Moscow chairs: Georgiy Yashagashvili / Django Friends, Dmitry Kuptsov, Lu Golovina, Ilya Delizonas — Kozlov Club, Maroseyka 9/2 and Unplugged on Myasnitskaya 15. Next billed: Django Friends, 18 September 2026, 18:00, Unplugged. No printed weekly jam. Saint Petersburg: Hot Club of Saint-Petersburg at JFC, Shpalernaya 33 — concerts when posted; mid-September board has no Hot Club night. Perm, Yekaterinburg, Samara and Tyumen bands exist; they post city by city.",
   Norway:
