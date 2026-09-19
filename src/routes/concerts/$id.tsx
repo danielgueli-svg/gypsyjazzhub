@@ -48,6 +48,7 @@ export const Route = createFileRoute("/concerts/$id")({
 });
 
 function ArtistButton({ slug, kind, name }: { slug: string; kind: "legend" | "community"; name: string }) {
+  if (!slug) return null;
   if (slug === "django-reinhardt") {
     return (
       <Button asChild variant="outline">
@@ -89,6 +90,7 @@ function ArtistButton({ slug, kind, name }: { slug: string; kind: "legend" | "co
 
 function ArtistTextLink({ slug, kind, name }: { slug: string; kind: "legend" | "community"; name: string }) {
   const className = "text-fg hover:underline";
+  if (!slug) return <span>{name}</span>;
   if (slug === "django-reinhardt") return <Link to="/django" className={className}>{name}</Link>;
   if (slug === "stephane-grappelli") return <Link to="/grappelli" className={className}>{name}</Link>;
   if (slug === "denis-chang") return <Link to="/denis-chang" className={className}>{name}</Link>;
