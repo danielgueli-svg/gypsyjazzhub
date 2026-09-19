@@ -777,10 +777,20 @@ export const saveMyProfile = createServerFn({ method: "POST" })
       let contactUrl = data.contactUrl.trim();
       const contactLooksLikeSite =
         /^(https?:\/\/)/i.test(contactUrl) ||
-        (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(contactUrl) && !contactUrl.includes("@"));
+        (/^[a-z0-9.-]+\.[a-z]{2,}([/?#].*)?$/i.test(contactUrl) && !contactUrl.includes("@"));
       if (contactLooksLikeSite) {
-        if (!websiteUrl) websiteUrl = contactUrl;
-        contactUrl = "";
+        const href = /^(https?:\/\/)/i.test(contactUrl) ? contactUrl : `https://${contactUrl}`;
+        let path = "/";
+        try {
+          path = new URL(href).pathname.replace(/\/+$/, "") || "/";
+        } catch {
+          path = "/";
+        }
+        const isHome = path === "/";
+        if (isHome) {
+          if (!websiteUrl) websiteUrl = contactUrl;
+          contactUrl = "";
+        }
       }
       await sql`
       insert into profiles (

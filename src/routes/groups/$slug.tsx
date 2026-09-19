@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { ArtistBioEdit } from "@/components/artist-bio-edit";
+import { BookButton } from "@/components/book-button";
 import { ArtistNameLink } from "@/components/artist-name-link";
 import { ConcertList } from "@/components/concert-row";
 import { Nightbook } from "@/components/i-was-there";
@@ -96,6 +97,11 @@ function GroupPage() {
         <Badge>{members.length} members</Badge>
         <Badge>{band.country}</Badge>
       </div>
+      {hubPage?.bookingUrl ? (
+        <div className="mt-4">
+          <BookButton href={hubPage.bookingUrl} kind="group" />
+        </div>
+      ) : null}
       {lead ? (
         <p className="mt-4 text-sm text-muted">
           Main artist{" "}
@@ -112,6 +118,7 @@ function GroupPage() {
         bio={bio}
         links={extraLinks}
         photoUrl={hubPage?.photoUrl ?? ""}
+        bookingUrl={hubPage?.bookingUrl ?? ""}
         returnTo={`/groups/${band.slug}`}
       />
       <PageLinks catalog={GROUP_LINKS[band.slug] ?? []} extra={extraLinks} />

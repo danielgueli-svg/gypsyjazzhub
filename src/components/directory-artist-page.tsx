@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistBioEdit } from "@/components/artist-bio-edit";
+import { BookButton } from "@/components/book-button";
 import { ArtistMusic } from "@/components/artist-music";
 import { BookerLinks } from "@/components/booker-links";
 import { ConcertList } from "@/components/concert-row";
@@ -108,6 +109,7 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
   const overlay = hubPage?.bio?.trim() ?? "";
   const bio = overlay || member?.bio?.trim() || legend.bio;
   const extraLinks = hubPage?.links ?? [];
+  const bookingHref = hubPage?.bookingUrl?.trim() || member?.contactUrl?.trim() || "";
   const websiteUrl = member?.websiteUrl?.trim() || legend.websiteUrl;
   const youtubeUrl = member?.youtubeUrl?.trim() || legend.youtubeUrl;
   const instagramUrl = member?.instagramUrl?.trim() || legend.instagramUrl;
@@ -142,11 +144,17 @@ export function DirectoryArtistPage({ data }: { data: DirectoryArtistData }) {
             ))}
           </div>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">{bio}</p>
+          {bookingHref ? (
+            <div className="mt-4">
+              <BookButton href={bookingHref} />
+            </div>
+          ) : null}
           <ArtistBioEdit
             slug={legend.slug}
             bio={bio}
             links={extraLinks}
             photoUrl={hubPage?.photoUrl ?? ""}
+            bookingUrl={hubPage?.bookingUrl || member?.contactUrl || ""}
           />
           {legend.notable && !member?.bio?.trim() ? (
             <p className="mt-3 text-sm text-faint">{legend.notable}</p>

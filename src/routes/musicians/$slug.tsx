@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArtistBioEdit } from "@/components/artist-bio-edit";
+import { BookButton } from "@/components/book-button";
 import { ArtistClips } from "@/components/artist-clips";
 import { ArtistMusic } from "@/components/artist-music";
 import { ConcertList } from "@/components/concert-row";
@@ -132,7 +133,8 @@ function MemberMusicianPage({
   const bookingHrefRaw = contactHref(musician.contactUrl);
   const contactIsWebsite =
     /^https?:\/\//i.test(bookingHrefRaw) && !musician.contactUrl.includes("@");
-  const booking = contactIsWebsite ? "" : bookingHrefRaw;
+  const memberBooking = contactIsWebsite ? "" : bookingHrefRaw;
+  const booking = hubPage?.bookingUrl?.trim() || memberBooking;
   const websiteUrl = musician.websiteUrl.trim() || (contactIsWebsite ? bookingHrefRaw : "");
   const upcoming = concerts.filter((c) => new Date(c.startsAt).getTime() >= Date.now());
   const catalogPhoto = artistPhoto(musician.slug, musician.instruments);
@@ -189,13 +191,7 @@ function MemberMusicianPage({
             )}
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
-            {booking ? (
-              <Button asChild>
-                <a href={booking} target={booking.startsWith("mailto:") ? undefined : "_blank"} rel="noreferrer">
-                  Contact / book
-                </a>
-              </Button>
-            ) : null}
+            {booking ? <BookButton href={booking} /> : null}
             <SaveButton kind="artist" slug={musician.slug} label="Save artist" />
           </div>
         </div>
@@ -220,6 +216,7 @@ function MemberMusicianPage({
         bio={bio}
         links={extraLinks}
         photoUrl={hubPage?.photoUrl ?? ""}
+        bookingUrl={hubPage?.bookingUrl || musician.contactUrl}
       />
 
       {musician.youtubeUrl ? (
@@ -251,7 +248,7 @@ function MemberMusicianPage({
         ) : null}
         {booking ? (
           <a href={booking} className="text-muted hover:text-fg" target={booking.startsWith("mailto:") ? undefined : "_blank"} rel="noreferrer">
-            Contact bookers
+            {t("book.bookers")}
           </a>
         ) : null}
       </div>

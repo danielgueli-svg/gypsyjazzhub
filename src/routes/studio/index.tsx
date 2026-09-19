@@ -343,6 +343,7 @@ function ProfileForm({
   profile: Profile | null;
   onSaved: (profile: Profile) => void;
 }) {
+  const { t } = useI18n();
   const [displayName, setDisplayName] = useState(profile?.displayName || userName);
   const [city, setCity] = useState(profile?.city ?? "");
   const [country, setCountry] = useState(profile?.country ?? "");
@@ -535,19 +536,15 @@ function ProfileForm({
 
       {isMusician(profileTypes) ? (
       <section className="space-y-4">
-        <h2 className="font-display text-2xl font-semibold">For bookers</h2>
-        <p className="text-sm text-muted">
-          An email so venues and bookers can reach you. It shows as a contact
-          button on your page. Put your website in Website, not here.
-        </p>
-        <Field label="Email for bookings" htmlFor="contact">
+        <h2 className="font-display text-2xl font-semibold">{t("studio.bookers")}</h2>
+        <p className="text-sm text-muted">{t("studio.bookLead")}</p>
+        <Field label={t("book.field")} htmlFor="contact">
           <Input
             id="contact"
             value={contactUrl}
             onChange={(e) => setContactUrl(e.target.value)}
-            placeholder="you@atelier.com"
-            inputMode="email"
-            autoComplete="email"
+            placeholder={t("book.placeholder")}
+            autoComplete="off"
           />
         </Field>
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -558,7 +555,7 @@ function ProfileForm({
               onChange={(e) => setLookingForGigs(e.target.checked)}
               className="size-4 accent-accent"
             />
-            Looking for gigs
+            {t("studio.gigs")}
           </label>
           <label className="flex min-h-11 items-center gap-2 text-sm">
             <input
@@ -567,7 +564,7 @@ function ProfileForm({
               onChange={(e) => setAvailableToJam(e.target.checked)}
               className="size-4 accent-accent"
             />
-            Open to jam
+            {t("studio.jam")}
           </label>
         </div>
       </section>

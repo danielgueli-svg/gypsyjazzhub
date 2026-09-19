@@ -22,12 +22,14 @@ export function ArtistBioEdit({
   bio,
   links = [],
   photoUrl = "",
+  bookingUrl = "",
   returnTo,
 }: {
   slug: string;
   bio: string;
   links?: HubArtistLink[];
   photoUrl?: string;
+  bookingUrl?: string;
   returnTo?: string;
 }) {
   const { t } = useI18n();
@@ -36,6 +38,7 @@ export function ArtistBioEdit({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(bio);
   const [photo, setPhoto] = useState(photoUrl);
+  const [booking, setBooking] = useState(bookingUrl);
   const [drafts, setDrafts] = useState<DraftLink[]>(() => draftsFrom(links));
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -44,6 +47,7 @@ export function ArtistBioEdit({
   function resetForm() {
     setValue(bio);
     setPhoto(photoUrl);
+    setBooking(bookingUrl);
     setDrafts(draftsFrom(links));
     setStatus(null);
   }
@@ -70,6 +74,7 @@ export function ArtistBioEdit({
           bio: value,
           links: drafts,
           photoUrl: photo,
+          bookingUrl: booking,
         },
       });
       setStatus(result.pending ? t("bio.pending") : t("page.saved"));
@@ -124,6 +129,19 @@ export function ArtistBioEdit({
               value={photo}
               onChange={(e) => setPhoto(e.target.value)}
               placeholder="https://… or /groups/photo.jpg"
+              autoComplete="off"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="page-booking">{t("book.field")}</Label>
+            <p className="text-sm text-muted">{t("book.fieldLead")}</p>
+            <Input
+              id="page-booking"
+              type="text"
+              inputMode="email"
+              value={booking}
+              onChange={(e) => setBooking(e.target.value)}
+              placeholder={t("book.placeholder")}
               autoComplete="off"
             />
           </div>

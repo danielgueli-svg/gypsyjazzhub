@@ -18,6 +18,7 @@ import {
   emptyArtistPage,
   normalizeArtistLinks,
   parseArtistLinks,
+  sanitizeBookingUrl,
   sanitizePhotoUrl,
   type HubArtistLink,
   type HubArtistPage,
@@ -658,6 +659,7 @@ async function ensureArtistPageColumns() {
     for (const col of [
       "links text not null default '[]'",
       "photo_url text not null default ''",
+      "booking_url text not null default ''",
     ]) {
       try {
         await sql.query(`alter table hub_artist_bios add column if not exists ${col}`);
@@ -676,11 +678,13 @@ function mapArtistPage(row: {
   bio?: string | null;
   links?: unknown;
   photo_url?: string | null;
+  booking_url?: string | null;
 }): HubArtistPage {
   return {
     bio: (row.bio ?? "").trim(),
     links: parseArtistLinks(row.links),
     photoUrl: sanitizePhotoUrl(row.photo_url ?? ""),
+    bookingUrl: sanitizeBookingUrl(row.booking_url ?? ""),
   };
 }
 
@@ -850,8 +854,9 @@ export const getHubArtistBio = createServerFn({ method: "GET" })
       await ensureArtistPageColumns();
       const sql = await getSql();
       try {
-        const rows = await sql<{ bio: string; links: string; photo_url: string }>`
-          select bio, coalesce(links, '[]') as links, coalesce(photo_url, '') as photo_url
+        const rows = await sql<{ bio: string; links: string; photo_url: string; booking_url: string }>`
+          select bio, coalesce(links, '[]') as links, coalesce(photo_url, '') as photo_url,
+                 coalesce(booking_url, '') as booking_url
           from hub_artist_bios
           where artist_slug = ${slug} and coalesce(status, 'published') = 'published'
           limit 1
@@ -881,6 +886,7 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
     bio: string;
     links?: HubArtistLink[];
     photoUrl?: string;
+    bookingUrl?: string;
   }) => input)
   .handler(async ({ context, data }) => {
     await ensureHub();
@@ -898,19 +904,20 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
     const bio = submittedBio || (current[0]?.bio.trim() ?? "");
     const links = normalizeArtistLinks(data.links ?? []);
     const photoUrl = sanitizePhotoUrl(data.photoUrl ?? "");
-    if (!bio && !links.length && !photoUrl) {
-      throw new Error("Add a short bio, a labelled link, or a photo URL.");
+    const bookingUrl = sanitizeBookingUrl(data.bookingUrl ?? "");
+    if (!bio && !links.length && !photoUrl && !bookingUrl) {
+      throw new Error("Add a short bio, a booking link, or a photo URL.");
     }
     if (bio && bio.length < 20) {
       throw new Error("Write a little more — a short paragraph is enough.");
     }
     if (bio.length > 4000) throw new Error("Keep the bio under a few thousand characters.");
     const name = await submitterName(context.userId);
-    const payload = [slug, bio, JSON.stringify(links), photoUrl, context.userId, name, gate.status, new Date().toISOString()];
+    const payload = [slug, bio, JSON.stringify(links), photoUrl, bookingUrl, context.userId, name, gate.status, new Date().toISOString()];
     try {
       await sql.query(
-        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at, links, photo_url)
-         values ($1, $2, $5, $6, $7, $8, $3, $4)
+        `insert into hub_artist_bios (artist_slug, bio, submitted_by, submitted_name, status, updated_at, links, photo_url, booking_url)
+         values ($1, $2, $6, $7, $8, $9, $3, $4, $5)
          on conflict (artist_slug) do update set
            bio = excluded.bio,
            submitted_by = excluded.submitted_by,
@@ -918,7 +925,8 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
            status = excluded.status,
            updated_at = excluded.updated_at,
            links = excluded.links,
-           photo_url = excluded.photo_url`,
+           photo_url = excluded.photo_url,
+           booking_url = excluded.booking_url`,
         payload,
       );
     } catch (err) {
@@ -939,8 +947,8 @@ export const updateHubArtistBio = createServerFn({ method: "POST" })
         throw new Error(`Could not save the page (${message}).`);
       }
       const message = err instanceof Error ? err.message : String(err);
-      if (links.length || photoUrl) {
-        throw new Error(`Saved the bio, but extra links and photo need a HubDb update (${message}).`);
+      if (links.length || photoUrl || bookingUrl) {
+        throw new Error(`Saved the bio, but extra links need a HubDb update (${message}).`);
       }
     }
     return { ok: true as const, pending: gate.pending };

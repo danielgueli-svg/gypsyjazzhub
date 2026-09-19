@@ -10,6 +10,7 @@ export type HubArtistPage = {
   bio: string;
   links: HubArtistLink[];
   photoUrl: string;
+  bookingUrl: string;
 };
 
 export const MAX_PAGE_LINKS = 12;
@@ -19,7 +20,7 @@ const MAX_URL = 500;
 const SAFE_PATH = /^\/[A-Za-z0-9/_\-.~?=&%+#]*$/;
 
 export function emptyArtistPage(): HubArtistPage {
-  return { bio: "", links: [], photoUrl: "" };
+  return { bio: "", links: [], photoUrl: "", bookingUrl: "" };
 }
 
 export function parseArtistLinks(raw: unknown): HubArtistLink[] {
@@ -72,6 +73,20 @@ export function sanitizePageUrl(raw: string): string {
 
 export function sanitizePhotoUrl(raw: string): string {
   return sanitizePageUrl(raw);
+}
+
+export function sanitizeBookingUrl(raw: string): string {
+  const value = raw.trim();
+  if (!value || value.length > MAX_URL) return "";
+  if (value.includes("@") && !value.includes(" ")) {
+    const email = value.replace(/^mailto:/i, "");
+    return email.includes("@") ? `mailto:${email}` : "";
+  }
+  return sanitizePageUrl(value) || (looksLikeHost(value) ? `https://${value}` : "");
+}
+
+function looksLikeHost(value: string) {
+  return /^[a-z0-9.-]+\.[a-z]{2,}([/?#].*)?$/i.test(value) && !value.includes(" ");
 }
 
 export function normalizeArtistLinks(
