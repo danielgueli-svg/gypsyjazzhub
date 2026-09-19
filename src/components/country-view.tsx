@@ -209,8 +209,8 @@ export function CountryView({
           { id: "jams", label: t("nav.jams") },
           featured ? { id: "featured", label: featured.title } : null,
           camps.length ? { id: "camps", label: t("country.camps") } : null,
+          luthiers.length ? { id: "makers", label: t("country.makers") } : null,
           { id: "concerts", label: t("nav.concerts") },
-          { id: "makers", label: t("country.makers") },
           { id: "festivals", label: t("nav.festivals") },
           hotClubs.length ? { id: "hot-clubs", label: t("country.hotClub") } : null,
           { id: "teachers", label: t("country.teachers") },
@@ -335,19 +335,21 @@ export function CountryView({
       </section>
       ) : null}
 
+      {luthiers.length > 0 ? (
+        <CountryMakersPreview
+          luthiers={sortCountryLuthiers(atlasName, luthiers)}
+          shops={shops}
+          countryName={name}
+          countrySlug={slug}
+        />
+      ) : null}
+
       <ConcertList
         id="concerts"
         title={t("country.concerts")}
         concerts={concerts}
         empty={t("country.noConcerts")}
         initial={5}
-      />
-
-      <CountryMakersPreview
-        luthiers={sortCountryLuthiers(atlasName, luthiers)}
-        shops={shops}
-        countryName={name}
-        countrySlug={slug}
       />
 
       <div className="mt-10">

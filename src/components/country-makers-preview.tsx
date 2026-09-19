@@ -35,6 +35,8 @@ export function CountryMakersPreview({
     shops.length ? `${shops.length} ${t("instruments.shops").toLowerCase()}` : null,
   ].filter(Boolean);
 
+  if (!luthiers.length) return null;
+
   return (
     <section id="makers" className="mt-12 scroll-mt-40">
       <h2 className="font-display text-3xl font-semibold">{t("country.makers")}</h2>
